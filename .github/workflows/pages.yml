@@ -1,0 +1,41 @@
+# 推到 main 就自動部署到 GitHub Pages。
+# 第一次使用前：GitHub 專案頁 -> Settings -> Pages -> Source 選 "GitHub Actions"
+#
+# 注意 path 是 '_site' 不是 '.'：
+# repo 裡的 docs/ tools/ tests/ 只給開發用，不應該被發佈到公開網址上
+# （repo 是 Public，檔案在 GitHub 上仍然看得到，這裡只擋住「被當成網站發佈」）。
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: 只把網頁檔放進 _site
+        run: |
+          mkdir -p _site
+          cp index.html manifest.webmanifest icon-192.png icon-512.png _site/
+          cp .nojekyll _site/ 2>/dev/null || touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+      - id: deployment
+        uses: actions/deploy-pages@v4

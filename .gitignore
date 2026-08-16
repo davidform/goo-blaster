@@ -1,0 +1,16 @@
+# 開發雜物
+*.log
+*.tmp
+*.swp
+*.bak
+node_modules/
+__pycache__/
+.venv/
+venv/
+dist/
+build/
+_site/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

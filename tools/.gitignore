@@ -1,0 +1,11 @@
+*.log
+*.tmp
+*.swp
+node_modules/
+__pycache__/
+.venv/
+venv/
+dist/
+build/
+.DS_Store
+Thumbs.db
