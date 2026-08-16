@@ -141,7 +141,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.6';          // 每次交付都會變，手機上可在主畫面右下角確認
+const BUILD='v0.9.7';          // 每次交付都會變，手機上可在主畫面右下角確認
 //====================== 診斷（真機問題回報用）======================
 // 手機上沒有 console 可以看，所以把致命錯誤與輸入事件計數直接顯示在畫面上。
 const DIAG={touch:0,tmove:0,tend:0,pointer:0,pmove:0,mouse:0,err:'',warn:''};
@@ -929,6 +929,10 @@ function hurtPlayer(){
 //====================== 升級 ======================
 // 升級卡：每一張都是「新規則」而不是「數字加幾趴」，而且大多有情境或取捨。
 // max 表示可重複的次數；stack 為目前層數時的描述。
+// v0.9.6 移除了兩張卡（使用者要求）：
+//  - 「活力粉紅」（原本能把 maxHearts 一路加到 7）：愛心上限已經全面固定在 3，
+//    不該再有卡可以往上加
+//  - 「吸塵果凍狗」（原本讓拾取範圍變成全場無限大）：取消全畫面磁鐵吸經驗
 const UPGRADES=[
   {id:'w_bubble',ic:'💧',n:'泡泡加壓水槍',d:'主武器 · 高射速直線',w:'bubble'},
   {id:'w_graffiti',ic:'🎨',n:'七彩塗鴉噴槍',d:'扇形散彈 · 命中留果凍',w:'graffiti'},
@@ -976,19 +980,10 @@ const UPGRADES=[
    d:'受傷後 3 秒內移速 +75%，無敵時間也更長',
    f:P=>P.panic++},
 
-  {id:'magnet',ic:'🧲',n:'吸塵果凍狗',max:1,
-   d:'全場晶核直接飛向你，不用再繞路撿',
-   f:P=>P.magnet++},
-
   {id:'greed',ic:'💰',n:'貪婪狂歡',max:2,
    d:'每顆晶核多給 1 點經驗',
    d2:'再多給 1 點，並且晶核會發光變大',
    f:P=>P.greed++},
-
-  {id:'heart',ic:'💗',n:'活力粉紅',max:2,
-   d:'最大愛心 +1 並補滿',
-   d2:'再 +1 顆愛心並補滿（上限 5）',
-   f:P=>{ if(P.maxHearts<7)P.maxHearts++; P.hearts=P.maxHearts; P.heart++; }},
 
   {id:'cd',ic:'🌀',n:'滑順翻滾',max:2,
    d:'加速冷卻縮短 0.8 秒',
@@ -1072,25 +1067,27 @@ const WAVES=[
 // 10 關分成 5 個難度層級，每層 2 關：新機制關 + 加壓關。
 // ★ = 該關首次引入新敵種（出怪率相對前一關下降，這就是鋸齒的「回落」）
 const LEVELS=[
+ // v0.9.6：愛心上限全面改成 3（使用者要求「三顆心」是遊戲識別特徵，不要再有
+ // 5→4→3 的關卡差異，也不要有能把上限往上加的升級卡，見下面 UPGRADES 的異動）
  // 第一層：新手 —— 只有慢吞吞的軟泥怪，目標是「第一次碰手機的小孩也能過」
- {tier:'新手', n:'果凍幼幼園',   dur:70 , hearts:5, rate:0.40, hp:0.30, espd:0.70,
+ {tier:'新手', n:'果凍幼幼園',   dur:70 , hearts:3, rate:0.40, hp:0.30, espd:0.70,
   bossHp:0.20, nboss:1, types:['slime'], bspd:0.60, atkSlow:1.80, chest:8 , maxE:40,
   d:'學會拖曳移動。怪物慢、血少，不會反擊。'},
- {tier:'新手', n:'軟糖草原',     dur:85 , hearts:5, rate:0.50, hp:0.40, espd:0.76,
+ {tier:'新手', n:'軟糖草原',     dur:85 , hearts:3, rate:0.50, hp:0.40, espd:0.76,
   bossHp:0.28, nboss:1, types:['slime'], bspd:0.65, atkSlow:1.70, chest:9 , maxE:50,
   d:'一樣的怪，但變多了。練習用加速鍵脫離包圍。'},
  // 第二層：上手 —— 引入會衝刺的兔子
- {tier:'上手', n:'霓虹遊樂場',   dur:95 , hearts:5, rate:0.46, hp:0.48, espd:0.80,
+ {tier:'上手', n:'霓虹遊樂場',   dur:95 , hearts:3, rate:0.46, hp:0.48, espd:0.80,
   bossHp:0.36, nboss:2, types:['slime','bunny'], bspd:0.70, atkSlow:1.60, chest:10, maxE:58,
   d:'★ 兔子登場：速度是軟泥的兩倍。怪的總量先降下來讓你適應。'},
- {tier:'上手', n:'跳跳糖小鎮',   dur:110, hearts:4, rate:0.58, hp:0.58, espd:0.85,
+ {tier:'上手', n:'跳跳糖小鎮',   dur:110, hearts:3, rate:0.58, hp:0.58, espd:0.85,
   bossHp:0.46, nboss:2, types:['slime','bunny'], bspd:0.76, atkSlow:1.45, chest:11, maxE:68,
-  d:'兔子變多，愛心少一顆。開始需要真的走位。'},
+  d:'兔子變多。開始需要真的走位。'},
  // 第三層：熟練 —— 引入遠程彈幕
- {tier:'熟練', n:'黏黏果醬工廠', dur:120, hearts:4, rate:0.54, hp:0.68, espd:0.88,
+ {tier:'熟練', n:'黏黏果醬工廠', dur:120, hearts:3, rate:0.54, hp:0.68, espd:0.88,
   bossHp:0.56, nboss:2, types:['slime','bunny','drone'], bspd:0.82, atkSlow:1.35, chest:12, maxE:76,
   d:'★ 無人機登場：會從遠處射擊。學會用加速鍵的無敵幀穿過子彈。'},
- {tier:'熟練', n:'彈幕糖果屋',   dur:140, hearts:4, rate:0.68, hp:0.80, espd:0.92,
+ {tier:'熟練', n:'彈幕糖果屋',   dur:140, hearts:3, rate:0.68, hp:0.80, espd:0.92,
   bossHp:0.68, nboss:2, types:['slime','bunny','drone'], bspd:0.88, atkSlow:1.22, chest:13, maxE:88,
   superBoss:true,
   d:'彈幕變密、關卡變長。這關開始要認真管理愛心。★ 超級大 Boss 壓軸登場，血量遠超一般 Boss。'},
