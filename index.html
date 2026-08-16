@@ -15,12 +15,13 @@
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
      user-select:none;-webkit-user-select:none;touch-action:none;}
   html,body{width:100%;height:100%;overflow:hidden;background:#0a0618;
-     font-family:-apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif;}
-  #wrap{position:fixed;inset:0;}
-  canvas{display:block;width:100%;height:100%;}
-  .ui{position:absolute;inset:0;pointer-events:none;}
+     font-family:-apple-system,"PingFang TC","Noto Sans TC",system-ui,sans-serif;
+     touch-action:pan-y;}   /* v0.9.8：見下方 #galaxyWrap 註解 */
+  #wrap{position:fixed;inset:0;touch-action:pan-y;}
+  canvas{display:block;width:100%;height:100%;touch-action:none;}
+  .ui{position:absolute;inset:0;pointer-events:none;touch-action:pan-y;}
   .panel{position:absolute;inset:0;display:flex;flex-direction:column;
-     align-items:center;justify-content:center;gap:14px;pointer-events:auto;
+     align-items:center;justify-content:center;gap:14px;pointer-events:auto;touch-action:pan-y;
      background:rgba(10,6,24,.86);backdrop-filter:blur(8px);padding:22px;text-align:center;}
   /* 過關時不要遮住花火：背景半透明、不模糊，並淡入 */
   .panel.win{background:linear-gradient(180deg,rgba(10,6,24,.12) 0%,rgba(10,6,24,.62) 38%,
@@ -47,7 +48,16 @@
   #galaxyWrap{position:relative;width:100%;max-width:330px;height:230px;
      overflow-y:auto;overflow-x:hidden;border-radius:16px;border:2px solid #402c78;
      background:radial-gradient(ellipse at 50% 0%,#2a1a52 0%,#160c30 55%,#0a0618 100%);
-     -webkit-overflow-scrolling:touch;}
+     -webkit-overflow-scrolling:touch;
+     touch-action:pan-y;}
+  /* v0.9.8：瀏覽器判斷「這根手指能不能拿來滑動捲軸」，看的是被摸到的那個元素
+     本身、以及它所有祖先的 touch-action 交集——只要鏈上任何一層是 none 就整條斷掉。
+     最上層 *{touch-action:none} 把 html/body/#wrap/.ui/.panel 全部鎖死了，
+     光改 #galaxyWrap 沒用（手指實際摸到的是它裡面的 #galaxyInner／.gnode 節點，
+     這兩層一樣被 * 鎖住）。所以連同 html、body、#wrap、.ui、.panel 都要開放 pan-y，
+     這裡再用 #galaxyWrap * 把裡面所有子元素（節點、SVG、星星）一次蓋掉，
+     不用每加一個新元素就要記得補一次。canvas 本身維持 none，搖桿拖曳的行為不受影響。*/
+  #galaxyWrap *{touch-action:pan-y;}
   #galaxyInner{position:relative;width:100%;}
   #galaxyInner svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
   #galaxyInner .star{position:absolute;border-radius:50%;background:#fff;opacity:.5;}
@@ -121,7 +131,6 @@
       <div id="galaxyWrap"><div id="galaxyInner"></div></div>
       <button class="btn" id="btnPlay">開始遊戲</button>
       <div class="row">
-        <button class="btn small" id="btnShake">畫面晃動：低</button>
         <button class="btn small hide" id="btnReset">從第 1 關重來</button>
       </div>
       <div id="diag"></div>
@@ -141,7 +150,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.7';          // 每次交付都會變，手機上可在主畫面右下角確認
+const BUILD='v0.9.8';          // 每次交付都會變，手機上可在主畫面右下角確認
 //====================== 診斷（真機問題回報用）======================
 // 手機上沒有 console 可以看，所以把致命錯誤與輸入事件計數直接顯示在畫面上。
 const DIAG={touch:0,tmove:0,tend:0,pointer:0,pmove:0,mouse:0,err:'',warn:''};
@@ -158,7 +167,6 @@ safeProbeB.style.cssText='position:fixed;top:0;left:0;width:0;height:env(safe-ar
 document.body.appendChild(safeProbe); document.body.appendChild(safeProbeB);
 const BTN={x:0,y:0,r:44};                     // 加速鍵（左下拇指區）
 const MUTE={x:0,y:0,r:17};                    // 靜音鍵
-const SHK={x:0,y:0,r:17};                     // 畫面晃動切換
 function resize(){
   DPR=Math.min(devicePixelRatio||1,2);
   W=innerWidth; H=innerHeight;
@@ -169,7 +177,6 @@ function resize(){
   BTN.r=Math.max(40,Math.min(52,W*0.12));
   BTN.x=BTN.r+20; BTN.y=H-BTN.r-24-SAFE_BOT;   // 左下拇指區
   MUTE.x=W-MUTE.r-14; MUTE.y=SAFE_TOP+78;
-  SHK.x=W-SHK.r-14;  SHK.y=SAFE_TOP+78+SHK.r*2+8;
 }
 addEventListener('resize',resize); addEventListener('orientationchange',()=>setTimeout(resize,120)); resize();
 
@@ -259,39 +266,76 @@ const SFX=(()=>{
   }
 
   //---------------- 背景音樂：走 lookahead 排程，不用 setTimeout 對拍 ----------------
+  // v0.9.8：改成兩套完全不同的主題（不是同一旋律變快變亮而已），
+  // 由 musicIntensity() 切換——平常是「可愛版」，遇到 Boss 立刻換成「緊張版」。
   const NOTE=n=>440*Math.pow(2,(n-69)/12);     // MIDI → Hz
-  // C大調亮色進行：C - G - Am - F（每小節一個和弦）
-  const PROG=[
+  // 可愛主題：C大調亮色俏皮進行：C - G - Am - F（每小節一個和弦）
+  const PROG_CUTE=[
     {root:36, tones:[60,64,67,72]},   // C
     {root:31, tones:[59,62,67,71]},   // G
     {root:33, tones:[57,60,64,69]},   // Am
     {root:29, tones:[57,60,65,69]}    // F
   ];
+  // Boss主題：a小調 + 借用大三度屬和弦(E)製造導音張力：Am - E - Am - Dm（i-V-i-iv）
+  // 跟可愛主題完全不共用和弦，聽感上是「換了一首歌」而不是同一首歌加速
+  const PROG_BOSS=[
+    {root:33, tones:[57,60,64,69]},   // Am（i）
+    {root:40, tones:[64,68,71,76]},   // E （V，大三度導音，緊張感的來源）
+    {root:33, tones:[57,60,64,69]},   // Am（i）
+    {root:38, tones:[62,65,69,74]}    // Dm（iv）
+  ];
   const ARP=[0,1,2,3,2,1,3,2,0,1,2,3,1,2,3,1];   // 每小節 16 個十六分音符的和弦音索引
-  const M={on:false,step:0,next:0,timer:null,bpm:112,intensity:0};
+  const M={on:false,step:0,next:0,timer:null,bpm:112,intensity:0,theme:'cute'};
   function stepDur(){ return 60/M.bpm/4; }
   function playStep(i,t){
-    const bar=Math.floor(i/16)%4, k=i%16, ch=PROG[bar], hot=M.intensity>0;
-    // 低音：小節第 1、3 拍
-    if(k===0||k===8||(hot&&k===12))
-      osc({f0:NOTE(ch.root),f1:NOTE(ch.root)*0.995,dur:0.42,vol:0.20,type:'triangle',
-           filter:'lowpass',ff0:900,ff1:320,delay:t-ac.currentTime,dest:musBus});
-    // 琶音：十六分音符，左右輕微擺動製造空間感
-    const nt=ch.tones[ARP[k]] + (hot&&k%4===0?12:0);
-    osc({f0:NOTE(nt),dur:hot?0.16:0.13,vol:hot?0.075:0.055,type:'square',
-         filter:'lowpass',ff0:hot?2600:1800,ff1:700,q:3,
-         pan:(k%4-1.5)*0.28,delay:t-ac.currentTime,dest:musBus});
+    const boss=M.theme==='boss';
+    const PROG = boss?PROG_BOSS:PROG_CUTE;
+    const bar=Math.floor(i/16)%4, k=i%16, ch=PROG[bar];
+    const dt0=t-ac.currentTime;
+
+    if(boss){
+      // Boss戰：驅動型八分音符貝斯（鋸齒波，比可愛版密集一倍），營造壓迫感
+      if(k%4===0)
+        osc({f0:NOTE(ch.root),f1:NOTE(ch.root)*0.985,dur:0.20,vol:0.24,type:'sawtooth',
+             filter:'lowpass',ff0:1100,ff1:260,delay:dt0,dest:musBus});
+      // 琶音：鋸齒波、更快更硬，每兩拍疊一次高八度製造衝突感
+      const nt=ch.tones[ARP[k]] + (k%8===0?12:0);
+      osc({f0:NOTE(nt),dur:0.13,vol:0.085,type:'sawtooth',
+           filter:'lowpass',ff0:3200,ff1:900,q:5,
+           pan:(k%4-1.5)*0.24,delay:dt0,dest:musBus});
+      // 鼓組：每拍都有大鼓（比可愛版密集兩倍）、2/4拍小鼓、高帽更密
+      if(k%4===0) osc({f0:140,f1:38,dur:0.15,vol:0.30,type:'sine',delay:dt0,dest:musBus});
+      if(k===4||k===12) nz({dur:0.12,vol:0.16,f0:2400,f1:1000,q:1.0,delay:dt0,dest:musBus});
+      if(k%2===1) nz({dur:0.03,vol:0.06,f0:9000,q:2,pan:k%4===1?-0.3:0.3,delay:dt0,dest:musBus});
+      // 每輪結尾加一顆不和諧的緊張墊音，強化「快出事了」的感覺
+      if(k===14&&bar===3)
+        osc({f0:NOTE(ch.tones[1]+1),dur:0.5,vol:0.05,type:'square',atk:0.02,
+             filter:'bandpass',ff0:1400,q:6,delay:dt0,dest:musBus});
+      return;
+    }
+
+    // 可愛主題：三角波+鐘鈴亮片，比原本更甜、更彈跳
+    // 低音：小節第 1、3 拍，短促而有彈性
+    if(k===0||k===8)
+      osc({f0:NOTE(ch.root),f1:NOTE(ch.root)*0.995,dur:0.30,vol:0.18,type:'triangle',
+           filter:'lowpass',ff0:900,ff1:340,delay:dt0,dest:musBus});
+    // 琶音：三角波，比原本的方波更柔更甜
+    const nt=ch.tones[ARP[k]];
+    osc({f0:NOTE(nt),dur:0.14,vol:0.058,type:'triangle',
+         filter:'lowpass',ff0:2000,ff1:750,q:2.4,
+         pan:(k%4-1.5)*0.28,delay:dt0,dest:musBus});
+    // 亮片層：固定節奏（非隨機，音訊要可重現）在弱拍加一顆高八度鐘鈴聲，增加可愛的閃爍感
+    if((k===2||k===6||k===10||k===14) && bar%2===0)
+      osc({f0:NOTE(nt+12),dur:0.22,vol:0.035,type:'sine',atk:0.002,
+           delay:dt0,dest:musBus});
     // 墊音：每小節開頭一顆長音，很輕
     if(k===0)
       osc({f0:NOTE(ch.tones[0]-12),dur:1.9,vol:0.045,type:'sawtooth',atk:0.25,
-           filter:'lowpass',ff0:520,ff1:260,delay:t-ac.currentTime,dest:musBus});
-    // 鼓組
-    if(k===0||k===8) osc({f0:132,f1:44,dur:0.16,vol:0.24,type:'sine',
-                          delay:t-ac.currentTime,dest:musBus});          // 大鼓
-    if(k===4||k===12) nz({dur:0.11,vol:0.10,f0:2100,f1:900,q:1.1,
-                          delay:t-ac.currentTime,dest:musBus});          // 小鼓
-    if(k%2===1) nz({dur:0.035,vol:hot?0.055:0.038,f0:8200,q:2,
-                    pan:k%4===1?-0.3:0.3,delay:t-ac.currentTime,dest:musBus});  // 高帽
+           filter:'lowpass',ff0:520,ff1:260,delay:dt0,dest:musBus});
+    // 鼓組：輕巧
+    if(k===0||k===8) osc({f0:132,f1:44,dur:0.16,vol:0.24,type:'sine',delay:dt0,dest:musBus});
+    if(k===4||k===12) nz({dur:0.11,vol:0.10,f0:2100,f1:900,q:1.1,delay:dt0,dest:musBus});
+    if(k%2===1) nz({dur:0.035,vol:0.038,f0:8200,q:2,pan:k%4===1?-0.3:0.3,delay:dt0,dest:musBus});
   }
   function pump(){
     if(!M.on||!ac)return;
@@ -452,15 +496,6 @@ const IN={active:false,id:null,ox:0,oy:0,x:0,y:0,dx:0,dy:0,mag:0,hist:[]};
 let BTNPRESS=0, touchSeen=false, lastTouchAt=0;
 function inBtn(x,y){ return dist2(x,y,BTN.x,BTN.y) < (BTN.r*1.12)**2; }
 function inMute(x,y){ return dist2(x,y,MUTE.x,MUTE.y) < (MUTE.r*1.7)**2; }
-function inShk(x,y){ return dist2(x,y,SHK.x,SHK.y) < (SHK.r*1.7)**2; }
-const SHAKE_LABEL=['關','低','標準'];
-function shakeIdx(){ return SHAKE<=0?0:(SHAKE<=0.6?1:2); }
-function cycleShake(){
-  SHAKE=[0,0.5,1][(shakeIdx()+1)%3];
-  if(G) G.cam.shake=0;
-  const b=document.getElementById('btnShake');
-  if(b) b.textContent='畫面晃動：'+SHAKE_LABEL[shakeIdx()];
-}
 function startJoy(id,x,y){
   IN.active=true; IN.id=id; IN.ox=IN.x=x; IN.oy=IN.y=y;
   IN.dx=IN.dy=0; IN.mag=0; IN.hist.length=0;
@@ -512,7 +547,7 @@ function pickJoyTouch(tl){
   if(!tl||!tl.length) return null;
   for(let i=0;i<tl.length;i++){
     const t=tl[i];
-    if(inBtn(t.clientX,t.clientY)||inMute(t.clientX,t.clientY)||inShk(t.clientX,t.clientY)) continue;
+    if(inBtn(t.clientX,t.clientY)||inMute(t.clientX,t.clientY)) continue;
     return t;
   }
   return tl[0];                                  // 後援：寧可誤判成搖桿，也不要不能動
@@ -540,7 +575,6 @@ cv.addEventListener('touchstart',e=>{
   for(let i=0;i<ct.length;i++){
     const t=ct[i];
     if(inMute(t.clientX,t.clientY)) SFX.toggle();
-    else if(inShk(t.clientX,t.clientY)) cycleShake();
     else if(inBtn(t.clientX,t.clientY)) btnTap={id:t.identifier,x:t.clientX,y:t.clientY,t:performance.now()};
   }
   syncJoy(e,false);
@@ -582,7 +616,6 @@ cv.addEventListener('touchcancel',onTouchEnd,{passive:false});
 cv.addEventListener('mousedown',e=>{
   DIAG.mouse++; SFX.unlock();
   if(inMute(e.clientX,e.clientY)) SFX.toggle();
-  else if(inShk(e.clientX,e.clientY)) cycleShake();
   else if(inBtn(e.clientX,e.clientY)) pressBoost();
   else startJoy(-1,e.clientX,e.clientY);
 });
@@ -594,7 +627,6 @@ if(window.PointerEvent){
   cv.addEventListener('pointerdown',e=>{ if(touchAlive()||e.pointerType!=='touch')return;
     DIAG.pointer++; SFX.unlock();
     if(inMute(e.clientX,e.clientY)) SFX.toggle();
-    else if(inShk(e.clientX,e.clientY)) cycleShake();
     else if(inBtn(e.clientX,e.clientY)) pressBoost();
     else if(!IN.active) startJoy(e.pointerId,e.clientX,e.clientY); });
   cv.addEventListener('pointermove',e=>{ if(touchAlive()||e.pointerType!=='touch')return;
@@ -819,13 +851,16 @@ function pop(x,y,txt,color,sz){
 }
 // 舊版是每一幀重新取隨機位移 → 高頻抖動，長時間看很傷眼。
 // 改成：一次衝擊給一個固定方向 + 阻尼正弦，讀起來是「撞了一下」而不是「畫面在震」。
-let SHAKE=0.5;                       // 0=關 0.5=低（預設） 1=標準
+// v0.9.8：拿掉「畫面晃動：關/低/標準」的使用者選項（使用者要求），固定用原本
+// 「低」的強度當統一基準，維持舒適一致。但 Boss 在場時額外加成，加強戰鬥的刺激感。
+const SHAKE=0.5;                     // 固定值，不再讓玩家調整
 function shake(v,ang){
   if(SHAKE<=0){ G.cam.shake=0; return; }
   const c=G.cam;
-  const amp=v*SHAKE*0.55;
+  const bossMul = (G.boss ? 1.4 : 1);      // Boss 戰時晃動加強 40%
+  const amp=v*SHAKE*0.55*bossMul;
   if(amp<=c.shake*0.6) return;       // 已經在震且更強時不打斷，避免疊加成亂流
-  c.shake=Math.min(c.shake+amp, 9*SHAKE+1);
+  c.shake=Math.min(c.shake+amp, (9*SHAKE+1)*bossMul);
   c.shAng= ang!==undefined?ang:rnd(0,6.283);
   c.shPhase=0;
 }
@@ -1241,11 +1276,23 @@ const CHEST_TYPES=[
   {id:'power', ic:'💥', n:'猛攻糖',  c:'#ff5b6b', hue:355,
    go(P){ P.chestDmgT=Math.max(P.chestDmgT,8); return '8 秒攻擊力 +40%！'; }}
 ];
-// 攻擊向的兩種（閃電糖=攻速、猛攻糖=攻擊力）在池子裡各放兩份，讓寶箱整體
+// 攻擊向的兩種（閃電糖=攻速、猛攻糖=攻擊力）在池子裡放比較多份，讓寶箱整體
 // 「以攻擊向輔助為主」，但仍保留其他效果、不要讓寶箱變成單一套路。
+// v0.9.8：愛心糖權重調低（使用者反映出現太頻繁）。愛心上限已經固定在 3 顆，
+// 補血的重要性比以前低，改成只放 1 份權重（原本跟其他效果一樣是 1 份，
+// 但分母變大所以相對機率被稀釋），讓其他即時性效果的出現機會相對提高。
 const CHEST_POOL=(()=>{
   const byId=id=>CHEST_TYPES.find(t=>t.id===id);
-  return [...CHEST_TYPES, byId('speed'), byId('power')];
+  return [
+    byId('heart'),
+    byId('nuke'), byId('nuke'),
+    byId('rain'), byId('rain'),
+    byId('gold'), byId('gold'),
+    byId('ice'),  byId('ice'),
+    byId('fire'), byId('fire'),
+    byId('speed'), byId('speed'), byId('speed'),
+    byId('power'), byId('power'), byId('power')
+  ];
 })();
 function gemBurst(x,y,n){
   for(let i=0;i<n;i++){ const a=rnd(0,6.283),d=rnd(20,90);
@@ -2042,14 +2089,6 @@ function drawHUD(){
     ctx.strokeStyle='#ff6b8a'; ctx.lineWidth=2.2;
     ctx.beginPath(); ctx.moveTo(MUTE.x-9,MUTE.y+9); ctx.lineTo(MUTE.x+9,MUTE.y-9); ctx.stroke();
   }
-  // 晃動切換
-  ctx.beginPath(); ctx.arc(SHK.x,SHK.y,SHK.r,0,6.283);
-  ctx.fillStyle='rgba(12,8,28,.5)'; ctx.fill();
-  ctx.strokeStyle='rgba(180,160,230,.45)'; ctx.lineWidth=1.5; ctx.stroke();
-  ctx.font='900 13px system-ui'; ctx.fillStyle='#c9bdea';
-  ctx.fillText('〰',SHK.x,SHK.y+4);
-  ctx.font='800 8px system-ui'; ctx.fillStyle='#9a8cc4';
-  ctx.fillText(SHAKE_LABEL[shakeIdx()],SHK.x,SHK.y+SHK.r+9);
   // 護盾指示
   if(P.shieldN>0){
     ctx.textAlign='left'; ctx.font='800 11px system-ui'; ctx.fillStyle='#8fd8ff';
@@ -2134,7 +2173,7 @@ function renderStage(){
   buildGalaxy(frontier,cleared);
   document.getElementById('btnPlay').textContent =
     i<frontier ? '重玩 · 第 '+(i+1)+' 關' :
-    (PROGRESS>1 ? (showCleared?'再玩最後一關':'繼續 · 第 '+(i+1)+' 關') : '開始遊戲');
+    (PROGRESS>1 ? (showCleared?'再玩最後一關':'第 '+(i+1)+' 關') : '開始遊戲');
   document.getElementById('btnReset').classList.toggle('hide',PROGRESS<=1);
 }
 // 銀河挑戰路線：10 個關卡節點沿一條蜿蜒路徑排列，玩得越遠、路線往下延伸越多。
@@ -2297,7 +2336,6 @@ function endGame(win){
   setTimeout(()=>overEl.classList.remove('hide'), win?1600:320);
 }
 
-document.getElementById('btnShake').onclick=cycleShake;
 document.getElementById('btnPlay').onclick=()=>{ LV_IDX=Math.min(SEL_IDX,LEVELS.length-1); start(); };
 document.getElementById('btnReset').onclick=()=>{
   PROGRESS=1; SEL_IDX=0; saveProgress(); renderStage();
