@@ -126,7 +126,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.3';          // 每次交付都會變，手機上可在主畫面右下角確認
+const BUILD='v0.9.4';          // 每次交付都會變，手機上可在主畫面右下角確認
 //====================== 診斷（真機問題回報用）======================
 // 手機上沒有 console 可以看，所以把致命錯誤與輸入事件計數直接顯示在畫面上。
 const DIAG={touch:0,tmove:0,tend:0,pointer:0,pmove:0,mouse:0,err:'',warn:''};
@@ -141,7 +141,7 @@ safeProbe.style.cssText='position:fixed;top:0;left:0;width:0;height:env(safe-are
 const safeProbeB=document.createElement('div');
 safeProbeB.style.cssText='position:fixed;top:0;left:0;width:0;height:env(safe-area-inset-bottom,0px);pointer-events:none;';
 document.body.appendChild(safeProbe); document.body.appendChild(safeProbeB);
-const BTN={x:0,y:0,r:44};                     // 加速鍵（右下拇指區）
+const BTN={x:0,y:0,r:44};                     // 加速鍵（左下拇指區）
 const MUTE={x:0,y:0,r:17};                    // 靜音鍵
 const SHK={x:0,y:0,r:17};                     // 畫面晃動切換
 function resize(){
@@ -152,7 +152,7 @@ function resize(){
   SAFE_TOP=Math.max(0,safeProbe.getBoundingClientRect().height);
   SAFE_BOT=Math.max(0,safeProbeB.getBoundingClientRect().height);
   BTN.r=Math.max(40,Math.min(52,W*0.12));
-  BTN.x=W-BTN.r-20; BTN.y=H-BTN.r-24-SAFE_BOT;
+  BTN.x=BTN.r+20; BTN.y=H-BTN.r-24-SAFE_BOT;   // 左下拇指區
   MUTE.x=W-MUTE.r-14; MUTE.y=SAFE_TOP+78;
   SHK.x=W-SHK.r-14;  SHK.y=SAFE_TOP+78+SHK.r*2+8;
 }
@@ -435,7 +435,7 @@ const dist2=(ax,ay,bx,by)=>{const dx=ax-bx,dy=ay-by;return dx*dx+dy*dy;};
 //====================== 輸入 ======================
 const IN={active:false,id:null,ox:0,oy:0,x:0,y:0,dx:0,dy:0,mag:0,hist:[]};
 let BTNPRESS=0, touchSeen=false, lastTouchAt=0;
-function inBtn(x,y){ return dist2(x,y,BTN.x,BTN.y) < (BTN.r*1.3)**2; }
+function inBtn(x,y){ return dist2(x,y,BTN.x,BTN.y) < (BTN.r*1.12)**2; }
 function inMute(x,y){ return dist2(x,y,MUTE.x,MUTE.y) < (MUTE.r*1.7)**2; }
 function inShk(x,y){ return dist2(x,y,SHK.x,SHK.y) < (SHK.r*1.7)**2; }
 const SHAKE_LABEL=['關','低','標準'];
@@ -477,15 +477,8 @@ function moveJoy(x,y){
   const m=Math.hypot(dx,dy);
   IN.mag=clamp(m/R,0,1);
   if(m>0.001){ IN.dx=dx/m; IN.dy=dy/m; }
-  // 甩動偵測 → 閃避
-  if(IN.hist.length>=2){
-    const a=IN.hist[0], b=IN.hist[IN.hist.length-1];
-    const dt=(b.t-a.t)/1000;
-    if(dt>0.012){
-      const sp=Math.hypot(b.x-a.x,b.y-a.y)/dt;   // px/s
-      if(sp>1250) tryDash((b.x-a.x)||IN.dx,(b.y-a.y)||IN.dy);
-    }
-  }
+  // v0.9.4：移除「甩動自動衝刺」。它是第二個非預期加速來源 ——
+  // 轉向轉得快一點就會自己衝出去，玩家無法預測。加速一律只由加速鍵觸發。
 }
 // 多點觸控。
 // 之前的版本靠 Touch.identifier 去比對「哪一根是搖桿」，只要有一個 touchend/touchcancel
@@ -493,14 +486,21 @@ function moveJoy(x,y){
 // 手指在動但角色不動。改成每次事件都直接從 e.touches 重新挑一根「不在按鈕上」的手指當搖桿，
 // 完全無狀態，漏事件也能自己恢復。
 // ⚠ TouchList 一律用索引存取：iOS Safari 與部分 Android WebView 沒有 Symbol.iterator。
+// ⚠ v0.9.4 修正「手機上無法移動」的真正成因：
+// 舊版規則是「落在按鈕上的手指一律不能當搖桿」。加速鍵在右下角、判定半徑 BTN.r*1.3
+// （390px 寬的手機上是 60.8px，但只畫出 46.8px），右手拇指自然放的位置正好在裡面 →
+// 拇指停在該區內時搖桿永遠不啟動，mag 恆為 0，拖再多都不會動。
+// 已用 CDP 真實觸控重現：區內小幅繞圈 60 次 touchmove，mag 六次取樣全是 0。
+// 新規則：優先挑不在按鈕上的手指；如果所有手指都在按鈕上，還是拿第一根來當搖桿。
+// 死區徹底消失，而且維持無狀態 —— 不會回到「漏一個 touchend 就永久卡死」的老問題。
 function pickJoyTouch(tl){
-  if(!tl) return null;
+  if(!tl||!tl.length) return null;
   for(let i=0;i<tl.length;i++){
     const t=tl[i];
     if(inBtn(t.clientX,t.clientY)||inMute(t.clientX,t.clientY)||inShk(t.clientX,t.clientY)) continue;
     return t;
   }
-  return null;
+  return tl[0];                                  // 後援：寧可誤判成搖桿，也不要不能動
 }
 // allowChanged 只在 touchmove 開啟：touchend 的 changedTouches 裝的是「剛離開的手指」，
 // 拿來當後援會讓搖桿永遠放不掉。
@@ -511,6 +511,13 @@ function syncJoy(e,allowChanged){
   if(!IN.active) startJoy(t.identifier,t.clientX,t.clientY);
   else moveJoy(t.clientX,t.clientY);
 }
+// v0.9.4：加速鍵改成「放開才觸發」。
+// 按下時只登記候選（id / 起點 / 時間），手指移動超過 TAP_SLOP 或超過 TAP_MS 就作廢。
+// 這樣「按住加速鍵那一區當搖桿拖曳」不會誤觸衝刺，真正的點擊才會。
+// 候選會自己過期，漏掉任何一個 touchend 最壞情況只是少放一次衝刺，不會卡住操作。
+const TAP_SLOP=16, TAP_MS=400;
+let btnTap=null;
+function tapAlive(){ return btnTap && (performance.now()-btnTap.t)<TAP_MS; }
 cv.addEventListener('touchstart',e=>{
   e.preventDefault();
   DIAG.touch++;
@@ -519,7 +526,7 @@ cv.addEventListener('touchstart',e=>{
     const t=ct[i];
     if(inMute(t.clientX,t.clientY)) SFX.toggle();
     else if(inShk(t.clientX,t.clientY)) cycleShake();
-    else if(inBtn(t.clientX,t.clientY)) pressBoost();
+    else if(inBtn(t.clientX,t.clientY)) btnTap={id:t.identifier,x:t.clientX,y:t.clientY,t:performance.now()};
   }
   syncJoy(e,false);
   touchSeen=true; lastTouchAt=performance.now();
@@ -528,11 +535,30 @@ cv.addEventListener('touchstart',e=>{
 cv.addEventListener('touchmove',e=>{
   e.preventDefault();
   DIAG.tmove++; lastTouchAt=performance.now();
+  if(btnTap){                                      // 拖出去就不算點擊了
+    const ct=e.changedTouches;
+    for(let i=0;i<ct.length;i++){
+      const t=ct[i];
+      if(t.identifier===btnTap.id &&
+         dist2(t.clientX,t.clientY,btnTap.x,btnTap.y) > TAP_SLOP*TAP_SLOP){ btnTap=null; break; }
+    }
+  }
   syncJoy(e,true);
 },{passive:false});
 function onTouchEnd(e){
   if(e.cancelable) e.preventDefault();
   DIAG.tend++;
+  if(tapAlive()){
+    const ct=e.changedTouches;
+    for(let i=0;i<ct.length;i++){
+      const t=ct[i];
+      if(t.identifier===btnTap.id){
+        if(dist2(t.clientX,t.clientY,btnTap.x,btnTap.y) <= TAP_SLOP*TAP_SLOP &&
+           inBtn(t.clientX,t.clientY)) pressBoost();
+        btnTap=null; break;
+      }
+    }
+  }else btnTap=null;
   syncJoy(e,false);
 }
 cv.addEventListener('touchend',onTouchEnd,{passive:false});
@@ -1738,7 +1764,7 @@ function drawHUD(){
   ctx.fillText('擊殺 '+G.kills, pad+46, hy+38);
   ctx.font='800 10.5px system-ui'; ctx.fillStyle=TIER_COLOR[G.L.tier];
   ctx.fillText('第 '+(G.lvIdx+1)+' 關 · '+G.L.n+'（'+G.L.tier+'）', pad, hy+54);
-  // 加速鍵（右下拇指區，同時是冷卻指示器）
+  // 加速鍵（左下拇指區，同時是冷卻指示器）
   const k=1-clamp(P.dashCD/P.dashCDmax,0,1), ready=k>=1;
   const br=BTN.r*(1+(BTNPRESS>0?0.08:0));
   ctx.beginPath(); ctx.arc(BTN.x,BTN.y,br,0,6.283);
@@ -1797,7 +1823,7 @@ function drawHUD(){
     const msg='按住螢幕任意處，然後拖曳手指來移動';
     ctx.strokeText(msg,W/2,H*0.62); ctx.fillText(msg,W/2,H*0.62);
     ctx.font='700 13px system-ui'; ctx.fillStyle='rgba(126,247,192,'+a+')';
-    const msg2='右下 » 鍵 = 往移動方向加速（無敵幀）';
+    const msg2='左下 » 鍵 = 點一下往移動方向加速（無敵幀）';
     ctx.strokeText(msg2,W/2,H*0.62+26); ctx.fillText(msg2,W/2,H*0.62+26);
     const msg3='愛心用完就結束 — 靠閃避活下來';
     ctx.fillStyle='rgba(255,140,170,'+a+')';
@@ -1818,17 +1844,18 @@ function drawHUD(){
   // 觸控診斷（真機除錯用 —— 確認能動之後就可以整段刪掉）
   {
     const noInput = DIAG.touch===0 && DIAG.pointer===0 && DIAG.mouse===0 && G.t>2.5;
-    ctx.textAlign='left'; ctx.font='700 10px system-ui';
+    ctx.textAlign='right'; ctx.font='700 10px system-ui';   // 靠右：左下角現在是加速鍵
     ctx.lineWidth=3; ctx.strokeStyle='rgba(10,6,24,.9)';
     const line='觸控 '+DIAG.touch+'/'+DIAG.tmove+'/'+DIAG.tend+
                '  指標 '+DIAG.pointer+'/'+DIAG.pmove+
                '  搖桿 '+(IN.active?'ON':'off')+' '+IN.mag.toFixed(2)+
                '  座標 '+Math.round(P.x)+','+Math.round(P.y);
     const dy2=H-10-SAFE_BOT;
-    ctx.strokeText(line,pad,dy2); ctx.fillStyle=noInput?'#ff6b8a':'rgba(160,145,200,.75)';
-    ctx.fillText(line,pad,dy2);
-    if(DIAG.err){ ctx.strokeText('錯誤 '+DIAG.err.slice(0,60),pad,dy2-13);
-                  ctx.fillStyle='#ff5b7f'; ctx.fillText('錯誤 '+DIAG.err.slice(0,60),pad,dy2-13); }
+    const dx2=W-pad;
+    ctx.strokeText(line,dx2,dy2); ctx.fillStyle=noInput?'#ff6b8a':'rgba(160,145,200,.75)';
+    ctx.fillText(line,dx2,dy2);
+    if(DIAG.err){ ctx.strokeText('錯誤 '+DIAG.err.slice(0,60),dx2,dy2-13);
+                  ctx.fillStyle='#ff5b7f'; ctx.fillText('錯誤 '+DIAG.err.slice(0,60),dx2,dy2-13); }
     if(noInput){
       ctx.textAlign='center'; ctx.font='900 15px system-ui'; ctx.fillStyle='#ff6b8a';
       ctx.strokeText('⚠ 偵測不到任何觸控事件',W/2,H*0.44);
