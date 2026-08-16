@@ -43,12 +43,27 @@
   .btn.small{padding:9px 20px;font-size:13px;background:linear-gradient(180deg,#4b3c78,#33265a);
      color:#e4dcff;box-shadow:0 4px 0 #241a44;}
   .btn.small:active{box-shadow:0 1px 0 #241a44;}
-  #stageDots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:2px 0 6px;}
-  .dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;
-     justify-content:center;font-size:10px;font-weight:900;color:#0d0720;
-     background:#33265a;color:#6c5c9c;border:2px solid transparent;}
-  .dot.done{background:#7ef7c0;color:#0d2430;}
-  .dot.cur{background:#ffd23f;color:#150a26;border-color:#fff;transform:scale(1.18);}
+  /* 銀河挑戰路線：關卡選擇畫面（v0.9.5 取代原本的一排小圓點） */
+  #galaxyWrap{position:relative;width:100%;max-width:330px;height:230px;
+     overflow-y:auto;overflow-x:hidden;border-radius:16px;border:2px solid #402c78;
+     background:radial-gradient(ellipse at 50% 0%,#2a1a52 0%,#160c30 55%,#0a0618 100%);
+     -webkit-overflow-scrolling:touch;}
+  #galaxyInner{position:relative;width:100%;}
+  #galaxyInner svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+  #galaxyInner .star{position:absolute;border-radius:50%;background:#fff;opacity:.5;}
+  .gnode{position:absolute;width:48px;height:48px;margin-left:-24px;margin-top:-24px;
+     border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+     font-weight:900;font-size:15px;cursor:pointer;border:3px solid transparent;
+     background:#241a44;color:#5c4f88;transition:transform .08s;}
+  .gnode:active{transform:scale(.92);}
+  .gnode.done{color:#0d2430;}
+  .gnode.cur{border-color:#fff;animation:gpulse 1.5s ease-in-out infinite;}
+  .gnode.locked{background:#1c1636;color:#453a68;cursor:default;}
+  .gnode.sel{outline:3px solid #fff;outline-offset:2px;}
+  .gnode .gnum{font-size:15px;line-height:1;}
+  .gnode .gic{font-size:16px;line-height:1;}
+  @keyframes gpulse{0%,100%{box-shadow:0 0 8px 1px rgba(255,255,255,.55);}
+     50%{box-shadow:0 0 18px 4px rgba(255,255,255,.85);}}
   #stageInfo{max-width:330px;background:linear-gradient(160deg,#2a1a52,#1b1138);
      border:2px solid #402c78;border-radius:16px;padding:13px 15px;text-align:left;}
   #stageInfo .st{font-size:11px;font-weight:900;letter-spacing:1px;}
@@ -103,7 +118,7 @@
     <div id="menu" class="panel">
       <h1>GOO<br>BLASTER</h1>
       <div id="stageInfo"></div>
-      <div id="stageDots"></div>
+      <div id="galaxyWrap"><div id="galaxyInner"></div></div>
       <button class="btn" id="btnPlay">開始遊戲</button>
       <div class="row">
         <button class="btn small" id="btnShake">畫面晃動：低</button>
@@ -126,7 +141,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.4';          // 每次交付都會變，手機上可在主畫面右下角確認
+const BUILD='v0.9.6';          // 每次交付都會變，手機上可在主畫面右下角確認
 //====================== 診斷（真機問題回報用）======================
 // 手機上沒有 console 可以看，所以把致命錯誤與輸入事件計數直接顯示在畫面上。
 const DIAG={touch:0,tmove:0,tend:0,pointer:0,pmove:0,mouse:0,err:'',warn:''};
@@ -601,10 +616,10 @@ function newGame(){
  const L=CUR();
  return {
   L, lvIdx:LV_IDX, winT:L.dur, waves:buildWaves(L), bosses:buildBosses(L),
-  CHEST:[], chestT:L.chest*0.55,
+  CHEST:[], chestT:L.chest*0.75,   // 頻率降低後，第一個寶箱也稍微延後出現，維持節奏一致
   t:0, running:true, over:false, win:false, hasMoved:false,
   cam:{x:0,y:0,shake:0,shAng:0,shPhase:0,zoom:1},
-  hitstop:0, slowmo:0, hurt:0,
+  hitstop:0, slowmo:0, hurt:0, bossWarnT:-1, bossWarnName:'',
   P:{x:0,y:0,vx:0,vy:0,r:17,hearts:L.hearts,maxHearts:L.hearts,spd:260,
      iframe:0,dashT:0,dashCD:0,dashDX:1,dashDY:0,
      lv:1,xp:0,xpNext:5,flash:0,
@@ -613,7 +628,7 @@ function newGame(){
      sticky:0,chain:0,mine:0,freeze:0,shield:0,frenzy:0,split:0,
      rage:0,panic:0,magnet:0,greed:0,heart:0,cd:0,regen:0,
      // 對應的執行期狀態
-     regenT:0,shieldN:0,shieldT:0,frenzyKills:0,frenzyT:0,panicT:0,rainbowT:0,
+     regenT:0,shieldN:0,shieldT:0,frenzyKills:0,frenzyT:0,panicT:0,rainbowT:0,chestDmgT:0,
      mvx:0,mvy:0,moving:0,onGoo:0,
      wep:{bubble:1,graffiti:0,yoyo:0}, evo:{}},
   E:[], B:[], EB:[], PT:[], GEM:[], GOO:[], TXT:[], FW:[], fw:false, fwT:0,
@@ -651,29 +666,72 @@ function igniteGoo(x,y,rad,depth){
 }
 
 //====================== 實體 ======================
+// v0.9.5：4 種怪全部改成能發射遠程攻擊（原本只有無人機會）。
+// cdMin/cdMax 是「兩次開火間隔」的秒數範圍，數字越大＝打越慢。
+// 軟泥（初階怪）刻意設成全遊戲最慢：同一個等級層級（tier）下，
+// 軟泥的 cdMin 都比其他三種的 cdMin 大，乘上共用的 atkSlow／tier 倍率後順序不會變。
+// kite=true 才會在近距離後退保持距離（目前只有無人機維持原本的風箏打法）；
+// 其餘三種維持原本「衝向玩家」的路徑，只是路上會順便打一發。
+// rangedFromTier：這隻怪從第幾個 tier 開始會射擊（0=一開始就會）。
+// ⚠ 踩過兩次同一種坑，記錄一下：
+//  1) 一開始設 tier=1（第3關）：笨bot 直接陣亡掉滿心。第3-4關「上手層」的兔子
+//     敘述只提速度，完全沒提子彈 —— 這層是刻意留白的純速度測試。
+//  2) 改成 tier=2（第5關）想說對齊無人機原本的登場點，結果 3 次測試全滅（0/5）。
+//     問題是第5關本來就是「無人機第一次登場、單獨教你閃子彈」的關卡
+//    （docs 原話：「無人機登場：會從遠處射擊，學會用加速鍵的無敵幀穿過子彈」），
+//     這次改動讓軟泥+兔子在同一關一起加入開火，等於三種怪同時射擊，
+//     直接打穿「一次只教一個新機制」的鋸齒設計原則。
+//  現在改成 tier=3（第7關，挑戰層）：這一層原始設計本來就是「不再引入新機制，
+//  純粹考驗操作」（第8關敘述：「四種敵人全開，沒有新東西了」），疊加更多遠程
+//  壓力跟這層的設計意圖一致，不會踩到中段任何一個刻意留白的教學關卡。
+// 軟泥（初階怪）在射擊解鎖後仍是全遊戲最慢的射手（見下方 cdMin 排序）。
 const ETYPE={
-  slime  :{r:15,hp:11 ,spd:62 ,dmg:8 ,hue:140,xp:1,name:'軟泥'},
-  bunny  :{r:14,hp:20 ,spd:124,dmg:10,hue:330,xp:2,name:'兔子'},
-  drone  :{r:15,hp:28 ,spd:78 ,dmg:9 ,hue:195,xp:3,name:'無人機',ranged:true},
-  bomber :{r:19,hp:38 ,spd:96 ,dmg:22,hue:30 ,xp:4,name:'自爆',boom:true}
+  slime  :{r:15,hp:11 ,spd:62 ,dmg:8 ,hue:140,xp:1,name:'軟泥',
+           ranged:true,rangedFromTier:3,kite:false,cdMin:3.4,cdMax:4.4,shootRange:360},
+  bunny  :{r:14,hp:20 ,spd:124,dmg:10,hue:330,xp:2,name:'兔子',
+           ranged:true,rangedFromTier:3,kite:false,cdMin:2.4,cdMax:3.2,shootRange:400},
+  drone  :{r:15,hp:28 ,spd:78 ,dmg:9 ,hue:195,xp:3,name:'無人機',
+           ranged:true,rangedFromTier:0,kite:true, cdMin:1.9,cdMax:3.0,shootRange:520},
+  bomber :{r:19,hp:38 ,spd:96 ,dmg:22,hue:30 ,xp:4,name:'自爆',boom:true,
+           ranged:true,rangedFromTier:0,kite:false,cdMin:2.6,cdMax:3.6,shootRange:340}
 };
+// 怪物等級（tier）：對應現有 5 個難度層級（新手/上手/熟練/挑戰/地獄，每層 2 關）。
+// 血量/攻速隨 tier 提高；移速也會提高，但在 spawnEnemy 裡硬性夾在「主角速度 60%」以內。
+const TIER_HP =[1.00,1.18,1.38,1.62,1.90];
+const TIER_SPD=[1.00,1.06,1.12,1.18,1.24];
+const TIER_CD =[1.00,0.90,0.82,0.75,0.68];   // 越小＝攻速越快
+function enemyTier(){ return Math.min(4, Math.floor((G.lvIdx||0)/2)); }
 function spawnEnemy(type,mult){
   const T=ETYPE[type];
   const a=rnd(0,6.283), d=rnd(330,430);
   const P=G.P;
+  const tier=enemyTier();
+  const hpT=TIER_HP[tier], spT=TIER_SPD[tier], cdT=TIER_CD[tier];
+  const rawSpd=T.spd*rnd(.9,1.12)*CUR().espd*spT;
+  const spd=Math.min(rawSpd, P.spd*0.6);      // 移速上限：主角速度的 60%
+  const cdMin=T.cdMin*cdT, cdMax=T.cdMax*cdT;
+  const ranged = !!T.ranged && tier>=(T.rangedFromTier||0);
   G.E.push({x:P.x+Math.cos(a)*d, y:P.y+Math.sin(a)*d, vx:0,vy:0,
-    r:T.r, hp:T.hp*mult, maxhp:T.hp*mult, spd:T.spd*rnd(.9,1.12)*CUR().espd,
+    r:T.r, hp:T.hp*mult*hpT, maxhp:T.hp*mult*hpT, spd,
     dmg:T.dmg, hue:T.hue, xp:T.xp, type, flash:0, kb:0,kbx:0,kby:0,
-    shootCD:rnd(1,2.6), wob:rnd(0,6.28), boom:!!T.boom, ranged:!!T.ranged, boss:false});
+    shootCD:rnd(cdMin,cdMax), wob:rnd(0,6.28), boom:!!T.boom,
+    ranged, kite:!!T.kite, cdMin, cdMax, shootRange:T.shootRange,
+    tier, boss:false});
 }
 function spawnBoss(cfg){
   const P=G.P; const a=rnd(0,6.283);
   const b={x:P.x+Math.cos(a)*480,y:P.y+Math.sin(a)*480,vx:0,vy:0,
-    r:cfg.r,hp:cfg.hp,maxhp:cfg.hp,spd:cfg.spd,dmg:cfg.dmg,hue:cfg.hue,xp:40,
+    r:cfg.r,hp:cfg.hp,maxhp:cfg.hp,spd:cfg.spd,dmg:cfg.dmg,hue:cfg.hue,xp:cfg.superBoss?90:40,
     type:'boss',flash:0,kb:0,kbx:0,kby:0,shootCD:2,wob:0,boss:true,name:cfg.name,
-    atk:cfg.atk, atkT:1.4, atkMax:cfg.atkT, bspd:cfg.bspd, spin:0, kind:cfg.kind};
+    atk:cfg.atk, atkT:1.4, atkMax:cfg.atkT, bspd:cfg.bspd, spin:0, kind:cfg.kind,
+    superBoss:!!cfg.superBoss};
   G.E.push(b); G.boss=b;
-  toast(cfg.name+' 出現！','#ff6b6b'); shake(7); SFX.bossIn(); SFX.musicIntensity(1);
+  if(cfg.superBoss){
+    toast('⚠️ 超級大 BOSS：'+cfg.name+'！','#ff2a6b'); shake(14); hitstop(.12);
+  }else{
+    toast(cfg.name+' 出現！','#ff6b6b'); shake(7);
+  }
+  SFX.bossIn(); SFX.musicIntensity(1);
 }
 
 //====================== 武器 ======================
@@ -716,9 +774,18 @@ const EVOS={
 
 // 目標選擇：Boss 的「有效距離」打 0.4 折，所以只要 Boss 在合理範圍內就優先集火，
 // 但貼臉的雜兵仍然會被打掉。原規格的「最近優先」在 Boss 戰會讓輸出全部餵給雜兵。
+// 攻擊距離限制：只能鎖定畫面上實際看得到的敵人（用攝影機座標換算螢幕座標），
+// maxd 仍保留當作距離上限的安全閥（例如超寬螢幕時不要打到太遠）。
+function onScreen(x,y,margin){
+  margin=margin||0;
+  const sx=x-G.cam.x+W/2, sy=y-G.cam.y+H/2;
+  return sx>-margin && sx<W+margin && sy>-margin && sy<H+margin;
+}
 function nearest(x,y,maxd){
   let best=null,bd=maxd*maxd;
+  const SCREEN_MARGIN=44;              // 讓貼在邊緣、還露出一部分的敵人也能被鎖定，不要卡在像素邊界
   for(const e of G.E){
+    if(!onScreen(e.x,e.y,SCREEN_MARGIN)) continue;
     let d=dist2(x,y,e.x,e.y);
     if(e.boss) d*=0.16;                 // 距離平方 → 0.4² = 0.16
     if(d<bd){bd=d;best=e;}
@@ -1025,7 +1092,8 @@ const LEVELS=[
   d:'★ 無人機登場：會從遠處射擊。學會用加速鍵的無敵幀穿過子彈。'},
  {tier:'熟練', n:'彈幕糖果屋',   dur:140, hearts:4, rate:0.68, hp:0.80, espd:0.92,
   bossHp:0.68, nboss:2, types:['slime','bunny','drone'], bspd:0.88, atkSlow:1.22, chest:13, maxE:88,
-  d:'彈幕變密、關卡變長。這關開始要認真管理愛心。'},
+  superBoss:true,
+  d:'彈幕變密、關卡變長。這關開始要認真管理愛心。★ 超級大 Boss 壓軸登場，血量遠超一般 Boss。'},
  // 第四層：挑戰 —— 引入自爆怪
  {tier:'挑戰', n:'爆炸軟糖礦坑', dur:150, hearts:3, rate:0.64, hp:0.92, espd:0.95,
   bossHp:0.80, nboss:3, types:['slime','bunny','drone','bomber'], bspd:0.92, atkSlow:1.12, chest:14, maxE:96,
@@ -1039,7 +1107,8 @@ const LEVELS=[
   d:'血量、速度、彈速全面上修。'},
  {tier:'地獄', n:'果凍終末',     dur:215, hearts:3, rate:1.20, hp:1.60, espd:1.14,
   bossHp:1.70, nboss:3, types:['slime','bunny','drone','bomber'], bspd:1.20, atkSlow:0.82, chest:17, maxE:130,
-  d:'最後一關。做好心理準備。'}
+  superBoss:true,
+  d:'最後一關。做好心理準備。★ 全遊戲最強的超級大 Boss 在此坐鎮。'}
 ];
 const TIERS=['新手','上手','熟練','挑戰','地獄'];
 const TIER_COLOR={'新手':'#7ef7c0','上手':'#8fe8ff','熟練':'#ffd23f','挑戰':'#ff9a4f','地獄':'#ff5b7f'};
@@ -1078,13 +1147,24 @@ function buildWaves(L){
 }
 // Boss 池（基準值），實際血量/時間由關卡縮放
 const BOSS_POOL=[
-  {hp:2800 , r:50, hue:275, name:'加班文件怪', spd:58, dmg:20, atk:'cross' , atkT:2.2, bspd:190},
-  {hp:6800 , r:64, hue:200, name:'未讀訊息怪', spd:54, dmg:24, atk:'spiral', atkT:1.7, bspd:215},
-  {hp:16000, r:80, hue:12 , name:'奪魂鬧鐘怪', spd:48, dmg:28, atk:'ring'  , atkT:1.5, bspd:240}
+  // hp 在 v0.9.5 全面 ×1.5：使用者反映「Boss 不要太快死」，原始版本第1關單Boss
+  // 2 秒左右就被秒殺。試過 ×2.2 但笨bot測出第1關零失誤基準線失敗率從文件記載的
+  // 33%（舊版）惡化到 40%（Boss戰拖長，bot站在彈幕裡不閃的曝險時間變長），
+  // 回調到 ×1.5：戰鬥拉長到 2.8-8 秒、且 3 次測試零失誤基準線全過，兩邊都顧到
+  {hp:4200 , r:50, hue:275, name:'加班文件怪', spd:58, dmg:20, atk:'cross' , atkT:2.2, bspd:190},
+  {hp:10200, r:64, hue:200, name:'未讀訊息怪', spd:54, dmg:24, atk:'spiral', atkT:1.7, bspd:215},
+  {hp:24000, r:80, hue:12 , name:'奪魂鬧鐘怪', spd:48, dmg:28, atk:'ring'  , atkT:1.5, bspd:240}
 ];
+// 超級大Boss（每 5 隻怪物等級新增需求）：使用者原本要求「每5關」，但第5關是
+// docs/02 設計的鋸齒回落點（新機制登場、出怪率刻意降 6-8%），放超級Boss會抵銷
+// 回落的用意；改放第 6、10 關——這兩關在原設計裡都不是回落點（只有 3/5/7 關
+// 才是），第 10 關本來就是全遊戲最終關，第 6 關是「熟練」層加壓的那一半，適合
+// 壓軸更強的敵人。血量在關卡自己的 bossHp 倍率之上再乘 1.6，且一定排在
+// G.bosses 陣列最後、kind='final'，打死它才算真正過關。
+const SUPER_BOSS={hp:26000, r:96, hue:330, name:'業績KPI巨獸', spd:44, dmg:30, atk:'ring', atkT:1.3, bspd:250};
 function buildBosses(L){
   const at = L.nboss===1?[0.62] : L.nboss===2?[0.40,0.80] : [0.22,0.53,0.84];
-  return at.map((f,i)=>{
+  const bosses = at.map((f,i)=>{
     const b=BOSS_POOL[L.nboss===1?0:i];
     return {...b,
       t: Math.round(L.dur*f),
@@ -1092,15 +1172,35 @@ function buildBosses(L){
       spd: b.spd*L.espd,
       bspd: b.bspd*L.bspd,
       atkT: b.atkT*L.atkSlow,
-      kind: i===at.length-1 ? 'final' : ('b'+(i+1))
+      kind: (!L.superBoss && i===at.length-1) ? 'final' : ('b'+(i+1))
     };
   });
+  if(L.superBoss){
+    const b=SUPER_BOSS;
+    bosses.push({...b,
+      t: Math.round(L.dur*0.93),
+      hp: Math.round(b.hp*L.bossHp*1.6),
+      spd: b.spd*L.espd,
+      bspd: b.bspd*L.bspd,
+      atkT: b.atkT*L.atkSlow,
+      kind:'final', superBoss:true
+    });
+  }
+  return bosses;
 }
 
 function updateSpawn(dt){
   const L=CUR();
   let w=G.waves[0];
   for(const x of G.waves) if(G.t>=x.t) w=x;
+  // Boss 出場預告：出場前 5 秒開始閃紅倒數。每幀重算、不存狀態，
+  // 跟搖桿判定一樣的無狀態哲學——漏一幀不會卡死，下一幀自己就對了。
+  G.bossWarnT=-1; G.bossWarnName='';
+  for(let i=0;i<G.bosses.length;i++){
+    if(G.bossDone[i]) continue;
+    const rem=G.bosses[i].t-G.t;
+    if(rem>0 && rem<=5){ G.bossWarnT=rem; G.bossWarnName=G.bosses[i].name; break; }
+  }
   for(let i=0;i<G.bosses.length;i++)
     if(!G.bossDone[i] && G.t>=G.bosses[i].t){ G.bossDone[i]=true; spawnBoss(G.bosses[i]); }
   const rate = G.boss ? w.rate*0.35 : w.rate;
@@ -1137,8 +1237,19 @@ const CHEST_TYPES=[
           burst(P.x,P.y,40,200,2); return '凍結 '+n+' 隻敵人！'; }},
   {id:'fire',  ic:'🔥', n:'火焰糖',  c:'#ff9a4f', hue:25,
    go(P){ let n=0; for(const g of G.GOO.slice()){ if(g.burn<=0){ igniteGoo(g.x,g.y,g.r,2); n++; } }
-          return '引爆全場果凍！'; }}
+          return '引爆全場果凍！'; }},
+  // v0.9.5 新增：寶箱內容改成偏向攻擊向輔助。維持「即時性效果、過了就沒了」的
+  // 風格（使用者已確認），不做成永久數值加成，避免跟 17 張機制型升級卡的
+  // 定位（docs/02 第一節：升級卡全部是機制型、不是純數值百分比）互相打架。
+  {id:'power', ic:'💥', n:'猛攻糖',  c:'#ff5b6b', hue:355,
+   go(P){ P.chestDmgT=Math.max(P.chestDmgT,8); return '8 秒攻擊力 +40%！'; }}
 ];
+// 攻擊向的兩種（閃電糖=攻速、猛攻糖=攻擊力）在池子裡各放兩份，讓寶箱整體
+// 「以攻擊向輔助為主」，但仍保留其他效果、不要讓寶箱變成單一套路。
+const CHEST_POOL=(()=>{
+  const byId=id=>CHEST_TYPES.find(t=>t.id===id);
+  return [...CHEST_TYPES, byId('speed'), byId('power')];
+})();
 function gemBurst(x,y,n){
   for(let i=0;i<n;i++){ const a=rnd(0,6.283),d=rnd(20,90);
     G.GEM.push({x:x+Math.cos(a)*d,y:y+Math.sin(a)*d,vx:Math.cos(a)*120,vy:Math.sin(a)*120,
@@ -1150,7 +1261,7 @@ function spawnChest(){
     const a=rnd(0,6.283), d=rnd(430,700);
     const x=P.x+Math.cos(a)*d, y=P.y+Math.sin(a)*d;
     if(Math.hypot(x,y)>ARENA-100) continue;
-    G.CHEST.push({x,y,life:18,max:18,wob:rnd(0,6.28),pop:0,type:pick(CHEST_TYPES)});
+    G.CHEST.push({x,y,life:18,max:18,wob:rnd(0,6.28),pop:0,type:pick(CHEST_POOL)});
     toast('遠處出現寶箱！快去拿','#ffd84f'); SFX.heal();
     return true;
   }
@@ -1160,7 +1271,9 @@ function updateChests(dt){
   const P=G.P;
   G.chestT-=dt;
   if(G.chestT<=0 && G.CHEST.length<2){
-    G.chestT = G.L.chest*rnd(0.85,1.25);
+    // v0.9.5：出現頻率降低（原本 rnd(0.85,1.25) 倍間隔，改成再乘 1.4 拉長間隔），
+    // 使用者要求「注意平衡、不要一次加太多讓遊戲變太簡單」
+    G.chestT = G.L.chest*1.4*rnd(0.85,1.25);
     spawnChest();
   }
   for(let i=G.CHEST.length-1;i>=0;i--){
@@ -1257,8 +1370,9 @@ function update(dt,rawdt){
   const P=G.P;
   G.t+=rawdt;                       // 關卡時鐘 = 真實時間
   dt*=speedScale();                 // 遊戲節奏隨等級加快
-  // 有效傷害＝基礎 × 果凍覆蓋加成 × 滿心怒氣
-  P.dmgEff = P.dmg * gooBonus() * (P.rage&&P.hearts>=P.maxHearts ? 1.45 : 1);
+  // 有效傷害＝基礎 × 果凍覆蓋加成 × 滿心怒氣 × 寶箱猛攻糖（暫時性，不是永久數值卡）
+  P.dmgEff = P.dmg * gooBonus() * (P.rage&&P.hearts>=P.maxHearts ? 1.45 : 1) * (P.chestDmgT>0?1.4:1);
+  if(P.chestDmgT>0) P.chestDmgT-=dt;
 
   //--- 玩家移動
   if(P.dashT>0){
@@ -1331,6 +1445,11 @@ function update(dt,rawdt){
   //--- 敵人
   for(let i=G.E.length-1;i>=0;i--){
     const e=G.E[i];
+    // 迴圈中途可能有範圍傷害（damageArea，例如自爆怪死亡的爆炸）連續 splice 掉
+    // 好幾隻怪，讓陣列在這個迴圈跑到一半就變短，此時 i 可能已經超出新長度 → e 是 undefined。
+    // 這是實測跑出來的真實當機（PAGEERROR: Cannot read properties of undefined (reading 'flash')），
+    // 不是猜測。防呆：這種情況直接跳過，不影響其他敵人的處理。
+    if(!e) continue;
     if(e.flash>0)e.flash-=dt;
     e.wob+=dt*7;
     let ang=Math.atan2(P.y-e.y,P.x-e.x);
@@ -1346,9 +1465,12 @@ function update(dt,rawdt){
     if(e.frozen>0) sp=0;
     if(e.ranged){
       const d=Math.hypot(P.x-e.x,P.y-e.y);
-      if(d<330) sp*=-0.55;                       // 保持距離
+      if(e.kite && d<330) sp*=-0.55;             // 只有無人機保持距離風箏；其他三種照樣衝過來
       e.shootCD-=dt;
-      if(e.shootCD<=0&&d<520){ e.shootCD=rnd(1.9,3.0)*CUR().atkSlow; shootE(e.x,e.y,ang,215*CUR().bspd,e.dmg,6); }
+      if(e.shootCD<=0&&d<e.shootRange){
+        e.shootCD=rnd(e.cdMin,e.cdMax)*CUR().atkSlow;
+        shootE(e.x,e.y,ang,215*CUR().bspd,e.dmg,6);
+      }
     }
     if(e.boss){
       // 半血進入第二階段；時間耗盡後最終 Boss 直接狂暴，避免無限拖
@@ -1651,6 +1773,12 @@ function drawBlob(e,detail){
   ctx.fillStyle='hsla('+e.hue+',90%,55%,.18)';
   ctx.beginPath(); ctx.arc(e.x,e.y,R*1.42,0,6.283); ctx.fill();
   if(e.boss){ ctx.shadowColor='hsl('+e.hue+',90%,55%)'; ctx.shadowBlur=26; }
+  // 超級大 Boss：多一圈脈動的警戒圈，跟一般 Boss 拉開視覺辨識度
+  if(e.superBoss){
+    ctx.strokeStyle='rgba(255,40,100,'+(0.45+0.35*Math.sin(G.t*6))+')';
+    ctx.lineWidth=4;
+    ctx.beginPath(); ctx.arc(e.x,e.y,R*1.28,0,6.283); ctx.stroke();
+  }
   ctx.fillStyle= e.flash>0 ? '#fff'
                : e.frozen>0 ? '#9fe4ff'
                : e.slowT>0  ? 'hsl('+e.hue+',45%,42%)'      // 被黏住：明顯變暗沉
@@ -1675,6 +1803,13 @@ function drawBlob(e,detail){
     if(!e.boss){
       ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(e.x-w/2,e.y-e.r-9,w,3.5);
       ctx.fillStyle='#ff5b7f'; ctx.fillRect(e.x-w/2,e.y-e.r-9,w*clamp(e.hp/e.maxhp,0,1),3.5);
+    }
+  }
+  // 等級（tier）標示：白色細圈，數量＝tier，讓玩家看得出「這隻比較強化」
+  if(!e.boss && e.tier>0 && detail){
+    ctx.strokeStyle='rgba(255,255,255,.65)'; ctx.lineWidth=1.4;
+    for(let k=0;k<e.tier;k++){
+      ctx.beginPath(); ctx.arc(e.x,e.y,R*1.22+k*3.4,0,6.283); ctx.stroke();
     }
   }
 }
@@ -1724,6 +1859,24 @@ function drawHUD(){
     vg.addColorStop(0,'rgba(255,0,40,0)');
     vg.addColorStop(1,'rgba(255,10,45,'+(a*0.62)+')');
     ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
+  }
+  // Boss 出場預告：出場前 5 秒，畫面閃紅 + 倒數數字，跟受擊紅閃刻意做出區別
+  // （受擊是短促單次衰減，這裡是持續 5 秒的脈動閃爍，讓玩家有時間反應而不是被嚇到）
+  if(G.bossWarnT>=0){
+    const pulse=0.5+0.5*Math.sin(G.t*11);
+    ctx.fillStyle='rgba(255,20,40,'+(0.08+0.12*pulse)+')'; ctx.fillRect(0,0,W,H);
+    const vg2=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.20,W/2,H/2,Math.max(W,H)*0.60);
+    vg2.addColorStop(0,'rgba(255,0,30,0)');
+    vg2.addColorStop(1,'rgba(255,10,40,'+(0.30+0.30*pulse)+')');
+    ctx.fillStyle=vg2; ctx.fillRect(0,0,W,H);
+    ctx.textAlign='center';
+    ctx.lineWidth=4; ctx.strokeStyle='rgba(0,0,0,.6)';
+    ctx.font='900 20px system-ui'; ctx.fillStyle='#ff6b78';
+    const warnTxt='⚠ '+(G.bossWarnName||'BOSS')+' 即將出現';
+    ctx.strokeText(warnTxt,W/2,H*0.30); ctx.fillText(warnTxt,W/2,H*0.30);
+    const cdNum=Math.max(1,Math.ceil(G.bossWarnT));
+    ctx.font='900 '+Math.round(58+pulse*8)+'px system-ui';
+    ctx.strokeText(String(cdNum),W/2,H*0.30+56); ctx.fillText(String(cdNum),W/2,H*0.30+56);
   }
   // XP 條
   ctx.fillStyle='rgba(0,0,0,.4)'; ctx.fillRect(0,top,W,7);
@@ -1800,9 +1953,10 @@ function drawHUD(){
   if(G.boss){
     const bw=Math.min(W-56,420), bx=(W-bw)/2, by=BTN.y-BTN.r-36;
     ctx.fillStyle='rgba(0,0,0,.55)'; roundRect(bx,by,bw,17,8); ctx.fill();
-    ctx.fillStyle='#ff5b3f'; roundRect(bx,by,bw*clamp(G.boss.hp/G.boss.maxhp,0,1),17,8); ctx.fill();
+    ctx.fillStyle=G.boss.superBoss?'#ff2a6b':'#ff5b3f';
+    roundRect(bx,by,bw*clamp(G.boss.hp/G.boss.maxhp,0,1),17,8); ctx.fill();
     ctx.font='900 12px system-ui'; ctx.fillStyle='#fff'; ctx.textAlign='center';
-    ctx.fillText(G.boss.name, W/2, by-7);
+    ctx.fillText((G.boss.superBoss?'⚠️ 超級大 BOSS · ':'')+G.boss.name, W/2, by-7);
   }
   // 搖桿
   if(IN.active){
@@ -1965,26 +2119,79 @@ const shotEl=document.getElementById('shot'), overTitle=document.getElementById(
 const nextEl=document.getElementById('btnNext');
 
 
+// SEL_IDX：銀河路線上「目前預覽/準備開始」的關卡，跟 PROGRESS（實際解鎖進度）分開。
+// 玩家可以點已解鎖的節點回頭預覽/重玩前面的關卡，不會影響解鎖進度本身。
+let SEL_IDX=0;
 function renderStage(){
-  const i=Math.min(PROGRESS-1,LEVELS.length-1), L=LEVELS[i], c=TIER_COLOR[L.tier];
+  const frontier=Math.min(PROGRESS-1,LEVELS.length-1);
   const cleared = PROGRESS>LEVELS.length;
+  const i=Math.min(Math.max(SEL_IDX,0),LEVELS.length-1);
+  const L=LEVELS[i], c=TIER_COLOR[L.tier];
+  const showCleared = cleared && i===LEVELS.length-1;
   document.getElementById('stageInfo').innerHTML =
-    '<div class="st" style="color:'+c+'">'+(cleared?'全部通關':'第 '+(i+1)+' 關 / '+LEVELS.length+'　·　'+L.tier)+'</div>'+
-    '<div class="nm">'+(cleared?'恭喜全破！':L.n)+'</div>'+
-    '<div class="ds">'+(cleared?'你已經打穿全部 10 關。再玩一次挑戰更快的紀錄。':L.d)+'</div>'+
+    '<div class="st" style="color:'+c+'">'+(showCleared?'全部通關':'第 '+(i+1)+' 關 / '+LEVELS.length+'　·　'+L.tier)+'</div>'+
+    '<div class="nm">'+(showCleared?'恭喜全破！':L.n)+'</div>'+
+    '<div class="ds">'+(showCleared?'你已經打穿全部 10 關。再玩一次挑戰更快的紀錄。':L.d)+'</div>'+
     '<div class="mt">'+Math.floor(L.dur/60)+':'+String(L.dur%60).padStart(2,'0')+
       '　·　♥'+L.hearts+'　·　Boss ×'+L.nboss+'</div>';
-  const dots=document.getElementById('stageDots');
-  dots.innerHTML='';
-  LEVELS.forEach((L2,k)=>{
-    const d=document.createElement('div');
-    d.className='dot'+(k<PROGRESS-1?' done':(k===PROGRESS-1&&!cleared?' cur':''));
-    d.textContent=k+1;
-    dots.appendChild(d);
-  });
+  buildGalaxy(frontier,cleared);
   document.getElementById('btnPlay').textContent =
-    PROGRESS>1 ? (cleared?'再玩最後一關':'繼續 · 第 '+(i+1)+' 關') : '開始遊戲';
+    i<frontier ? '重玩 · 第 '+(i+1)+' 關' :
+    (PROGRESS>1 ? (showCleared?'再玩最後一關':'繼續 · 第 '+(i+1)+' 關') : '開始遊戲');
   document.getElementById('btnReset').classList.toggle('hide',PROGRESS<=1);
+}
+// 銀河挑戰路線：10 個關卡節點沿一條蜿蜒路徑排列，玩得越遠、路線往下延伸越多。
+// 節點狀態：done=已通關（可回頭重玩）、cur=目前解鎖到的最前線（可玩）、locked=還沒解鎖。
+function buildGalaxy(frontier,cleared){
+  const wrap=document.getElementById('galaxyWrap'), inner=document.getElementById('galaxyInner');
+  const W=300, padY=42, stepY=68;
+  const n=LEVELS.length;
+  const H=padY*2+(n-1)*stepY;
+  const pts=[];
+  for(let k=0;k<n;k++){
+    const x=W/2+Math.sin(k*1.05)*(W/2-42);
+    const y=padY+k*stepY;
+    pts.push({x,y});
+  }
+  let svg='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+
+    '<polyline points="'+pts.map(p=>p.x+','+p.y).join(' ')+'" fill="none" '+
+    'stroke="#5a3fa0" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 10" opacity="0.75"/></svg>';
+  let stars='';
+  for(let s=0;s<26;s++){
+    stars+='<div class="star" style="left:'+rnd(0,W)+'px;top:'+rnd(0,H)+'px;'+
+      'width:'+rnd(1,2.6).toFixed(1)+'px;height:'+rnd(1,2.6).toFixed(1)+'px;opacity:'+rnd(.15,.6).toFixed(2)+'"></div>';
+  }
+  let nodes='';
+  LEVELS.forEach((L2,k)=>{
+    const p=pts[k];
+    const unlocked = k<=frontier || cleared;
+    const isDone = k<frontier || (cleared && k<n-1) ;
+    const isCur = k===frontier && !cleared;
+    const isFinalCleared = cleared && k===n-1;
+    const cls=['gnode'];
+    if(isDone||isFinalCleared) cls.push('done');
+    if(isCur) cls.push('cur');
+    if(!unlocked) cls.push('locked');
+    if(k===SEL_IDX && unlocked) cls.push('sel');
+    const bg = unlocked ? TIER_COLOR[L2.tier] : '';
+    const label = unlocked ? (isDone||isFinalCleared?'✓':(k+1)) : '🔒';
+    // left/top 用百分比（相對 #galaxyInner，寬度基準是上面算 pts 用的 W=300），
+    // 這樣手機實際渲染寬度跟 300px 設計稿不同時，節點位置還是會跟著 SVG 路徑對齊
+    nodes+='<div class="'+cls.join(' ')+'" data-k="'+k+'" style="left:'+(p.x/W*100)+'%;top:'+p.y+'px;'+
+      (unlocked?'background:'+bg+';':'')+'">'+
+      '<div class="gnum">'+label+'</div></div>';
+  });
+  inner.style.height=H+'px';
+  inner.innerHTML=svg+stars+nodes;
+  inner.querySelectorAll('.gnode:not(.locked)').forEach(el=>{
+    el.onclick=()=>{ SEL_IDX=+el.dataset.k; renderStage();
+      el.scrollIntoView({block:'center',behavior:'smooth'}); };
+  });
+  // 開選單時自動捲到目前選取的節點，不用手動找
+  requestAnimationFrame(()=>{
+    const cur=inner.querySelector('.gnode[data-k="'+SEL_IDX+'"]');
+    if(cur) wrap.scrollTop = Math.max(0, cur.offsetTop - wrap.clientHeight/2);
+  });
 }
 function updateDiag(){
   const el=document.getElementById('diag'); if(!el)return;
@@ -1995,7 +2202,9 @@ function updateDiag(){
 }
 setInterval(updateDiag,700);
 function showMenu(){
-  clampProgress(); renderStage();
+  clampProgress();
+  SEL_IDX=Math.min(PROGRESS-1,LEVELS.length-1);   // 每次回選單，預設選到目前最前線的關卡
+  renderStage();
   overEl.classList.add('hide'); cardsEl.classList.add('hide');
   menuEl.classList.remove('hide');
   SFX.musicStop();
@@ -2092,9 +2301,9 @@ function endGame(win){
 }
 
 document.getElementById('btnShake').onclick=cycleShake;
-document.getElementById('btnPlay').onclick=()=>{ LV_IDX=Math.min(PROGRESS-1,LEVELS.length-1); start(); };
+document.getElementById('btnPlay').onclick=()=>{ LV_IDX=Math.min(SEL_IDX,LEVELS.length-1); start(); };
 document.getElementById('btnReset').onclick=()=>{
-  PROGRESS=1; saveProgress(); renderStage();
+  PROGRESS=1; SEL_IDX=0; saveProgress(); renderStage();
 };
 document.getElementById('btnAgain').onclick=()=>start();
 document.getElementById('btnMenu').onclick=showMenu;
