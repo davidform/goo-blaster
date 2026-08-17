@@ -134,6 +134,39 @@
   #stageInfo .nm{font-size:19px;font-weight:900;color:#fff;margin:3px 0 4px;}
   #stageInfo .ds{font-size:12px;color:#a294cc;line-height:1.6;}
   #stageInfo .mt{font-size:11px;color:#7e70ab;margin-top:6px;}
+  /* v0.9.17：結算畫面的近失回饋與糖果幣 */
+  #overSub{max-width:330px;margin:2px 0 8px;}
+  #overSub .nearmiss{font-size:14px;font-weight:900;color:#ffd84f;margin-bottom:4px;}
+  #overSub .coingain{font-size:15px;font-weight:900;color:#ff9ad5;}
+  #overSub .coingain .tot{font-size:12px;color:#a294cc;font-weight:700;}
+  /* v0.9.17：糖果屋（永久強化商店） */
+  #shop{gap:8px;}
+  #shopCoins{font-size:20px;font-weight:900;color:#ffd84f;}
+  #shopHint{font-size:11px;color:#a294cc;max-width:330px;line-height:1.6;text-align:center;}
+  #shopList{width:100%;max-width:340px;max-height:52vh;overflow-y:auto;
+     display:flex;flex-direction:column;gap:7px;padding:2px;
+     scrollbar-width:thin;scrollbar-color:#c98bff rgba(255,255,255,.08);}
+  #shopList *{touch-action:pan-y;}
+  #shopList::-webkit-scrollbar{width:9px;}
+  #shopList::-webkit-scrollbar-track{background:rgba(255,255,255,.06);border-radius:99px;margin:4px 2px;}
+  #shopList::-webkit-scrollbar-thumb{border-radius:99px;border:2px solid transparent;background-clip:padding-box;
+     background-image:linear-gradient(180deg,#ff9ad5,#c98bff 55%,#8257ff);}
+  .mrow{display:flex;align-items:center;gap:9px;text-align:left;
+     background:linear-gradient(160deg,#2a1a52,#1b1138);border:2px solid #402c78;
+     border-radius:14px;padding:8px 10px;}
+  .mrow .mic{font-size:24px;line-height:1;flex:0 0 auto;}
+  .mrow .mmid{flex:1 1 auto;min-width:0;}
+  .mrow .mn{font-size:14px;font-weight:900;color:#fff;}
+  .mrow .md{font-size:11px;color:#a294cc;line-height:1.5;margin-top:2px;}
+  .mrow .mpip{display:flex;gap:3px;margin-top:4px;}
+  .mrow .mpip i{width:14px;height:5px;border-radius:99px;background:#3b2c68;}
+  .mrow .mpip i.on{background:linear-gradient(90deg,#ffd84f,#ff9ad5);}
+  .mbuy{flex:0 0 auto;border:0;border-radius:12px;padding:8px 10px;cursor:pointer;
+     font-family:inherit;font-weight:900;font-size:12px;color:#2a1250;
+     background:linear-gradient(180deg,#ffe58f,#ffb43f);box-shadow:0 3px 0 #c07a12;}
+  .mbuy:active{transform:translateY(2px);box-shadow:0 1px 0 #c07a12;}
+  .mbuy.cant{background:#3b2c68;color:#6d5fa0;box-shadow:0 3px 0 #2a1f4d;}
+  .mbuy.maxed{background:linear-gradient(180deg,#9ef7c0,#4fd0a0);color:#0d3a2a;box-shadow:0 3px 0 #2a8a68;}
   #diag{font-size:10px;color:#5f5388;line-height:1.6;text-align:center;max-width:330px;
      word-break:break-all;pointer-events:auto;}
   #diag b{color:#ff8fae}
@@ -185,6 +218,7 @@
       <div id="galaxyWrap"><div id="galaxyInner"></div></div>
       <button class="btn" id="btnPlay">開始遊戲</button>
       <div class="row">
+        <button class="btn alt" id="btnShop">🍬 糖果屋 <span id="coinTag">0</span></button>
         <button class="btn small hide" id="btnReset">從第 1 關重來</button>
       </div>
       <div id="diag"></div>
@@ -201,8 +235,18 @@
       </div>
     </div>
 
+    <!-- v0.9.17：局外成長商店。用糖果幣買永久強化，效果套用到之後每一局的起始狀態。 -->
+    <div id="shop" class="panel hide">
+      <h1>糖果屋</h1>
+      <div id="shopCoins">🍬 0 糖果幣</div>
+      <div id="shopHint">永久強化，每一局開始就生效。打不過的關卡，可以先回頭刷幣變強再挑戰。</div>
+      <div id="shopList"></div>
+      <button class="btn" id="btnShopBack">◀ 回主畫面</button>
+    </div>
+
     <div id="over" class="panel hide">
       <h1 id="overTitle">GAME OVER</h1>
+      <div id="overSub"></div>
       <img id="shot" alt="戰報">
       <div class="row">
         <button class="btn hide" id="btnNext">下一關 ▶</button>
@@ -228,7 +272,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.14';          // 每次交付都會變，手機上可在主畫面右下角確認
+const BUILD='v0.9.17';          // 每次交付都會變，手機上可在主畫面右下角確認
 //====================== 診斷（真機問題回報用）======================
 // 手機上沒有 console 可以看，所以把致命錯誤與輸入事件計數直接顯示在畫面上。
 const DIAG={touch:0,tmove:0,tend:0,pointer:0,pmove:0,mouse:0,err:'',warn:''};
@@ -346,7 +390,14 @@ const SFX=(()=>{
   //---------------- 背景音樂：走 lookahead 排程，不用 setTimeout 對拍 ----------------
   // v0.9.8：改成兩套完全不同的主題（不是同一旋律變快變亮而已），
   // 由 musicIntensity() 切換——平常是「可愛版」，遇到 Boss 立刻換成「緊張版」。
-  const NOTE=n=>440*Math.pow(2,(n-69)/12);     // MIDI → Hz
+  // v0.9.15：每一關要聽起來不一樣。做法不是真的作100首曲子（不切實際、維護成本
+  // 也太高），而是在同一套「和弦進行＋琶音引擎」上疊兩層變化：①移調（M.keyOffset，
+  // 靠 NOTE() 這個唯一的 MIDI→Hz 轉換點統一加總，不用改每個呼叫點）②換一套琶音
+  // 節奏型（M.arp，從 ARP_VARIANTS 選一套）。兩層乘起來，前 60 關（12種調 × 5種
+  // 節奏型的最小公倍數）每關的組合都不重複，60 關之後才會開始循環——不是「每關
+  // 都獨一無二」的完美謊言，是誠實地在同一套引擎上做出「聽起來像換了一首歌」的
+  // 效果，跟音樂系統一直以來零外部音檔、純程式合成的設計精神一致。
+  const NOTE=n=>440*Math.pow(2,(n-69+(M.keyOffset||0))/12);     // MIDI → Hz，統一在這裡加上移調
   // 可愛主題：C大調亮色俏皮進行：C - G - Am - F（每小節一個和弦）
   const PROG_CUTE=[
     {root:36, tones:[60,64,67,72]},   // C
@@ -362,8 +413,19 @@ const SFX=(()=>{
     {root:33, tones:[57,60,64,69]},   // Am（i）
     {root:38, tones:[62,65,69,74]}    // Dm（iv）
   ];
-  const ARP=[0,1,2,3,2,1,3,2,0,1,2,3,1,2,3,1];   // 每小節 16 個十六分音符的和弦音索引
-  const M={on:false,step:0,next:0,timer:null,bpm:112,intensity:0,theme:'cute'};
+  // 每小節 16 個十六分音符的和弦音索引（0~3，對應 tones 陣列）。
+  // v0.9.15：原本只有一套，現在有 5 套不同節奏型，每關按 lvIdx%5 選一套。
+  const ARP_VARIANTS=[
+    [0,1,2,3,2,1,3,2,0,1,2,3,1,2,3,1],   // 原版
+    [0,2,1,3,2,0,3,1,0,2,1,3,2,1,3,0],
+    [0,1,0,2,3,2,1,3,0,1,0,2,3,1,2,3],
+    [3,2,1,0,1,2,3,0,3,2,1,0,2,3,0,1],   // 下行感
+    [0,3,1,2,0,3,2,1,0,3,1,2,1,0,2,3]
+  ];
+  // 移調表：用五度圈間隔（每步±7半音，取 mod12 落在 -5~6 半音內）排出12個調，
+  // 相鄰調聽起來自然相關（不是隨機半音亂跳），但排列順序又不是單純半音爬升。
+  const KEY_OFFSETS=(()=>{ const out=[]; for(let i=0;i<12;i++){ let v=(i*7)%12; if(v>6) v-=12; out.push(v); } return out; })();
+  const M={on:false,step:0,next:0,timer:null,bpm:112,intensity:0,theme:'cute',keyOffset:0,arp:null};
   function stepDur(){ return 60/M.bpm/4; }
   function playStep(i,t){
     const boss=M.theme==='boss';
@@ -377,7 +439,7 @@ const SFX=(()=>{
         osc({f0:NOTE(ch.root),f1:NOTE(ch.root)*0.985,dur:0.20,vol:0.24,type:'sawtooth',
              filter:'lowpass',ff0:1100,ff1:260,delay:dt0,dest:musBus});
       // 琶音：鋸齒波、更快更硬，每兩拍疊一次高八度製造衝突感
-      const nt=ch.tones[ARP[k]] + (k%8===0?12:0);
+      const nt=ch.tones[(M.arp||ARP_VARIANTS[0])[k]] + (k%8===0?12:0);
       osc({f0:NOTE(nt),dur:0.13,vol:0.085,type:'sawtooth',
            filter:'lowpass',ff0:3200,ff1:900,q:5,
            pan:(k%4-1.5)*0.24,delay:dt0,dest:musBus});
@@ -398,7 +460,7 @@ const SFX=(()=>{
       osc({f0:NOTE(ch.root),f1:NOTE(ch.root)*0.995,dur:0.30,vol:0.18,type:'triangle',
            filter:'lowpass',ff0:900,ff1:340,delay:dt0,dest:musBus});
     // 琶音：三角波，比原本的方波更柔更甜
-    const nt=ch.tones[ARP[k]];
+    const nt=ch.tones[(M.arp||ARP_VARIANTS[0])[k]];
     osc({f0:NOTE(nt),dur:0.14,vol:0.058,type:'triangle',
          filter:'lowpass',ff0:2000,ff1:750,q:2.4,
          pan:(k%4-1.5)*0.28,delay:dt0,dest:musBus});
@@ -435,10 +497,21 @@ const SFX=(()=>{
       unlock(); if(!ac)return;
       M.on=true; M.step=0; M.next=ac.currentTime+0.1; M.intensity=0; M.theme='cute';
       M.bpm=112;
+      // v0.9.15：每次啟動音樂先重置回預設調（C大調、原版琶音）——選單音樂沒有
+      // 「關卡」概念，靠這行確保選單一律是熟悉的原版主題曲，不會殘留上一關的移調。
+      // 真正要玩關卡時，start() 會緊接著呼叫 musicSetLevel() 蓋成該關卡專屬的調。
+      M.keyOffset=0; M.arp=null;
       musBus.gain.cancelScheduledValues(ac.currentTime);
       musBus.gain.setValueAtTime(0.0001,ac.currentTime);
       if(!muted) musBus.gain.setTargetAtTime(1,ac.currentTime,0.9);   // 慢慢淡入
       clearInterval(M.timer); M.timer=setInterval(pump,25);
+    },
+    // v0.9.15：每一關配一個專屬的（調性,琶音節奏型）組合，讓100關不會聽起來
+    // 全部都是同一首歌——lvIdx 直接決定組合，同一關每次進去都聽到一樣的版本
+    // （不是隨機），12種調 × 5種節奏型要到第61關才會開始重複第1關的組合。
+    musicSetLevel(lvIdx){
+      const i=((lvIdx%12)+12)%12, j=((lvIdx%ARP_VARIANTS.length)+ARP_VARIANTS.length)%ARP_VARIANTS.length;
+      M.keyOffset=KEY_OFFSETS[i]; M.arp=ARP_VARIANTS[j];
     },
     musicStop(fade){
       if(!ac||!M.on)return;
@@ -827,18 +900,42 @@ function newGame(){
      iframe:0,dashT:0,dashCD:0,dashDX:1,dashDY:0,
      lv:1,xp:0,xpNext:5,flash:0,
      atkSpd:1,dmg:1,crit:.05,pickup:110,dashCDmax:3.0,
+     atkRange:ATK_RANGE_BASE,   // v0.9.15：攻擊鎖定範圍，每幀在 update() 裡依 rangeUp 重算
      // 升級卡層數
      sticky:0,chain:0,mine:0,freeze:0,shield:0,frenzy:0,split:0,
-     rage:0,panic:0,magnet:0,greed:0,heart:0,cd:0,regen:0,
+     rage:0,panic:0,magnet:0,greed:0,heart:0,cd:0,regen:0,rangeUp:0,
      // 對應的執行期狀態
      regenT:0,shieldN:0,shieldT:0,frenzyKills:0,frenzyT:0,panicT:0,rainbowT:0,chestDmgT:0,
      mvx:0,mvy:0,moving:0,onGoo:0, nukeHeld:false,
-     wep:{bubble:1,graffiti:0,yoyo:0}, evo:{}},
+     // v0.9.16：後期關卡給一個比較強的起始裝備（L.startWep）。
+     // 原本每一關都是 {bubble:1}，但敵人從第1關到第100關強度成長了十幾倍，
+     // 玩家的起跑點卻一動也沒動——實測第50關以後笨bot連一次升級都來不及就死了，
+     // 陷入「打不動→沒經驗→更打不動」的死亡螺旋。第1~10關維持原本的 {bubble:1}
+     // 完全不動（那是已經調過、驗過的基準），只有第11關之後才給起始裝備。
+     wep:Object.assign({bubble:1,graffiti:0,yoyo:0}, L.startWep||{}), evo:{}},
   E:[], B:[], EB:[], PT:[], GEM:[], GOO:[], TXT:[], FW:[], fw:false, fwT:0,
   spawnAcc:0, waveIdx:0, boss:null, bossDone:[false,false,false], chests:0,
   kills:0, gooArea:0, paused:false,
+  revives:metaLv('revive'),        // v0.9.17：重生蠟燭，每關限用
   best:{dmg:0}
  };
+}
+// v0.9.17：把玩家在商店買的永久強化套用到這一局的起始狀態。
+// 刻意做成獨立函式而不是塞進 newGame() 的物件字面量裡——這樣「關卡本身給的
+// 起始值」跟「玩家自己累積的強化」在程式碼上是分開的兩層，之後要調整任何一邊
+// 都不會不小心動到另一邊。兩者是相加關係，不互相取代。
+function applyMeta(G){
+  const P=G.P;
+  const h=metaLv('hearts');
+  if(h){ P.maxHearts+=h; P.hearts+=h; }
+  P.dmg     *= 1 + metaLv('dmg')*0.10;
+  P.atkSpd  *= 1 + metaLv('aspd')*0.08;
+  P.pickup  += metaLv('pickup')*45;
+  P.dashCDmax = Math.max(1.0, P.dashCDmax - metaLv('dash')*0.35);
+  P.metaRange = metaLv('range')*90;         // 在 update() 裡加進 P.atkRange
+  P.metaXP    = 1 + metaLv('xp')*0.12;      // 在 killEnemy() 裡乘進晶核經驗
+  const w=metaLv('wep');
+  if(w) P.wep.bubble=Math.min(5,P.wep.bubble+w);
 }
 
 //====================== 果凍地形（核心差異化）======================
@@ -946,11 +1043,19 @@ function spawnBoss(cfg){
 }
 
 //====================== 武器 ======================
+// v0.9.15：攻擊鎖定範圍——原本三把武器各自的射程（760/520/900）都遠比手機
+// 螢幕的可視範圍大（螢幕對角線通常才 400~500px 左右），導致敵人常常「畫面外
+// 就已經被鎖定射死」，玩家完全沒看到敵人出現就沒了。改成一開始統一先鎖在一個
+// 比較窄的 P.atkRange（跟螢幕可視範圍差不多大小），每把武器實際生效的射程＝
+// min(武器自己的射程, P.atkRange)——武器原本的射程數字還在，只是變成「上限」，
+// 真正能打多遠交給下面新增的「望遠糖鏡」升級卡逐步撐開。溜溜球(900)射程最長，
+// 就算把望遠糖鏡疊滿也還沒完全打開，維持它「長射程專武」的定位不被這次改動蓋掉。
+const ATK_RANGE_BASE=550, ATK_RANGE_STEP=140;
 const WEAPONS={
   bubble:{name:'泡泡加壓水槍',ic:'💧',hue:190,
     desc:l=>`高射速直線彈 · 傷害 ${20+l*13}`,
     fire(P,l){
-      const tg=nearest(P.x,P.y,760); if(!tg)return;
+      const tg=nearest(P.x,P.y,Math.min(760,P.atkRange)); if(!tg)return;
       const a=Math.atan2(tg.y-P.y,tg.x-P.x)+rnd(-.05,.05);
       const d=(20+l*13)*P.dmgEff;
       shoot(P.x,P.y,a,600,d,7,190,{pierce:l>=3?1:0});
@@ -960,7 +1065,7 @@ const WEAPONS={
   graffiti:{name:'七彩塗鴉噴槍',ic:'🎨',hue:300,
     desc:l=>`扇形散彈 · ${2+l} 發 · 命中留果凍`,
     fire(P,l){
-      const tg=nearest(P.x,P.y,520); if(!tg)return;
+      const tg=nearest(P.x,P.y,Math.min(520,P.atkRange)); if(!tg)return;
       const base=Math.atan2(tg.y-P.y,tg.x-P.x), n=2+l;
       const h0=(G.t*46)%360;                       // 彩虹隨時間緩慢輪轉，不是純亂數
       for(let i=0;i<n;i++){
@@ -971,7 +1076,7 @@ const WEAPONS={
   yoyo:{name:'迴旋發光溜溜球',ic:'🪀',hue:55,
     desc:l=>`環繞拋射 · 貫穿全部敵人`,
     fire(P,l){
-      const tg=nearest(P.x,P.y,900);
+      const tg=nearest(P.x,P.y,Math.min(900,P.atkRange));
       const a=tg?Math.atan2(tg.y-P.y,tg.x-P.x):rnd(0,6.28);
       for(let i=0;i<(l>=4?2:1);i++)
         shoot(P.x,P.y,a+i*3.14,430,(18+l*15)*P.dmgEff,11,55,{pierce:99,boomerang:true,life:1.5});
@@ -1084,7 +1189,11 @@ function killEnemy(e){
   G.E.splice(i,1); G.kills++;
   burst(e.x,e.y,e.boss?60:9,e.hue,e.boss?2.4:1);
   addGoo(e.x,e.y,e.boss?70:e.r*1.5,e.hue);
-  const gxp=(e.boss?4:e.xp)+(P.greed|0);
+  // v0.9.16：後期關卡的晶核給更多經驗（L.xpMul）。原因是玩家每一關都從 Lv.1
+  // 重新開始，但敵人強度一路上修——如果經驗給的量不變，後期關卡玩家還沒升到
+  // 夠強的 build 就已經被淹死了（實測：第50關笨bot 7秒陣亡、只升到 Lv.1）。
+  // 讓後期關卡的升級速度變快，玩家才有機會在關卡內把戰力拉到跟得上敵人的程度。
+  const gxp=Math.round(((e.boss?4:e.xp)+(P.greed|0)) * (CUR().xpMul||1) * (P.metaXP||1));
   for(let k=0;k<(e.boss?18:1);k++)
     G.GEM.push({x:e.x+rnd(-14,14),y:e.y+rnd(-14,14),vx:rnd(-70,70),vy:rnd(-70,70),
                 xp:gxp,hue:e.hue,r:5,wob:rnd(0,6.28)});
@@ -1152,7 +1261,24 @@ function hurtPlayer(){
   shake(8); hitstop(.07); SFX.hurt();
   burst(P.x,P.y,20,350,1.5);
   pop(P.x,P.y-30,'-♥','#ff5b7f',24);
-  if(P.hearts<=0){ P.hearts=0; endGame(false); return true; }
+  if(P.hearts<=0){
+    P.hearts=0;
+    // v0.9.17：重生蠟燭（永久強化）——愛心歸零時原地復活，每關限用買到的次數。
+    // 這是局外成長最直接的「跨過打不過的關卡」手段：玩家卡關時，可以選擇去
+    // 刷幣買復活，而不是只能一直撞牆。復活給滿血與較長的無敵時間，避免復活
+    // 完馬上又被同一波彈幕打死（那樣等於白買）。
+    if(G.revives>0){
+      G.revives--;
+      P.hearts=P.maxHearts; P.iframe=3.2; G.hurt=1;
+      // 清掉場上所有敵彈，給玩家喘息的空間
+      const n=G.EB.length; G.EB.length=0;
+      for(let i=0;i<3;i++) G.SHOCK.push({x:P.x,y:P.y,r:10+i*26,spd:520-i*80,life:0.75,max:0.75,hue:[45,330,190][i]});
+      burst(P.x,P.y,70,45,2.4); shake(16); hitstop(.18);
+      toast('🕯️ 重生！剩餘 '+G.revives+' 次','#ffd84f'); SFX.evo();
+      return false;
+    }
+    endGame(false); return true;
+  }
   return false;
 }
 
@@ -1223,7 +1349,12 @@ const UPGRADES=[
   {id:'regen',ic:'🍬',n:'軟糖再生',max:2,
    d:'每 40 秒自動回復一顆愛心',
    d2:'改為每 25 秒回復一顆',
-   f:P=>P.regen++}
+   f:P=>P.regen++},
+
+  {id:'rangeUp',ic:'🔭',n:'望遠糖鏡',max:2,
+   d:'攻擊自動鎖定範圍擴大一階，能看清楚敵人才打得到',
+   d2:'再擴大一階，射程接近武器原本的極限',
+   f:P=>P.rangeUp++}
 ];
 function rollCards(){
   const P=G.P, pool=[];
@@ -1245,9 +1376,29 @@ function rollCards(){
   return out;
 }
 const cardsEl=document.getElementById('cards');
+// v0.9.16 修正：升級卡全部拿滿之後 rollCards() 會回傳空陣列，原本的程式碼還是
+// 照樣把 G.paused 設成 true、把卡片視窗打開，但視窗裡一張卡都沒有 → 玩家永遠
+// 點不到任何東西 → G.paused 永遠回不去 false → 整個遊戲永久凍結，只能強制關掉
+// App，整局進度全部作廢。實測重現過：把所有升級疊滿後呼叫 gainXP(999)，
+// 「卡片數 0 / 視窗開著 / G.paused=true / 2秒後 G.t 仍然是 0（完全停止）」。
+// 有兩個獨立的觸發點都會走到這裡（gainXP() 的升級、以及中期 Boss 死亡送的獎勵卡），
+// 所以防呆做在 showCards() 這個共同入口，兩條路徑一次修掉。
+// 補償設計：已經無卡可選代表玩家已經全滿，這時候把欠的卡轉成愛心（沒滿才補）
+// 與晶核，讓「升級」這件事不會變成完全沒有回饋。
 function showCards(){
-  G.paused=true;   // btnPause/btnNuke 的顯示都跟著 G.paused 走（見 drawHUD()），這裡不用另外管
   const list=rollCards();
+  if(!list.length){
+    // 卡池已空：把還欠的卡清掉、關閉視窗、恢復遊戲，絕對不能停在暫停狀態
+    const owed=Math.max(1,G.pendingCards|0);
+    G.pendingCards=0;
+    cardsEl.classList.add('hide');
+    G.paused=false;
+    const P=G.P;
+    if(P.hearts<P.maxHearts){ P.hearts++; toast('全能力已滿 → 回復愛心！','#ff7aa2'); SFX.heal(); }
+    else { gemBurst(P.x,P.y,12*owed); toast('全能力已滿 → 晶核大放送！','#ffd84f'); SFX.pickup(); }
+    return;
+  }
+  G.paused=true;   // btnPause/btnNuke 的顯示都跟著 G.paused 走（見 drawHUD()），這裡不用另外管
   cardsEl.innerHTML='<div class="lvtitle">LV.'+G.P.lv+' 升級！選一張</div>';
   for(const u of list){
     const el=document.createElement('div');
@@ -1362,19 +1513,93 @@ const TIER_COLOR={'新手':'#7ef7c0','上手':'#8fe8ff','熟練':'#ffd23f','挑�
 let LV_IDX=0;                                  // 目前選的關卡
 const CUR=()=>LEVELS[LV_IDX];
 
-// 進度：能存就存（打包成 App 後可換成 Capacitor Preferences），存不了就只留在這一輪
+//====================== 存檔與局外成長（v0.9.17）======================
+// v0.9.16 之前，存檔裡「只有一個整數」（打到第幾關）。這代表玩家死掉之後
+// 什麼都沒得到，下一次重玩跟上一次一模一樣——這正是這款遊戲最大的結構性
+// 問題：第 10 關之後的關卡因為玩家戰力上限固定（每關都從 Lv.1 重來）而
+// 實質上打不過，難關變成一堵完全的牆，玩家不是「再試一次」而是直接刪遊戲。
+//
+// 這個版本把存檔擴充成 JSON，並加入「糖果幣 + 永久強化」的局外成長系統。
+// 這一個系統同時解三個問題：
+//   ① 難度：玩家可以靠累積永久強化跨過打不過的關卡（牆 → 坡）
+//   ② 留存：每一場失敗都有收穫，roguelite 的核心迴圈才成立
+//   ③ 商業：免費試玩累積的進度就是付費解鎖時「損失趨避」的著力點
+//
 // ⚠ 存檔 key 一定要帶版本。舊的 5 關版用的是 'gooblaster_progress'，如果沿用同一個 key，
-//   舊存檔的「已通關到第 5 關」會被新的 10 關版直接讀進來 → 一開始就跳到第 5 關，
-//   看起來就像「關卡亂跳、不照順序」。
-const PROG_KEY='gooblaster_progress_v2';
+//   舊存檔的「已通關到第 5 關」會被新版直接讀進來 → 一開始就跳到第 5 關。
+// 這次 key 從 _v2 升到 _v3（格式從「純數字字串」變成 JSON），並且會自動把
+// 舊的 _v2 存檔遷移過來（保留破關進度，糖果幣從 0 開始），不讓老玩家進度歸零。
+const PROG_KEY='gooblaster_save_v3';
+const OLD_PROG_KEY='gooblaster_progress_v2';
+
+// 永久強化項目。cost(n) 是「從第 n 級升到第 n+1 級」要花多少糖果幣。
+// 設計原則：每一項的第 1 級都很便宜（讓玩家第一次進商店就買得起、立刻有正回饋），
+// 之後逐級變貴（給長期目標）。效果全部是「起始狀態」的加成，不影響關卡內的
+// 升級卡系統，兩者是相加而不是互相取代。
+const META_UPGRADES=[
+  {id:'hearts', ic:'💖', n:'糖心護體',  max:2, cost:n=>[60,220][n],
+   d:n=>'起始愛心 +'+(n+1)+'（'+(3+n+1)+' 顆）'},
+  {id:'dmg',    ic:'⚔️', n:'糖霜利刃',  max:5, cost:n=>[40,90,180,320,520][n],
+   d:n=>'起始傷害 +'+((n+1)*10)+'%'},
+  {id:'aspd',   ic:'⚡', n:'急速攪拌',  max:5, cost:n=>[40,90,180,320,520][n],
+   d:n=>'起始攻速 +'+((n+1)*8)+'%'},
+  {id:'wep',    ic:'🔫', n:'愛用武器',  max:3, cost:n=>[120,300,650][n],
+   d:n=>'起始主武器等級 +'+(n+1)},
+  {id:'range',  ic:'🔭', n:'遠視糖鏡',  max:3, cost:n=>[70,160,340][n],
+   d:n=>'起始攻擊範圍 +'+((n+1)*90)},
+  {id:'xp',     ic:'💠', n:'晶核親和',  max:4, cost:n=>[50,120,260,480][n],
+   d:n=>'經驗獲得 +'+((n+1)*12)+'%'},
+  {id:'pickup', ic:'🧲', n:'吸引磁鐵',  max:3, cost:n=>[45,110,240][n],
+   d:n=>'晶核吸取範圍 +'+((n+1)*45)},
+  {id:'dash',   ic:'🌀', n:'翻滾大師',  max:3, cost:n=>[55,130,280][n],
+   d:n=>'加速冷卻 -'+((n+1)*0.35).toFixed(2)+' 秒'},
+  {id:'revive', ic:'🕯️', n:'重生蠟燭',  max:2, cost:n=>[400,1200][n],
+   d:n=>'陣亡時原地復活 '+(n+1)+' 次（每關限用）'},
+  {id:'coin',   ic:'💰', n:'糖幣獵人',  max:4, cost:n=>[80,180,380,700][n],
+   d:n=>'每局獲得的糖果幣 +'+((n+1)*15)+'%'}
+];
+
 let PROGRESS=1;
-try{
-  const v=localStorage.getItem(PROG_KEY);
-  if(v) PROGRESS=+v||1;
-  localStorage.removeItem('gooblaster_progress');   // 清掉舊版殘留
-}catch(e){}
+let COINS=0;
+let META={};                    // {升級id: 已購買等級}
+function metaLv(id){ return META[id]|0; }
+
+function loadSave(){
+  try{
+    const raw=localStorage.getItem(PROG_KEY);
+    if(raw){
+      const o=JSON.parse(raw);
+      PROGRESS=+o.progress||1; COINS=Math.max(0,+o.coins||0); META=o.meta||{};
+    }else{
+      // 從舊版（純數字）存檔遷移：保留破關進度，糖果幣從 0 開始
+      const old=localStorage.getItem(OLD_PROG_KEY);
+      if(old){ PROGRESS=+old||1; COINS=0; META={}; saveGame(); }
+    }
+    localStorage.removeItem('gooblaster_progress');   // 清掉更早的殘留
+  }catch(e){}
+}
 function clampProgress(){ PROGRESS=Math.max(1,Math.min(Math.round(PROGRESS)||1,LEVELS.length+1)); }
-function saveProgress(){ clampProgress(); try{ localStorage.setItem(PROG_KEY,String(PROGRESS)); }catch(e){} }
+function saveGame(){
+  clampProgress();
+  try{ localStorage.setItem(PROG_KEY, JSON.stringify({progress:PROGRESS, coins:Math.round(COINS), meta:META})); }catch(e){}
+}
+const saveProgress=saveGame;    // 舊呼叫點沿用同一個名字，不用到處改
+
+// 一局結束能拿多少糖果幣。刻意設計成「死掉也給」——roguelite 的留存迴圈就是
+// 每一次失敗都要有進度，不然難關就變成一堵完全的牆。通關有額外獎勵，關卡越
+// 後面基礎值越高（否則玩家會發現刷第 1 關最有效率，那會毀掉整個進程設計）。
+function runCoins(win, lvIdx, kills, tSurvived, dur){
+  // ⚠ 擊殺數對糖果幣一定要「次線性」（開 0.62 次方），不能線性。第一版用
+  // kills*0.55 線性計算，實測第50關通關一場就給 7376 幣——佔買滿全部強化
+  // 總成本（8930）的 83%，等於玩家一旦打得動後期關卡，商店就瞬間全滿、
+  // 整個進程設計直接崩掉。後期關卡的擊殺數本來就是前期的幾十倍，線性換算
+  // 必然爆炸。再加一個每局上限 520，確保單場收益不會失控。
+  const lvBonus = 1 + lvIdx*0.025;                   // 關卡越後面給越多，但幅度要小
+  const base = Math.pow(Math.max(0,kills),0.62)*2.4 + (tSurvived/Math.max(1,dur))*55;
+  const winMul = win ? 1.55 : 1.0;                   // 通關有獎勵，但死掉也一定有收穫
+  const meta = 1 + metaLv('coin')*0.15;              // 糖幣獵人
+  return Math.max(3, Math.min(520, Math.round(base*lvBonus*winMul*meta)));
+}
 
 // 依關卡縮放出波次表：時間軸按關卡長度壓縮，敵種只留該關解鎖的
 function buildWaves(L){
@@ -1460,10 +1685,36 @@ function buildBosses(L){
 // 再快也只是變成「看不到、躲不掉」，不是有意義的難度；真正的難度加壓
 // 交給 hp／bossHp（打更久、Boss 更肉）跟 rate／dur（出怪更密、關卡更長）、
 // atkSlow（Boss攻擊冷卻更短）。
+// ── v0.9.16 重做難度曲線 ────────────────────────────────────────────────
+// v0.9.14 的公式是 peakMul(c)=1+c*0.30+c*c*0.028，第100關的倍率會衝到 5.97，
+// 換算成「敵人壓力」（血量倍率 × 出怪率）是第1關的 570 倍。但玩家的戰力成長
+// 上限（從 Lv.1 練到滿等滿裝）大概只有 20~30 倍，而且每一關都從 Lv.1 重來——
+// 兩邊差了一個數量級，所以第10關之後實質上打不過（實測：滿等滿裝在第100關
+// 只撐 9 秒、笨bot在第50關只撐 7 秒且升不到 Lv.2）。
+// 這次的修正是三管齊下，缺一不可：
+//   ① 敵人成長大幅放緩：peakMul 改成線性 1+c*0.17（第100關倍率 2.53，壓力約 100 倍）
+//   ② 起始裝備隨章節提升（startWep）：後期關卡不再從一把 Lv.1 水槍開始
+//   ③ 經驗值倍率隨章節提升（xpMul）：關卡內的升級速度跟得上敵人的成長
+// 第 1~10 關完全不受影響（這個函式只生成第 11 關之後的關卡）。
 (function genExtraLevels(){
   const CH_NAMES=['深淵','噩夢','煉獄','虛無','修羅','冥界','天啟','神魔','終焉'];
   const base=LEVELS[9];              // 第10關（chapter 0 頂點）當基準
-  const peakMul=c=>1+c*0.30+c*c*0.028; // 章節 c 結尾（大Boss關）的倍率頂點
+  const peakMul=c=>1+c*0.17;         // 章節 c 結尾（大Boss關）的倍率頂點（v0.9.16 放緩）
+  // 各章節的起始武器配置：越後面的章節，開局就有越完整的武器組合。
+  // 這是在「還沒做局外成長系統」之前的過渡方案——等永久強化商店做出來之後，
+  // 這張表應該改成由玩家自己買的永久強化來決定，而不是寫死在關卡設定裡。
+  const START_WEP=[
+    null,                                    // c=0：第1~10關，維持原本的 {bubble:1}
+    {bubble:2},                              // c=1：第11~20關
+    {bubble:2,graffiti:1},                   // c=2
+    {bubble:3,graffiti:1},                   // c=3
+    {bubble:3,graffiti:2,yoyo:1},            // c=4
+    {bubble:3,graffiti:2,yoyo:2},            // c=5
+    {bubble:4,graffiti:3,yoyo:2},            // c=6
+    {bubble:4,graffiti:3,yoyo:3},            // c=7
+    {bubble:4,graffiti:4,yoyo:3},            // c=8
+    {bubble:5,graffiti:4,yoyo:4}             // c=9：第91~100關
+  ];
   for(let c=1;c<=9;c++){
     const pk=peakMul(c), st=peakMul(c-1)*0.93;   // st：本章開頭＝上一章頂點回落7%
     const bossName=BOSS_CHAPTER[c].name;
@@ -1484,9 +1735,21 @@ function buildBosses(L){
         nboss: 3,
         types: ['slime','bunny','drone','bomber'],
         bspd: Math.min(2.3, +(base.bspd*mul).toFixed(3)),
-        atkSlow: Math.max(0.35, +(base.atkSlow/mul).toFixed(3)),
+        // v0.9.16：atkSlow 乘在「每一隻普通敵人」的開火冷卻上（見約 1968 行
+        // e.shootCD=rnd(cdMin,cdMax)*CUR().atkSlow），不是只影響 Boss。
+        // v0.9.14 用 base.atkSlow/mul 讓它一路掉到下限 0.35，等於每隻怪的開火
+        // 速度變成第10關的 2.3 倍——再乘上敵人數量也翻倍，彈幕密度是「相乘」的，
+        // 這才是後期關卡真正的殺手（實測滿等滿裝在第100關也只撐 16.6%）。
+        // 改成隨章節「微幅」加快即可，密度的成長交給敵人數量與血量去做。
+        atkSlow: +Math.max(0.62, base.atkSlow-c*0.02).toFixed(3),
         chest: Math.min(32, 17+Math.floor((lvlNum-10)/3)),
-        maxE: Math.min(260, 130+Math.floor((lvlNum-10)*1.45)),
+        // v0.9.16：上限從 260 砍到 150。260 隻怪在 390px 寬的手機螢幕上本來就
+        // 擠成一團看不清楚，而且同時是 O(n²) 敵人分離迴圈的效能引爆點
+        // （實測第100關塞滿 260 隻時，中階手機只剩 12fps）。砍到 150 同時
+        // 解決「彈幕太密打不過」與「後期會掉幀」兩個問題。
+        maxE: Math.min(150, 130+Math.floor((lvlNum-10)*0.42)),
+        startWep: START_WEP[c],
+        xpMul: +(1+c*0.55).toFixed(2),   // 第11關起 1.55 倍，第100關 5.95 倍
         d: isBoss ? ('★ 第'+(c+1)+'章壓軸：超級大 Boss「'+bossName+'」坐鎮，血量與強度全面超越前一章。')
            : isOpener ? ('進入「'+CH_NAMES[c-1]+'」章節，難度較上一章末暫時回落，準備重新爬升。')
            : ('「'+CH_NAMES[c-1]+'」章節持續加壓，敵人血量與出怪密度持續上修。'),
@@ -1496,6 +1759,11 @@ function buildBosses(L){
     }
   }
 })();
+
+// ⚠ 一定要等 genExtraLevels() 跑完才能讀存檔：loadSave() 遷移舊存檔時會呼叫
+// saveGame() → clampProgress()，而 clampProgress() 是用 LEVELS.length 當上限。
+// 如果在關卡生成之前讀檔，LEVELS 還只有 10 筆，破關到第 50 關的玩家會被夾成 11。
+loadSave();
 
 function updateSpawn(dt){
   const L=CUR();
@@ -1588,7 +1856,7 @@ const CHEST_POOL=(()=>{
 function gemBurst(x,y,n){
   for(let i=0;i<n;i++){ const a=rnd(0,6.283),d=rnd(20,90);
     G.GEM.push({x:x+Math.cos(a)*d,y:y+Math.sin(a)*d,vx:Math.cos(a)*120,vy:Math.sin(a)*120,
-                xp:2+(G.P.greed|0),hue:45,r:5,wob:rnd(0,6.28)}); }
+                xp:Math.round((2+(G.P.greed|0))*(CUR().xpMul||1)*(G.P.metaXP||1)),hue:45,r:5,wob:rnd(0,6.28)}); }
 }
 function spawnChest(){
   const P=G.P;
@@ -1767,6 +2035,7 @@ function update(dt,rawdt){
   dt*=speedScale();                 // 遊戲節奏隨等級加快
   // 有效傷害＝基礎 × 果凍覆蓋加成 × 滿心怒氣 × 寶箱猛攻糖（暫時性，不是永久數值卡）
   P.dmgEff = P.dmg * gooBonus() * (P.rage&&P.hearts>=P.maxHearts ? 1.45 : 1) * (P.chestDmgT>0?1.4:1);
+  P.atkRange = ATK_RANGE_BASE + P.rangeUp*ATK_RANGE_STEP + (P.metaRange||0);   // v0.9.15 望遠糖鏡 + v0.9.17 永久強化「遠視糖鏡」
   if(P.chestDmgT>0) P.chestDmgT-=dt;
 
   //--- 玩家移動
@@ -2691,13 +2960,54 @@ function showMenu(){
   SEL_IDX=Math.min(PROGRESS-1,LEVELS.length-1);   // 每次回選單，預設選到目前最前線的關卡
   renderStage();
   overEl.classList.add('hide'); cardsEl.classList.add('hide');
+  document.getElementById('shop').classList.add('hide');
   menuEl.classList.remove('hide');
   document.getElementById('confirmBox').classList.add('hide');   // 保險：不要帶著上次沒關掉的確認彈窗回來
+  document.getElementById('coinTag').textContent=Math.round(COINS);
   SFX.unlock(); SFX.musicStart();   // v0.9.10：回選單改成播放首頁音樂（可愛版），不再是靜音
 }
+//====================== v0.9.17：糖果屋（永久強化商店）======================
+// 每一列顯示：圖示、名稱、「下一級會變成什麼」的描述、等級進度條、購買按鈕。
+// 描述刻意寫「買了之後會變成怎樣」而不是「現在是什麼」——玩家在商店裡想知道的
+// 是「我花這筆錢會得到什麼」，這也讓下一級的價值變得具體、比較容易產生購買動機。
+const shopEl=document.getElementById('shop');
+function renderShop(){
+  document.getElementById('shopCoins').textContent='🍬 '+Math.round(COINS)+' 糖果幣';
+  const list=document.getElementById('shopList');
+  list.innerHTML='';
+  for(const u of META_UPGRADES){
+    const lv=metaLv(u.id), maxed=lv>=u.max;
+    const price=maxed?0:u.cost(lv);
+    const can=!maxed && COINS>=price;
+    const row=document.createElement('div');
+    row.className='mrow';
+    let pips='';
+    for(let i=0;i<u.max;i++) pips+='<i class="'+(i<lv?'on':'')+'"></i>';
+    row.innerHTML='<div class="mic">'+u.ic+'</div>'+
+      '<div class="mmid"><div class="mn">'+u.n+'</div>'+
+      '<div class="md">'+(maxed?('已滿級 · '+u.d(u.max-1)):u.d(lv))+'</div>'+
+      '<div class="mpip">'+pips+'</div></div>';
+    const btn=document.createElement('button');
+    btn.className='mbuy'+(maxed?' maxed':(can?'':' cant'));
+    btn.textContent=maxed?'MAX':('🍬'+price);
+    if(can) btn.onclick=()=>{
+      COINS-=price; META[u.id]=lv+1; saveGame();
+      SFX.level(); renderShop();
+      document.getElementById('coinTag').textContent=Math.round(COINS);
+    };
+    row.appendChild(btn);
+    list.appendChild(row);
+  }
+}
+function showShop(){
+  menuEl.classList.add('hide'); overEl.classList.add('hide');
+  shopEl.classList.remove('hide');
+  renderShop();
+  SFX.unlock();
+}
 function start(){
-  G=newGame(); G.running=true;
-  SFX.unlock(); SFX.musicStart();
+  G=newGame(); applyMeta(G); G.running=true;   // v0.9.17：先套用商店買的永久強化再開始
+  SFX.unlock(); SFX.musicStart(); SFX.musicSetLevel(LV_IDX);   // v0.9.15：每關換一套調＋節奏型
   menuEl.classList.add('hide'); overEl.classList.add('hide'); cardsEl.classList.add('hide');
   document.getElementById('pauseOverlay').classList.add('hide');   // btnPause本身跟著G.running自動顯示，見drawHUD()
   lastT=performance.now();
@@ -2777,6 +3087,23 @@ function endGame(win){
     // 解鎖下一關
     if(G.lvIdx+2>PROGRESS){ PROGRESS=G.lvIdx+2; saveProgress(); }   // 只能往前推一關
   } else SFX.lose();
+  // v0.9.17：不管輸贏都結算糖果幣。「死掉也有收穫」是 roguelite 留存迴圈的核心——
+  // 沒有它，打不過的關卡就是一堵完全的牆，玩家不會「再試一次」而是直接刪遊戲。
+  const earned=runCoins(win, G.lvIdx, G.kills, G.t, G.winT);
+  COINS+=earned; saveGame();
+  // v0.9.17：近失回饋。研究賭場心理學的「近失效應」——拉霸出現兩個一樣的符號
+  // 在數學上跟全部不同一樣是輸，但感覺更接近贏，玩家更想再拉一次。這裡把
+  // 「你走到 87%、再撐 23 秒就過關」講出來，取代單純的 GAME OVER，讓失敗的
+  // 那一局也留下「差一點」的敘事，而不是「我就是打不過」。
+  const pct=Math.min(99,Math.round(G.t/G.winT*100));
+  const remain=Math.max(1,Math.ceil(G.winT-G.t));
+  let sub;
+  if(win) sub='通關！擊殺 '+G.kills+' 隻';
+  else if(pct>=60) sub='走到 '+pct+'%，再撐 '+remain+' 秒就過關了！';
+  else sub='走到 '+pct+'%，擊殺 '+G.kills+' 隻';
+  document.getElementById('overSub').innerHTML=
+    '<div class="nearmiss">'+sub+'</div>'+
+    '<div class="coingain">🍬 +'+earned+' 糖果幣　<span class="tot">（共 '+Math.round(COINS)+'）</span></div>';
   const hasNext = win && G.lvIdx+1<LEVELS.length;
   nextEl.classList.toggle('hide',!hasNext);
   overTitle.textContent = win?'CLEAR!':'GAME OVER';
@@ -2789,6 +3116,8 @@ function endGame(win){
 }
 
 document.getElementById('btnPlay').onclick=()=>{ LV_IDX=Math.min(SEL_IDX,LEVELS.length-1); start(); };
+document.getElementById('btnShop').onclick=showShop;
+document.getElementById('btnShopBack').onclick=showMenu;
 // v0.9.9：「從第 1 關重來」是不可逆的操作（會清掉破關進度），改成先跳二次確認彈窗，
 // 點「確定重來」才真的執行，點「取消」或誤觸都不會動到 PROGRESS。
 const confirmBoxEl=document.getElementById('confirmBox');
