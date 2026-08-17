@@ -56,13 +56,19 @@
   .overlayBox .ic{font-size:34px;line-height:1;margin-bottom:6px;}
   .overlayBox .msg{font-size:15px;font-weight:800;color:#fff;margin-bottom:6px;}
   .overlayBox .sub2{font-size:12px;color:#a99ad0;line-height:1.6;margin-bottom:16px;}
-  /* v0.9.10：遊戲中的暫停鍵，疊在 canvas 右上角、靜音鍵正上方 */
+  /* 遊戲中的暫停鍵，疊在 canvas 右上角、靜音鍵正上方。
+     v0.9.12：原本是「深色底+一圈細灰線」，使用者反應看起來不可愛，
+     改成跟其餘按鈕同一套「糖果色漸層 + 立體投影」語言（跟 .btn.alt 同色系），
+     圓形描白邊、按下去有 Q 彈的位移感，不再是一顆孤零零的灰框圈。 */
   #btnPause{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;
-     width:34px;height:34px;border-radius:50%;pointer-events:auto;cursor:pointer;
-     background:rgba(12,8,28,.55);border:1.5px solid rgba(180,160,230,.45);
-     color:#e4dcff;font-size:15px;display:flex;align-items:center;justify-content:center;
-     font-family:inherit;padding:0;z-index:4;}
-  #btnPause:active{transform:scale(.9);}
+     width:38px;height:38px;border-radius:50%;pointer-events:auto;cursor:pointer;
+     background:linear-gradient(180deg,#c9b3ff,#8257ff);
+     border:2.5px solid #fff3ff;color:#fff;font-size:15px;
+     display:flex;align-items:center;justify-content:center;
+     font-family:inherit;padding:0;z-index:4;
+     box-shadow:0 3px 0 #5a34c4,0 5px 12px rgba(130,87,255,.45);
+     transition:transform .07s;}
+  #btnPause:active{transform:translateY(2px) scale(.94);box-shadow:0 1px 0 #5a34c4;}
   /* v0.9.10：核彈按鈕，疊在左下角、加速鍵正上方；用發光+脈動強調「這是稀有道具」 */
   #btnNuke{position:absolute;left:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 122px);
      width:52px;height:52px;border-radius:50%;pointer-events:auto;cursor:pointer;
@@ -113,6 +119,15 @@
   .gnode .gic{font-size:16px;line-height:1;}
   @keyframes gpulse{0%,100%{box-shadow:0 0 8px 1px rgba(255,255,255,.55);}
      50%{box-shadow:0 0 18px 4px rgba(255,255,255,.85);}}
+  /* v0.9.14：大 Boss 關節點 —— 邊框加粗、圖示字級放大，跟一般數字關卡有明顯區別 */
+  .gnode.boss{border-color:rgba(255,255,255,.65);}
+  .gnode.boss .gic{font-size:22px;}
+  /* 第100關（全遊戲最終大魔王）：紅色脈動光暈，蓋掉原本 .cur 的白色光暈，
+     一眼看出「這關超恐怖」，跟前面99關的大Boss關再拉開一層視覺區隔 */
+  .gnode.mega{animation:gpulseMega 1.1s ease-in-out infinite;border-color:#ff3355;}
+  .gnode.mega .gic{font-size:26px;}
+  @keyframes gpulseMega{0%,100%{box-shadow:0 0 10px 2px rgba(255,40,70,.65);}
+     50%{box-shadow:0 0 26px 8px rgba(255,40,70,.95);}}
   #stageInfo{max-width:330px;background:linear-gradient(160deg,#2a1a52,#1b1138);
      border:2px solid #402c78;border-radius:16px;padding:13px 15px;text-align:left;}
   #stageInfo .st{font-size:11px;font-weight:900;letter-spacing:1px;}
@@ -213,7 +228,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.11';          // 每次交付都會變，手機上可在主畫面右下角確認
+const BUILD='v0.9.14';          // 每次交付都會變，手機上可在主畫面右下角確認
 //====================== 診斷（真機問題回報用）======================
 // 手機上沒有 console 可以看，所以把致命錯誤與輸入事件計數直接顯示在畫面上。
 const DIAG={touch:0,tmove:0,tend:0,pointer:0,pmove:0,mouse:0,err:'',warn:''};
@@ -538,6 +553,11 @@ const SFX=(()=>{
       nz({dur:R(.28,.42),vol:R(.075,.11),f0:R(1200,2800),f1:R(300,600),q:1.1,pan:p});
       osc({f0:R(600,1100),f1:R(140,240),dur:.22,vol:.035,type:'sine',pan:p});
     },
+    // v0.9.12：使用者反應過關時「除了煙火還需要有慶祝勝利的音效」——原本的
+    // win() 其實有在響（一段上行音階+低音墊），但太像普通的「完成提示音」，
+    // 聽感上不夠像慶祝。加大：上行音階跑完後疊一個大和弦、加一層像歡呼/彩帶
+    // 灑落感的噪音掃頻，最後補一個「登登登～」尾音，整體拉長變成有頭有尾的
+    // 小型勝利號角，而不只是一串上行音符。
     win(){
       if(!ok('w',1))return;
       [523.25,659.25,783.99,1046.5,1318.5,1568].forEach((f,i)=>{
@@ -545,6 +565,12 @@ const SFX=(()=>{
         osc({f0:f*1.5,dur:.36,vol:.034,type:'square',filter:'lowpass',ff0:3600,ff1:1400,delay:i*0.11});
       });
       osc({f0:130.81,dur:1.9,vol:.09,type:'sawtooth',atk:.1,filter:'lowpass',ff0:600,ff1:250,delay:.1});
+      // 歡呼／彩帶灑落感：寬頻噪音由高往低緩緩掃過，疊在音階跑完之後
+      nz({dur:1.1,vol:.075,f0:6800,f1:1400,q:.5,delay:.55});
+      nz({dur:.9, vol:.05, f0:5200,f1:2200,q:.6,delay:.78});
+      // 收尾大和弦（C大三和弦，比前面的單音階更飽滿，做「勝利定格」的感覺）
+      [523.25,659.25,783.99,1046.5].forEach((f,i)=>
+        osc({f0:f,dur:.85,vol:.095,type:'triangle',atk:.02,delay:1.28+i*0.02}));
     },
     lose(){
       if(!ok('lo',1))return;
@@ -564,6 +590,33 @@ const SFX=(()=>{
       if(!ok('lf',0.4))return;
       osc({f0:1400,f1:180,dur:.30,vol:.16,type:'sawtooth',filter:'lowpass',ff0:5200,ff1:600});
       nz({dur:.22,vol:.09,f0:4200,f1:900,q:1.0});
+    },
+    // v0.9.12：畫面上「⚠ BOSS即將出現」倒數視窗剛開始時響一次——兩聲上揚警報
+    // （像警笛「喔喔」兩響），跟 bossIn() 那顆低沉的「登場撞擊音」刻意做出區隔：
+    // 這顆是「快來了」的預警，bossIn() 是「已經來了」的衝擊，聽感上不會混淆。
+    bossWarn(){
+      if(!ok('bw',4))return;
+      [0,0.16].forEach(d=>{
+        osc({f0:520,f1:880,dur:.13,vol:.09,type:'square',filter:'lowpass',ff0:2600,ff1:1200,delay:d});
+        nz({dur:.09,vol:.03,f0:3000,f1:4400,q:1.2,delay:d});
+      });
+    },
+    // 倒數每跳一次整數秒的軟性「嗶」，故意做得比 bossWarn() 輕巧很多，
+    // 避免 5,4,3,2,1 連續五聲吵到蓋過音樂
+    bossWarnTick(){
+      if(!ok('bt',0.15))return;
+      osc({f0:900,dur:.06,vol:.045,type:'sine'});
+    },
+    // v0.9.12：核彈引爆專屬爆炸音——比原本借用的 bossDie() 更沉更大聲，
+    // 三層：深沉次低音衝擊 + 主要爆裂噪音 + 稍微延遲的「碎片飛濺」噪音尾巴，
+    // 聽起來是「一次性的大爆炸」而不是「Boss倒下的悶哼」。
+    nukeBlast(){
+      if(!ok('nb',0.3))return;
+      osc({f0:70,f1:24,dur:1.1,vol:.28,type:'sine',atk:.006});
+      osc({f0:180,f1:38,dur:.7, vol:.22,type:'sawtooth',filter:'lowpass',ff0:1800,ff1:150});
+      nz({dur:.55,vol:.20,f0:3400,f1:220,q:.55});
+      nz({dur:.9, vol:.10,f0:2200,f1:400,q:.5,delay:.14});
+      osc({f0:2000,f1:300,dur:.22,vol:.05,type:'triangle',delay:.02});
     }
   };
 })();
@@ -765,7 +818,11 @@ function newGame(){
   NUKE:null, nukeSpawned:false, nukeSpawnAt:rnd(L.dur*0.28,L.dur*0.55),
   t:0, running:true, over:false, win:false, hasMoved:false,
   cam:{x:0,y:0,shake:0,shAng:0,shPhase:0,zoom:1},
-  hitstop:0, slowmo:0, hurt:0, bossWarnT:-1, bossWarnName:'',
+  hitstop:0, slowmo:0, hurt:0, bossWarnT:-1, bossWarnName:'', _bwSec:99,
+  // v0.9.12：核彈爆炸的加強視覺——全螢幕閃光衰減值 + 世界座標的擴散衝擊波環
+  nukeFlash:0, SHOCK:[],
+  // v0.9.13：一次跨好幾級時，還欠玩家幾張升級卡沒選（見 gainXP()/applyCard() 修正）
+  pendingCards:0,
   P:{x:0,y:0,vx:0,vy:0,r:17,hearts:L.hearts,maxHearts:L.hearts,spd:260,
      iframe:0,dashT:0,dashCD:0,dashDX:1,dashDY:0,
      lv:1,xp:0,xpNext:5,flash:0,
@@ -800,7 +857,13 @@ function addGoo(x,y,r,hue){
 }
 function igniteGoo(x,y,rad,depth){
   if(depth>3)return;
-  for(const g of G.GOO){
+  // v0.9.13 修正：跟 damageArea() 同一類問題的邊角案例——這裡呼叫的 damageArea()
+  // 打死怪物時經過 killEnemy() 會呼叫 addGoo()，如果 G.GOO 這時候剛好滿了
+  // （GOO_MAX=64 顆果凍同時存在），addGoo() 會 shift() 掉最舊的一顆，一樣是
+  // 邊迭代邊刪同一個陣列。雖然要「果凍剛好疊到 64 顆」才會踩到，比較少見，
+  // 但既然是同一種模式就一起改成倒著跑的索引迴圈，不留這個地雷。
+  for(let i=G.GOO.length-1;i>=0;i--){
+    const g=G.GOO[i]; if(!g) continue;
     if(g.burn>0) continue;
     if(dist2(x,y,g.x,g.y) < (rad+g.r)**2){
       g.burn=.55;
@@ -982,8 +1045,16 @@ function shake(v,ang){
 }
 function hitstop(v){ G.hitstop=Math.max(G.hitstop,v); }
 
+// v0.9.13 修正：原本用 for(const e of G.E)，但 hurtEnemy() 打死怪物時會呼叫
+// killEnemy() 對 G.E 做 splice()，邊迭代邊刪除同一個陣列會讓「剛好排在被刪除
+// 那格後面」的敵人整個被跳過（陣列往前遞補一格，for...of 的內部游標會直接
+// 錯過它）。實測過：10 隻怪疊在一起，一次 AoE 打過去，只有 5 隻真的受傷/死亡，
+// 另外 5 隻完全沒事——影響到自爆怪的爆炸、進化版泡泡槍的果凍暴雨、連鎖引爆。
+// 改成從陣列尾端往前跑的索引迴圈：splice 只會影響「更前面」的索引，不會讓
+// 迴圈游標跳過任何一個還沒檢查的元素。
 function damageArea(x,y,r,dmg,doKb){
-  for(const e of G.E){
+  for(let i=G.E.length-1;i>=0;i--){
+    const e=G.E[i]; if(!e) continue;
     if(dist2(x,y,e.x,e.y)<(r+e.r)**2){
       hurtEnemy(e,dmg);
       if(doKb){ const a=Math.atan2(e.y-y,e.x-x); e.kb=.18; e.kbx=Math.cos(a)*380; e.kby=Math.sin(a)*380; }
@@ -1042,7 +1113,15 @@ function killEnemy(e){
     else{                                   // 中期 Boss：補一顆愛心 + 直接送一張卡（節奏喘息點）
       if(G.P.hearts<G.P.maxHearts) G.P.hearts++;
       toast('黃金超載寶箱！回復一顆愛心','#ffd84f');
-      setTimeout(()=>{ if(G&&G.running) showCards(); },420);
+      // v0.9.13：改走跟 gainXP() 一樣的 pendingCards 佇列，而不是直接呼叫
+      // showCards()——如果這時候玩家剛好也因為撿晶核同時跨等級、已經有卡片
+      // 視窗開著，直接呼叫會把正在選的那組蓋掉，害玩家漏選一張。排進佇列
+      // 就不會互相蓋掉，最多就是「多欠一張」，選完前面的自然會接著跳出來。
+      setTimeout(()=>{
+        if(!G||!G.running) return;
+        G.pendingCards=(G.pendingCards||0)+1;
+        if(cardsEl.classList.contains('hide')) showCards();
+      },420);
     }
   }
 }
@@ -1183,20 +1262,35 @@ function showCards(){
   }
   cardsEl.classList.remove('hide');
 }
+// v0.9.13 修正：原本選完一張卡就直接 G.paused=false 恢復遊戲，但 gainXP() 一次
+// 跨好幾級的時候（例如一口氣撿到很多晶核、或磁力吸過來一堆），會在同一幀內連續
+// 呼叫好幾次 showCards()，後面呼叫的每次都會整個蓋掉前一次的卡片內容——實測過：
+// gainXP(500) 從 Lv.1 衝到 Lv.10（跨9級），showCards() 真的被呼叫了9次，但畫面
+// 上永遠只看得到最後一次、只能選1張卡，前面8次的升級選擇整個消失，玩家完全
+// 沒感覺到自己其實錯過了8張卡。改成用 G.pendingCards 記錄「還欠幾張卡」，選完
+// 一張之後如果還有欠，馬上接著跳下一組選項，直到選滿為止才真的恢復遊戲。
 function applyCard(u){
   const P=G.P;
   if(u.evo){ P.evo[u.w]=true; toast(u.n+'！','#ffd84f'); SFX.evo(); }
   else if(u.w){ P.wep[u.w]=Math.min(5,P.wep[u.w]+1); SFX.level(); }
   else { u.f(P); SFX.level(); }
-  cardsEl.classList.add('hide'); G.paused=false;
+  if(G.pendingCards>0) G.pendingCards--;
+  if(G.pendingCards>0) showCards();               // 還欠卡：直接接著跳下一組，不恢復遊戲
+  else { cardsEl.classList.add('hide'); G.paused=false; }
 }
 function gainXP(n){
   const P=G.P; P.xp+=n;
+  let leveled=false;
   while(P.xp>=P.xpNext){
     P.xp-=P.xpNext; P.lv++;
     P.xpNext=Math.round(6+P.lv*5.5+P.lv*P.lv*0.5);   // 放慢升級速度（原本 3 分鐘會衝到 Lv.20+）
-    showCards();
+    G.pendingCards=(G.pendingCards||0)+1;
+    leveled=true;
   }
+  // gainXP() 常常在同一幀被連續呼叫很多次（一顆晶核一次），所以不能在 while 迴圈
+  // 裡面就直接開卡片視窗——只有「目前沒有卡片視窗開著」時才觸發一次，實際要選
+  // 幾張卡完全交給 G.pendingCards／applyCard() 那條鏈路自己跑完。
+  if(leveled && cardsEl.classList.contains('hide')) showCards();
 }
 
 //====================== 關卡與波次 ======================
@@ -1240,8 +1334,7 @@ const LEVELS=[
   d:'★ 無人機登場：會從遠處射擊。學會用加速鍵的無敵幀穿過子彈。'},
  {tier:'熟練', n:'彈幕糖果屋',   dur:140, hearts:3, rate:0.68, hp:0.80, espd:0.92,
   bossHp:0.68, nboss:2, types:['slime','bunny','drone'], bspd:0.88, atkSlow:1.22, chest:13, maxE:88,
-  superBoss:true,
-  d:'彈幕變密、關卡變長。這關開始要認真管理愛心。★ 超級大 Boss 壓軸登場，血量遠超一般 Boss。'},
+  d:'彈幕變密、關卡變長。這關開始要認真管理愛心。'},
  // 第四層：挑戰 —— 引入自爆怪
  {tier:'挑戰', n:'爆炸軟糖礦坑', dur:150, hearts:3, rate:0.64, hp:0.92, espd:0.95,
   bossHp:0.80, nboss:3, types:['slime','bunny','drone','bomber'], bspd:0.92, atkSlow:1.12, chest:14, maxE:96,
@@ -1255,11 +1348,17 @@ const LEVELS=[
   d:'血量、速度、彈速全面上修。'},
  {tier:'地獄', n:'果凍終末',     dur:215, hearts:3, rate:1.20, hp:1.60, espd:1.14,
   bossHp:1.70, nboss:3, types:['slime','bunny','drone','bomber'], bspd:1.20, atkSlow:0.82, chest:17, maxE:130,
-  superBoss:true,
-  d:'最後一關。做好心理準備。★ 全遊戲最強的超級大 Boss 在此坐鎮。'}
+  superBoss:true, bossChapter:0,
+  d:'第一個十關章節的壓軸。★ 超級大 Boss 首次登場，血量遠超一般 Boss。（後面每 10 關都會再遇到更恐怖的大 Boss）'}
 ];
-const TIERS=['新手','上手','熟練','挑戰','地獄'];
-const TIER_COLOR={'新手':'#7ef7c0','上手':'#8fe8ff','熟練':'#ffd23f','挑戰':'#ff9a4f','地獄':'#ff5b7f'};
+// v0.9.14：原本只有 10 關，改成每 10 關一個「章節」、共 10 章節 = 100 關。
+// 前 10 關（第 1 章）維持原班人馬完全不動（已經過大量笨bot測試調過），下面
+// genExtraLevels() 會在這份陣列後面接著生出第 11~100 關（第 2~10 章）。
+// 章節命名跟著原本 TIERS 的語感繼續往下探：新手→...→地獄→再往下更狠。
+const TIERS=['新手','上手','熟練','挑戰','地獄','深淵','噩夢','煉獄','虛無','修羅','冥界','天啟','神魔','終焉'];
+const TIER_COLOR={'新手':'#7ef7c0','上手':'#8fe8ff','熟練':'#ffd23f','挑戰':'#ff9a4f','地獄':'#ff5b7f',
+  '深淵':'#c04fff','噩夢':'#9a3fff','煉獄':'#ff5a3c','虛無':'#5a6cff','修羅':'#ff2f6b',
+  '冥界':'#3fd0ff','天啟':'#ffe14f','神魔':'#ff8a00','終焉':'#ff1a1a'};
 let LV_IDX=0;                                  // 目前選的關卡
 const CUR=()=>LEVELS[LV_IDX];
 
@@ -1303,13 +1402,26 @@ const BOSS_POOL=[
   {hp:10200, r:64, hue:200, name:'未讀訊息怪', spd:54, dmg:24, atk:'spiral', atkT:1.7, bspd:215},
   {hp:24000, r:80, hue:12 , name:'奪魂鬧鐘怪', spd:48, dmg:28, atk:'ring'  , atkT:1.5, bspd:240}
 ];
-// 超級大Boss（每 5 隻怪物等級新增需求）：使用者原本要求「每5關」，但第5關是
-// docs/02 設計的鋸齒回落點（新機制登場、出怪率刻意降 6-8%），放超級Boss會抵銷
-// 回落的用意；改放第 6、10 關——這兩關在原設計裡都不是回落點（只有 3/5/7 關
-// 才是），第 10 關本來就是全遊戲最終關，第 6 關是「熟練」層加壓的那一半，適合
-// 壓軸更強的敵人。血量在關卡自己的 bossHp 倍率之上再乘 1.6，且一定排在
-// G.bosses 陣列最後、kind='final'，打死它才算真正過關。
-const SUPER_BOSS={hp:26000, r:96, hue:330, name:'業績KPI巨獸', spd:44, dmg:30, atk:'ring', atkT:1.3, bspd:250};
+// 超級大Boss（v0.9.14 起改為每 10 關一隻，分別在第 10/20/.../100 關）：
+// 原本只有第 6、10 關兩隻共用同一份 SUPER_BOSS 設定；現在每個「十關章節」
+// 結尾都要有一隻專屬的超級大 Boss，而且要越後面越誇張，所以把單一常數
+// 展開成 BOSS_CHAPTER 陣列（index=章節序號，0=第10關、1=第20關...9=第100關）。
+// index 0 完全沿用舊版業績KPI巨獸的數值不變（第10關已經被笨bot測過很多次，
+// 不能因為改架構就連帶動到已經調好的數字）。血量在關卡自己的 bossHp 倍率
+// 之上再乘 1.6，且一定排在 G.bosses 陣列最後、kind='final'，打死它才算過關。
+// icon 是主選單銀河圖上顯示用的表情符號，從「有點恐怖」一路加碼到「超恐怖」。
+const BOSS_CHAPTER=[
+  {hp:26000, r:96 , hue:330, name:'業績KPI巨獸',   spd:44, dmg:30, atk:'ring'  , atkT:1.30, bspd:250, icon:'👹'},
+  {hp:29500, r:97 , hue:300, name:'週一晨會惡魔',   spd:45, dmg:31, atk:'cross' , atkT:1.27, bspd:253, icon:'👺'},
+  {hp:33500, r:98 , hue:270, name:'無限加班幽靈',   spd:46, dmg:32, atk:'spiral', atkT:1.24, bspd:256, icon:'💀'},
+  {hp:38000, r:99 , hue:240, name:'已讀不回怪',     spd:47, dmg:33, atk:'ring'  , atkT:1.21, bspd:259, icon:'☠️'},
+  {hp:43000, r:100, hue:210, name:'年終考核修羅',   spd:48, dmg:34, atk:'cross' , atkT:1.18, bspd:262, icon:'👻'},
+  {hp:48500, r:101, hue:180, name:'信箱爆炸魔王',   spd:49, dmg:35, atk:'spiral', atkT:1.15, bspd:265, icon:'🧟'},
+  {hp:54500, r:102, hue:150, name:'責任制黑洞',     spd:50, dmg:36, atk:'ring'  , atkT:1.12, bspd:268, icon:'😈'},
+  {hp:61000, r:103, hue:60 , name:'交接怨靈',       spd:51, dmg:37, atk:'cross' , atkT:1.09, bspd:271, icon:'👿'},
+  {hp:68000, r:104, hue:30 , name:'沉默審判者',     spd:52, dmg:38, atk:'spiral', atkT:1.06, bspd:274, icon:'🐲'},
+  {hp:76000, r:106, hue:0  , name:'終極KPI審判神',   spd:54, dmg:40, atk:'ring'  , atkT:1.02, bspd:280, icon:'🔥'}
+];
 function buildBosses(L){
   const at = L.nboss===1?[0.62] : L.nboss===2?[0.40,0.80] : [0.22,0.53,0.84];
   const bosses = at.map((f,i)=>{
@@ -1324,7 +1436,7 @@ function buildBosses(L){
     };
   });
   if(L.superBoss){
-    const b=SUPER_BOSS;
+    const b=BOSS_CHAPTER[L.bossChapter||0];
     bosses.push({...b,
       t: Math.round(L.dur*0.93),
       hp: Math.round(b.hp*L.bossHp*1.6),
@@ -1337,17 +1449,77 @@ function buildBosses(L){
   return bosses;
 }
 
+// ── v0.9.14：第 11~100 關產生器 ─────────────────────────────────────────
+// 前 10 關（第 1 章）維持手動調校、跑過大量笨bot測試的數值不動。第 2~10 章
+// （第 11~100 關，共 90 關）改用公式生成：90 關全部手打數字風險太高（容易
+// 手滑打錯、難度曲線不連續），改成以「第10關」的數值當基準往上疊倍率。
+// 章節內採用跟原本 10 關版一樣的鋸齒節奏：章節開頭比上一章頂點回落 7%，
+// 章節內線性爬升到章節末（第10/20/.../100關）的大 Boss 關，粒度從
+// docs/02 原設計的「2關一層」放大成「10關一章」，精神不變。
+// espd（敵人移動速度）跟 bspd（子彈速度）刻意設上限：速度只要能閃、後面
+// 再快也只是變成「看不到、躲不掉」，不是有意義的難度；真正的難度加壓
+// 交給 hp／bossHp（打更久、Boss 更肉）跟 rate／dur（出怪更密、關卡更長）、
+// atkSlow（Boss攻擊冷卻更短）。
+(function genExtraLevels(){
+  const CH_NAMES=['深淵','噩夢','煉獄','虛無','修羅','冥界','天啟','神魔','終焉'];
+  const base=LEVELS[9];              // 第10關（chapter 0 頂點）當基準
+  const peakMul=c=>1+c*0.30+c*c*0.028; // 章節 c 結尾（大Boss關）的倍率頂點
+  for(let c=1;c<=9;c++){
+    const pk=peakMul(c), st=peakMul(c-1)*0.93;   // st：本章開頭＝上一章頂點回落7%
+    const bossName=BOSS_CHAPTER[c].name;
+    for(let p=0;p<10;p++){
+      const lvlNum=c*10+p+1;         // 第幾關（1-based）
+      const f=p/9;                   // 章節內進度 0~1，線性內插 st→pk
+      const mul=st+(pk-st)*f;
+      const isBoss=p===9, isOpener=p===0;
+      LEVELS.push({
+        tier: CH_NAMES[c-1],
+        n: isBoss ? (CH_NAMES[c-1]+'首領：'+bossName) : (CH_NAMES[c-1]+' 第'+(p+1)+'關'),
+        dur: Math.min(323, Math.round(215+Math.log2(lvlNum/10)*42)),
+        hearts:3,
+        rate: Math.min(6.0, +(base.rate*mul).toFixed(3)),
+        hp: +(base.hp*mul).toFixed(3),
+        espd: Math.min(1.85, +(base.espd*mul).toFixed(3)),
+        bossHp: +(base.bossHp*mul).toFixed(3),
+        nboss: 3,
+        types: ['slime','bunny','drone','bomber'],
+        bspd: Math.min(2.3, +(base.bspd*mul).toFixed(3)),
+        atkSlow: Math.max(0.35, +(base.atkSlow/mul).toFixed(3)),
+        chest: Math.min(32, 17+Math.floor((lvlNum-10)/3)),
+        maxE: Math.min(260, 130+Math.floor((lvlNum-10)*1.45)),
+        d: isBoss ? ('★ 第'+(c+1)+'章壓軸：超級大 Boss「'+bossName+'」坐鎮，血量與強度全面超越前一章。')
+           : isOpener ? ('進入「'+CH_NAMES[c-1]+'」章節，難度較上一章末暫時回落，準備重新爬升。')
+           : ('「'+CH_NAMES[c-1]+'」章節持續加壓，敵人血量與出怪密度持續上修。'),
+        superBoss: isBoss,
+        ...(isBoss?{bossChapter:c}:{})
+      });
+    }
+  }
+})();
+
 function updateSpawn(dt){
   const L=CUR();
   let w=G.waves[0];
   for(const x of G.waves) if(G.t>=x.t) w=x;
   // Boss 出場預告：出場前 5 秒開始閃紅倒數。每幀重算、不存狀態，
   // 跟搖桿判定一樣的無狀態哲學——漏一幀不會卡死，下一幀自己就對了。
+  const prevWarnT=G.bossWarnT;
   G.bossWarnT=-1; G.bossWarnName='';
   for(let i=0;i<G.bosses.length;i++){
     if(G.bossDone[i]) continue;
     const rem=G.bosses[i].t-G.t;
     if(rem>0 && rem<=5){ G.bossWarnT=rem; G.bossWarnName=G.bosses[i].name; break; }
+  }
+  // v0.9.12：畫面上原本就有「⚠ BOSS即將出現」的倒數數字，但完全沒有配聲音。
+  // 倒數視窗剛開始的那一幀響一聲警報，之後倒數數字每跳一次整數秒（5,4,3,2,1）
+  // 補一聲短「嗶」，讓玩家不用一直盯著畫面看數字也能感覺到「快來了」。
+  // bossWarnT 本身是無狀態、每幀重算的（見上），所以判斷「剛進入警示視窗」
+  // 只能用「上一幀 vs 這一幀」的邊界比對，不能存一個「有沒有響過」的旗標，
+  // 否則同一隻 Boss 的警示視窗結束後，旗標忘記重置的話下次就永遠不會再響。
+  if(G.bossWarnT>=0 && prevWarnT<0){ SFX.bossWarn(); G._bwSec=Math.ceil(G.bossWarnT); }
+  else if(G.bossWarnT>=0){
+    const sec=Math.ceil(G.bossWarnT);
+    if(sec<G._bwSec){ G._bwSec=sec; SFX.bossWarnTick(); }
   }
   for(let i=0;i<G.bosses.length;i++)
     if(!G.bossDone[i] && G.t>=G.bosses[i].t){ G.bossDone[i]=true; spawnBoss(G.bosses[i]); }
@@ -1372,7 +1544,10 @@ const CHEST_TYPES=[
           gemBurst(P.x,P.y,22); return '愛心已滿 → 大量晶核！'; }},
   {id:'nuke',  ic:'🍬', n:'糖果雨',  c:'#8fe8ff', hue:195,
    go(P){ const n=G.EB.length; G.EB.length=0;
-          for(const e of G.E) if(!e.boss) hurtEnemy(e,140*P.dmgEff,false);
+          // v0.9.13 修正：同一個「邊迭代邊刪除 G.E 會跳過元素」的問題，這個寶箱
+          // 是最容易踩到的地方之一——140點傷害通常直接打死一票雜兵，改成倒著跑
+          // 的索引迴圈，才能真的做到「所有非Boss敵人」都受傷，不會漏掉一半。
+          for(let i=G.E.length-1;i>=0;i--){ const e=G.E[i]; if(e&&!e.boss) hurtEnemy(e,140*P.dmgEff,false); }
           burst(P.x,P.y,44,195,2.2); return '清空 '+n+' 發彈幕！'; }},
   {id:'speed', ic:'⚡', n:'閃電糖',  c:'#ffd23f', hue:50,
    go(P){ P.frenzyT=Math.max(P.frenzyT,9); return '9 秒攻速翻倍！'; }},
@@ -1567,6 +1742,7 @@ function loop(now){
   requestAnimationFrame(loop);
   let dt=Math.min((now-lastT)/1000,.05); lastT=now;
   if(G&&G.hurt>0) G.hurt=Math.max(0,G.hurt-dt*6.5);   // 受擊紅閃：約 0.15 秒衰減完，用真實時間不受慢動作影響
+  if(G&&G.nukeFlash>0) G.nukeFlash=Math.max(0,G.nukeFlash-dt*3.3);  // 核彈全螢幕閃光：約 0.3 秒衰減完
   if(BTNPRESS>0) BTNPRESS-=dt;
   if(G&&G.running&&!G.paused){
     if(G.hitstop>0){ G.hitstop-=dt; }
@@ -1775,7 +1951,12 @@ function update(dt,rawdt){
     }
     b.x+=b.vx*dt; b.y+=b.vy*dt;
     if(b.life<=0){ if(b.goo) addGoo(b.x,b.y,17,b.hue); G.B.splice(i,1); continue; }
-    for(const e of G.E){
+    // v0.9.13 修正：跟 damageArea() 同一個問題——這裡原本是 for(const e of G.E)，
+    // hurtEnemy() 打死怪物會 splice(G.E)，邊迭代邊刪同一個陣列會跳過元素。
+    // 對貫穿子彈（pierce>=1，例如溜溜球武器）影響最明顯：打穿一群怪的時候，
+    // 偶爾會有一隻完全沒中彈判定，卻沒有視覺上的理由。改成倒著跑的索引迴圈。
+    for(let ei=G.E.length-1;ei>=0;ei--){
+      const e=G.E[ei]; if(!e) continue;
       if(b.hit.has(e))continue;
       if(dist2(b.x,b.y,e.x,e.y)<(b.r+e.r)**2){
         hurtEnemy(e,b.dmg,true);
@@ -1838,6 +2019,11 @@ function update(dt,rawdt){
     const t=G.TXT[i]; t.t+=dt;
     if(t.vy){ t.y+=t.vy*dt; t.vy*=(1-dt*2.4); }
     if(t.t>t.life) G.TXT.splice(i,1);
+  }
+  //--- 衝擊波環（v0.9.12：核彈爆炸用，半徑持續擴大、越擴越淡）
+  for(let i=G.SHOCK.length-1;i>=0;i--){
+    const s=G.SHOCK[i]; s.r+=s.spd*dt; s.life-=dt;
+    if(s.life<=0) G.SHOCK.splice(i,1);
   }
   //--- 相機
   // 相機刻意落後 + 前瞻偏移：角色會在畫面上實際位移，而不是永遠釘在正中央
@@ -1991,6 +2177,16 @@ function draw(){
     ctx.fillStyle='hsla('+p.hue+',95%,65%,'+a+')';
     ctx.beginPath(); ctx.arc(p.x,p.y,p.r*a,0,6.283); ctx.fill();
   }
+  // 衝擊波環（v0.9.12：核彈爆炸——外圈亮線 + 內側柔光，隨半徑擴大逐漸淡出）
+  for(const s of (live?G.SHOCK:[])){
+    const a=clamp(s.life/s.max,0,1);
+    ctx.strokeStyle='hsla('+s.hue+',95%,'+(60+a*20)+'%,'+(a*0.85)+')';
+    ctx.lineWidth=6*a+1.5;
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,6.283); ctx.stroke();
+    ctx.strokeStyle='hsla('+s.hue+',90%,75%,'+(a*0.28)+')';
+    ctx.lineWidth=22*a+2;
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,6.283); ctx.stroke();
+  }
   ctx.globalCompositeOperation='source-over';
 
   // 玩家
@@ -2139,6 +2335,12 @@ function drawHUD(){
     vg.addColorStop(0,'rgba(255,0,40,0)');
     vg.addColorStop(1,'rgba(255,10,45,'+(a*0.62)+')');
     ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
+  }
+  // v0.9.12：核彈引爆瞬間的全螢幕白/橘閃光，跟受擊紅閃刻意做出色調區隔，
+  // 加強「按下去真的發生了一件大事」的爽快感
+  if(G.nukeFlash>0){
+    const a=G.nukeFlash;
+    ctx.fillStyle='rgba(255,240,200,'+(a*0.55)+')'; ctx.fillRect(0,0,W,H);
   }
   // Boss 出場預告：出場前 5 秒，畫面閃紅 + 倒數數字，跟受擊紅閃刻意做出區別
   // （受擊是短促單次衰減，這裡是持續 5 秒的脈動閃爍，讓玩家有時間反應而不是被嚇到）
@@ -2404,7 +2606,7 @@ function renderStage(){
   document.getElementById('stageInfo').innerHTML =
     '<div class="st" style="color:'+c+'">'+(showCleared?'全部通關':'第 '+(i+1)+' 關 / '+LEVELS.length+'　·　'+L.tier)+'</div>'+
     '<div class="nm">'+(showCleared?'恭喜全破！':L.n)+'</div>'+
-    '<div class="ds">'+(showCleared?'你已經打穿全部 10 關。再玩一次挑戰更快的紀錄。':L.d)+'</div>'+
+    '<div class="ds">'+(showCleared?('你已經打穿全部 '+LEVELS.length+' 關。再玩一次挑戰更快的紀錄。'):L.d)+'</div>'+
     '<div class="mt">'+Math.floor(L.dur/60)+':'+String(L.dur%60).padStart(2,'0')+
       '　·　♥'+L.hearts+'　·　Boss ×'+L.nboss+'</div>';
   buildGalaxy(frontier,cleared);
@@ -2441,18 +2643,28 @@ function buildGalaxy(frontier,cleared){
     const isDone = k<frontier || (cleared && k<n-1) ;
     const isCur = k===frontier && !cleared;
     const isFinalCleared = cleared && k===n-1;
+    // v0.9.14：大 Boss 關（每 10 關一次）在銀河圖上用 BOSS_CHAPTER 的表情符號
+    // 取代數字，越後面的章節圖示越誇張，讓玩家一眼就能看出「這關有大魔王」。
+    // 最後一關（第100關）額外加 mega class，CSS 給它紅色脈動光暈，代表全遊戲最恐怖。
+    const isBossLv = !!L2.superBoss;
+    const isMega = isBossLv && k===n-1;
     const cls=['gnode'];
     if(isDone||isFinalCleared) cls.push('done');
     if(isCur) cls.push('cur');
     if(!unlocked) cls.push('locked');
     if(k===SEL_IDX && unlocked) cls.push('sel');
+    if(isBossLv && unlocked && !(isDone||isFinalCleared)) cls.push('boss');
+    if(isMega && unlocked && !(isDone||isFinalCleared)) cls.push('mega');
     const bg = unlocked ? TIER_COLOR[L2.tier] : '';
-    const label = unlocked ? (isDone||isFinalCleared?'✓':(k+1)) : '🔒';
+    let inner;
+    if(!unlocked) inner='<div class="gnum">🔒</div>';
+    else if(isDone||isFinalCleared) inner='<div class="gnum">✓</div>';
+    else if(isBossLv) inner='<div class="gic">'+(BOSS_CHAPTER[L2.bossChapter||0].icon)+'</div>';
+    else inner='<div class="gnum">'+(k+1)+'</div>';
     // left/top 用百分比（相對 #galaxyInner，寬度基準是上面算 pts 用的 W=300），
     // 這樣手機實際渲染寬度跟 300px 設計稿不同時，節點位置還是會跟著 SVG 路徑對齊
     nodes+='<div class="'+cls.join(' ')+'" data-k="'+k+'" style="left:'+(p.x/W*100)+'%;top:'+p.y+'px;'+
-      (unlocked?'background:'+bg+';':'')+'">'+
-      '<div class="gnum">'+label+'</div></div>';
+      (unlocked?'background:'+bg+';':'')+'">'+inner+'</div>';
   });
   inner.style.height=H+'px';
   inner.innerHTML=svg+stars+nodes;
@@ -2620,9 +2832,16 @@ nukeBtnEl.onclick=()=>{
   for(const e of targets) killEnemy(e);
   G.EB.length=0;                          // 順便清空敵方彈幕，畫面乾淨清爽
   toast('☢️ 核彈引爆！清空 '+n+' 隻小怪','#ff9a4f');
-  shake(16); hitstop(.18);
-  burst(G.P.x,G.P.y,50,25,2.4);
-  SFX.bossDie();                          // 借用遊戲裡最有份量的爆炸音效
+  // v0.9.12：畫面效果加強——原本只有一層粒子噴發，現在疊三層擴散衝擊波
+  // （由內而外：白核心 → 橘中層 → 暗紅外環，時間差 0.05 秒讓層次感更明顯）
+  // + 全螢幕閃光 + 更大量的粒子噴發，搭配專屬爆炸音效（不再借用 Boss 死亡音）
+  shake(20); hitstop(.22);
+  G.nukeFlash=1;
+  G.SHOCK.push({x:G.P.x,y:G.P.y,r:10,spd:620,life:.55,max:.55,hue:48});
+  G.SHOCK.push({x:G.P.x,y:G.P.y,r:6, spd:520,life:.60,max:.60,hue:28});
+  G.SHOCK.push({x:G.P.x,y:G.P.y,r:2, spd:430,life:.68,max:.68,hue:355});
+  burst(G.P.x,G.P.y,90,25,3.2);
+  SFX.nukeBlast();
 };
 renderStage();
 
