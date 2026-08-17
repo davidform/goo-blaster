@@ -106,6 +106,10 @@
   #galaxyInner{position:relative;width:100%;}
   #galaxyInner svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
   #galaxyInner .star{position:absolute;border-radius:50%;background:#fff;opacity:.5;}
+  /* v0.9.18：每 5 關一個背景色帶 + 交界處的發光銜接線 */
+  #galaxyInner .gband{position:absolute;left:0;right:0;pointer-events:none;}
+  #galaxyInner .gbandline{position:absolute;left:0;right:0;height:2px;pointer-events:none;
+     filter:blur(0.5px);opacity:.75;}
   .gnode{position:absolute;width:48px;height:48px;margin-left:-24px;margin-top:-24px;
      border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
      font-weight:900;font-size:15px;cursor:pointer;border:3px solid transparent;
@@ -143,8 +147,14 @@
   #shop{gap:8px;}
   #shopCoins{font-size:20px;font-weight:900;color:#ffd84f;}
   #shopHint{font-size:11px;color:#a294cc;max-width:330px;line-height:1.6;text-align:center;}
+  /* ⚠ v0.9.18 修正「糖果屋無法滑動」：原本只寫了 #shopList *（子元素），漏掉容器
+     本身。最上層的 *{touch-action:none} 會把 #shopList 自己鎖死，而瀏覽器判斷
+     「這根手指能不能捲動」看的是「被摸到的元素 + 它所有祖先」的交集——只要鏈上
+     任何一層是 none 就整條斷掉。#galaxyWrap 當初就踩過同一個坑（見上方註解），
+     它是容器本身跟 * 兩條都寫了才會動，這裡漏了容器那條所以完全捲不動。 */
   #shopList{width:100%;max-width:340px;max-height:52vh;overflow-y:auto;
      display:flex;flex-direction:column;gap:7px;padding:2px;
+     -webkit-overflow-scrolling:touch;touch-action:pan-y;
      scrollbar-width:thin;scrollbar-color:#c98bff rgba(255,255,255,.08);}
   #shopList *{touch-action:pan-y;}
   #shopList::-webkit-scrollbar{width:9px;}
@@ -272,7 +282,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.17';          // 每次交付都會變，手機上可在主畫面右下角確認
+const BUILD='v0.9.18';          // 每次交付都會變，手機上可在主畫面右下角確認
 //====================== 診斷（真機問題回報用）======================
 // 手機上沒有 console 可以看，所以把致命錯誤與輸入事件計數直接顯示在畫面上。
 const DIAG={touch:0,tmove:0,tend:0,pointer:0,pmove:0,mouse:0,err:'',warn:''};
@@ -803,7 +813,10 @@ function syncJoy(e,allowChanged){
 // 按下時只登記候選（id / 起點 / 時間），手指移動超過 TAP_SLOP 或超過 TAP_MS 就作廢。
 // 這樣「按住加速鍵那一區當搖桿拖曳」不會誤觸衝刺，真正的點擊才會。
 // 候選會自己過期，漏掉任何一個 touchend 最壞情況只是少放一次衝刺，不會卡住操作。
-const TAP_SLOP=16, TAP_MS=400;
+// v0.9.18：TAP_SLOP/TAP_MS 放寬（16→24px、400→600ms）。使用者回報「按著螢幕滑動時
+// 很難按加速鍵」——在真實遊玩中玩家幾乎永遠都在拖曳搖桿，另一根手指去點按鈕時
+// 手掌會跟著晃，原本 16px/400ms 的判定對「邊拖曳邊點」來說太嚴苛。
+const TAP_SLOP=24, TAP_MS=600;
 let btnTap=null;
 function tapAlive(){ return btnTap && (performance.now()-btnTap.t)<TAP_MS; }
 cv.addEventListener('touchstart',e=>{
@@ -813,7 +826,16 @@ cv.addEventListener('touchstart',e=>{
   for(let i=0;i<ct.length;i++){
     const t=ct[i];
     if(inMute(t.clientX,t.clientY)) SFX.toggle();
-    else if(inBtn(t.clientX,t.clientY)) btnTap={id:t.identifier,x:t.clientX,y:t.clientY,t:performance.now()};
+    else if(inBtn(t.clientX,t.clientY)){
+      // v0.9.18 修正「拖曳中很難按加速鍵」的主因：
+      // 加速鍵原本一律是「放開才觸發」（v0.9.4 為了避免把按鈕區當搖桿拖曳時誤觸）。
+      // 但那個顧慮只在「單指」時成立——如果畫面上已經有另一根手指在當搖桿，
+      // 這根新落在按鈕上的手指就不可能是搖桿，意圖非常明確就是要按按鈕。
+      // 這種情況直接在 touchstart 立刻觸發，不必等放開、也不必通過位移/時間判定，
+      // 手感從「常常按不出來」變成「一按就有」。單指時維持原本的放開才觸發。
+      if(e.touches && e.touches.length>1){ pressBoost(); btnTap=null; }
+      else btnTap={id:t.identifier,x:t.clientX,y:t.clientY,t:performance.now()};
+    }
   }
   syncJoy(e,false);
   touchSeen=true; lastTouchAt=performance.now();
@@ -2769,20 +2791,27 @@ function drawHUD(){
       ctx.textAlign='left';
     }
   }
-  // 果凍覆蓋率（差異化指標）
+  // 果凍覆蓋率（差異化指標）與速度加成
+  // ⚠ v0.9.18 修正「右上方的按鈕會蓋住增加的數值」：這兩行原本畫在 top+34 / top+52，
+  // 但右上角疊著兩顆 DOM 按鈕——暫停鍵（top+14 起、高 38，佔到 top+52）與靜音鍵
+  // （圓心 top+78、半徑 17，佔到 top+95）。也就是整個 top+14 ~ top+95 的右側都被
+  // 按鈕蓋住，而「果凍%」「傷害+%」「速度×」正是全場唯一會一路往上跳的成長型數值，
+  // 玩家最想看的東西剛好被擋住。改成畫在按鈕下緣（RIGHT_HUD_Y=top+112）之後，
+  // 兩顆按鈕與數值互不重疊。
+  const RIGHT_HUD_Y = top+112;
   const gp=gooPct();
   ctx.textAlign='right'; ctx.font='800 11px system-ui';
   ctx.lineWidth=4; ctx.strokeStyle='rgba(10,6,24,.9)';
   const gt='果凍 '+gp+'%  傷害 +'+Math.round(gp*0.30)+'%';
-  ctx.strokeText(gt, W-pad, top+34);
+  ctx.strokeText(gt, W-pad, RIGHT_HUD_Y);
   ctx.fillStyle= gp>55?'#ffd23f':'#a294cc';
-  ctx.fillText(gt, W-pad, top+34);
+  ctx.fillText(gt, W-pad, RIGHT_HUD_Y);
   const sc=speedScale();
   if(sc>1.02){
     ctx.font='800 11px system-ui';
     const st2='速度 ×'+sc.toFixed(2);
-    ctx.strokeText(st2, W-pad, top+52);
-    ctx.fillStyle='#7ef7c0'; ctx.fillText(st2, W-pad, top+52);
+    ctx.strokeText(st2, W-pad, RIGHT_HUD_Y+18);
+    ctx.fillStyle='#7ef7c0'; ctx.fillText(st2, W-pad, RIGHT_HUD_Y+18);
   }
   // 靜音鍵
   ctx.beginPath(); ctx.arc(MUTE.x,MUTE.y,MUTE.r,0,6.283);
@@ -2891,17 +2920,61 @@ function buildGalaxy(frontier,cleared){
   const W=300, padY=42, stepY=68;
   const n=LEVELS.length;
   const H=padY*2+(n-1)*stepY;
+  // v0.9.18：關卡順序上下顛倒——第 1 關在最下面、第 100 關在最上面，玩家往上爬。
+  // 這是刻意的心理學設計：「往上爬」是人類對「進步」最直覺的空間隱喻（爬山、爬梯、
+  // 排行榜），把已通關的路留在腳下、未挑戰的關卡在頭頂延伸出去，玩家每次打開選單
+  // 都會直接看到「我爬了多高」，比由上往下的清單更能製造成就感與繼續前進的動機。
   const pts=[];
   for(let k=0;k<n;k++){
     const x=W/2+Math.sin(k*1.05)*(W/2-42);
-    const y=padY+k*stepY;
+    const y=padY+(n-1-k)*stepY;      // ← 反轉：k=0（第1關）落在最下方
     pts.push({x,y});
   }
   let svg='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none">'+
     '<polyline points="'+pts.map(p=>p.x+','+p.y).join(' ')+'" fill="none" '+
     'stroke="#5a3fa0" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 10" opacity="0.75"/></svg>';
+  // v0.9.18：每 5 關一個背景區塊，區塊之間用漸層自然銜接。
+  // 為什麼是「每 5 關換一次」而不是整條路一個底色：長達 100 關、6800px 高的路線
+  // 如果從頭到尾同一個背景，玩家往上滑時完全沒有「我到了新地方」的感覺，
+  // 捲動變成一件無聊的事。切成 20 個色帶之後，每爬 5 關就會看到景色變一次，
+  // 把「捲動」本身變成一種有回饋的推進感（同樣是為了成就感與續玩動機）。
+  // 銜接做法：每個色帶的背景是「自己的顏色 → 上一個色帶的顏色」的直向漸層，
+  // 相鄰兩帶在交界處的顏色天然相同，看起來是連續的一條漸變，而不是硬邊。
+  const BAND=5, bands=Math.ceil(n/BAND);
+  // 一個章節是 10 關 = 2 個色帶，如果兩帶都直接用該章的 tier 色，章節內的那次
+  // 換帶就完全看不出變化，「每 5 關換一次背景」等於只做到一半。所以奇數帶把
+  // 顏色往青色方向偏移並調暗一點，讓每 5 關都一定有可見的色彩變化，同時仍然
+  // 看得出它跟同章節的另一半是同一個色系（章節感不會被打散）。
+  const shiftHex=(hex,dr,dg,db,mul)=>{
+    const m=/^#?([0-9a-f]{6})$/i.exec(hex); if(!m) return hex;
+    const v=parseInt(m[1],16);
+    const cl=x=>Math.max(0,Math.min(255,Math.round(x)));
+    const r=cl(((v>>16)&255)*mul+dr), g=cl(((v>>8)&255)*mul+dg), b=cl((v&255)*mul+db);
+    return '#'+((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
+  };
+  const bandHue=i=>{
+    // 每帶的代表色取該帶第一關所屬章節的顏色，讓背景跟關卡難度分層一致
+    const L0=LEVELS[Math.min(n-1,i*BAND)];
+    const base=TIER_COLOR[L0.tier]||'#5a3fa0';
+    return (i%2===0) ? base : shiftHex(base,-18,10,34,0.78);
+  };
+  let bandsHtml='';
+  for(let i=0;i<bands;i++){
+    // 這一帶涵蓋的關卡 index：i*BAND .. i*BAND+BAND-1，換算成 y（記得是反轉的）
+    const kLo=i*BAND, kHi=Math.min(n-1,i*BAND+BAND-1);
+    const yTop=padY+(n-1-kHi)*stepY-stepY*0.5;      // 上緣（關卡編號較大那一端）
+    const yBot=padY+(n-1-kLo)*stepY+stepY*0.5;      // 下緣
+    const top=Math.max(0,yTop), h=Math.min(H,yBot)-top;
+    const c=bandHue(i), cNext=bandHue(Math.min(bands-1,i+1));
+    bandsHtml+='<div class="gband" style="top:'+top+'px;height:'+h+'px;'+
+      'background:linear-gradient(180deg,'+cNext+'26 0%,'+c+'3a 42%,'+c+'4a 100%);"></div>';
+    // 交界處再疊一條發光細線，強化「進入新區域」的儀式感
+    if(i<bands-1)
+      bandsHtml+='<div class="gbandline" style="top:'+top+'px;background:'+
+        'linear-gradient(90deg,transparent,'+c+'cc 50%,transparent);"></div>';
+  }
   let stars='';
-  for(let s=0;s<26;s++){
+  for(let s=0;s<26+bands*2;s++){
     stars+='<div class="star" style="left:'+rnd(0,W)+'px;top:'+rnd(0,H)+'px;'+
       'width:'+rnd(1,2.6).toFixed(1)+'px;height:'+rnd(1,2.6).toFixed(1)+'px;opacity:'+rnd(.15,.6).toFixed(2)+'"></div>';
   }
@@ -2936,7 +3009,7 @@ function buildGalaxy(frontier,cleared){
       (unlocked?'background:'+bg+';':'')+'">'+inner+'</div>';
   });
   inner.style.height=H+'px';
-  inner.innerHTML=svg+stars+nodes;
+  inner.innerHTML=bandsHtml+svg+stars+nodes;   // 背景色帶要墊在最底層
   inner.querySelectorAll('.gnode:not(.locked)').forEach(el=>{
     el.onclick=()=>{ SEL_IDX=+el.dataset.k; renderStage();
       el.scrollIntoView({block:'center',behavior:'smooth'}); };
@@ -3138,10 +3211,27 @@ document.getElementById('btnSave').onclick=()=>{
 // 本身要不要顯示，統一在 drawHUD() 裡每幀跟著 G.running/G.paused 判斷，這裡只管
 // pauseOverlay 這個彈窗本身的開關，不用重複管按鈕的顯示/隱藏。
 const pauseOverlayEl=document.getElementById('pauseOverlay');
-pauseBtnEl.onclick=()=>{
+// v0.9.18：暫停鍵與核彈鍵改成「自己聽 touchstart」，不再只依賴瀏覽器合成的 click。
+// 原因：canvas 的 touchstart/touchmove 都有 e.preventDefault()（搖桿必須要，否則會
+// 觸發頁面捲動與長按選字）。玩家「一根手指正在拖曳搖桿、另一根手指去點按鈕」時，
+// 這個 preventDefault 會讓部分瀏覽器不再為那一次多點觸控合成 click 事件 → 按了沒反應。
+// 這正是使用者回報「按著螢幕滑動時，很難按核彈與加速的按鈕」的第二個成因
+// （第一個是加速鍵的放開才觸發判定，已在上面的 touchstart 處理）。
+// 直接聽 touchstart 就繞開整個 click 合成機制，多點觸控下也一定會反應。
+function bindTapBtn(el, fn){
+  let done=false;
+  el.addEventListener('touchstart',ev=>{
+    ev.preventDefault(); ev.stopPropagation();
+    done=true; fn();
+    setTimeout(()=>{done=false;},400);      // 擋掉緊接著可能還是會來的合成 click
+  },{passive:false});
+  el.addEventListener('click',()=>{ if(!done) fn(); });
+}
+const doPause=()=>{
   if(!G||!G.running||G.paused)return;
   G.paused=true; pauseOverlayEl.classList.remove('hide');
 };
+bindTapBtn(pauseBtnEl, doPause);
 document.getElementById('btnResume').onclick=()=>{
   if(!G)return;
   G.paused=false; pauseOverlayEl.classList.add('hide');
@@ -3153,7 +3243,7 @@ document.getElementById('btnQuitToMenu').onclick=()=>{
 };
 // v0.9.10：核彈按鈕——場上所有非 Boss 敵人（「低級的怪物」）直接死亡，Boss 不受影響。
 // 用 killEnemy() 而不是扣血，確保是「一定死」，不是「傷害夠不夠」。
-nukeBtnEl.onclick=()=>{
+const doNuke=()=>{
   if(!G||!G.running||G.paused||!G.P.nukeHeld) return;
   G.P.nukeHeld=false;
   const targets=G.E.filter(e=>!e.boss);
@@ -3172,6 +3262,7 @@ nukeBtnEl.onclick=()=>{
   burst(G.P.x,G.P.y,90,25,3.2);
   SFX.nukeBlast();
 };
+bindTapBtn(nukeBtnEl, doNuke);
 renderStage();
 
 G=newGame(); G.running=false;
