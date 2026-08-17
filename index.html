@@ -47,15 +47,33 @@
   .btn.danger{background:linear-gradient(180deg,#ff8fa8,#ff4f74);color:#fff;
      box-shadow:0 4px 0 #b3243f;}
   .btn.danger:active{box-shadow:0 1px 0 #b3243f;}
-  /* v0.9.9：「從第 1 關重來」二次確認彈窗 */
-  #confirmBox{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  /* v0.9.9：通用彈窗樣式（先給「從第1關重來」二次確認用，v0.9.10 暫停畫面也共用這組） */
+  .overlayBox{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
      padding:22px;pointer-events:auto;background:rgba(8,4,20,.6);backdrop-filter:blur(3px);z-index:5;}
-  #confirmBox .box{max-width:290px;background:linear-gradient(170deg,#241547,#150c2e);
+  .overlayBox .box{max-width:290px;background:linear-gradient(170deg,#241547,#150c2e);
      border:2px solid #3d2a6e;border-radius:20px;padding:24px 20px 20px;text-align:center;
      box-shadow:0 8px 0 rgba(0,0,0,.35);}
-  #confirmBox .ic{font-size:34px;line-height:1;margin-bottom:6px;}
-  #confirmBox .msg{font-size:15px;font-weight:800;color:#fff;margin-bottom:6px;}
-  #confirmBox .sub2{font-size:12px;color:#a99ad0;line-height:1.6;margin-bottom:16px;}
+  .overlayBox .ic{font-size:34px;line-height:1;margin-bottom:6px;}
+  .overlayBox .msg{font-size:15px;font-weight:800;color:#fff;margin-bottom:6px;}
+  .overlayBox .sub2{font-size:12px;color:#a99ad0;line-height:1.6;margin-bottom:16px;}
+  /* v0.9.10：遊戲中的暫停鍵，疊在 canvas 右上角、靜音鍵正上方 */
+  #btnPause{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;
+     width:34px;height:34px;border-radius:50%;pointer-events:auto;cursor:pointer;
+     background:rgba(12,8,28,.55);border:1.5px solid rgba(180,160,230,.45);
+     color:#e4dcff;font-size:15px;display:flex;align-items:center;justify-content:center;
+     font-family:inherit;padding:0;z-index:4;}
+  #btnPause:active{transform:scale(.9);}
+  /* v0.9.10：核彈按鈕，疊在左下角、加速鍵正上方；用發光+脈動強調「這是稀有道具」 */
+  #btnNuke{position:absolute;left:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 122px);
+     width:52px;height:52px;border-radius:50%;pointer-events:auto;cursor:pointer;
+     background:radial-gradient(circle at 35% 30%,#fff6b0,#ffb23f 55%,#ff5b3f);
+     border:2.5px solid #fff3c4;color:#3a1600;font-size:24px;
+     display:flex;align-items:center;justify-content:center;font-family:inherit;padding:0;
+     box-shadow:0 0 0 4px rgba(255,150,50,.25),0 4px 14px rgba(255,120,30,.55);
+     animation:nukePulse 1.4s ease-in-out infinite;z-index:4;}
+  #btnNuke:active{transform:scale(.9);}
+  @keyframes nukePulse{0%,100%{box-shadow:0 0 0 4px rgba(255,150,50,.25),0 4px 14px rgba(255,120,30,.55);}
+     50%{box-shadow:0 0 0 9px rgba(255,150,50,.12),0 4px 22px rgba(255,120,30,.75);}}
   /* 銀河挑戰路線：關卡選擇畫面（v0.9.5 取代原本的一排小圓點） */
   #galaxyWrap{position:relative;width:100%;max-width:330px;height:230px;
      overflow-y:auto;overflow-x:hidden;border-radius:16px;border:2px solid #402c78;
@@ -155,7 +173,7 @@
         <button class="btn small hide" id="btnReset">從第 1 關重來</button>
       </div>
       <div id="diag"></div>
-      <div id="confirmBox" class="hide">
+      <div id="confirmBox" class="overlayBox hide">
         <div class="box">
           <div class="ic">⚠️</div>
           <div class="msg">確定要從第 1 關重來嗎？</div>
@@ -178,11 +196,24 @@
         <button class="btn small" id="btnMenu">回主畫面</button>
       </div>
     </div>
+
+    <button id="btnPause" class="hide" title="暫停">⏸</button>
+    <button id="btnNuke" class="hide" title="使用核彈">☢️</button>
+    <div id="pauseOverlay" class="overlayBox hide">
+      <div class="box">
+        <div class="ic">⏸️</div>
+        <div class="msg">遊戲已暫停</div>
+        <div class="row">
+          <button class="btn small" id="btnResume">▶ 繼續遊戲</button>
+          <button class="btn small danger" id="btnQuitToMenu">回主畫面</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.9';          // 每次交付都會變，手機上可在主畫面右下角確認
+const BUILD='v0.9.11';          // 每次交付都會變，手機上可在主畫面右下角確認
 //====================== 診斷（真機問題回報用）======================
 // 手機上沒有 console 可以看，所以把致命錯誤與輸入事件計數直接顯示在畫面上。
 const DIAG={touch:0,tmove:0,tend:0,pointer:0,pmove:0,mouse:0,err:'',warn:''};
@@ -378,7 +409,7 @@ const SFX=(()=>{
     }
   }
   return {
-    unlock, isMuted:()=>muted, status:()=>ac?('ok/'+ac.state):('無聲:'+(initFailed||'未啟動')),
+    unlock, isMuted:()=>muted, isMusicOn:()=>M.on, status:()=>ac?('ok/'+ac.state):('無聲:'+(initFailed||'未啟動')),
     toggle(){
       muted=!muted; if(!muted)unlock();
       if(ac) musBus.gain.setTargetAtTime(muted?0:(M.on?1:0),ac.currentTime,0.1);
@@ -387,7 +418,8 @@ const SFX=(()=>{
     },
     musicStart(){
       unlock(); if(!ac)return;
-      M.on=true; M.step=0; M.next=ac.currentTime+0.1; M.intensity=0;
+      M.on=true; M.step=0; M.next=ac.currentTime+0.1; M.intensity=0; M.theme='cute';
+      M.bpm=112;
       musBus.gain.cancelScheduledValues(ac.currentTime);
       musBus.gain.setValueAtTime(0.0001,ac.currentTime);
       if(!muted) musBus.gain.setTargetAtTime(1,ac.currentTime,0.9);   // 慢慢淡入
@@ -398,7 +430,14 @@ const SFX=(()=>{
       musBus.gain.setTargetAtTime(0.0001,ac.currentTime,fade===false?0.05:0.5);
       setTimeout(()=>{ M.on=false; clearInterval(M.timer); }, fade===false?120:1400);
     },
-    musicIntensity(n){ M.intensity=n; M.bpm= n>0?126:112; },
+    musicIntensity(n){ M.intensity=n; M.bpm= n>0?158:112; },
+    // v0.9.10：切到背景（切別的App、鎖螢幕、滑掉）時立刻讓所有聲音停住。
+    // 音樂用 lookahead 排程，note 一旦排進 Web Audio 的音訊執行緒，就算主執行緒被瀏覽器
+    // 節流（分頁不可見時 rAF 幾乎都會被瀏覽器暫停，但 Web Audio 播放走獨立執行緒，
+    // 不受影響），已經排定的聲音還是會照樣出聲——這就是使用者回報「切出去音效還在跑」
+    // 的真正原因。AudioContext.suspend() 是唯一能讓「已經排定但還沒播完」的聲音立刻
+    // 靜掉的做法，而不是只擋住「之後」要排的聲音。
+    suspend(){ if(ac&&ac.state==='running'){ try{ ac.suspend(); }catch(e){} } },
 
     // ---- 音效：每一發都有隨機微變，且分層 ----
     shoot(w,pan){
@@ -513,15 +552,56 @@ const SFX=(()=>{
         osc({f0:f,f1:f*0.86,dur:.46,vol:.11,type:'sawtooth',filter:'lowpass',ff0:1500,ff1:400,delay:i*0.15});
         osc({f0:f*0.5,f1:f*0.43,dur:.5,vol:.05,type:'square',filter:'lowpass',ff0:700,ff1:250,delay:i*0.15});
       });
+    },
+    // v0.9.11：超級大 Boss 的雷射鎖定攻擊——鎖定瞬間一聲上揚「嗶」提醒玩家看警示線，
+    // 實際開火時是短而尖銳的「唰」，跟其他既有音效都不同，才聽得出來這是新招式。
+    laserWarn(){
+      if(!ok('lw',0.5))return;
+      osc({f0:520,f1:1100,dur:.16,vol:.075,type:'triangle'});
+      nz({dur:.10,vol:.028,f0:2600,f1:4200,q:1.4});
+    },
+    laserFire(){
+      if(!ok('lf',0.4))return;
+      osc({f0:1400,f1:180,dur:.30,vol:.16,type:'sawtooth',filter:'lowpass',ff0:5200,ff1:600});
+      nz({dur:.22,vol:.09,f0:4200,f1:900,q:1.0});
     }
   };
 })();
+// v0.9.10：切到背景（切別的App、鎖螢幕、從最近使用App滑掉）要讓聲音立刻停住。
+// 用 Page Visibility API：分頁/App 一旦不可見就 suspend AudioContext，回來再恢復。
+// 不用 pause 個別音效——AudioContext.suspend() 直接讓整個音訊時鐘停住，
+// 已經排定但還沒播完的音樂/音效會全部立刻靜音，這是唯一做得到「立即停止」的方法。
+function onVisChange(){ if(document.hidden) SFX.suspend(); else SFX.unlock(); }
+document.addEventListener('visibilitychange',onVisChange);
+addEventListener('pagehide',()=>SFX.suspend());   // iOS Safari 有時只觸發這個、不觸發 visibilitychange
+addEventListener('pageshow',onVisChange);
+// v0.9.10：首頁音樂。瀏覽器規定 AudioContext 一定要有使用者手勢才能真的發聲，
+// 頁面剛載入時沒辦法自動播放，所以在第一次觸控/點擊時（跟 SFX.unlock() 同一時機）
+// 順便啟動；如果玩家還在選單畫面就一直點，也不會每次都重新起音樂（isMusicOn 擋掉）。
+function ensureMenuMusic(){
+  if((!G||!G.running) && menuEl && !menuEl.classList.contains('hide') && !SFX.isMusicOn())
+    SFX.musicStart();
+}
+// 選單畫面上的按鈕、銀河路線節點都是獨立的 DOM 元素（蓋在 canvas 上面），
+// 點下去不會經過 canvas 的 touchstart/mousedown/pointerdown 監聽器，
+// 所以另外在 document 這層攔一次，確保「點任何一個選單按鈕」都能觸發音樂/解鎖。
+document.addEventListener('pointerdown',()=>{ SFX.unlock(); ensureMenuMusic(); },{capture:true});
+document.addEventListener('touchstart',()=>{ SFX.unlock(); ensureMenuMusic(); },{capture:true,passive:true});
 
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const rndi=(a,b)=>Math.floor(rnd(a,b+1));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const dist2=(ax,ay,bx,by)=>{const dx=ax-bx,dy=ay-by;return dx*dx+dy*dy;};
+// v0.9.11：點到「射線段」的最短距離，給超級大 Boss 的雷射鎖定攻擊判定命中用。
+// (x0,y0)=起點、ang=方向、len=長度上限，(px,py)=要測試的點（通常是玩家座標）。
+function raySegDist(x0,y0,ang,len,px,py){
+  const dx=Math.cos(ang), dy=Math.sin(ang);
+  let t=(px-x0)*dx+(py-y0)*dy;
+  t=clamp(t,0,len);
+  const cx=x0+dx*t, cy=y0+dy*t;
+  return Math.hypot(px-cx,py-cy);
+}
 
 //====================== 輸入 ======================
 const IN={active:false,id:null,ox:0,oy:0,x:0,y:0,dx:0,dy:0,mag:0,hist:[]};
@@ -611,7 +691,7 @@ cv.addEventListener('touchstart',e=>{
   }
   syncJoy(e,false);
   touchSeen=true; lastTouchAt=performance.now();
-  SFX.unlock();                                    // 放最後：音訊出事也不能影響操作
+  SFX.unlock(); ensureMenuMusic();                  // 放最後：音訊出事也不能影響操作
 },{passive:false});
 cv.addEventListener('touchmove',e=>{
   e.preventDefault();
@@ -646,7 +726,7 @@ cv.addEventListener('touchend',onTouchEnd,{passive:false});
 cv.addEventListener('touchcancel',onTouchEnd,{passive:false});
 // 滑鼠（桌機）
 cv.addEventListener('mousedown',e=>{
-  DIAG.mouse++; SFX.unlock();
+  DIAG.mouse++; SFX.unlock(); ensureMenuMusic();
   if(inMute(e.clientX,e.clientY)) SFX.toggle();
   else if(inBtn(e.clientX,e.clientY)) pressBoost();
   else startJoy(-1,e.clientX,e.clientY);
@@ -657,7 +737,7 @@ addEventListener('mouseup',()=>{ if(IN.id===-1) endJoy(); });
 const touchAlive=()=>touchSeen && (performance.now()-lastTouchAt)<2000;
 if(window.PointerEvent){
   cv.addEventListener('pointerdown',e=>{ if(touchAlive()||e.pointerType!=='touch')return;
-    DIAG.pointer++; SFX.unlock();
+    DIAG.pointer++; SFX.unlock(); ensureMenuMusic();
     if(inMute(e.clientX,e.clientY)) SFX.toggle();
     else if(inBtn(e.clientX,e.clientY)) pressBoost();
     else if(!IN.active) startJoy(e.pointerId,e.clientX,e.clientY); });
@@ -681,6 +761,8 @@ function newGame(){
  return {
   L, lvIdx:LV_IDX, winT:L.dur, waves:buildWaves(L), bosses:buildBosses(L),
   CHEST:[], chestT:L.chest*0.75,   // 頻率降低後，第一個寶箱也稍微延後出現，維持節奏一致
+  // v0.9.10：核彈補給，每關限定出現一次（不會過期），撿到後在左下角圖示按鈕待命使用
+  NUKE:null, nukeSpawned:false, nukeSpawnAt:rnd(L.dur*0.28,L.dur*0.55),
   t:0, running:true, over:false, win:false, hasMoved:false,
   cam:{x:0,y:0,shake:0,shAng:0,shPhase:0,zoom:1},
   hitstop:0, slowmo:0, hurt:0, bossWarnT:-1, bossWarnName:'',
@@ -693,7 +775,7 @@ function newGame(){
      rage:0,panic:0,magnet:0,greed:0,heart:0,cd:0,regen:0,
      // 對應的執行期狀態
      regenT:0,shieldN:0,shieldT:0,frenzyKills:0,frenzyT:0,panicT:0,rainbowT:0,chestDmgT:0,
-     mvx:0,mvy:0,moving:0,onGoo:0,
+     mvx:0,mvy:0,moving:0,onGoo:0, nukeHeld:false,
      wep:{bubble:1,graffiti:0,yoyo:0}, evo:{}},
   E:[], B:[], EB:[], PT:[], GEM:[], GOO:[], TXT:[], FW:[], fw:false, fwT:0,
   spawnAcc:0, waveIdx:0, boss:null, bossDone:[false,false,false], chests:0,
@@ -788,7 +870,9 @@ function spawnBoss(cfg){
     r:cfg.r,hp:cfg.hp,maxhp:cfg.hp,spd:cfg.spd,dmg:cfg.dmg,hue:cfg.hue,xp:cfg.superBoss?90:40,
     type:'boss',flash:0,kb:0,kbx:0,kby:0,shootCD:2,wob:0,boss:true,name:cfg.name,
     atk:cfg.atk, atkT:1.4, atkMax:cfg.atkT, bspd:cfg.bspd, spin:0, kind:cfg.kind,
-    superBoss:!!cfg.superBoss};
+    superBoss:!!cfg.superBoss,
+    // v0.9.11：雷射鎖定攻擊計時器，只有超級大 Boss 會真的用到（見 update() 內判斷）
+    laserCD:rnd(2.6,3.6), laserWarnT:0, laserFireT:0, laserAng:0};
   G.E.push(b); G.boss=b;
   if(cfg.superBoss){
     toast('⚠️ 超級大 BOSS：'+cfg.name+'！','#ff2a6b'); shake(14); hitstop(.12);
@@ -1083,7 +1167,7 @@ function rollCards(){
 }
 const cardsEl=document.getElementById('cards');
 function showCards(){
-  G.paused=true;
+  G.paused=true;   // btnPause/btnNuke 的顯示都跟著 G.paused 走（見 drawHUD()），這裡不用另外管
   const list=rollCards();
   cardsEl.innerHTML='<div class="lvtitle">LV.'+G.P.lv+' 升級！選一張</div>';
   for(const u of list){
@@ -1365,6 +1449,32 @@ function updateChests(dt){
     }
   }
 }
+// v0.9.10：核彈補給——整關限定出現一次，撿到之前不會過期（不像寶箱會消失），
+// 撿到後不會立刻生效，收進「庫存」讓玩家自己選時機按左下角圖示引爆。
+function updateNuke(dt){
+  const P=G.P;
+  if(!G.nukeSpawned && G.t>=G.nukeSpawnAt){
+    G.nukeSpawned=true;
+    for(let k=0;k<24;k++){
+      const a=rnd(0,6.283), d=rnd(380,650);
+      const x=P.x+Math.cos(a)*d, y=P.y+Math.sin(a)*d;
+      if(Math.hypot(x,y)>ARENA-100) continue;
+      G.NUKE={x,y,wob:rnd(0,6.28)};
+      toast('☢️ 出現核彈補給！快去撿','#ff9a4f'); SFX.heal();
+      break;
+    }
+  }
+  if(G.NUKE){
+    G.NUKE.wob+=dt*3;
+    if(dist2(G.NUKE.x,G.NUKE.y,P.x,P.y) < 40*40){
+      P.nukeHeld=true; G.NUKE=null;
+      toast('取得核彈！左下角圖示可以引爆','#ff9a4f');
+      pop(P.x,P.y-46,'☢️','#fff',34);
+      burst(P.x,P.y,34,25,1.8);
+      shake(4); SFX.evo();
+    }
+  }
+}
 function drawChests(){
   for(const c of G.CHEST){
     const bob=Math.sin(c.wob)*4, s=26, x=c.x, y=c.y+bob;
@@ -1416,6 +1526,39 @@ function drawChestArrows(){
     ctx.beginPath(); ctx.moveTo(30,0); ctx.lineTo(19,8); ctx.lineTo(19,-8); ctx.closePath(); ctx.fill();
     ctx.restore();
   }
+}
+// v0.9.10：核彈補給的外觀——不用寶箱那套糖果箱造型，換成明顯不一樣的輻射膠囊，
+// 提醒玩家這是稀有道具，跟一般寶箱不同等級
+function drawNuke(){
+  if(!G.NUKE) return;
+  const c=G.NUKE, bob=Math.sin(c.wob)*4, s=28, x=c.x, y=c.y+bob;
+  const pulse=0.6+0.4*Math.sin(c.wob*2.2);
+  ctx.fillStyle='hsla(25,100%,60%,'+(0.22+pulse*0.12)+')';
+  ctx.beginPath(); ctx.arc(x,y,s*2.3,0,6.283); ctx.fill();
+  ctx.fillStyle='#2a1608';
+  ctx.beginPath(); ctx.arc(x,y,s*0.92,0,6.283); ctx.fill();
+  ctx.strokeStyle='#ffb23f'; ctx.lineWidth=3; ctx.stroke();
+  ctx.font='900 '+Math.round(s*1.05)+'px system-ui'; ctx.textAlign='center';
+  ctx.fillText('☢️',x,y+s*0.36);
+}
+function drawNukeArrow(){
+  if(!G.NUKE) return;
+  const c=G.NUKE;
+  const sx=c.x-G.cam.x+W/2, sy=c.y-G.cam.y+H/2, m=52;
+  if(sx>m&&sx<W-m&&sy>m&&sy<H-m) return;
+  const ax=clamp(sx,m,W-m), ay=clamp(sy,m,H-m);
+  const a=Math.atan2(sy-H/2,sx-W/2);
+  const pulse=0.6+0.4*Math.sin(G.t*5);
+  ctx.save(); ctx.translate(ax,ay);
+  ctx.fillStyle='hsla(25,100%,58%,'+(0.6+pulse*0.35)+')';
+  ctx.beginPath(); ctx.arc(0,0,20,0,6.283); ctx.fill();
+  ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+  ctx.font='900 16px system-ui'; ctx.textAlign='center'; ctx.fillStyle='#fff';
+  ctx.fillText('☢️',0,6);
+  ctx.rotate(a);
+  ctx.fillStyle='hsla(25,100%,65%,'+(0.65+pulse*0.35)+')';
+  ctx.beginPath(); ctx.moveTo(30,0); ctx.lineTo(19,8); ctx.lineTo(19,-8); ctx.closePath(); ctx.fill();
+  ctx.restore();
 }
 
 //====================== 更新 ======================
@@ -1517,6 +1660,7 @@ function update(dt,rawdt){
 
   updateSpawn(dt);
   updateChests(dt);
+  updateNuke(dt);
 
   //--- 敵人
   for(let i=G.E.length-1;i>=0;i--){
@@ -1568,6 +1712,30 @@ function update(dt,rawdt){
           for(let k=-2;k<=2;k++) shootE(e.x,e.y,ang+k*.20,bs*1.4,e.dmg,7);
         }
         shake(rage?3:2);
+      }
+      // v0.9.11：超級大 Boss 專屬第二種攻擊——雷射鎖定直線光束。
+      // 取材自使用者提供的參考遊戲影片：先鎖定玩家「當下」位置畫出警示細線，
+      // 短暫延遲後才沿線打出直線光束。跟既有的 cross/spiral/ring 這類「從中心
+      // 往外放射」的彈幕完全不同性質——逼玩家「離開一條線」而不是「離開一個點」，
+      // 是全新的閃避技巧，所以只給超級大 Boss（第6、10關）用，不影響其餘8關
+      // 一般 Boss 戰既有的難度曲線與教學節奏。
+      if(e.superBoss){
+        if(e.laserFireT>0){
+          e.laserFireT-=dt;
+          const dHit=raySegDist(e.x,e.y,e.laserAng,1000,P.x,P.y);
+          if(dHit<24+P.r && P.iframe<=0) hurtPlayer();
+          if(e.laserFireT<=0) e.laserCD=rnd(3.0,4.2)*(rage?0.7:1);
+        }else if(e.laserWarnT>0){
+          e.laserWarnT-=dt;
+          if(e.laserWarnT<=0){ e.laserFireT=0.35; shake(6); SFX.laserFire(); }
+        }else{
+          e.laserCD-=dt;
+          if(e.laserCD<=0){
+            e.laserAng=ang;              // 鎖定當下角度，警示期間不再更新，玩家能靠移動閃開
+            e.laserWarnT=0.68;
+            SFX.laserWarn();
+          }
+        }
       }
     }
     if(e.kb>0){ e.kb-=dt; e.x+=e.kbx*dt; e.y+=e.kby*dt; }
@@ -1783,6 +1951,7 @@ function draw(){
   }
 
   drawChests();
+  drawNuke();
   // 敵人
   const eDetail=G.E.length<=55;
   for(const e of G.E) drawBlob(e,eDetail||e.boss);
@@ -1805,6 +1974,7 @@ function draw(){
     ctx.fillStyle='#fff8f8';
     ctx.beginPath(); ctx.arc(b.x,b.y,R*0.3,0,6.283); ctx.fill();
   }
+  drawBossLaser();
   // 我方子彈 —— 一律青白發光圓形（不管哪把武器），與紅色敵彈徹底分流
   ctx.globalCompositeOperation='lighter';
   for(const b of (live?G.B:[])){
@@ -1842,6 +2012,35 @@ function draw(){
   drawHUD();
 }
 
+// v0.9.11：超級大 Boss 雷射鎖定攻擊的畫面——警示階段畫紅色虛線（讓玩家有時間反應、
+// 走出這條線），開火階段換成又粗又亮的光束（紅→粉→白三層疊加，跟敵彈的紅色菱形
+// 用同一套「危險=紅」語言，但形狀完全不同，才不會被誤認成普通彈幕）。
+function drawBossLaser(){
+  const e=G.boss;
+  if(!e||!e.superBoss) return;
+  const LEN=1000, ex=e.x, ey=e.y, ax=Math.cos(e.laserAng)*LEN, ay=Math.sin(e.laserAng)*LEN;
+  if(e.laserWarnT>0){
+    const k=clamp(1-e.laserWarnT/0.68,0,1);
+    const flick=0.35+Math.abs(Math.sin(G.t*22))*0.45;
+    ctx.save();
+    ctx.strokeStyle='rgba(255,50,70,'+(flick*(0.35+k*0.5)).toFixed(3)+')';
+    ctx.lineWidth=2.5+k*3;
+    ctx.setLineDash([14,10]);
+    ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex+ax,ey+ay); ctx.stroke();
+    ctx.restore();
+  }else if(e.laserFireT>0){
+    const k=clamp(e.laserFireT/0.35,0,1);
+    ctx.save();
+    ctx.globalCompositeOperation='lighter';
+    ctx.strokeStyle='rgba(255,70,90,'+(0.30*k+0.12).toFixed(3)+')'; ctx.lineWidth=48;
+    ctx.beginPath(); ctx.moveTo(ex,ey); ctx.lineTo(ex+ax,ey+ay); ctx.stroke();
+    ctx.strokeStyle='rgba(255,150,170,'+(0.55*k+0.25).toFixed(3)+')'; ctx.lineWidth=20;
+    ctx.stroke();
+    ctx.strokeStyle='rgba(255,248,249,'+(0.75*k+0.25).toFixed(3)+')'; ctx.lineWidth=7;
+    ctx.stroke();
+    ctx.restore();
+  }
+}
 // 不使用 save()/restore()：那兩個呼叫在 80+ 敵人時是實測最大的單一開銷
 function drawBlob(e,detail){
   const R=e.r*(1+Math.sin(e.wob)*.07);
@@ -1924,9 +2123,14 @@ function drawPlayer(P){
   ctx.restore();
 }
 
+const pauseBtnEl=document.getElementById('btnPause'), nukeBtnEl=document.getElementById('btnNuke');
 function drawHUD(){
   const P=G.P;
   const pad=14, top=SAFE_TOP;
+  // v0.9.10：暫停鍵、核彈按鈕是不是要顯示，每幀在這裡統一判斷（唯一的判斷來源），
+  // 不要在 start()/endGame()/showCards() 等一堆地方各自 toggle，容易漏掉某個路徑。
+  pauseBtnEl.classList.toggle('hide', !(G.running && !G.paused));
+  nukeBtnEl.classList.toggle('hide', !(G.running && !G.paused && P.nukeHeld));
   // 受擊全螢幕紅閃 + 邊緣暗角（比血條扣血更快被眼睛接收到）
   if(G.hurt>0){
     const a=G.hurt;
@@ -2012,6 +2216,7 @@ function drawHUD(){
     ctx.fillText(P.dashCD.toFixed(1),BTN.x,BTN.y+br+16);
   }
   drawChestArrows();
+  drawNukeArrow();
   // Boss 離開視野時的方向指示（血條在跳但看不到本體會很困惑）
   if(G.boss){
     const sx2=G.boss.x-G.cam.x+W/2, sy2=G.boss.y-G.cam.y+H/2, m=46;
@@ -2276,12 +2481,13 @@ function showMenu(){
   overEl.classList.add('hide'); cardsEl.classList.add('hide');
   menuEl.classList.remove('hide');
   document.getElementById('confirmBox').classList.add('hide');   // 保險：不要帶著上次沒關掉的確認彈窗回來
-  SFX.musicStop();
+  SFX.unlock(); SFX.musicStart();   // v0.9.10：回選單改成播放首頁音樂（可愛版），不再是靜音
 }
 function start(){
   G=newGame(); G.running=true;
   SFX.unlock(); SFX.musicStart();
   menuEl.classList.add('hide'); overEl.classList.add('hide'); cardsEl.classList.add('hide');
+  document.getElementById('pauseOverlay').classList.add('hide');   // btnPause本身跟著G.running自動顯示，見drawHUD()
   lastT=performance.now();
 }
 
@@ -2352,6 +2558,7 @@ function endGame(win){
   G.running=false; G.over=true; G.win=win;
   shake(8);
   SFX.musicStop();
+  document.getElementById('pauseOverlay').classList.add('hide');
   if(win){
     G.fw=true; G.fwT=0; SFX.win();
     for(let i=0;i<7;i++) setTimeout(()=>{ if(G&&G.fw) spawnFirework(i%3===0); }, i*120);
@@ -2385,6 +2592,37 @@ nextEl.onclick=()=>{ if(LV_IDX+1<LEVELS.length){ LV_IDX++; } start(); };
 document.getElementById('btnSave').onclick=()=>{
   const a=document.createElement('a'); a.href=shotEl.src;
   a.download='goo-blaster-L'+(LV_IDX+1)+'.png'; a.click();
+};
+// v0.9.10：遊戲中的暫停鍵。跟升級卡選擇共用 G.paused；btnPause/btnNuke 兩顆按鈕
+// 本身要不要顯示，統一在 drawHUD() 裡每幀跟著 G.running/G.paused 判斷，這裡只管
+// pauseOverlay 這個彈窗本身的開關，不用重複管按鈕的顯示/隱藏。
+const pauseOverlayEl=document.getElementById('pauseOverlay');
+pauseBtnEl.onclick=()=>{
+  if(!G||!G.running||G.paused)return;
+  G.paused=true; pauseOverlayEl.classList.remove('hide');
+};
+document.getElementById('btnResume').onclick=()=>{
+  if(!G)return;
+  G.paused=false; pauseOverlayEl.classList.add('hide');
+};
+document.getElementById('btnQuitToMenu').onclick=()=>{
+  if(G){ G.running=false; G.paused=false; }
+  pauseOverlayEl.classList.add('hide');
+  showMenu();
+};
+// v0.9.10：核彈按鈕——場上所有非 Boss 敵人（「低級的怪物」）直接死亡，Boss 不受影響。
+// 用 killEnemy() 而不是扣血，確保是「一定死」，不是「傷害夠不夠」。
+nukeBtnEl.onclick=()=>{
+  if(!G||!G.running||G.paused||!G.P.nukeHeld) return;
+  G.P.nukeHeld=false;
+  const targets=G.E.filter(e=>!e.boss);
+  const n=targets.length;
+  for(const e of targets) killEnemy(e);
+  G.EB.length=0;                          // 順便清空敵方彈幕，畫面乾淨清爽
+  toast('☢️ 核彈引爆！清空 '+n+' 隻小怪','#ff9a4f');
+  shake(16); hitstop(.18);
+  burst(G.P.x,G.P.y,50,25,2.4);
+  SFX.bossDie();                          // 借用遊戲裡最有份量的爆炸音效
 };
 renderStage();
 
