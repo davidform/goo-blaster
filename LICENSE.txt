@@ -1,0 +1,31 @@
+GOO BLASTER
+Copyright (c) 2026 David Form. All rights reserved.
+版權所有，保留一切權利。
+
+This repository is made public solely so that the game can be hosted on
+GitHub Pages and played in a browser. Publishing the source does NOT place
+it in the public domain and does NOT grant any licence.
+
+本專案之所以設為公開，僅僅是為了讓遊戲能透過 GitHub Pages 在瀏覽器中遊玩。
+公開原始碼不代表放棄著作權，也不代表授權任何人使用。
+
+You MAY:
+  - Play the game.
+  - Read the source code for personal study.
+  - Report bugs or send feedback.
+
+You MAY NOT, without prior written permission from the copyright holder:
+  - Copy, modify, translate or create derivative works from this code.
+  - Redistribute this game or any part of it.
+  - Publish this game, or anything substantially derived from it, on any
+    app store, game portal, website or other distribution channel.
+  - Use the name "GOO BLASTER", its artwork, or its characters commercially.
+
+未經著作權人事前書面同意，不得：
+  - 複製、修改、翻譯本程式碼或製作衍生作品
+  - 再散布本遊戲或其任何部分
+  - 將本遊戲或實質衍生自本遊戲的作品上架至任何應用程式商店、
+    遊戲平台、網站或其他散布管道
+  - 商業使用「GOO BLASTER」名稱、美術或角色
+
+Contact: davidformbz@gmail.com

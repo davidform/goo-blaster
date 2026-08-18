@@ -1,7 +1,9 @@
 {
   "name": "GOO BLASTER",
   "short_name": "GooBlaster",
-  "description": "頂視角單指果凍射擊 — 殺越多，地板越黏。",
+  "lang": "en",
+  "description": "A sticky one-thumb survivor game. 50 stages, 10 bosses, no download, no ads.",
+  "categories": ["games"],
   "start_url": "./index.html",
   "scope": "./",
   "display": "fullscreen",
