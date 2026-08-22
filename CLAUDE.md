@@ -97,6 +97,7 @@ store/                  ← 上架素材（封面、截圖、itch.io 用的 zip�
 | 主迴圈 | `function update(dt,rawdt)` |
 | 玩家受傷 | `function hurtPlayer` |
 | 存檔 | `function saveGame` / `loadSave` / `const SAVE_VER=` |
+| **原生儲存** | `const NATIVE_STORE=` / `pickBetterSave` / `hydrateFromNative` |
 | **免費/付費切點** | `const EDITION=` / `DEMO_LEVELS` / `isLocked` / `showLockBox` |
 | **同伴（糖果援軍）** | `const ALLY_N=` / `spawnAllies` / `updateAllies` / `drawAllies` |
 | 寶箱 | `const CHEST_TYPES=` / `const CHEST_W=`（整數權重表） |
@@ -152,6 +153,9 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
 7. **猜錯兩次就停下來裝儀器。** v0.9.27 有一項測試我連續猜了四次原因、
    每次「修正」都讓測試更複雜，最後量出來的真相是：被測的功能根本沒壞。
 8. **效能測試不能跟別的測試搶 CPU**，而且**容器不是真實手機**，真機效能量不到。
+9. ⭐ **「測試的輸入」也不能是機率的。** `hurtEnemy()` 內建 5% 爆擊（傷害 ×2），
+   害 `py_boss_skin` 的盔甲門檻測試從 v0.9.22 起就有 5% 機率失敗、六個版本沒人發現。
+   寫測試時要問：**我餵進去的東西，每次都一樣嗎？**（該測試已先 `G.P.crit=0`）
 
 ---
 
@@ -192,9 +196,10 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
 - 🟢 ~~免費/付費切點~~ **v0.9.27 已完成機制**：`EDITION='demo'` 即可啟用
   （免費 1–15 關 + 解鎖面板 + `window.GOO_UNLOCK()`）。
   **還缺的是商店端**：`STORE_URL` 要填、原生內購要接、定價要決定。
-- 🔴 **沒有原生儲存**。包成 WebView App 後 localStorage 可能被 OS 清掉，
-  對付費玩家是致命的。需要 Capacitor Preferences 之類的方案 + 存檔遷移
-- 🔴 沒有隱私政策（上架必要文件）
+- 🟢 ~~沒有原生儲存~~ **v0.9.28 已完成**：`NATIVE_STORE` 偵測到 Capacitor 就用
+  Preferences 當持久層，localStorage 降級成快取；`pickBetterSave()` 保證玩家不倒退。
+  骨架在 `native/`。⚠ **雲端沒有 Android SDK，真機打包與存檔持久性尚未實測**
+- 🟢 ~~沒有隱私政策~~ `PRIVACY.md`（中英雙語）已寫好，**還要放到一個公開網址**
 - 🔴 **定價還沒決定**，`STORE_URL` 還是空字串
 - 🟠 內容深度：只有 4 種敵人、3 種武器、1 個角色
 - 🟠 `enemyTier()` 在第 9 關就封頂，之後 42 關的敵人分層完全相同

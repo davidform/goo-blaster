@@ -23,14 +23,14 @@ echo "測試根目錄：$GAME_DIR"
 if ! node "$REPO/tests/syntax_check.js"; then echo "❌ 語法檢查沒過"; exit 1; fi
 
 if [ "${1:-}" = "quick" ]; then
-  PY="py_test9 py_ab_base py_bullet_density py_i18n py_cjk_scan py_v0927"
+  PY="py_test9 py_ab_base py_bullet_density py_i18n py_cjk_scan py_v0927 py_native_store"
   JS=""
 else
   PY="py_50levels py_ab_base py_audit_fixes py_balance py_boss_skin py_boss_time \
       py_btn_conflict py_bullet_density py_card_pool py_cards_fix py_cjk_scan \
       py_i18n py_i18n_new py_lang_attr py_laser_boss py_layout_fit py_level_audit \
       py_meta py_range_music py_spawn py_touch_real py_ui_edge py_ui_fixes \
-      py_v0926_edge py_v0927 py_lv5_stress py_test9"
+      py_v0926_edge py_v0927 py_native_store py_lv5_stress py_test9"
   JS="test5 test6 test8 test9 test10 test11 testaudio testlead"
   # ⚠ 效能測試不能跟其他 36 支搶 CPU：平行時整台機器只剩個位數 FPS，
   #   連「有同伴 vs 沒同伴」的相對比較都失去解析度（2.6 fps vs 1.6 fps

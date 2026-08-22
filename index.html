@@ -311,7 +311,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.27';
+const BUILD='v0.9.28';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1742,26 +1742,74 @@ let COINS=0;
 let META={};                    // {升級id: 已購買等級}
 function metaLv(id){ return META[id]|0; }
 
+// ══════════ v0.9.28：儲存層 ══════════════════════════════════════════
+// 問題（docs-12 列為上架前的第一風險）：包成 WebView App 之後，存檔還是走
+// localStorage，而 iOS / Android 都可能在儲存空間吃緊時把 WebView 的
+// localStorage 清掉。對付費玩家來說就是：進度、糖果幣、買斷解鎖狀態全部消失
+// → 退款 + 一星評價，而且是我們自己造成的。
+//
+// 解法：原生外殼在的時候，用 Capacitor Preferences（會寫進 App 的私有空間，
+// 不會被當成快取清掉）當真正的持久層，localStorage 降級成同步快取。
+//
+// ⚠ 架構上的難處：Preferences 是**非同步**的，但 loadSave() 在開機時是同步呼叫，
+//   而且後面一整串程式都假設 PROGRESS/COINS 已經有值。所以用 hydrate 模式：
+//     1. 開機先同步讀 localStorage（純網頁版這就是全部，行為完全不變）
+//     2. 偵測到原生外殼時，再非同步把原生的值讀進來，合併後重畫選單
+//     3. 之後每次存檔「同時」寫 localStorage 與原生
+const NATIVE_STORE = {
+  plugin(){
+    try{ return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Preferences) || null; }
+    catch(e){ return null; }
+  },
+  available(){ return !!this.plugin(); },
+  get(k){
+    const p=this.plugin(); if(!p) return Promise.resolve(null);
+    try{ return Promise.resolve(p.get({key:k})).then(r=>(r&&r.value!=null)?r.value:null).catch(()=>null); }
+    catch(e){ return Promise.resolve(null); }
+  },
+  set(k,v){
+    const p=this.plugin(); if(!p) return Promise.resolve(false);
+    try{ return Promise.resolve(p.set({key:k,value:v})).then(()=>true).catch(()=>false); }
+    catch(e){ return Promise.resolve(false); }
+  }
+};
+
+// 兩份存檔打架時挑哪一份：永遠不讓玩家倒退。
+// 進度高的贏；平手看糖果幣；買斷解鎖只要有一邊是 true 就保留（付過的錢不能消失）。
+function pickBetterSave(a,b){
+  if(!a) return b; if(!b) return a;
+  const pa=+a.progress||1, pb=+b.progress||1;
+  const win = pa!==pb ? (pa>pb?a:b) : ((+a.coins||0)>=(+b.coins||0) ? a : b);
+  const out = Object.assign({}, win);
+  out.prem = (a.prem||b.prem) ? 1 : 0;          // 買斷狀態 OR 起來
+  out.coins = Math.max(+a.coins||0, +b.coins||0);
+  return out;
+}
+
+function applySaveObject(o){
+  if(!o) return;
+  PROGRESS=+o.progress||1; COINS=Math.max(0,+o.coins||0); META=o.meta||{};
+  PREM_OWNED=!!o.prem;             // v0.9.27：買斷解鎖狀態（demo 版才有作用）
+  // v0.9.22：預設一律英文。原本這裡是 detectLang()（跟著手機語系走），
+  // 結果使用者的 zh-TW 手機開起來是中文版——跟「預設語言為英文」的需求相反。
+  // 現在只有「玩家自己在語言選單選過」才會記住，其餘一律 DEFAULT_LANG。
+  if(o.lang && L10N[o.lang]) LANG=o.lang;
+  else LANG=DEFAULT_LANG;
+  // v0.9.23：100 關 → 50 關的存檔遷移。新第 N 關 ≈ 舊第 2N 關，
+  // 所以「已破關數」除以 2（無條件進位，寧可多給不要倒扣）。
+  // 用 o.v 標記已遷移，避免重複執行把進度越切越小。
+  if(!(o.v>=2)){
+    const cleared=Math.max(0,(+o.progress||1)-1);
+    PROGRESS=Math.min(LEVELS.length+1, Math.ceil(cleared/2)+1);
+    SAVE_V=2; saveGame();
+  }
+}
+
 function loadSave(){
   try{
     const raw=localStorage.getItem(PROG_KEY);
     if(raw){
-      const o=JSON.parse(raw);
-      PROGRESS=+o.progress||1; COINS=Math.max(0,+o.coins||0); META=o.meta||{};
-      PREM_OWNED=!!o.prem;             // v0.9.27：買斷解鎖狀態（demo 版才有作用）
-      // v0.9.22：預設一律英文。原本這裡是 detectLang()（跟著手機語系走），
-      // 結果使用者的 zh-TW 手機開起來是中文版——跟「預設語言為英文」的需求相反。
-      // 現在只有「玩家自己在語言選單選過」才會記住，其餘一律 DEFAULT_LANG。
-      if(o.lang && L10N[o.lang]) LANG=o.lang;
-      else LANG=DEFAULT_LANG;
-      // v0.9.23：100 關 → 50 關的存檔遷移。新第 N 關 ≈ 舊第 2N 關，
-      // 所以「已破關數」除以 2（無條件進位，寧可多給不要倒扣）。
-      // 用 o.v 標記已遷移，避免重複執行把進度越切越小。
-      if(!(o.v>=2)){
-        const cleared=Math.max(0,(+o.progress||1)-1);
-        PROGRESS=Math.min(LEVELS.length+1, Math.ceil(cleared/2)+1);
-        SAVE_V=2; saveGame();
-      }
+      applySaveObject(JSON.parse(raw));
     }else{
       // 從舊版（純數字）存檔遷移：保留破關進度，糖果幣從 0 開始
       const old=localStorage.getItem(OLD_PROG_KEY);
@@ -1771,10 +1819,46 @@ function loadSave(){
     localStorage.removeItem('gooblaster_progress');   // 清掉更早的殘留
   }catch(e){}
 }
+
+// 開機後才跑的第二階段：把原生儲存的內容讀進來。
+// 純網頁版（沒有 Capacitor）會立刻 return，行為與 v0.9.27 完全相同。
+let NATIVE_READY=false;
+function hydrateFromNative(){
+  if(!NATIVE_STORE.available()){ NATIVE_READY=true; return Promise.resolve(false); }
+  return NATIVE_STORE.get(PROG_KEY).then(raw=>{
+    let nat=null;
+    if(raw){ try{ nat=JSON.parse(raw); }catch(e){ nat=null; } }
+    let web=null;
+    try{ const r=localStorage.getItem(PROG_KEY); if(r) web=JSON.parse(r); }catch(e){}
+
+    if(!nat && web){
+      // 第一次在原生外殼裡跑：把既有的網頁存檔搬進原生儲存（一次性遷移）
+      NATIVE_READY=true;
+      return NATIVE_STORE.set(PROG_KEY, JSON.stringify(web)).then(()=>true);
+    }
+    if(nat){
+      const best=pickBetterSave(nat, web);
+      applySaveObject(best);
+      NATIVE_READY=true;
+      saveGame();                       // 把合併後的結果寫回兩邊，讓它們一致
+      // 存檔可能改變語言與進度 → 重畫主選單。遊戲進行中就不要動畫面。
+      try{ if(!(G && G.running)){ applyLanguage(); renderStage(); } }catch(e){}
+      return true;
+    }
+    NATIVE_READY=true;
+    return false;
+  }).catch(()=>{ NATIVE_READY=true; return false; });
+}
+
 function clampProgress(){ PROGRESS=Math.max(1,Math.min(Math.round(PROGRESS)||1,LEVELS.length+1)); }
 function saveGame(){
   clampProgress();
-  try{ localStorage.setItem(PROG_KEY, JSON.stringify({progress:PROGRESS, coins:Math.round(COINS), meta:META, lang:LANG, v:SAVE_VER, prem:PREM_OWNED?1:0})); }catch(e){}
+  const payload=JSON.stringify({progress:PROGRESS, coins:Math.round(COINS), meta:META,
+                                lang:LANG, v:SAVE_VER, prem:PREM_OWNED?1:0});
+  try{ localStorage.setItem(PROG_KEY, payload); }catch(e){}
+  // 原生儲存是非同步的，但存檔不需要等它——寫失敗也還有 localStorage 這份。
+  // 刻意不 await：存檔在遊戲迴圈裡會被頻繁呼叫，不能讓它卡住任何一幀。
+  try{ NATIVE_STORE.set(PROG_KEY, payload); }catch(e){}
 }
 const saveProgress=saveGame;    // 舊呼叫點沿用同一個名字，不用到處改
 
@@ -3969,6 +4053,10 @@ const doNuke=()=>{
 bindTapBtn(nukeBtnEl, doNuke);
 applyLanguage();          // v0.9.19：套用偵測/存檔的語言，再畫主選單
 renderStage();
+// v0.9.28：主選單先用 localStorage 的內容畫出來（純網頁版到這裡就結束了），
+// 再非同步把原生儲存的存檔讀進來合併、必要時重畫一次。
+// 這樣不論有沒有原生外殼，開機都不會有等待畫面。
+try{ hydrateFromNative(); }catch(e){}
 
 G=newGame(); G.running=false;
 requestAnimationFrame(loop);

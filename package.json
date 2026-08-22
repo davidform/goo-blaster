@@ -1,0 +1,21 @@
+{
+  "name": "goo-blaster",
+  "version": "0.9.28",
+  "private": true,
+  "description": "GOO BLASTER - native shell (Capacitor)",
+  "scripts": {
+    "sync": "cap sync",
+    "android": "cap open android",
+    "ios": "cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "@capacitor/preferences": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}
