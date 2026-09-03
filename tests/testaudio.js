@@ -12,8 +12,8 @@ const { chromium } = require('playwright');
     AC.prototype.createBufferSource=function(){ window.__cnt.buf++; return ob.call(this); };
   });
   const errs=[]; p.on('pageerror',e=>errs.push(e.message));
-  await p.goto('file:///home/claude/goo-blaster/index.html');
-  await p.evaluate(()=>{ PROGRESS=5; renderLevels(); LV_IDX=3; start(); }); await p.waitForTimeout(400);
+  await p.goto('file:///home/claude/goo/game/index.html');
+  await p.evaluate(()=>{ PROGRESS=5; renderStage(); LV_IDX=3; start(); }); await p.waitForTimeout(400);
   // 暫停遊戲讓只有音樂在跑
   await p.evaluate(()=>{ G.paused=true; });
   const t0 = await p.evaluate(()=>({...window.__cnt}));

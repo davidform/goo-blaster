@@ -25,12 +25,12 @@ def run(scheme):
                             user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) "
                                        "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 "
                                        "Mobile/15E148 Safari/604.1")
-        pg = ctx.new_page()
+        pg = ctx.new_page(); pg.set_default_timeout(60000)
         errs = []
         pg.on("pageerror", lambda e: errs.append(str(e)))
         pg.goto(url)
         pg.wait_for_timeout(600)
-        pg.click("#btnPlay")
+        pg.click("#btnPlay", no_wait_after=True)   # 單頁遊戲不會導航，等它只會白等到逾時
         pg.wait_for_timeout(800)
 
         cdp = ctx.new_cdp_session(pg)

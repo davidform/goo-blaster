@@ -3,7 +3,7 @@ const { chromium } = require('playwright');
   const b = await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});
   const c = await b.newContext({ viewport:{width:390,height:844}, deviceScaleFactor:2, isMobile:true, hasTouch:true });
   const p = await c.newPage();
-  await p.goto('file:///home/claude/goo-blaster/index.html');
+  await p.goto('file:///home/claude/goo/game/index.html');
   const gpu = await p.evaluate(()=>{
     const cv=document.createElement('canvas');
     const gl=cv.getContext('webgl')||cv.getContext('experimental-webgl');
@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
     const d=gl.getExtension('WEBGL_debug_renderer_info');
     return d? gl.getParameter(d.UNMASKED_RENDERER_WEBGL) : 'no debug info';
   });
-  await p.evaluate(()=>{ PROGRESS=5; renderLevels(); LV_IDX=3; start(); });
+  await p.evaluate(()=>{ PROGRESS=5; renderStage(); LV_IDX=3; start(); });
   // 快轉到最終 Boss 狂暴階段（真實遊戲中最重的一刻）
   await p.evaluate(()=>{ window.__a=setInterval(()=>{const x=document.querySelector('#cards .card');
     if(x&&!document.getElementById('cards').classList.contains('hide'))x.click();},60); });

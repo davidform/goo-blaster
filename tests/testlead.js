@@ -4,8 +4,8 @@ const { chromium } = require('playwright');
   const c = await b.newContext({ viewport:{width:390,height:844}, deviceScaleFactor:2, isMobile:true, hasTouch:true });
   const p = await c.newPage();
   const errs=[]; p.on('pageerror',e=>errs.push(e.message));
-  await p.goto('file:///home/claude/goo-blaster/index.html');
-  await p.evaluate(()=>{ PROGRESS=5; renderLevels(); LV_IDX=3; start(); }); await p.waitForTimeout(300);
+  await p.goto('file:///home/claude/goo/game/index.html');
+  await p.evaluate(()=>{ PROGRESS=5; renderStage(); LV_IDX=3; start(); }); await p.waitForTimeout(300);
   const r = await p.evaluate(async ()=>{
     const cvs=document.getElementById('cv');
     const mk=(id,x,y)=>new Touch({identifier:id,target:cvs,clientX:x,clientY:y});

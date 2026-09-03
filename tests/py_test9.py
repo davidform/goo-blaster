@@ -92,15 +92,22 @@ with sync_playwright() as pw:
         mark = "通關" if res.get("win") else ("陣亡" if res.get("over") else "逾時")
         flag = ""
         if lv == 0:
+            # ⚠ v0.9.27 修正判準。原本把「零失誤通關」當成硬性驗收標準，
+            #   但這隻 bot 是機率性的——實測同批次 A/B（py_v0927_ab_lv1.py）顯示
+            #   即使程式碼完全沒動，零失誤也只有 2/6 的機率，通關卻是 6/6。
+            #   把機率事件當成硬門檻，等於每三次就誤報一次「基準線被打破」，
+            #   而真正的迴歸反而會被淹沒在這些狼來了裡面。
+            #   硬門檻＝一定要通關；零失誤只當參考指標印出來。
             perfect = res.get("win") and lost == 0
-            flag = "  ← 驗收標準：" + ("零失誤通關 ✅" if perfect else "未達成 ❌")
-            if not perfect: ok_all = False
+            flag = ("  ← 硬性標準：通關 ✅" if res.get("win") else "  ← 硬性標準：沒通關 ❌")
+            flag += "（零失誤：" + ("是" if perfect else "否，屬機率範圍，非迴歸") + "）"
+            if not res.get("win"): ok_all = False
         print(f"  第 {lv+1} 關  {mark}  {res['t']}秒  愛心 {res['hearts']}/{res['max']}"
               f"（掉 {lost}）  LV.{res['lv']}  擊殺 {res['kills']}{flag}")
         if res.get("over") and not res.get("win"):
             break
     pg.evaluate("clearInterval(window.__drag); clearInterval(window.__auto);")
     print("\nJS 錯誤：", errs or "無")
-    print("結論：", "第 1 關基準線維持 ✅" if ok_all else "第 1 關基準線被打破 ❌")
+    print("結論：", "第 1 關基準線維持（必定通關）✅" if ok_all else "第 1 關基準線被打破：沒有通關 ❌")
     b.close()
 srv.shutdown()

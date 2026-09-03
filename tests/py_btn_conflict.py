@@ -18,8 +18,8 @@ with sync_playwright() as p:
     b = p.chromium.launch()
     for label, sx, sy in CASES:
         c = b.new_context(viewport={"width":390,"height":844}, is_mobile=True, has_touch=True)
-        pg = c.new_page(); pg.goto(f"http://127.0.0.1:{PORT}/index.html")
-        pg.wait_for_timeout(400); pg.click("#btnPlay"); pg.wait_for_timeout(700)
+        pg = c.new_page(); pg.set_default_timeout(60000); pg.goto(f"http://127.0.0.1:{PORT}/index.html")
+        pg.wait_for_timeout(400); pg.click("#btnPlay", no_wait_after=True)   # 單頁遊戲不會導航，等它只會白等到逾時; pg.wait_for_timeout(700)
         geo = pg.evaluate("({bx:BTN.x,by:BTN.y,br:BTN.r,hit:BTN.r*1.3})")
         cdp = c.new_cdp_session(pg)
         t = lambda ty, pts: cdp.send("Input.dispatchTouchEvent",

@@ -5,8 +5,8 @@ const { chromium } = require('playwright');
   const p = await c.newPage();
   const errs=[]; p.on('pageerror',e=>errs.push('PAGEERROR: '+e.message));
   p.on('console',m=>{if(m.type()==='error')errs.push('CONSOLE: '+m.text());});
-  await p.goto('file:///home/claude/goo-blaster/index.html');
-  await p.evaluate(()=>{ PROGRESS=5; renderLevels(); LV_IDX=3; start(); }); await p.waitForTimeout(300);
+  await p.goto('file:///home/claude/goo/game/index.html');
+  await p.evaluate(()=>{ PROGRESS=5; renderStage(); LV_IDX=3; start(); }); await p.waitForTimeout(300);
 
   const R={};
 

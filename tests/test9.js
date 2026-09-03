@@ -32,7 +32,7 @@ const DUMB = `
   const p = await c.newPage();
   const errs=[]; p.on('pageerror',e=>errs.push('PAGEERROR: '+e.message));
   p.on('console',m=>{if(m.type()==='error')errs.push('CONSOLE: '+m.text());});
-  await p.goto('file:///home/claude/goo-blaster/index.html');
+  await p.goto('file:///home/claude/goo/game/index.html');
   await p.waitForTimeout(400);
   const R={};
 
