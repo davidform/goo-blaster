@@ -1,0 +1,45 @@
+GOO BLASTER v0.9.28 更新步驟
+=============================
+
+■ 這一版改了什麼
+  原生儲存層。**對現在的網頁玩家完全沒有影響**（一行行為都沒變），
+  但這是上架前擋在最前面的那一塊：
+  包成 App 之後，存檔不再只靠 localStorage（會被系統清掉），
+  而是同時寫進 App 的私有儲存空間。
+
+  白話：**家長付了錢，小孩的進度就不會某天突然消失。**
+
+■ 一、GitHub 更新（跟前幾次一樣）
+  1. 解壓縮 goo-blaster-v0.9.28-repo.zip
+  2. 全部覆蓋到 GitHub Desktop 打開的資料夾
+     （C:\Users\David\Documents\GitHub\goo-blaster）
+  3. Commit 訊息填 "v0.9.28"，按 Commit → Push origin
+  4. 開 https://davidform.github.io/goo-blaster/ 確認版本號是 v0.9.28
+     （可能要 Ctrl+F5 強制重整）
+
+■ 二、itch.io 更新
+  1. Edit project → Uploads → 刪掉舊 zip，上傳 goo-blaster-html5.zip
+  2. 勾 "This file will be played in the browser"
+  3. Save
+
+■ 三、確認清單
+  □ 版本號 v0.9.28
+  □ 語言是英文
+  □ Stage 1 / 50，沒有任何鎖頭圖示
+  □ 糖果幣沒有歸零（這一版動的就是存檔，一定要確認這條）
+  □ 玩一關 → 重新整理 → 進度還在
+
+■ 四、新增的兩個東西（現在不用動，上架時才要）
+
+  PRIVACY.md
+    隱私政策，中英雙語。上架時 Google Play 與 App Store 都會要求
+    「隱私政策網址」——要把它放到一個公開網頁上。
+    最簡單的做法：GitHub Pages 已經開著了，直接放進 repo 之後網址就是
+    https://davidform.github.io/goo-blaster/PRIVACY.md
+    （之後要做得漂亮一點再轉成 HTML）
+
+  native/
+    Capacitor 原生外殼的骨架，裡面的 README.md 有逐步指令。
+    ⚠ 這個資料夾建議**另外開一個 repo**，不要跟遊戲混在一起。
+    ⚠ 我沒有辦法在雲端幫你實測打包（沒有 Android SDK / Xcode），
+      所以那份 README 的指令要以 Capacitor 官網當下的版本為準。

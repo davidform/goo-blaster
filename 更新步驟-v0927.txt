@@ -1,0 +1,38 @@
+GOO BLASTER v0.9.27 更新步驟
+=============================
+
+■ 這一版改了什麼
+  1. 新寶箱「糖果援軍」：開到之後跑出 3 個同伴幫你打怪 15 秒
+  2. 免費/付費切點：機制全部做好了，但**這一版對玩家完全沒有影響**
+     （EDITION='full'，所有關卡照常全開。上架時才改成 'demo'）
+
+■ 一、GitHub 更新
+  1. 解壓縮 goo-blaster-v0.9.27-repo.zip
+  2. 把裡面的檔案全部覆蓋到 GitHub Desktop 打開的那個資料夾
+     （C:\Users\David\Documents\GitHub\goo-blaster）
+  3. GitHub Desktop 會列出變更 → Commit 訊息填 "v0.9.27"
+  4. 按 Commit → 按 Push origin
+  5. 等 1~2 分鐘，開 https://davidform.github.io/goo-blaster/
+     確認左下角版本號變成 v0.9.27（可能要強制重新整理：Ctrl+F5）
+
+■ 二、itch.io 更新
+  1. 到 https://davidform.itch.io/goo-blaster → 右上 Edit project
+  2. Uploads 區塊，找到現有那個 zip → 右邊有個垃圾桶圖示先刪掉舊的
+     （或直接用 "Replace file" 如果有這個按鈕）
+  3. Upload files → 選 goo-blaster-html5.zip
+  4. 勾選 "This file will be played in the browser"
+  5. 拉到最下面按 Save
+  6. 開一次遊戲頁確認版本號是 v0.9.27
+
+■ 三、確認清單（更新完花兩分鐘看一下）
+  □ 左下角版本號是 v0.9.27
+  □ 語言是英文（不是中文）
+  □ 關卡地圖是 Stage 1 / 50，沒有任何鎖頭圖示
+  □ 進第 1 關能正常移動、能開火
+  □ 糖果幣沒有歸零（存檔沒被弄壞）
+
+  ※ 如果看到鎖頭圖示，代表拿錯檔案了——請告訴我。
+
+■ 四、之後要上架時才做的事（現在不用動）
+  在 index.html 裡找 const EDITION='full'; 改成 'demo'
+  並把 const STORE_URL=''; 填上商店連結。

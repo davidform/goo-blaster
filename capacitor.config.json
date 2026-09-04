@@ -1,0 +1,19 @@
+{
+  "appId": "io.itch.davidform.gooblaster",
+  "appName": "GOO BLASTER",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#0d0a1e",
+      "showSpinner": false,
+      "androidSplashResourceName": "splash"
+    }
+  }
+}
