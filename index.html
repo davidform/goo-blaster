@@ -348,7 +348,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.31';
+const BUILD='v0.9.32';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -3681,6 +3681,45 @@ function roundRect(x,y,w,h,r){
 }
 
 //====================== 戰報拍立得 ======================
+// v0.9.32：戰報上的主角肖像。
+// 比例完全照抄 drawPlayer()（眼睛 ±R*.32／-R*.1、眼睛半徑 R*.19、
+// 左上高光 -R*.28／-R*.4 半徑 R*.19、外框線寬 R*.147），確保分享出去的圖
+// 跟遊戲裡看到的是同一隻角色。唯一的差別是「表情會依勝負變化」：
+// 過關 = 彎起來的笑眼 ^ ^，失敗 = × ×。
+//
+// ⚠ 刻意只換眼睛形狀、不加嘴巴——遊戲裡的主角本來就沒有嘴，加了會變成
+// 另一隻角色，反而傷害辨識度。角色的三個辨識特徵（果凍藍綠 #6ff0e0、
+// 白色外框、左上高光）在勝負兩種狀態下都保留。
+//
+// ⚠ 跟 drawPlayer() 唯一的繪製順序差異：這裡把高光畫在眼睛「之前」。
+// 遊戲內是高光蓋在眼睛上（那是刻意的果凍反光感），但在這張圖上表情才是主角，
+// 高光壓在笑眼上會把弧線吃掉一截，所以改成先畫高光、表情永遠完整可見。
+function drawHeroPortrait(x, cx, cy, R, win){
+  x.save();
+  x.shadowColor='#4ff0ff'; x.shadowBlur=34;
+  x.fillStyle='#6ff0e0';
+  x.beginPath(); x.arc(cx,cy,R,0,6.283); x.fill();
+  x.shadowBlur=0;
+  x.strokeStyle='#e8fffb'; x.lineWidth=R*0.147; x.stroke();
+  // 左上高光（先畫，讓表情蓋在上面）
+  x.fillStyle='rgba(255,255,255,.55)';
+  x.beginPath(); x.arc(cx-R*0.28, cy-R*0.4, R*0.19, 0, 6.283); x.fill();
+  // 表情
+  const ex=R*0.32, ey=-R*0.1, er=R*0.19;
+  x.strokeStyle='#0d2430'; x.lineCap='round'; x.lineWidth=R*0.11;
+  for(const s of [-1,1]){
+    const gx=cx+s*ex, gy=cy+ey;
+    x.beginPath();
+    if(win){                                   // 笑眼 ^ ^
+      x.arc(gx, gy+er*0.55, er*1.15, Math.PI*1.15, Math.PI*1.85);
+    }else{                                     // × ×
+      x.moveTo(gx-er,gy-er); x.lineTo(gx+er,gy+er);
+      x.moveTo(gx+er,gy-er); x.lineTo(gx-er,gy+er);
+    }
+    x.stroke();
+  }
+  x.restore();
+}
 function makePolaroid(win){
   const w=560,h=740,c=document.createElement('canvas');
   c.width=w; c.height=h; const x=c.getContext('2d');
@@ -3695,8 +3734,11 @@ function makePolaroid(win){
     x.fillStyle='hsla('+hue+',90%,62%,'+rnd(.15,.7)+')';
     x.beginPath(); x.arc(rnd(px,px+pw),rnd(py,py+ph),rnd(3,34),0,6.283); x.fill();
   }
-  x.fillStyle='#6ff0e0'; x.shadowColor='#4ff0ff'; x.shadowBlur=30;
-  x.beginPath(); x.arc(px+pw/2,py+ph/2,42,0,6.283); x.fill(); x.shadowBlur=0;
+  // v0.9.32：原本這裡只畫一顆 42px 的純色光球——沒有臉、沒有輪廓線。
+  // 真機實測回報「主角的表情並沒有在截圖上，只是一個光球」。這張圖底下就印著
+  // #GooBlaster、是要拿去社群分享的，主角認不出來等於白丟品牌辨識度。
+  // 改成畫完整的角色（含表情），並放大到 78px 讓它真的像張人物照。
+  drawHeroPortrait(x, px+pw/2, py+ph/2-12, 78, win);
   x.textAlign='center';
   x.font='900 54px system-ui'; x.fillStyle=win?'#7ef7c0':'#ff5b7f';
   x.lineWidth=8; x.strokeStyle='rgba(0,0,0,.55)';
