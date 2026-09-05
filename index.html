@@ -348,7 +348,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.33';
+const BUILD='v0.9.34';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1927,7 +1927,12 @@ function hydrateFromNative(){
       NATIVE_READY=true;
       saveGame();                       // 把合併後的結果寫回兩邊，讓它們一致
       // 存檔可能改變語言與進度 → 重畫主選單。遊戲進行中就不要動畫面。
-      try{ if(!(G && G.running)){ applyLanguage(); renderStage(); } }catch(e){}
+      // v0.9.34：原生存檔合併完成後，PROGRESS 很可能比剛才用 localStorage
+      // 畫出來的高（例如重裝 App 之後 localStorage 是空的、原生儲存才有進度）。
+      // 這裡一定要跟著把 SEL_IDX 也拉到新的最前線，否則畫面會停在第 1 關，
+      // 玩家會以為進度不見了——但金幣又還在，更令人困惑。
+      try{ if(!(G && G.running)){ applyLanguage(); syncSelToFrontier(); renderStage();
+             document.getElementById('coinTag').textContent=Math.round(COINS); } }catch(e){}
       return true;
     }
     NATIVE_READY=true;
@@ -3998,9 +4003,16 @@ updateDiag();          // v0.9.20：先畫一次，否則開頭 700ms 版本號�
     if(diagTaps>=5){ diagTaps=0; DIAG_ON=!DIAG_ON; updateDiag(); SFX.level(); }
   });
 })();
-function showMenu(){
+// v0.9.34：把「目前選取的關卡」對齊玩家的最前線進度。
+// 抽成獨立函式的原因：原本這段只寫在 showMenu() 裡，但需要它的地方有三個
+// （開機、原生存檔非同步載入完成、回選單），漏掉任何一個就會發生
+// 「進度明明在、畫面卻停在第 1 關」。
+function syncSelToFrontier(){
   clampProgress();
-  SEL_IDX=Math.min(PROGRESS-1,LEVELS.length-1);   // 每次回選單，預設選到目前最前線的關卡
+  SEL_IDX=Math.max(0, Math.min(PROGRESS-1, LEVELS.length-1));
+}
+function showMenu(){
+  syncSelToFrontier();                             // 每次回選單，預設選到目前最前線的關卡
   renderStage();
   overEl.classList.add('hide'); cardsEl.classList.add('hide');
   document.getElementById('shop').classList.add('hide');
@@ -4330,6 +4342,16 @@ addEventListener('keydown',e=>{
   doNuke();
 });
 applyLanguage();          // v0.9.19：套用偵測/存檔的語言，再畫主選單
+// v0.9.34：開機時要把選取的關卡對齊「目前最前線」，不能停在第 1 關。
+// 這個 bug 一直都在（不是 v0.9.28 原生儲存造成的）：`SEL_IDX` 的宣告是
+// `let SEL_IDX=0`，而唯一會把它設成 PROGRESS-1 的地方是 showMenu()——
+// 但**開機路徑不會經過 showMenu()**，是直接呼叫 renderStage()。
+// 結果是：玩家關掉遊戲再打開，進度與糖果幣都在（存檔沒問題），
+// 但主畫面永遠停在第 1 關、按鈕寫著「重玩第一關」，要自己在銀河圖上
+// 一路點回第 8 關才能繼續。對小朋友來說這是每次開遊戲都要做一次的苦工。
+// 真機實測才發現，因為在網頁版通常是玩完一關回選單（會經過 showMenu()），
+// 很少有人真的「關掉再重開」。
+syncSelToFrontier();
 renderStage();
 // v0.9.28：主選單先用 localStorage 的內容畫出來（純網頁版到這裡就結束了），
 // 再非同步把原生儲存的存檔讀進來合併、必要時重畫一次。

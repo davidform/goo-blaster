@@ -75,7 +75,7 @@ index.html              ← 整個遊戲。唯一的產物。
 docs-04-append.md       ← 開發史（每一版的根因分析與教訓）★ 先讀這個
 docs-05 ~ docs-11       ← 各種專題評估（優化、獲利、語言市場、關卡數量…）
 LICENSE.txt             ← 保留一切權利
-tests/                  ← 41 支 Python(Playwright) + 8 支 Node 測試
+tests/                  ← 42 支 Python(Playwright) + 8 支 Node 測試
 run_tests.sh            ← 一鍵跑完整套測試（改完 index.html 一定要跑）
 i18n/                   ← 產生/更新 L10N 字典的腳本（改字典用這個，不要手改 index.html）
 store/                  ← 上架素材（封面、截圖、itch.io 用的 zip）
@@ -240,6 +240,23 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
   ⚠ 起因是使用者真機回饋，但他點名的是 🩹 急救棒棒糖（那張根本不回血）——
   **體感對、歸因錯**，要查的是他描述的效果而不是他點名的物件。
   已補 `tests/py_regen_cap.py`。詳見 `docs-04-append.md` 三十六。
+- 🟢 ~~開機後主畫面永遠停在第 1 關~~ **v0.9.34 已修**：`SEL_IDX` 只有 `showMenu()`
+  會設成 `PROGRESS-1`，但**開機路徑不經過 showMenu()**，所以玩家關掉遊戲再打開，
+  進度與金幣都在、主畫面卻停在第 1 關（金幣對是因為 `applyLanguage()` 順手重畫了
+  商店按鈕——同一份存檔、兩個地方更新，一個跟上一個沒有）。**網頁版一樣有這個
+  bug**，只是網頁玩家很少「關掉再重開」。抽成 `syncSelToFrontier()` 並補在
+  開機／`hydrateFromNative()` 合併完成／`showMenu()` 三個入口。
+  已補 `tests/py_boot_sel.py`（含用假 Capacitor 模擬 App 重裝）。
+  詳見 `docs-04-append.md` 三十七。
+- 🔴 **第 7 關是一道 3.2 倍的難度懸崖（已量測，尚未修）**：`py_boss_pressure.py`
+  量到同屏敵方子彈峰值第 3~6 關持平在 25~30，**第 7 關直接跳到 84（+223%）**。
+  根因是 `nboss` 由 2 變 3 加上攻擊間隔全面縮短，而 `genExtraLevels()` 第 11~50 關
+  **全部硬寫 `nboss: 3`**。兩位互不相識的真人（專案負責人、itch.io 玩家
+  CoderGenius72）都卡在第 7~8 關，與數據吻合。
+  ⚠ 使用者另提議「被打到後 3 秒無敵」——該機制**已存在**
+  （`P.iframe = P.panic ? 2.1 : 1.45`），是延長不是新增。
+  **建議先修懸崖再考慮延長無敵**：後者是全域鈍器，會連本來正常的第 1~6 關
+  與第 50 關一起變簡單，先動它會蓋掉懸崖的基準。
 - 🟢 ~~沒有隱私政策~~ `PRIVACY.md`（中英雙語）已寫好，**還要放到一個公開網址**
 - 🟢 ~~定價還沒決定~~ **已定案 US$2.99**（2026-09-05，見專案現況文件的定價研究）；
   `STORE_URL` 仍是空字串——那要等 Google Play 商店頁真的存在才能填
