@@ -73,6 +73,24 @@ MEASURE = """
   // 先跑到所有 Boss 都出場
   for (let i = 0; i < 120; i++) update(dt, dt);
 
+  // ⚠ spawnBoss() 用 rnd(0,6.283) 決定出場方位角，那是**隨機輸入**：
+  //   不同的相對位置會讓各隻 Boss 的彈幕重疊程度不同，實測同一份程式碼
+  //   連跑三次，第 3/4 關的峰值會在 26 與 30 之間跳動（±15%）。
+  //   AGENTS.md 第 3 節第 9 條：「餵進去的東西每次都要一樣」。
+  //   所以這裡把所有 Boss 重新排成以玩家為圓心、固定角度的等距圓陣，
+  //   讓測量完全確定性——量到的差異才一定是程式改動造成的。
+  {
+    const bosses = G.E.filter(e => e.boss);
+    bosses.forEach((e, k) => {
+      const a = k * 6.283 / Math.max(1, bosses.length);
+      e.x = G.P.x + Math.cos(a) * 300;
+      e.y = G.P.y + Math.sin(a) * 300;
+      e.spin = 0;
+      e.atkT = e.atkMax;          // 讓每隻的開火相位也一致
+    });
+    G.EB.length = 0;              // 清掉排位期間噴出來的子彈
+  }
+
   // 玩家不動、不被打死：每幀把愛心補滿並清無敵，純粹量火力
   let peak = 0, sum = 0, n = 0, bossPeak = 0;
   for (let i = 0; i < Math.round(25 * 60); i++) {

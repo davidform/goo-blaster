@@ -31,6 +31,12 @@
 import http.server, socketserver, threading, functools, sys, json, time
 from playwright.sync_api import sync_playwright
 
+# ⚠ 逾時刻意放到 60 秒：這些 wait_for_function 都是「輪詢到條件成立為止」，
+#   機器閒置時毫秒級就回來，長逾時不會讓測試變慢。但 run_tests.sh 是 43 支
+#   平行跑，開 43 個 Chromium 時光是把頁面載完就可能超過 15 秒——
+#   短逾時在那個情境下必定假紅字（AGENTS.md 第 3 節第 1 條）。
+
+
 ROOT = __import__('os').environ.get('GOO_ROOT','/home/claude/goo/game')
 PORT = 8803
 
@@ -105,14 +111,14 @@ def main():
             ctx = b.new_context(viewport={"width": 420, "height": 820})
             pg = ctx.new_page()
             pg.goto(url)
-            pg.wait_for_function("typeof SEL_IDX !== 'undefined'", timeout=15000)
+            pg.wait_for_function("typeof SEL_IDX !== 'undefined'", timeout=60000)
             total = pg.evaluate("() => LEVELS.length")
 
             for prog in (8, 1, 2, total, total + 1):
                 pg.evaluate("(v) => localStorage.setItem('gooblaster_save_v3', v)",
                             save_payload(prog))
                 pg.reload()
-                pg.wait_for_function("typeof SEL_IDX !== 'undefined'", timeout=15000)
+                pg.wait_for_function("typeof SEL_IDX !== 'undefined'", timeout=60000)
                 r = pg.evaluate(READ)
                 want = max(0, min(prog - 1, total - 1))
                 ok = r["sel"] == want
@@ -135,13 +141,13 @@ def main():
             pg = ctx.new_page()
             pg.add_init_script(FAKE_NATIVE)
             pg.goto(url)
-            pg.wait_for_function("typeof SEL_IDX !== 'undefined'", timeout=15000)
+            pg.wait_for_function("typeof SEL_IDX !== 'undefined'", timeout=60000)
             # 把進度只寫進「原生儲存」，然後清掉 localStorage 模擬重裝
             pg.evaluate("(v) => { let db={}; try{db=JSON.parse(window.name||'{}');}catch(e){}"
                         "  db['gooblaster_save_v3']=v; window.name=JSON.stringify(db);"
                         "  localStorage.clear(); }", save_payload(8, 4321))
             pg.reload()
-            pg.wait_for_function("typeof SEL_IDX !== 'undefined'", timeout=15000)
+            pg.wait_for_function("typeof SEL_IDX !== 'undefined'", timeout=60000)
             # 等非同步的原生合併跑完（輪詢，不用固定 sleep）
             try:
                 pg.wait_for_function("() => PROGRESS === 8", timeout=10000)

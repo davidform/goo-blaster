@@ -26,6 +26,12 @@
 import http.server, socketserver, threading, functools, sys
 from playwright.sync_api import sync_playwright
 
+# ⚠ 逾時刻意放到 60 秒：這些 wait_for_function 都是「輪詢到條件成立為止」，
+#   機器閒置時毫秒級就回來，長逾時不會讓測試變慢。但 run_tests.sh 是 43 支
+#   平行跑，開 43 個 Chromium 時光是把頁面載完就可能超過 15 秒——
+#   短逾時在那個情境下必定假紅字（AGENTS.md 第 3 節第 1 條）。
+
+
 ROOT = "/home/claude/goo/game"
 PORT = 8801
 
@@ -109,7 +115,7 @@ def main():
             b = p.chromium.launch()
             pg = b.new_page(viewport={"width": 420, "height": 820})
             pg.goto(f"http://127.0.0.1:{port}/index.html")
-            pg.wait_for_function("typeof update === 'function'", timeout=15000)
+            pg.wait_for_function("typeof update === 'function'", timeout=60000)
 
             # ── 1. 上限本身：Lv.1 = 2 顆、Lv.2 = 4 顆 ──────────────────
             for regen_lv, cap, iv in ((1, 2, 40), (2, 4, 25)):

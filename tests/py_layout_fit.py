@@ -16,10 +16,23 @@
 import http.server, socketserver, threading, functools, sys
 from playwright.sync_api import sync_playwright
 
-ROOT="/home/claude/goo/game"; PORT=8803
+ROOT="/home/claude/goo/game"
+# v0.9.36：埠被佔用時往上找一個能用的。
+# ⚠ 原本寫死 PORT=8803，而 v0.9.34 新增的 tests/py_boot_sel.py 也用 8803——
+#   兩支平行跑時必定有一支拿不到埠，直接以
+#   `OSError: [Errno 98] Address already in use` 整支紅字收場。
+#   連續三輪全套測試都看到這支紅字、每次單獨重跑又是綠的，正是
+#   AGENTS.md 第 3 節第 3 條說的「會訓練所有人忽略紅字」的那種假紅字。
+#   （上一輪留下的 TIME_WAIT socket 也會造成同樣結果。）
 socketserver.TCPServer.allow_reuse_address=True
-srv=socketserver.TCPServer(("127.0.0.1",PORT),
-    functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
+_handler=functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT)
+srv=None; PORT=None
+for _p in range(8803,8823):
+    try:
+        srv=socketserver.TCPServer(("127.0.0.1",_p),_handler); PORT=_p; break
+    except OSError:
+        continue
+if srv is None: raise SystemExit("找不到可用的埠（8803~8822 都被佔用）")
 threading.Thread(target=srv.serve_forever,daemon=True).start()
 
 HOOK="""

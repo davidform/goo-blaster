@@ -348,7 +348,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.34';
+const BUILD='v0.9.36';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1587,8 +1587,27 @@ function rollCards(){
     for(let i=0;i<wepPool.length;i++){ r-=wt(wepPool[i]); if(r<=0){ pickIdx=i; break; } }
     out.push(wepPool.splice(pickIdx,1)[0]);
   }
+  // ── v0.9.36：剩下兩格依「玩家當下狀態」加權，不再是完全均勻亂抽 ──────────
+  // 真人回報（2026-09-06）：「如果不是滿血狀態，那滿血攻擊力+45% 的升級道具，
+  // 建議出現頻率低一點，我剛剛非滿血升了兩級，結果兩次升級都有這個道具選擇。」
+  //
+  // 查證屬實：原本這兩格是 `Math.floor(Math.random()*cp.length)` 完全均勻抽，
+  // **卡池從來不看玩家的狀態**。🔥 滿心怒氣（rage）的效果是「愛心全滿時
+  // 傷害 +45%，被打掉就失效」——玩家掉血的時候抽到它，等於這一格是張白卡，
+  // 而掉血正是玩家最需要有用選項的時候。連續兩次都看到它只是運氣差
+  // （單次約 12%），但「該不該在這個狀態出現」本身就是設計問題。
+  //
+  // 刻意**不設成 0**：愛心糖寶箱與 🍬 軟糖再生都能把血補回全滿，
+  // rage 在掉血狀態下不是廢卡、只是期望值低，所以是降權不是排除。
+  const RAGE_LOW_HP_W = 0.25;               // 非滿血時出現頻率降為四分之一
+  const stW = c => (!c.w && c.id==='rage' && P.hearts < P.maxHearts) ? RAGE_LOW_HP_W : 1;
   const cp=wepPool.concat(statPool);
-  while(out.length<3&&cp.length){ out.push(cp.splice(Math.floor(Math.random()*cp.length),1)[0]); }
+  while(out.length<3&&cp.length){
+    let tot=0; for(const c of cp) tot+=stW(c);
+    let r=Math.random()*tot, k=cp.length-1;
+    for(let i=0;i<cp.length;i++){ r-=stW(cp[i]); if(r<=0){ k=i; break; } }
+    out.push(cp.splice(k,1)[0]);
+  }
   return out;
 }
 const cardsEl=document.getElementById('cards');
@@ -2118,6 +2137,11 @@ function buildBosses(L){
       bspd: b.bspd*L.bspd,
       atkT: b.atkT*L.atkSlow,
       kind: (!L.superBoss && i===at.length-1) ? 'final' : ('b'+(i+1)),
+      // v0.9.35：一般 Boss 也要知道自己在第幾章，環形彈幕的顆數要依章節縮放
+      // （見 update() 裡的 `cs`）。⚠ 只有「環形」那一種會用到，
+      // cross／spiral 完全不受影響；雷射的判斷是 `e.superBoss && chIdx>=5`，
+      // 一般 Boss 的 superBoss 是 false，所以也不會因為這個欄位跑出雷射。
+      chIdx: L.ch||0,
       skin: MID_SKIN_CH[Math.min(9, L.ch||0)]            // v0.9.22 外觀，純視覺
     };
   });
@@ -2802,7 +2826,28 @@ function update(dt,rawdt){
         //   比第 10/15/25 關的章節 Boss 都還密（那些是 cross 8 顆 / spiral 6 顆）。
         // 這個遊戲要給小朋友玩，「看得懂、躲得掉」比「有挑戰性」重要得多。
         // 一般 Boss 不縮放（cross 8 顆本來就讀得懂），只縮章節 Boss。
-        const cs = e.superBoss ? Math.min(1, 0.45+(e.chIdx|0)*0.061) : 1;
+        // ── v0.9.35：一般 Boss 的「環形」彈幕也要依章節縮放 ────────────────
+        // 上面那段 v0.9.26 的註解結尾寫著「一般 Boss 不縮放（cross 8 顆本來就
+        // 讀得懂），只縮章節 Boss」——那個推論在當時是對的，**但它在第 7 關
+        // 就悄悄失效了**：一般 Boss 的第三個位置（`nboss:3` 才會出現）用的是
+        // BOSS_POOL[2]，而它的攻擊型態正是 ring，一波 19 顆（暴走 25 顆），
+        // 跟當初被判定「太密、要縮」的章節 Boss 是同一種東西。
+        //
+        // 量測（tests/py_boss_pressure.py，2026-09-05）：同屏敵方子彈峰值
+        //   第 3 關 30 ／第 4 關 26 ／第 5 關 25 ／第 6 關 26
+        //   → **第 7 關 84（+223%）**、第 8 關 84、第 9 關 101
+        // 前面整整四關持平在 25~30，第 7 關一次乘以 3.2 倍。每一波的顆數是
+        //   第 6 關：cross 8 ＋ spiral 6 = 14
+        //   第 7 關：cross 8 ＋ spiral 6 ＋ **ring 19** = 33
+        // 專案負責人與 itch.io 玩家 CoderGenius72 兩個互不相識的人都卡在
+        // 第 7~8 關，跟這個數字完全吻合。
+        //
+        // 解法沿用 v0.9.26 已經驗證過的同一套機制（`cs`），只是把它擴大到
+        // 一般 Boss 的 ring。cross／spiral 維持不縮（8 顆與 6 顆本來就讀得懂），
+        // 章節 Boss 的公式一個字都沒動。ring 從第 7 關（ch1）的一半強度起跳，
+        // 到第 26 關（ch5）回到滿值——**難度還是往上，但是斜坡不是懸崖**。
+        const cs = e.superBoss ? Math.min(1, 0.45+(e.chIdx|0)*0.061)
+                 : (e.atk==='ring' ? Math.min(1, 0.38+(e.chIdx|0)*0.125) : 1);
         const sc = (v,min)=>Math.max(min, Math.round(v*cs));
         if(e.atk==='cross'){                   // 打叉彈幕：兩組交錯十字
           const n = sc(rage?12:8, 4);
