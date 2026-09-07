@@ -77,7 +77,7 @@ docs-14-history.md      ← 開發史（v0.9.37 起）★ 新版本一律寫這�
 docs-04-append.md       ← 開發史（～v0.9.36，214KB，**已凍結**：只讀不寫，用搜尋不要整份讀）
 docs-05 ~ docs-11       ← 各種專題評估（優化、獲利、語言市場、關卡數量…）
 LICENSE.txt             ← 保留一切權利
-tests/                  ← 44 支 Python(Playwright) + 8 支 Node 測試
+tests/                  ← 48 支 Python(Playwright) + 8 支 Node 測試（run_tests.sh 預設批次跑 36 支 py + 8 支 js，其餘是診斷用）
 run_tests.sh            ← 一鍵跑完整套測試（改完 index.html 一定要跑）
 i18n/                   ← 產生/更新 L10N 字典的腳本（改字典用這個，不要手改 index.html）
 store/                  ← 上架素材（封面、截圖、itch.io 用的 zip）
@@ -102,7 +102,9 @@ store/                  ← 上架素材（封面、截圖、itch.io 用的 zip�
 | **原生儲存** | `const NATIVE_STORE=` / `pickBetterSave` / `hydrateFromNative` |
 | **免費/付費切點** | `const EDITION=` / `DEMO_LEVELS` / `isLocked` / `showLockBox` |
 | **同伴（糖果援軍）** | `const ALLY_N=` / `spawnAllies` / `updateAllies` / `drawAllies` |
-| 寶箱 | `const CHEST_TYPES=` / `const CHEST_W=`（整數權重表） |
+| 寶箱 | `const CHEST_TYPES=` / `const CHEST_W=`（整數權重表） / `buildChestPool` |
+| **寶箱的關卡門檻** | `t.minLv` 欄位 / `CHEST_POOL`（第1~8關）vs `CHEST_POOL_LATE`（第9關起）/ `chestPool()`　⚠ `chestPool()` 讀的是 **`G.lvIdx`**，標題畫面就已經有一個 G 存在，只改 `LV_IDX` 沒有用 |
+| **綠殼護盾** | `const SHELL_N=` / `SHELL_MIN_LV` / `spawnShells` / `updateShells` / `shellBlock` / `drawShells` |
 | **存檔備份碼** | `saveCodeEncode` / `saveCodeDecode` / `importSaveCode` / `#codeBox` |
 | **加速/核彈按鈕排版**（隨視窗較短邊縮放，手機/平板通用） | `function resize` / `BTN` / `#btnNuke` |
 | 目前顯示中的 Boss（HUD 血條讀這個） | `G.boss`（`spawnBoss()` 裡有多 Boss 重疊時的交接保護，見 v0.9.30） |
@@ -300,9 +302,16 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
   並加上 **2.5 秒淨空期**（引爆後不生一般敵人；擋在 Boss 排程之後，關卡長度不變）。
   **一個平衡數值都沒有動**，第 7 關基準未被蓋掉。已補 `tests/py_nuke_calm.py`（第 45 支）。
   詳見 `docs-14-history.md` 四十一。
-- 🟠 **三個綠殼護盾（使用者 2026-09-07 提的新道具）還沒做**：像瑪利歐賽車那樣
-  三顆殼繞著角色轉、可擋高密度子彈，安排在後段高難度關卡才出現。
-  這是新道具（要進卡池、要決定登場關卡、要量難度影響），**刻意單獨一版**。
+- 🟢 ~~三個綠殼護盾還沒做~~ **v0.9.39 已做**：🐢 寶箱，三顆六角綠殼繞著角色轉，
+  **只擋敵方子彈**（撞擊仍然照扣心，那是甜甜圈護盾 `P.shieldN` 的守備範圍——
+  兩種護盾刻意分工，不然玩家看到兩圈東西卻不知道差在哪，難度影響也糊成一團）。
+  沒有持續時間，只有「總共擋 15 發」，價值自動跟著彈幕密度走。
+  **第 9 關（焦糖煉獄）才進池** → 第 1~8 關的寶箱池一份都沒變，
+  v0.9.35 的第 7 關基準沒被蓋掉（`tests/py_shell.py` 用「前段池仍是 89 份」釘住這件事）。
+  ⚠ **畫法踩過一次坑**：第一版畫成綠色圓形，跟軟泥怪（hue 140、r=15 的綠色圓形）
+  幾乎一樣，看起來像三隻黏在主角身上的小怪。場上所有敵人都是圓形，
+  所以殼**必須不是圓形**——現在是六角形 + 奶油色殼緣。
+  詳見 `docs-14-history.md` 四十二。
 - 🟢 ~~沒有隱私政策~~ `PRIVACY.md`（中英雙語）已寫好，**還要放到一個公開網址**
 - 🟢 ~~定價還沒決定~~ **已定案 US$2.99**（2026-09-05，見專案現況文件的定價研究）；
   `STORE_URL` 仍是空字串——那要等 Google Play 商店頁真的存在才能填
