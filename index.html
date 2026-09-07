@@ -348,7 +348,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.37';
+const BUILD='v0.9.38';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1076,6 +1076,11 @@ function newGame(){
   hitstop:0, slowmo:0, hurt:0, bossWarnT:-1, bossWarnName:'', _bwSec:99,
   // v0.9.12：核彈爆炸的加強視覺——全螢幕閃光衰減值 + 世界座標的擴散衝擊波環
   nukeFlash:0, SHOCK:[],
+  // v0.9.38：核彈引爆後的「淨空期」。使用者回報原本按下去雖然全場清空，
+  // 但下一幀就照原速率補生怪，爽快感在 0.2 秒內就被抵銷掉。這個計時器
+  // 只擋「一般敵人的生成」——Boss 出場排程、關卡計時、勝負條件全部不動
+  // （所以不會改變任何一關的長度或通關條件，也就不會蓋掉第 7 關的難度基準）。
+  nukeCalm:0,
   // v0.9.37：重生蠟燭復活的演出狀態。兩個都**純視覺**，沒有任何遊戲邏輯讀它們
   // （不影響傷害判定、無敵時間、彈幕、掉落）——刻意這樣切，是為了不蓋掉
   // v0.9.35 量到的第 7 關難度基準。reviveT 的長度刻意等於復活的無敵秒數，
@@ -2410,6 +2415,10 @@ function updateSpawn(dt){
   }
   for(let i=0;i<G.bosses.length;i++)
     if(!G.bossDone[i] && G.t>=G.bosses[i].t){ G.bossDone[i]=true; spawnBoss(G.bosses[i]); }
+  // v0.9.38：核彈淨空期——這幾秒內不生成一般敵人。刻意放在 Boss 排程「之後」，
+  // Boss 該出場還是會出場（否則會拖長甚至打不完關卡）。離開時把 spawnAcc 歸零，
+  // 不然累積下來的份會在淨空期結束的那一幀一次倒出來，反而比不做還糟。
+  if(G.nukeCalm>0){ G.nukeCalm-=dt; G.spawnAcc=0; return; }
   const rate = G.boss ? w.rate*0.35 : w.rate;
   G.spawnAcc+=dt*rate;
   while(G.spawnAcc>=1){
@@ -2709,7 +2718,7 @@ function loop(now){
   requestAnimationFrame(loop);
   let dt=Math.min((now-lastT)/1000,.05); lastT=now;
   if(G&&G.hurt>0) G.hurt=Math.max(0,G.hurt-dt*6.5);   // 受擊紅閃：約 0.15 秒衰減完，用真實時間不受慢動作影響
-  if(G&&G.nukeFlash>0) G.nukeFlash=Math.max(0,G.nukeFlash-dt*3.3);  // 核彈全螢幕閃光：約 0.3 秒衰減完
+  if(G&&G.nukeFlash>0) G.nukeFlash=Math.max(0,G.nukeFlash-dt*2.2);  // v0.9.38：從 3.3 放慢到 2.2，配合 1.5 的起始值＝全白 0.23s + 淡出 0.45s
   // v0.9.37：復活演出。跟上面兩行一樣用**真實時間**衰減，不受 hitstop／慢動作影響——
   // 否則復活當下的 .28 秒頓幀會把光環也一起凍住，看起來像卡住而不是演出。
   if(G&&G.reviveFlash>0) G.reviveFlash=Math.max(0,G.reviveFlash-dt*2.2);  // 金色全螢幕閃光：約 0.45 秒
@@ -3494,14 +3503,34 @@ function drawReviveFX(P){
   ctx.restore();
 }
 
+// v0.9.38：無敵＝全身七彩閃爍（瑪利歐無敵星星那一套）。
+// 為什麼要做：這個遊戲有**四種**來源會給無敵——受擊後的 1.45/2.1 秒、翻滾的
+// 0.42 秒、彩虹糖的 7 秒、重生蠟燭的 3.2 秒——但它們共用同一圈薄薄的綠環，
+// 使用者原話是「我不知道自己無敵」。四種都是同一個狀態（`P.iframe>0`），
+// 所以訊號也只給一個、而且給在最不可能被漏看的地方：角色本體。
+// ⚠ 這是**純繪圖**：不動 P.iframe 的長度、不動任何判定，難度基準不受影響。
+// 色相走真實時間 G.t，不受慢動作縮放——頓幀時閃爍照跑，才不會看起來像當機。
+// 色相位移刻意用 120° 均分（不是 60°）：60° 的三圈在單一幀裡全是鄰近色，
+// 截圖看起來就是「綠色的角色」而不是彩虹——要在**靜止的一幀**就看得出七彩，
+// 三圈之間必須是三原色距離。循環速度 640°/s ≒ 每 0.56 秒繞完一圈色環。
+function invHue(off){ return (G.t*640+(off||0))%360; }
 function drawPlayer(P){
   const R=P.r*(P.dashT>0?1.22:1);
+  const inv=P.iframe>0;
   ctx.save();
   // 拾取範圍
   ctx.strokeStyle='rgba(126,247,192,.10)'; ctx.lineWidth=1.5;
   ctx.beginPath(); ctx.arc(P.x,P.y,P.pickup,0,6.283); ctx.stroke();
-  if(P.iframe>0){ ctx.strokeStyle='rgba(126,247,192,'+(.35+Math.sin(G.t*40)*.25)+')';
-    ctx.lineWidth=3; ctx.beginPath(); ctx.arc(P.x,P.y,R+8,0,6.283); ctx.stroke(); }
+  if(inv){
+    // 三圈同心彩虹環，色相彼此錯開 60°，一起繞——比單圈綠環更難被場上特效蓋掉
+    ctx.save(); ctx.globalCompositeOperation='lighter';
+    for(let i=0;i<4;i++){
+      ctx.strokeStyle='hsla('+invHue(i*120)+',100%,68%,'+(.62+Math.sin(G.t*30-i)*.28)+')';
+      ctx.lineWidth=4.5-i*0.7;
+      ctx.beginPath(); ctx.arc(P.x,P.y,R+7+i*6.5,0,6.283); ctx.stroke();
+    }
+    ctx.restore();
+  }
   for(let s=0;s<P.shieldN;s++){          // 甜甜圈護盾
     const rr=R+15+s*7;
     ctx.strokeStyle='rgba(143,216,255,'+(.55+Math.sin(G.t*3+s)*.2)+')';
@@ -3516,10 +3545,15 @@ function drawPlayer(P){
   const mv=P.moving||0, ang=Math.atan2(P.mvy||0,P.mvx||0);
   const st=1+mv*0.28, sq=1-mv*0.18;
   ctx.translate(P.x,P.y); ctx.rotate(ang);
-  ctx.shadowColor='#4ff0ff'; ctx.shadowBlur=20;
-  ctx.fillStyle= P.flash>0 ? '#fff' : '#6ff0e0';
+  // 本體：無敵時整顆果凍走彩虹，且亮度同步脈動（只換顏色，形狀完全沒動）
+  ctx.shadowColor= inv ? 'hsl('+invHue(30)+',100%,66%)' : '#4ff0ff';
+  ctx.shadowBlur= inv ? 30 : 20;
+  ctx.fillStyle= P.flash>0 ? '#fff'
+               : inv ? 'hsl('+invHue()+',100%,'+(68+Math.sin(G.t*34)*13)+'%)'
+               : '#6ff0e0';
   ctx.beginPath(); ctx.ellipse(0,0,R*st,R*sq,0,0,6.283); ctx.fill(); ctx.shadowBlur=0;
-  ctx.strokeStyle='#e8fffb'; ctx.lineWidth=2.5; ctx.stroke();
+  ctx.strokeStyle= inv ? 'hsl('+invHue(180)+',100%,88%)' : '#e8fffb';
+  ctx.lineWidth=2.5; ctx.stroke();
   ctx.rotate(-ang);
   ctx.fillStyle='#0d2430';
   ctx.beginPath(); ctx.arc(-R*.32,-R*.1,R*.19,0,6.283); ctx.fill();
@@ -3548,9 +3582,13 @@ function drawHUD(){
   }
   // v0.9.12：核彈引爆瞬間的全螢幕白/橘閃光，跟受擊紅閃刻意做出色調區隔，
   // 加強「按下去真的發生了一件大事」的爽快感
+  // v0.9.38：使用者回報「白屏不夠」。原本峰值只有 0.55 的半透明，隔著它還看得見
+  // 場景，所以讀起來像「畫面變亮」而不是「炸了」。改成幾乎純白的全屏 + 淡出時
+  // 補一層暖橘餘燼，讓白 → 橘 → 場景這個順序自己說出「剛剛爆了一顆」。
   if(G.nukeFlash>0){
-    const a=G.nukeFlash;
-    ctx.fillStyle='rgba(255,240,200,'+(a*0.55)+')'; ctx.fillRect(0,0,W,H);
+    const a=Math.min(1,G.nukeFlash);
+    ctx.fillStyle='rgba(255,253,245,'+(a*0.88)+')'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,186,104,'+(a*a*0.30)+')'; ctx.fillRect(0,0,W,H);
   }
   // v0.9.37：復活的全螢幕金色閃光 + 由外向內收攏的暖色暈。
   // 受擊是紅、核彈是白橘、復活是金——三種「畫面整片變色」的事件各有各的顏色，
@@ -4485,7 +4523,10 @@ const doNuke=()=>{
   // （由內而外：白核心 → 橘中層 → 暗紅外環，時間差 0.05 秒讓層次感更明顯）
   // + 全螢幕閃光 + 更大量的粒子噴發，搭配專屬爆炸音效（不再借用 Boss 死亡音）
   shake(20); hitstop(.22);
-  G.nukeFlash=1;
+  // v0.9.38：閃光值刻意設成 >1（畫的時候夾在 1）——多出來的 0.5 就是「白屏維持
+  // 全亮的那一段」，衰減率再放慢一倍。時間軸：全白約 0.23 秒 → 淡出約 0.45 秒。
+  G.nukeFlash=1.5;
+  G.nukeCalm=2.5;
   G.SHOCK.push({x:G.P.x,y:G.P.y,r:10,spd:620,life:.55,max:.55,hue:48});
   G.SHOCK.push({x:G.P.x,y:G.P.y,r:6, spd:520,life:.60,max:.60,hue:28});
   G.SHOCK.push({x:G.P.x,y:G.P.y,r:2, spd:430,life:.68,max:.68,hue:355});
