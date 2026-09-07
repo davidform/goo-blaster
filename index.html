@@ -348,7 +348,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.36';
+const BUILD='v0.9.37';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -756,6 +756,25 @@ const SFX=(()=>{
       });
       nz({dur:.5,vol:.05,f0:900,f1:5200,q:1.2});
     },
+    // v0.9.37：重生蠟燭「復活」專屬音效。原本借用 evo()（武器進化），那是一段
+    // 純上行的歡快音階，聽起來像「我變強了」——但復活的情緒不是變強，是
+    // 「差點死掉、又被救回來」。所以刻意做成三段：①低頻下墜＝蠟燭被吹熄
+    // ②0.36 秒的留白（沒有聲音的那一下才是「心跳停了一拍」的來源）
+    // ③上行大三和弦 ＋ 火焰竄起的噪音掃頻 ＋ 兩顆鐘聲定格＝火重新點起來。
+    // 波形與節奏都跟 evo() 不同，玩家一聽就知道這是另一件事。
+    revive(){
+      if(!ok('rv',0.8))return;
+      osc({f0:220,f1:48,dur:.34,vol:.18,type:'sawtooth',filter:'lowpass',ff0:1200,ff1:200});
+      osc({f0:110,f1:30,dur:.40,vol:.10,type:'square',filter:'lowpass',ff0:600,ff1:150});
+      nz({dur:.26,vol:.07,f0:900,f1:200,q:.8});
+      [261.63,329.63,392,523.25].forEach((f,i)=>{
+        osc({f0:f,dur:.42,vol:.10,type:'triangle',atk:.012,delay:.36+i*0.075});
+        osc({f0:f*2,dur:.30,vol:.030,type:'sine',delay:.36+i*0.075+0.015});
+      });
+      nz({dur:.55,vol:.055,f0:600,f1:5200,q:1.1,delay:.36});
+      [1046.5,1568].forEach((f,i)=>
+        osc({f0:f,dur:.90,vol:.075,type:'sine',atk:.006,delay:.72+i*0.05}));
+    },
     bossIn(){
       if(!ok('bi',0.5))return;
       osc({f0:118,f1:54,dur:1.0,vol:.20,type:'sawtooth',filter:'lowpass',ff0:900,ff1:180});
@@ -1057,6 +1076,11 @@ function newGame(){
   hitstop:0, slowmo:0, hurt:0, bossWarnT:-1, bossWarnName:'', _bwSec:99,
   // v0.9.12：核彈爆炸的加強視覺——全螢幕閃光衰減值 + 世界座標的擴散衝擊波環
   nukeFlash:0, SHOCK:[],
+  // v0.9.37：重生蠟燭復活的演出狀態。兩個都**純視覺**，沒有任何遊戲邏輯讀它們
+  // （不影響傷害判定、無敵時間、彈幕、掉落）——刻意這樣切，是為了不蓋掉
+  // v0.9.35 量到的第 7 關難度基準。reviveT 的長度刻意等於復活的無敵秒數，
+  // 光環才會「跟無敵同進同出」，玩家一眼看得出自己什麼時候不再無敵。
+  reviveFlash:0, reviveT:0, reviveMax:0,
   // v0.9.13：一次跨好幾級時，還欠玩家幾張升級卡沒選（見 gainXP()/applyCard() 修正）
   pendingCards:0,
   // v0.9.20 移除死欄位：vx/vy（玩家是直接改座標移動、不走速度向量，從未被讀寫）
@@ -1458,14 +1482,34 @@ function hurtPlayer(){
     // 完馬上又被同一波彈幕打死（那樣等於白買）。
     if(G.revives>0){
       G.revives--;
-      P.hearts=P.maxHearts; P.iframe=3.2; G.hurt=1;
+      P.hearts=P.maxHearts; P.iframe=3.2;
+      // v0.9.37：這裡原本是 `G.hurt=1`（沿用受擊的全螢幕紅閃）。拿掉它——
+      // 紅閃的語意是「你受傷了」，但這一刻的事實是「你被救回來了」，
+      // 兩個相反的訊號疊在同一幀上，畫面會變成橘紅色（實測截圖確認），
+      // 金色閃光想建立的「金＝復活」區隔就被洗掉了。
+      // ⚠ 這是**畫面層**的欄位（只有 drawHUD() 讀它畫紅色覆蓋與暗角），
+      //   不參與任何傷害／無敵／掉落判定，所以拿掉它不動難度。
+      G.hurt=0;
       // 清掉場上所有敵彈，給玩家喘息的空間
       const n=G.EB.length; G.EB.length=0;
+      // v0.9.37：復活的「演出」。使用者原話：「復活再重生，應該加個復活的效果，
+      // 而不是直接又把愛心加滿。」——機制本身從 v0.9.17 就是完整的（原地滿血、
+      // 3.2 秒無敵、清空全場敵彈），缺的一直是儀式感：玩家只看到愛心突然變回
+      // 3 顆，既不知道剛剛發生了什麼，也不知道自己現在還在無敵。
+      // ⚠ 這一版**只加畫面與聲音**：上面三行的 hearts / iframe / 清彈逐字未動，
+      //   所以 v0.9.35 量到的第 7 關難度基準不會被這一版蓋掉（AGENTS 1.4）。
+      G.reviveFlash=1; G.reviveT=P.iframe; G.reviveMax=P.iframe;
       for(let i=0;i<3;i++) G.SHOCK.push({x:P.x,y:P.y,r:10+i*26,spd:520-i*80,life:0.75,max:0.75,hue:[45,330,190][i]});
-      burst(P.x,P.y,70,45,2.4); shake(16); hitstop(.18);
-      toast(T('tRevive',G.revives),'#ffd84f'); SFX.evo();
+      burst(P.x,P.y,70,45,2.4);
+      burst(P.x,P.y,44,45,1.5);                    // 第二層慢速金色燭火，往上飄的餘燼感
+      shake(20); hitstop(.28);                     // 頓幀從 .18 拉長到 .28：復活值得一個更重的「定格」
+      toast(T('tRevive',G.revives),'#ffd84f'); SFX.revive();
       return false;
     }
+    // v0.9.37：真的死了就把復活演出的狀態收乾淨。畫面在 G.running=false 之後
+    // 本來就不會再畫它（drawReviveFX 只在 live 時呼叫），但留著一個「還在復活中」
+    // 的殘值遲早會誤導下一個接手的人——狀態的生命週期要自己收尾，不要靠畫面那一層擋。
+    G.reviveT=0; G.reviveMax=0; G.reviveFlash=0;
     endGame(false); return true;
   }
   return false;
@@ -2666,6 +2710,11 @@ function loop(now){
   let dt=Math.min((now-lastT)/1000,.05); lastT=now;
   if(G&&G.hurt>0) G.hurt=Math.max(0,G.hurt-dt*6.5);   // 受擊紅閃：約 0.15 秒衰減完，用真實時間不受慢動作影響
   if(G&&G.nukeFlash>0) G.nukeFlash=Math.max(0,G.nukeFlash-dt*3.3);  // 核彈全螢幕閃光：約 0.3 秒衰減完
+  // v0.9.37：復活演出。跟上面兩行一樣用**真實時間**衰減，不受 hitstop／慢動作影響——
+  // 否則復活當下的 .28 秒頓幀會把光環也一起凍住，看起來像卡住而不是演出。
+  if(G&&G.reviveFlash>0) G.reviveFlash=Math.max(0,G.reviveFlash-dt*2.2);  // 金色全螢幕閃光：約 0.45 秒
+  // ⚠ reviveT 不在這裡衰減——它跟 P.iframe 綁在一起，走 update() 裡那個會被
+  //   慢動作縮放的 dt（見 update() 中 P.iframe 的下一行）。
   if(BTNPRESS>0) BTNPRESS-=dt;
   if(G&&G.running&&!G.paused){
     if(G.hitstop>0){ G.hitstop-=dt; }
@@ -2726,6 +2775,10 @@ function update(dt,rawdt){
   if(pd>ARENA){ P.x=P.x/pd*ARENA; P.y=P.y/pd*ARENA; }
   if(P.dashCD>0)P.dashCD-=dt;
   if(P.iframe>0)P.iframe-=dt;
+  // v0.9.37：復活光環刻意跟 P.iframe 用**同一個 dt**（也就是會被慢動作一起縮放），
+  // 而不是像 reviveFlash 那樣走真實時間——光環的意義是「你還無敵多久」，
+  // 一旦兩者用不同時鐘，擦彈觸發慢動作時光環就會比無敵先消失，變成說謊的 UI。
+  if(G.reviveT>0) G.reviveT=Math.max(0,G.reviveT-dt);
   if(P.flash>0)P.flash-=dt;
   // 軟糖再生：定時補一顆愛心，但**整關有次數上限**。
   // v0.9.33：原本完全沒有上限——愛心上限固定 3 顆，而中後期關卡長 140~240 秒，
@@ -3170,6 +3223,9 @@ function draw(){
   }
   ctx.globalCompositeOperation='source-over';
 
+  // 復活演出（畫在同伴與玩家之前，光環在玩家腳下，不會擋住角色本體）
+  if(live && G.reviveT>0) drawReviveFX(P);
+
   // 同伴（畫在玩家之前，玩家永遠在最上層，不會被蓋住而找不到自己）
   drawAllies();
 
@@ -3387,6 +3443,57 @@ function drawBlob(e,detail){
     }
   }
 }
+// v0.9.37：重生蠟燭復活的畫面演出（純視覺，沒有任何遊戲狀態被這裡改到）。
+// 三個層次，各自解決一個問題：
+//  ① 燭光柱 + 向內收縮的三圈金環（前 1.2 秒）——回答「剛剛發生了什麼」。
+//     收縮方向刻意跟核彈的擴散衝擊波相反：核彈是「我把場面炸開」，
+//     復活是「生命被收回身上」，兩者用同一組視覺語彙就會互相混淆。
+//  ② 往上飄的蠟燭符號 🕯️ ——回答「是哪一項永久強化救了我」，
+//     跟商店裡那顆圖示是同一個，玩家自己就能把因果連起來。
+//  ③ 金色虛線環（整段無敵期間都在，最後 0.6 秒開始閃快）——回答
+//     「我現在還無敵嗎、還剩多久」。原本的綠色 iframe 環只有薄薄一圈、
+//     跟受擊後 1.45 秒的那圈長得一模一樣，玩家分不出這次特別長。
+function drawReviveFX(P){
+  const total=G.reviveMax||3.2, el=total-G.reviveT;    // el = 復活後已經過的秒數
+  ctx.save();
+  if(el<1.2){
+    const q=clamp(el/1.2,0,1);
+    ctx.globalCompositeOperation='lighter';
+    const lg=ctx.createLinearGradient(P.x,P.y+70,P.x,P.y-150);
+    lg.addColorStop(0,'rgba(255,180,40,0)');
+    lg.addColorStop(0.35,'rgba(255,214,96,'+(0.45*(1-q))+')');
+    lg.addColorStop(1,'rgba(255,255,225,0)');
+    ctx.fillStyle=lg;
+    const bw=52*(1-q*0.6);
+    ctx.fillRect(P.x-bw/2,P.y-150,bw,220);
+    for(let i=0;i<3;i++){
+      const qq=clamp(q*1.3-i*0.17,0,1);
+      if(qq<=0||qq>=1) continue;
+      const rr=(P.r+8)+230*(1-qq);            // 起手半徑放大：從畫面外緣收回身上才看得出「收縮」
+      ctx.strokeStyle='hsla('+(46-i*12)+',100%,'+(70+i*8)+'%,'+(0.95*(1-qq))+')';
+      ctx.lineWidth=7*(1-qq)+2;
+      ctx.beginPath(); ctx.arc(P.x,P.y,rr,0,6.283); ctx.stroke();
+      // 內側柔光（跟核彈衝擊波同一套畫法，但方向相反：那個向外、這個向內）
+      ctx.strokeStyle='hsla(46,95%,80%,'+(0.30*(1-qq))+')';
+      ctx.lineWidth=20*(1-qq)+3;
+      ctx.beginPath(); ctx.arc(P.x,P.y,rr,0,6.283); ctx.stroke();
+    }
+    ctx.globalCompositeOperation='source-over';
+    ctx.textAlign='center';
+    ctx.globalAlpha=1-q;
+    ctx.font='900 '+(26+q*16)+'px system-ui';
+    ctx.fillText('🕯️',P.x,P.y-34-q*46);
+    ctx.globalAlpha=1;
+  }
+  // 無敵剩餘時間的金色虛線環：最後 0.6 秒閃爍變快，等於一個「要結束了」的預告
+  const ending=G.reviveT<0.6, pulse=0.5+0.5*Math.sin(G.t*(ending?26:9));
+  ctx.strokeStyle='rgba(255,214,96,'+(0.28+0.30*pulse)*clamp(el/0.25,0,1)+')';
+  ctx.lineWidth=3.5; ctx.setLineDash([11,8]); ctx.lineDashOffset=-G.t*44;
+  ctx.beginPath(); ctx.arc(P.x,P.y,P.r+18,0,6.283); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+}
+
 function drawPlayer(P){
   const R=P.r*(P.dashT>0?1.22:1);
   ctx.save();
@@ -3444,6 +3551,19 @@ function drawHUD(){
   if(G.nukeFlash>0){
     const a=G.nukeFlash;
     ctx.fillStyle='rgba(255,240,200,'+(a*0.55)+')'; ctx.fillRect(0,0,W,H);
+  }
+  // v0.9.37：復活的全螢幕金色閃光 + 由外向內收攏的暖色暈。
+  // 受擊是紅、核彈是白橘、復活是金——三種「畫面整片變色」的事件各有各的顏色，
+  // 玩家用餘光就分得出剛剛發生的是哪一件，不必回頭看愛心。
+  // 暈的方向跟受擊的暗角相反（受擊是邊緣壓黑逼近，這裡是邊緣發亮擴散），
+  // 讓「快死了」跟「被救回來」在同一個位置給出相反的訊號。
+  if(G.reviveFlash>0){
+    const a=G.reviveFlash;
+    ctx.fillStyle='rgba(255,226,150,'+(a*0.42)+')'; ctx.fillRect(0,0,W,H);
+    const vg3=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.10,W/2,H/2,Math.max(W,H)*0.62);
+    vg3.addColorStop(0,'rgba(255,240,190,'+(a*0.30)+')');
+    vg3.addColorStop(1,'rgba(255,180,60,0)');
+    ctx.fillStyle=vg3; ctx.fillRect(0,0,W,H);
   }
   // Boss 出場預告：出場前 5 秒，畫面閃紅 + 倒數數字，跟受擊紅閃刻意做出區別
   // （受擊是短促單次衰減，這裡是持續 5 秒的脈動閃爍，讓玩家有時間反應而不是被嚇到）

@@ -5,8 +5,18 @@ import http.server, socketserver, threading, functools, sys, re
 from playwright.sync_api import sync_playwright
 ROOT="/home/claude/goo/game"; PORT=8807
 socketserver.TCPServer.allow_reuse_address=True
-srv=socketserver.TCPServer(("127.0.0.1",PORT),
-    functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
+# v0.9.37：埠被佔用就往上找。這支跟 v0.9.36 新增的 py_card_hp_weight **都寫死 8807**，
+# 44 支平行跑時必撞（實測就是 "Address already in use" 紅字，跟 v0.9.36 修掉的
+# py_layout_fit／py_boot_sel 撞 8803 是同一個病）。寫死埠號在平行測試裡就是地雷。
+_srv=None
+for _p in range(PORT, PORT+20):
+    try:
+        _srv=socketserver.TCPServer(("127.0.0.1",_p),
+            functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
+        PORT=_p; break
+    except OSError: continue
+if _srv is None: raise SystemExit("找不到可用的埠")
+srv=_srv
 threading.Thread(target=srv.serve_forever,daemon=True).start()
 fails=[]
 def ck(n,c,e=""):

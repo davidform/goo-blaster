@@ -29,6 +29,18 @@ def ck(name,cond,extra=""):
     print(("  PASS  " if cond else "  FAIL  ")+name+(("  "+str(extra)) if extra else ""))
     if not cond: fails.append(name)
 
+# v0.9.37：把「載入後固定 sleep 800ms」換成輪詢。
+# 這支測試在 44 支平行跑時連續兩輪紅字（Page.click("#btnCode") 逾時 60 秒，
+# 而且單獨跑一定是綠的）——根因就是 AGENTS.md 第 3 節第 1 條講的那件事：
+# 45 個 Chromium 同時開起來，光把頁面載到「按鈕存在且腳本跑完」就不只 800ms，
+# 固定 sleep 一過期，後面每一步都在對還沒準備好的頁面操作。
+# 正確處置是改成輪詢到條件成立，不是把逾時調長（那只會讓紅字晚一點出現）。
+def ready(pg):
+    pg.wait_for_function(
+        "() => typeof saveCodeDecode === 'function' && !!document.getElementById('btnCode')",
+        timeout=60000)
+
+
 with sync_playwright() as pw:
     b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
     def page(locale="en-US"):
@@ -36,7 +48,8 @@ with sync_playwright() as pw:
                         is_mobile=True,has_touch=True,locale=locale)
         pg=c.new_page(); pg.set_default_timeout(60000)
         errs=[]; pg.on("pageerror",lambda e:errs.append(str(e)))
-        pg.goto(f"http://127.0.0.1:{PORT}/index.html"); pg.wait_for_timeout(800)
+        pg.goto(f"http://127.0.0.1:{PORT}/index.html")
+        ready(pg)
         return pg,c,errs
 
     # ═══ 1. 按鈕存在、點開會出現合法格式的碼 ═══
@@ -63,7 +76,7 @@ with sync_playwright() as pw:
     code = pg.eval_on_selector("#codeExportArea", "el=>el.value")
     # 模擬「localStorage 被系統清掉」：直接清掉存檔、重新整理頁面（回到全新玩家狀態）
     pg.evaluate("()=>localStorage.clear()")
-    pg.reload(); pg.wait_for_timeout(700)
+    pg.reload(); ready(pg)
     fresh = pg.evaluate("()=>({p:PROGRESS,c:Math.round(COINS)})")
     ck("重新整理後確實變成新玩家（前提條件）", fresh["p"]==1 and fresh["c"]==0, fresh)
     pg.click("#btnCode")
@@ -76,7 +89,7 @@ with sync_playwright() as pw:
     is_err = pg.eval_on_selector("#codeStatus", "el=>el.classList.contains('err')")
     ck("成功訊息不是錯誤樣式", not is_err)
     # 存檔也要確實寫回 localStorage（不是只活在記憶體裡，重整一次要還在）
-    pg.reload(); pg.wait_for_timeout(700)
+    pg.reload(); ready(pg)
     persisted = pg.evaluate("()=>({p:PROGRESS,c:Math.round(COINS)})")
     ck("重整後持久化（不是只在記憶體裡）", persisted["p"]==23 and persisted["c"]==999, persisted)
     ck("無 JS 錯誤", not errs, errs[:2])
@@ -146,7 +159,16 @@ with sync_playwright() as pw:
     }""")
     pg.click("#btnCode")
     pg.click("#btnCodeCopy")
-    pg.wait_for_timeout(200)
+    # 同樣不要固定 sleep：輪詢到狀態列真的有字為止。
+    # 包 try 是為了「功能真的壞掉」時仍然走到下面的 ck() 給出可讀的失敗訊息，
+    # 而不是在這裡丟一個 Playwright 逾時例外、看不出是哪一條驗收沒過。
+    try:
+        pg.wait_for_function(
+            "() => { const e = document.getElementById('codeStatus');"
+            "        return !!e && e.textContent.trim().length > 0; }",
+            timeout=30000)
+    except Exception:
+        pass
     status_txt = pg.eval_on_selector("#codeStatus", "el=>el.textContent")
     ck("被拒絕時仍然給出提示文字（不是靜默失敗）", bool(status_txt.strip()), status_txt)
     ck("無 JS 錯誤", not errs, errs[:2])
