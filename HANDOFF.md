@@ -18,11 +18,11 @@
 
 ## 目前任務與發布阻擋
 - 本次已處理 Windows 測試相容、Android 套件修正、實際 APK/AAB 與真機驗證；index.html 沒有修改。
-- Windows 全套重跑為 46/47 通過；唯一失敗是 py_v0927_perf 的有同伴 FPS >=30，量到 27.9。
+- 上輪 Windows 全套為 46/47；2026-09-09 原 py_v0927_perf 單獨重跑已通過：無同伴42.7、有同伴42.6 FPS、損失0.2%，原門檻未改。不是新一輪全套47/47。
 - 48 工全平行壓力造成電腦嚴重失去回應與多項導頁逾時，已中止並清理；不得宣稱三輪全綠。
 - 同批固定亂數 v0.9.31/v0.9.40 重場景對照平均均約19.47 FPS；只是診斷，不能取代門檻或證明真機效能。
 - itch.io 尚未首次推送或切換檔案；不能把工具授權成功當作已發布。
-- 下一步先釐清效能測量與本機可承受的壓力條件，不為發布而偷偷放寬驗收。
+- 本機採已完整跑完的4工；48工不再重試。全平行壓力驗收需較充足的測試主機，仍未完成，不為發布放寬驗收。
 
 ## 已驗證：測試環境
 - .venv Python Playwright 1.62.0；Node Playwright 在 _private/test-node；官方 Chromium 下載逾時，改用已安裝 Edge。
@@ -34,6 +34,9 @@
 - 最終笨 bot 第1–3關通關且無 JS 錯誤；第5關CPU4x、零永久強化壓測通過；其他語系、排版、存檔、卡池等通過。
 - py_release_smoke.py：全新瀏覽器資料、離線、CPU4x、真實關閉重開存檔通過，外部請求0、pageerror0。
 - py_perf_baseline.py 僅做同批診斷；_private/test-artifacts/perf-baseline.json 有逐輪數字及GPU啟用狀態。
+- 本輪原效能證據：_private/test-runs/20260909-063939-575652-perf-handoff/results.json（exit0、原SHA不變）。
+- 新增 tests/py_perf_capacity.py：固定亂數、交替單頁/雙頁三輪，只做測試負載診斷，不取代原門檻或真機。
+- 三輪平均單頁無/有同伴59.47/53.47 FPS，雙頁34.11/35.17；12次pageerror皆0，證據_private/test-artifacts/perf-capacity-20260909-064053.json。
 
 ## 已驗證：Android
 - 使用已安裝 JDK21（C:/Users/Surface/.jdks/jbr-21.0.11）、Gradle8.14.3、SDK36；Android Studio 隨附 JDK25，CLI本次未用它建置。
@@ -58,4 +61,4 @@
 - 尚未執行：release簽章與AAB派生安裝、升版/移除重裝/系統備份恢復、完整網路行為稽核、Play Console申報、iOS。
 - Android真機曾有non-cancelable touchmove的console警告，未證實影響；不等同pageerror，也未修改遊戲消除它。
 - 本次提交：build: verify Android package and offline save persistence（485821c）；測試提交以git log核對。
-- 測試 Commit Summary：test: make browser validation portable and preserve failure evidence
+- 本輪 Commit Summary：test: diagnose performance contention and document safe concurrency

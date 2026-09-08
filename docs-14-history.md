@@ -658,3 +658,16 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 因仍未全綠，**itch.io未推送、未切換遊玩檔案**。也未用簽章憑證或送審。下一步釐清跨機器效能判準與可承受併發，不能為發布偷偷降低門檻。
 - 教訓：一台16GB筆電同時啟動整批瀏覽器會讓測試基礎設施本身失去回應；應保留這個失敗證據，與低併發功能/真機結果分開回報。
 - Commit Summary：test: make browser validation portable and preserve failure evidence
+
+## 2026-09-09：效能門檻重跑與測試併發診斷（非遊戲版本）
+
+- 接手核對：工作目錄乾淨、git pull --ff-only 已同步，HEAD 4fca868；遊戲仍為 v0.9.40，SHA256 cc7e50fcb9d87979be694c413c0b6173af0435c4647a2166b599aeF10e267d6b（大小寫不影響值）。
+- 原命令 `.venv/Scripts/python.exe run_tests.py --only py_v0927_perf --jobs 1 --label perf-handoff`（GOO_BROWSER_CHANNEL=msedge）完整通過，exit0。無同伴42.7、有同伴42.6 FPS，相對損失0.2%、三隻同伴與增加子彈量均通過，pageerror0；30 FPS與20%門檻未改。
+- 證據：_private/test-runs/20260909-063939-575652-perf-handoff/results.json 及 py_v0927_perf.log。上輪27.9與本輪42.6不是受控A/B，僅說明相同遊戲的失敗未必重現，不能將差值當作改善幅度。
+- 新增 `.venv/Scripts/python.exe tests/py_perf_capacity.py`，沿用原WORST場景、固定亂數、輪詢場面就緒，單頁及雙頁交替次序各三輪。實際12次量測皆有幀、無pageerror，有同伴組皆3隻；exit0。
+- 平均FPS：單頁無/有同伴59.47/53.47，雙頁34.11/35.17。雙頁共享資源會明顯壓低本機結果，也可能掩蓋同伴額外成本；場面仍隨時間演化，這不是精確相同工作量的效能基準。不能斷定上輪慢的全部根因，更不能代替真機。
+- 完整三輪數字、幀數/秒數、GPU與遊戲hash：_private/test-artifacts/perf-capacity-20260909-064053.json。
+- 修正tests/README.md不再推薦本機48工；沿用先前完整跑完的4工。4工是已知可執行條件，不宣稱最大容量。全平行壓力驗收仍需更充足的主機，保留上輪失敗。
+- 本輪僅測試工具/文件；index.html未改、BUILD不升版。未重跑完整遊戲三輪，未推送itch.io、未重做Android或簽署/送審；不可把上輪46項加這次單項稱為本輪47/47。
+- 教訓：效能工具即使排除其他測試，內部雙頁仍互相競爭；量到低FPS不應直接宣稱機器有殘留程序或遊戲迴歸，須保留可驗證的診斷與限制。
+- Commit Summary：test: diagnose performance contention and document safe concurrency

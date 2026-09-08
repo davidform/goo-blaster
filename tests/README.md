@@ -18,7 +18,12 @@ For Playwright Chromium, install it with `python -m playwright install chromium`
 
 `run_tests.py` reads the default suite names from `run_tests.sh`; it does not silently omit tests.
 It runs the performance test only after the concurrent batch. Do not run another build or stress job during that performance test.
-Use `--jobs 48 --label stress` for the full concurrent stress batch, or `--only py_test9 py_ab_base` for focused reruns.
+Use `--only py_test9 py_ab_base` for focused reruns. On this 16 GB Surface, retain
+`--jobs 4`: the previous 48-worker attempt made the host unresponsive and timed out.
+Do not repeat that configuration on this machine. Four workers are a previously
+completed operating point, not a measured maximum or a substitute for the required
+full-concurrency stress round. That round remains incomplete and needs a more capable
+test host before release acceptance can be claimed.
 Each invocation writes separate logs and `results.json` under `_private/test-runs/`, with the tested game's SHA256.
 Exit 124 means a timeout; Windows timeout cleanup targets only that test's process tree.
 Failures printed by legacy Python tests and nonempty Node `errs` also fail the runner.
@@ -38,6 +43,21 @@ node tools/publish_itch.cjs --push --verified-sha256 <tested-sha256>
 
 That parameter pins the bytes; it does not itself prove tests passed. Preserve and review the test logs first.
 The default command without `--push` only prepares files locally.
+
+For performance measurement diagnostics, run the following alone, after other test
+and build processes finish:
+
+```powershell
+$env:GOO_BROWSER_CHANNEL = 'msedge'
+.venv/Scripts/python.exe tests/py_perf_capacity.py
+```
+
+This reuses the existing worst scene and records three rounds of single-page and
+paired-page measurements, alternating their order. It saves timestamped JSON with
+the game hash, actual frames/time, ally counts, page errors, and GPU feature status.
+The fixed sampling window measures FPS; game readiness is checked by polling.
+These figures diagnose test-host contention; they neither change the original
+30 FPS / less-than-20% loss gates nor establish actual phone performance.
 
 ## 其他
 
