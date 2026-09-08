@@ -32,7 +32,7 @@ jobs:
       - name: 只把網頁檔放進 _site
         run: |
           mkdir -p _site
-          cp index.html manifest.webmanifest icon-192.png icon-512.png _site/
+          cp index.html manifest.webmanifest icon-192.png icon-512.png privacy.html _site/
           cp .nojekyll _site/ 2>/dev/null || touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
