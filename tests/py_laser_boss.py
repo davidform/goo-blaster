@@ -7,9 +7,10 @@
    4) 一般 Boss（非超級大）不應該觸發雷射邏輯（laserWarnT 應該一直是 0）。
 """
 import http.server, socketserver, threading, functools, sys
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT = "/home/claude/goo/game"
+ROOT = GAME_ROOT
 PORT = 8773
 
 socketserver.TCPServer.allow_reuse_address = True
@@ -26,7 +27,7 @@ def new_page(pw_b):
     return pg
 
 with sync_playwright() as pw:
-    b = pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b = pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
 
     print("=== 測試1: 超級大 Boss 雷射週期 (warn -> fire -> cooldown) ===")
     pg = new_page(b)

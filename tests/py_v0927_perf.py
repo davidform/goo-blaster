@@ -10,9 +10,10 @@ Lv.5，一次 7 發）、3 個同伴全開**，跟同一批次的「沒有同伴
 同批次 A/B，因為跨批次的 FPS 不能互比（平行分頁數會影響結果）。
 """
 import asyncio, http.server, socketserver, threading, functools, sys, statistics
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.async_api import async_playwright
 
-ROOT="/home/claude/goo/game"; PORT=8863
+ROOT = GAME_ROOT; PORT=8863
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -67,7 +68,7 @@ async def one(browser, with_ally):
 
 async def main():
     async with async_playwright() as pw:
-        b=await pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+        b=await pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
         print("=== 1. 第50關最壞情況：有同伴 vs 沒同伴（同批次 A/B、3 次重複）===")
         off,on=[],[]
         for i in range(3):

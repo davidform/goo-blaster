@@ -10,9 +10,10 @@
 6. tier 改成數字索引後，TIER_COLOR 查表仍然正確（不會因翻譯而壞掉）
 """
 import http.server, socketserver, threading, functools, sys, re
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT="/home/claude/goo/game"; PORT=8779
+ROOT = GAME_ROOT; PORT=8779
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -26,7 +27,7 @@ def ck(name,cond,extra=""):
 CJK=re.compile(r'[一-鿿]')
 
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
     def page(locale="en-US"):
         c=b.new_context(viewport={"width":390,"height":844},device_scale_factor=2,
                         is_mobile=True,has_touch=True,locale=locale)

@@ -14,9 +14,10 @@
   6. 加速鍵／核彈鍵在平板大螢幕上要跟著放大、離角落更遠（使用者親自回報）
 """
 import http.server, socketserver, threading, functools, sys, json
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT="/home/claude/goo/game"; PORT=8878
+ROOT = GAME_ROOT; PORT=8878
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -28,7 +29,7 @@ def ck(name,cond,extra=""):
     if not cond: fails.append(name)
 
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
     def page(vp=None):
         c=b.new_context(viewport=vp or {"width":390,"height":844},device_scale_factor=2,
                         is_mobile=True,has_touch=True,locale="en-US")

@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 """v0.9.25 驗收：卡池保底武器卡 + 連續升級的「第幾張/共幾張」提示。"""
 import http.server, socketserver, threading, functools, sys, re
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
-ROOT="/home/claude/goo/game"; PORT=8833
+ROOT = GAME_ROOT; PORT=8833
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -13,7 +14,7 @@ def ck(n,c,e=""):
     print(("  PASS  " if c else "  FAIL  ")+n+(("  "+str(e)) if e else ""))
     if not c: fails.append(n)
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
     c=b.new_context(viewport={"width":390,"height":844},device_scale_factor=2,
                     is_mobile=True,has_touch=True,locale="en-US")
     pg=c.new_page(); errs=[]

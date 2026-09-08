@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 """v0.9.23：100 關 → 50 關重構的結構驗收（不含難度平衡，那個交給 py_balance.py）。"""
 import http.server, socketserver, threading, functools, sys, json
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
-ROOT="/home/claude/goo/game"; PORT=8811
+ROOT = GAME_ROOT; PORT=8811
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -14,7 +15,7 @@ def ck(n,c,e=""):
     if not c: fails.append(n)
 
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
     def page(store=None):
         c=b.new_context(viewport={"width":390,"height":844},device_scale_factor=2,
                         is_mobile=True,has_touch=True,locale="en-US")

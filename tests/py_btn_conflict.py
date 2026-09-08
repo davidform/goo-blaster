@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """右下角/正中央/左下角起手拖曳，各自會發生什麼"""
 import http.server, socketserver, threading, functools
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT = "/home/claude/goo/game"; PORT = 8751
+ROOT = GAME_ROOT; PORT = 8751
 socketserver.TCPServer.allow_reuse_address = True
 srv = socketserver.TCPServer(("127.0.0.1", PORT),
       functools.partial(http.server.SimpleHTTPRequestHandler, directory=ROOT))
@@ -15,7 +16,7 @@ CASES = [("右下角（右手拇指自然位置）", 322, 742),
          ("右下但再往左一點", 250, 742)]
 
 with sync_playwright() as p:
-    b = p.chromium.launch()
+    b = p.chromium.launch(channel=BROWSER_CHANNEL)
     for label, sx, sy in CASES:
         c = b.new_context(viewport={"width":390,"height":844}, is_mobile=True, has_touch=True)
         pg = c.new_page(); pg.set_default_timeout(60000); pg.goto(f"http://127.0.0.1:{PORT}/index.html")

@@ -32,9 +32,10 @@
 用法：python3 tests/py_revive_fx.py
 """
 import http.server, socketserver, threading, functools, sys
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT = "/home/claude/goo/game"
+ROOT = GAME_ROOT
 PORT = 8880          # 起始埠；被佔用就往上找（43 支平行跑時一定會撞）
 
 
@@ -165,7 +166,7 @@ def main():
     fails = []
     try:
         with sync_playwright() as p:
-            b = p.chromium.launch()
+            b = p.chromium.launch(channel=BROWSER_CHANNEL)
             pg = b.new_page(viewport={"width": 420, "height": 820})
             pg.goto(f"http://127.0.0.1:{port}/index.html")
             pg.wait_for_function("typeof update === 'function'", timeout=60000)

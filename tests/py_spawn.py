@@ -3,14 +3,15 @@
 """針對 v0.9.19 把 spawnEnemy() 裡的區域變數 T 改名成 ET 做專門驗證：
    四種敵人的每一個屬性都必須正確從 ETYPE 帶過來，不能有 undefined/NaN。"""
 import http.server, socketserver, threading, functools, json, sys
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
-ROOT="/home/claude/goo/game"; PORT=8780
+ROOT = GAME_ROOT; PORT=8780
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
 threading.Thread(target=srv.serve_forever,daemon=True).start()
 fails=[]
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
     c=b.new_context(viewport={"width":390,"height":844},device_scale_factor=2,is_mobile=True,has_touch=True)
     pg=c.new_page(); errs=[]
     pg.on("pageerror",lambda e:errs.append(str(e)))

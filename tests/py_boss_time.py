@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 """量測 Boss 從出現到死亡花多久（笨bot自動打），用來決定血量要調到多少才不會秒殺。"""
 import http.server, socketserver, threading, functools, sys, time
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT = "/home/claude/goo/game"
+ROOT = GAME_ROOT
 PORT = 8772
 LV = int(sys.argv[1]) if len(sys.argv) > 1 else 0
 
@@ -37,7 +38,7 @@ srv = socketserver.TCPServer(("127.0.0.1", PORT),
 threading.Thread(target=srv.serve_forever, daemon=True).start()
 
 with sync_playwright() as pw:
-    b = pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b = pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
     c = b.new_context(viewport={"width":390,"height":844}, device_scale_factor=2,
                       is_mobile=True, has_touch=True)
     pg = c.new_page()

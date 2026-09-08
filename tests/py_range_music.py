@@ -7,9 +7,10 @@
       結果一致（非隨機、可重現），且不同關卡確實給出不同組合。
 """
 import http.server, socketserver, threading, functools, sys
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT = "/home/claude/goo/game"
+ROOT = GAME_ROOT
 PORT = 8775
 
 socketserver.TCPServer.allow_reuse_address = True
@@ -26,7 +27,7 @@ def new_page(pw_b):
     return pg
 
 with sync_playwright() as pw:
-    b = pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b = pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
 
     print("=== 測試1: P.atkRange 預設值比武器原始射程窄 ===")
     pg = new_page(b)

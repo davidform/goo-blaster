@@ -2,8 +2,9 @@
 # -*- coding: utf-8 -*-
 """v0.9.22：Boss 外觀特徵系統 + 新名稱 + 預設語言的驗收。"""
 import http.server, socketserver, threading, functools, sys, re
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
-ROOT="/home/claude/goo/game"; PORT=8807
+ROOT = GAME_ROOT; PORT=8807
 socketserver.TCPServer.allow_reuse_address=True
 # v0.9.37：埠被佔用就往上找。這支跟 v0.9.36 新增的 py_card_hp_weight **都寫死 8807**，
 # 44 支平行跑時必撞（實測就是 "Address already in use" 紅字，跟 v0.9.36 修掉的
@@ -24,7 +25,7 @@ def ck(n,c,e=""):
     if not c: fails.append(n)
 
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
 
     print("=== 1. 預設語言：不管手機語系是什麼，一律英文 ===")
     for loc in ["zh-TW","zh-CN","ja-JP","de-DE","ru-RU","en-US","pt-BR"]:

@@ -13,9 +13,10 @@
       挨打次數才直接對應小朋友的挫折感）。
 """
 import asyncio, http.server, socketserver, threading, functools, sys, statistics
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.async_api import async_playwright
 
-ROOT="/home/claude/goo/game"; PORT=8846
+ROOT = GAME_ROOT; PORT=8846
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -101,7 +102,7 @@ async def one(browser, old, throttle):
 
 async def main():
     async with async_playwright() as pw:
-        b=await pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+        b=await pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
         REPS=5
         res=[]
         for i in range(REPS):                  # 每輪只跑 2 個分頁（新舊各一），避免互相拖慢

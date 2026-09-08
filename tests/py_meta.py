@@ -11,9 +11,10 @@
   6) 經濟平衡防呆：單場收益不能高到「一場就買滿商店」
 """
 import http.server, socketserver, threading, functools, sys
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT="/home/claude/goo/game"; PORT=8776
+ROOT = GAME_ROOT; PORT=8776
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -27,7 +28,7 @@ def page(b, init=None):
     return pg
 
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
 
     print("=== 測試1：舊存檔（純數字）自動遷移 ===")
     pg=page(b, "localStorage.setItem('gooblaster_progress_v2','47');")

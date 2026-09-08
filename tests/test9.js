@@ -27,12 +27,12 @@ const DUMB = `
 `;
 
 (async () => {
-  const b = await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});
+  const b = await chromium.launch({channel:process.env.GOO_BROWSER_CHANNEL || undefined,args:['--autoplay-policy=no-user-gesture-required']});
   const c = await b.newContext({ viewport:{width:390,height:844}, deviceScaleFactor:2, isMobile:true, hasTouch:true });
   const p = await c.newPage();
   const errs=[]; p.on('pageerror',e=>errs.push('PAGEERROR: '+e.message));
   p.on('console',m=>{if(m.type()==='error')errs.push('CONSOLE: '+m.text());});
-  await p.goto('file:///home/claude/goo/game/index.html');
+  await p.goto(require('node:url').pathToFileURL(require('node:path').join(process.env.GOO_ROOT || require('node:path').resolve(__dirname, '..'), 'index.html')).href);
   await p.waitForTimeout(400);
   const R={};
 

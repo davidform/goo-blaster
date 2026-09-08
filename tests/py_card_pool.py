@@ -3,14 +3,15 @@
 """卡池統計：玩家想升主武器，每次升級有多少機率看得到那張卡？
    順便驗證「選完卡馬上又能選」到底是 bug 還是 pendingCards 的正常行為。"""
 import http.server, socketserver, threading, functools
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
-ROOT="/home/claude/goo/game"; PORT=8832
+ROOT = GAME_ROOT; PORT=8832
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
 threading.Thread(target=srv.serve_forever,daemon=True).start()
 with sync_playwright() as pw:
-    b=pw.chromium.launch()
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL)
     c=b.new_context(viewport={"width":390,"height":844},device_scale_factor=2,
                     is_mobile=True,has_touch=True,locale="en-US")
     pg=c.new_page(); pg.goto(f"http://127.0.0.1:{PORT}/index.html"); pg.wait_for_timeout(600)

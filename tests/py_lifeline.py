@@ -38,13 +38,14 @@
 用法：python3 tests/py_lifeline.py
 """
 import http.server, socketserver, threading, functools, sys, os
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
 # ⚠ 逾時放到 60 秒：底下的 wait_for_function 是「輪詢到條件成立為止」，
 #   機器閒置時毫秒級就回來。但 run_tests.sh 是 40+ 支平行跑 Chromium，
 #   光把頁面載完就可能超過 15 秒——短逾時在那個情境下必定假紅字。
 
-ROOT = os.environ.get('GOO_ROOT', '/home/claude/goo/game')
+ROOT = GAME_ROOT
 PORT = 8861
 N = 6000          # 每種狀態抽幾次（比 py_card_hp_weight 多，因為要比的是比值的比值）
 
@@ -103,7 +104,7 @@ def main():
     fails = []
     try:
         with sync_playwright() as p:
-            b = p.chromium.launch()
+            b = p.chromium.launch(channel=BROWSER_CHANNEL)
             pg = b.new_page(viewport={"width": 420, "height": 820})
             pg.goto(f"http://127.0.0.1:{port}/index.html")
             pg.wait_for_function("typeof rollCards === 'function'", timeout=60000)

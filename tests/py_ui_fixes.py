@@ -11,9 +11,10 @@
 4. 關卡圖：第1關在最下方、最後一關在最上方；每5關一個背景色帶
 """
 import http.server, socketserver, threading, functools, sys
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT="/home/claude/goo/game"; PORT=8777
+ROOT = GAME_ROOT; PORT=8777
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -33,7 +34,7 @@ def check(name, cond, extra=""):
     if not cond: fails.append(name)
 
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
 
     # ---------- 1. 拖曳中按加速鍵 / 核彈鍵 ----------
     print("=== 問題1：按著螢幕滑動時，要能按到核彈與加速鍵 ===")

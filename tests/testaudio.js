@@ -1,6 +1,6 @@
 const { chromium } = require('playwright');
 (async () => {
-  const b = await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});
+  const b = await chromium.launch({channel:process.env.GOO_BROWSER_CHANNEL || undefined,args:['--autoplay-policy=no-user-gesture-required']});
   const c = await b.newContext({ viewport:{width:390,height:844}, deviceScaleFactor:2, isMobile:true, hasTouch:true });
   const p = await c.newPage();
   // 在頁面腳本執行前掛勾，統計實際建立的音源節點
@@ -12,7 +12,7 @@ const { chromium } = require('playwright');
     AC.prototype.createBufferSource=function(){ window.__cnt.buf++; return ob.call(this); };
   });
   const errs=[]; p.on('pageerror',e=>errs.push(e.message));
-  await p.goto('file:///home/claude/goo/game/index.html');
+  await p.goto(require('node:url').pathToFileURL(require('node:path').join(process.env.GOO_ROOT || require('node:path').resolve(__dirname, '..'), 'index.html')).href);
   await p.evaluate(()=>{ PROGRESS=5; renderStage(); LV_IDX=3; start(); }); await p.waitForTimeout(400);
   // 暫停遊戲讓只有音樂在跑
   await p.evaluate(()=>{ G.paused=true; });

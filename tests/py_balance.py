@@ -21,9 +21,10 @@
   python3 tests/py_balance.py god 50 100
 """
 import http.server, socketserver, threading, functools, sys, asyncio
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.async_api import async_playwright
 
-ROOT = "/home/claude/goo/game"
+ROOT = GAME_ROOT
 PORT = 8820
 
 DUMB = r"""
@@ -88,7 +89,7 @@ async def run_one(browser, lv, mode, max_wall_s):
 
 async def main_async(mode, levels, max_wall):
     async with async_playwright() as pw:
-        b = await pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+        b = await pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
         results = await asyncio.gather(*[run_one(b, lv, mode, max_wall) for lv in levels],
                                        return_exceptions=True)
         await b.close()

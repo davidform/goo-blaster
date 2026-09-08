@@ -19,9 +19,14 @@
 import http.server, socketserver, threading, functools, sys, json, shutil, os
 from playwright.sync_api import sync_playwright
 
-OLD="/tmp/index.v0920.bak"
-NEW="/home/claude/work/goo-blaster/index.html"
-ROOT="/tmp/ab_root"; PORT=8798
+from test_paths import BROWSER_CHANNEL, REPO, ARTIFACTS, GAME_ROOT
+import subprocess
+OLD = str(ARTIFACTS / 'index.v0920.bak')
+# Pinned historical baseline, never substitute the current build.
+with open(OLD, 'wb') as baseline:
+    baseline.write(subprocess.check_output(['git', 'show', '50b166b:index.html'], cwd=REPO))
+NEW = os.path.join(GAME_ROOT, 'index.html')
+ROOT = str(ARTIFACTS / 'ab_root'); PORT=8798
 os.makedirs(ROOT+"/old",exist_ok=True); os.makedirs(ROOT+"/new",exist_ok=True)
 shutil.copy(OLD, ROOT+"/old/index.html")
 shutil.copy(NEW, ROOT+"/new/index.html")
@@ -81,7 +86,7 @@ def probe(pg_ctx, path):
     return r
 
 with sync_playwright() as pw:
-    b=pw.chromium.launch()
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL)
     c=b.new_context(viewport={"width":390,"height":844},device_scale_factor=2,
                     is_mobile=True,has_touch=True,locale="en-US")
     old=probe(c,"old"); new=probe(c,"new")
@@ -101,11 +106,12 @@ o4,n4=old['levels'][4],new['levels'][4]
 for k,(ov,nv) in DELIB.items():
     same = (o4[k]==ov and n4[k]==nv)
     print(("  PASS  " if same else "  FAIL  ")+f"第5關 {k} 由 {ov} 改成 {nv}（刻意）", (o4[k],n4[k]))
-    if not same: fails_pre=True
+    if not same: fails.append('level5-' + k)
 o4c=dict(o4); n4c=dict(n4)
 for k in DELIB: o4c.pop(k); n4c.pop(k)
 same4 = json.dumps(o4c,sort_keys=True)==json.dumps(n4c,sort_keys=True)
 print(("  PASS  " if same4 else "  FAIL  ")+"第5關的其他欄位完全沒動")
+if not same4: fails.append('level5-other')
 old['levels'][4]=new['levels'][4]   # 已個別驗過，從整體比對中排除
 
 for k in ['levels','tiers','startWep','starts','meta_upg','upgrades']:

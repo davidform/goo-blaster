@@ -637,6 +637,24 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - Pixel 真機原有舊套件 io.itch.davidform.gooblaster；新 com.demjastudio.gooblaster 原先不存在，已並存安裝 debug APK，沒有覆蓋舊版。冷啟動 Activity 成功。
 - 使用者同意飛航並關閉 Wi-Fi後，native/test_device.cjs 驗證系統離線狀態、真實 Preferences、強制關閉重開；第3關、23金幣、實際強化與語言完整保留。再次啟動遊戲沒有觀察到 pageerror；網路觀察只涵蓋該測試片段。
 - 真機截圖與 JSON 在 _private/test-artifacts/；本機原生來源備份由 native/backup_android.py 產生，排除快取、產物、機器設定與憑證。尚不是異機備份，也未建立獨立原生遠端 repo。
-- 限制：AAB **未簽署**；真機使用 debug APK，未測 AAB 派生安裝、升版、移除重裝、雲端備份恢复、iOS。未送審或發布商店。
+- 限制：AAB **未簽署**；真機使用 debug APK，未測 AAB 派生安裝、升版、移除重裝、雲端備份恢復、iOS。未送審或發布商店。
 - 遊戲 index.html 與 BUILD v0.9.40 完全未變。教訓：核對實際封裝 bytes、MainActivity 與真機存檔，不能以 Gradle成功取代這些驗證。
 - Commit Summary：build: verify Android package and offline save persistence
+
+
+## 2026-09-08～09：Windows 測試相容與發布阻擋（非遊戲版本）
+
+- 根因：原套件寫死 Linux 路徑，A/B 暫存基準不在本機，Python 未裝 Playwright；部分測試只印 FAIL/錯誤而沒有非零退出碼。
+- 預設38支Python+8支Node改為可攜路徑/可選瀏覽器；run_tests.py沿用原清單、效能另跑、逐項保存JSON與PID，避免中止後只剩口頭結果。未改遊戲或降低門檻。
+- 安裝隔離的 Python/Node Playwright1.62.0；官方Chromium下載多次逾時，改用已安裝Edge。py_ab_base直接提取50b166b:v0.9.20，保留原數值對照。
+- 補上py_ab_base漏報第5關差異、py_test9漏回傳失敗；py_test9小圖示回204，不忽略遊戲pageerror。Node JSON中的errs非空也算失敗。
+- 第一輪完整45/47；py_test9實際通關但因favicon404紅字，修正測試伺服器回應後重跑。第一次效能與Android建置重疊，該效能數字不作結論。
+- 全部同時平行（jobs48）造成主機失去回應、導頁ERR_ABORTED與30/60秒逾時；約8分鐘後中止並核對清理本專案程序。此輪失敗/未完整執行，不宣稱三輪全綠。
+- 最終完整重跑：run_tests.py --jobs 4 --label final-functional，46/47通過；py_test9第1–3關通關、無JS錯誤，第5關CPU4x/零永久強化壓測通過。
+- 唯一失敗py_v0927_perf：無同伴27.9、有同伴27.9 FPS，相對損失約0.1%通過，但有同伴>=30仍未過。Edge、Chrome隔離重測也曾不足20，不把低FPS直接歸因某個版本。
+- py_perf_baseline.py以固定亂數同批比較Git的v0.9.31/v0.9.40，三輪平均均約19.47 FPS；GPU功能已啟用。這是診斷，未取代門檻，不能證明真機最壞效能合格。
+- py_release_smoke.py實測離線全新資料、CPU4x與真實瀏覽器重開存檔通過；不是原生真機測試的替代品。
+- 證據在_private/test-runs/20260908-234507-833719-final-functional與_private/test-artifacts/；完整功能46項包含若干只輸出觀測值的舊Node診斷，不把正常退出誇大成所有遊玩情境都被斷言。
+- 因仍未全綠，**itch.io未推送、未切換遊玩檔案**。也未用簽章憑證或送審。下一步釐清跨機器效能判準與可承受併發，不能為發布偷偷降低門檻。
+- 教訓：一台16GB筆電同時啟動整批瀏覽器會讓測試基礎設施本身失去回應；應保留這個失敗證據，與低併發功能/真機結果分開回報。
+- Commit Summary：test: make browser validation portable and preserve failure evidence

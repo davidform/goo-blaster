@@ -37,9 +37,10 @@
 用法：python3 tests/py_shell.py
 """
 import http.server, socketserver, threading, functools, sys, asyncio
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.async_api import async_playwright
 
-ROOT = "/home/claude/goo/game"
+ROOT = GAME_ROOT
 PORT = 8851
 fails = []
 
@@ -112,7 +113,7 @@ PROBE = """(arg)=>{
 
 async def main():
     async with async_playwright() as pw:
-        b = await pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+        b = await pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
         c = await b.new_context(viewport={"width": 390, "height": 844},
                                 device_scale_factor=2, is_mobile=True, has_touch=True)
         pg = await c.new_page()

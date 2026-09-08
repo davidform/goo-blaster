@@ -7,8 +7,9 @@
    公式推算會漏掉「程式跟我以為的不一樣」這種錯。
 """
 import http.server, socketserver, threading, functools, sys
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
-ROOT="/home/claude/goo/game"; PORT=8841
+ROOT = GAME_ROOT; PORT=8841
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.TCPServer(("127.0.0.1",PORT),
     functools.partial(http.server.SimpleHTTPRequestHandler,directory=ROOT))
@@ -25,7 +26,7 @@ window.__hook=()=>{ const o=window.shootE; window.shootE=function(...a){ window.
 """
 
 with sync_playwright() as pw:
-    b=pw.chromium.launch(args=["--autoplay-policy=no-user-gesture-required"])
+    b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
     c=b.new_context(viewport={"width":390,"height":844},device_scale_factor=2,
                     is_mobile=True,has_touch=True,locale="en-US")
     pg=c.new_page(); errs=[]

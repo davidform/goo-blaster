@@ -29,6 +29,7 @@
 用法：python3 tests/py_boot_sel.py
 """
 import http.server, socketserver, threading, functools, sys, json, time
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
 # ⚠ 逾時刻意放到 60 秒：這些 wait_for_function 都是「輪詢到條件成立為止」，
@@ -37,7 +38,7 @@ from playwright.sync_api import sync_playwright
 #   短逾時在那個情境下必定假紅字（AGENTS.md 第 3 節第 1 條）。
 
 
-ROOT = __import__('os').environ.get('GOO_ROOT','/home/claude/goo/game')
+ROOT = GAME_ROOT
 PORT = 8803
 
 
@@ -104,7 +105,7 @@ def main():
     fails = []
     try:
         with sync_playwright() as p:
-            b = p.chromium.launch()
+            b = p.chromium.launch(channel=BROWSER_CHANNEL)
 
             # ── 1~3. 純網頁：localStorage 有進度，冷開機 ──────────────
             print("── 純網頁冷開機（localStorage 有進度）──")

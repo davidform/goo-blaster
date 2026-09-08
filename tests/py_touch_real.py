@@ -2,9 +2,10 @@
 # 用 CDP Input.dispatchTouchEvent 送出「瀏覽器層級的可信觸控」，
 # 而不是 new TouchEvent() 合成事件。這比 docs/02 第四節提到的舊做法可信。
 import http.server, socketserver, threading, functools, sys, time
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
-ROOT = "/home/claude/goo/game"
+ROOT = GAME_ROOT
 PORT = 8731
 
 Handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=ROOT)
@@ -18,7 +19,7 @@ def run(scheme):
     url = (f"http://127.0.0.1:{PORT}/index.html" if scheme == "http"
            else f"file://{ROOT}/index.html")
     with sync_playwright() as p:
-        b = p.chromium.launch(args=["--use-gl=swiftshader"])
+        b = p.chromium.launch(channel=BROWSER_CHANNEL, args=["--use-gl=swiftshader"])
         ctx = b.new_context(viewport={"width": 390, "height": 844},
                             device_scale_factor=3, is_mobile=True,
                             has_touch=True,

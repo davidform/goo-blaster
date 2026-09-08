@@ -1,62 +1,61 @@
 # GOO BLASTER — 目前交接
-更新：2026-09-08；本檔只保留現況，不複製完整對話。
+更新：2026-09-09；本檔只保留現況，不複製完整對話。
 
 ## 接手方式
-- 先讀 AGENTS.md，再讀本檔；核對 git status --short、git log -3 --oneline 與 BUILD。
-- 修改前先檢查未提交差異，再安全同步；不假設 Claude 的歷史測試仍適用。
-- 本次工作前的已同步基準：7c9c053；最新提交請用 git log 查，不用本檔自指 SHA。
-- 只有評估對話長度過長、確實需要換新對話時才提醒；不因階段完成而提醒。需要換對話時在同一專案貼上：
+- 先完整讀 AGENTS.md 與本檔，再核對 git status、git log、BUILD 與本次任務。
+- 修改前先檢查未提交差異，再安全同步；禁止 reset/覆寫消除差異。
+- 只有評估對話長度過長、確實需要換新對話時才提醒，不因階段完成提醒。
+- 需要換對話時，在同一專案貼上：
   > 依 AGENTS.md 與 HANDOFF.md 接手，先核對實際狀態，再完成目前任務。回報測試證據、未完成項目與 commit Summary。
 
-## 已確認方向
-- 目標：兒童可離線遊戲，Google Play 與 Apple App Store；不含廣告/訂閱/消耗型購買。
-- 定價基準 US$2.99，一次付費下載完整遊戲；目前未接原生內購。
-- 家長是購買決策者；9–12 歲為初步體驗研究方向，不是已定案的商店年齡申報。
-- 正式年齡組、內容分級與資料安全申報，要依真實內容及 SDK/產物稽核決定。
-- 日常可用 5.6 Terra 中；核心/存檔/跨系統疑難與發行稽核用 6 Astra 高。
-- 這是工作分配建議，不是保證品質/節省比例；不自動更改使用者的模型或用量設定。
-- 遊戲三輪實跑；文件採相應檢查。效能獨立跑，測試證據必須區分未執行。
-- 每次回報 commit Summary；授權內可自動同步，商店送審/發布需另外授權。
-- itch.io 已獲明確授權：遊戲改版通過規定測試後，可自動更新 davidform/goo-blaster 的網頁遊戲；價格、文案與其他商店發布不包含在內。
+## 已確認方向與授權
+- 兒童可離線遊戲；US$2.99 一次付費下載完整遊戲，不含廣告/訂閱/消耗型購買，尚未接原生內購。
+- 家長是購買決策者；9–12 歲只是體驗研究方向，正式商店年齡與資料申報尚未定案。
+- 單一代理；遊戲改動三輪實跑，效能必須單獨跑；回報區分已驗證、失敗、未執行。
+- Git 可在授權範圍自動 commit/push，只提交本次檔案；商店送審/發布、定價與敏感簽章操作需另行授權。
+- itch.io 已明確授權：遊戲改版通過規定測試後自動更新 davidform/goo-blaster 的網頁遊戲；不含價格或商店文案。
+- Chrome/GitHub Desktop/Android Studio 不必常開；執行工作需此專案工具環境、連網及電腦不睡眠。
 
-## 目前任務
-- 已建立交接規則；已修正 PRIVACY.md 與 privacy.html 的中英文說明。
-- 本次不改 index.html、原生設定或產生 AAB，不提交 Play Console 聲明。
-- 同步收尾已完成：2026-09-08 實查本機與遠端 main 同為 f0ef768，git pull --ff-only 無更新。
-- 公開政策 HTTP 200；8614 字元與本機 privacy.html 完全一致（統一換行後比較）。
-- 本次 commit Summary：build: prepare authenticated itch.io publishing workflow
-- 政策網址：https://davidform.github.io/goo-blaster/privacy.html
-- 目前接續 itch.io 自動更新設定；官方 butler v15.31.0 已安裝於 _private/butler，使用者已完成授權，憑證僅存標準本機位置，禁止讀出或提交。
-- butler status davidform/goo-blaster 成功，回傳尚無頻道；編輯頁 project 4906809 已是 HTML，現有檔名 goo-blaster-v0.9.31.html（尚未核對其內容版本）。
-- tools/publish_itch.cjs 預設只打包；--push 需附通過規定測試之 index.html SHA256。預定頻道 html5，尚未上傳或切換線上檔案。
+## 目前任務與發布阻擋
+- 本次已處理 Windows 測試相容、Android 套件修正、實際 APK/AAB 與真機驗證；index.html 沒有修改。
+- Windows 全套重跑為 46/47 通過；唯一失敗是 py_v0927_perf 的有同伴 FPS >=30，量到 27.9。
+- 48 工全平行壓力造成電腦嚴重失去回應與多項導頁逾時，已中止並清理；不得宣稱三輪全綠。
+- 同批固定亂數 v0.9.31/v0.9.40 重場景對照平均均約19.47 FPS；只是診斷，不能取代門檻或證明真機效能。
+- itch.io 尚未首次推送或切換檔案；不能把工具授權成功當作已發布。
+- 下一步先釐清效能測量與本機可承受的壓力條件，不為發布而偷偷放寬驗收。
 
-## 本機已核對的事實（2026-09-08）
-- index.html：v0.9.40；本次修改前 SHA256：
-  CC7E50FCB9D87979BE694C413C0B6173AF0435C4647A2166B599AEF10E267D6B
-- native/package.json 使用 Capacitor core/android/ios、Preferences、Splash Screen。
-- NATIVE_STORE 使用 Preferences 加 localStorage；不能聲稱「沒有第三方 SDK」。
-- btnResetConfirm 只重設 PROGRESS/SEL_IDX，不清除金幣/強化/語言/解鎖。
-- AndroidManifest.xml allowBackup=true；作業系統可能備份/移轉資料。
-- 原生 applicationId/namespace 已為 com.demjastudio.gooblaster。
-- 但 MainActivity.java package 和 strings.xml 的 package_name/custom_url_scheme 仍是舊值。
-- native/android 被忽略；GitHub 乾淨不代表本機原生專案已備份或封裝正確。
-- 本次尚未對新套件名稱完成 release AAB 與真機驗證，不能拿舊套件測試代替。
+## 已驗證：測試環境
+- .venv Python Playwright 1.62.0；Node Playwright 在 _private/test-node；官方 Chromium 下載逾時，改用已安裝 Edge。
+- tests/README.md 有完整指令；run_tests.py 讀取 run_tests.sh 原套件清單，支援 Windows，逐項保存結果與程序 PID。
+- 預設套件改為可攜路徑/可選瀏覽器；部分非預設診斷腳本仍有 Linux 路徑。
+- py_ab_base 固定提取 Git 50b166b 的真實 v0.9.20；修正兩處漏報失敗。py_test9 失敗會回傳非零，小圖示請求回204避免無關404。
+- 最終完整紀錄：_private/test-runs/20260908-234507-833719-final-functional/results.json（46/47、已完整結束）。
+- 第一輪紀錄：20260908-231458-436732-baseline（45/47，小圖示與效能）；壓力紀錄：20260908-233202-939857-stress（中止、只有逐支 log）。
+- 最終笨 bot 第1–3關通關且無 JS 錯誤；第5關CPU4x、零永久強化壓測通過；其他語系、排版、存檔、卡池等通過。
+- py_release_smoke.py：全新瀏覽器資料、離線、CPU4x、真實關閉重開存檔通過，外部請求0、pageerror0。
+- py_perf_baseline.py 僅做同批診斷；_private/test-artifacts/perf-baseline.json 有逐輪數字及GPU啟用狀態。
 
-## 驗證範圍與限制
-- 本次重跑 node tests/check_release_docs.cjs：8/8 通過；git diff --check 通過。
-- 上一輪 Playwright / Edge headless：1280×900 與 390×844 無橫向溢出/頁面錯誤並檢視截圖；本次未重跑。
-- index.html 修改後 SHA256 與上述基準相同；詳細檢查紀錄見 docs-14-history.md。
-- 本次核對存檔/重設/匯出程式、原生依賴及備份設定；並非完整網路行為稽核。
-- 政策說明客服郵件、平台託管/付款/備份，不再宣稱所有情境皆零資料。
-- 完整遊戲三輪、Windows 測試環境、原生 release 與 iOS 真機：本次未執行。
-- 舊紀錄 cap sync 曾出現 uv_os_get_passwd ENOMEM，原因未證實，不可直接歸因記憶體不足。
-- 舊紀錄 Gradle CLI 找不到 JAVA_HOME/java；可先檢查 Android Studio JBR，勿盲目重裝。
-- Android Studio 桌面控制在當前工具未啟用；檔案/命令操作與瀏覽器能力分開核對。
-- 不把 BUILD SUCCESSFUL 畫面當作 signed release AAB 已產生的證據。
+## 已驗證：Android
+- 使用已安裝 JDK21（C:/Users/Surface/.jdks/jbr-21.0.11）、Gradle8.14.3、SDK36；Android Studio 隨附 JDK25，CLI本次未用它建置。
+- native/prepare_android.py 修正 MainActivity 與 strings 的舊識別值、同步webDir，保留備份；不修改遊戲。
+- cap sync android 成功；Preferences7.0.4、SplashScreen7.0.5；assembleDebug + bundleRelease 成功，332 tasks。
+- native/audit_artifacts.py 驗證實際 APK/AAB 內含遊戲與根目錄 SHA256 完全一致：
+  CC7E50FCB9D87979BE694C413C0B6173AF0435C4647A2166B599AEF10E267D6B（BUILD v0.9.40）。
+- appId/MainActivity 為 com.demjastudio.gooblaster；release merged Manifest allowBackup=true、debuggable=false、minSdk23/targetSdk36。
+- debug APK 4,261,164 bytes；release AAB 3,112,351 bytes，未簽署；詳細 hash 在 native/audit_artifacts.py 輸出及歷史。
+- Pixel 真機原有 io.itch.davidform.gooblaster；新套件並存安裝，未覆蓋舊版或舊存檔。
+- 真機在飛航1、Wifi disabled下，真實Preferences存檔、強制停止後冷啟動、進度保留與再次開局通過；保留使用者實際第3關/23金幣/強化/語言。
+- native/test_device.cjs 可重跑；_private/test-artifacts/android-device.json 與 android-offline-*.png 為證據。
+- 測試手機已可恢復網路；最後檢查時已拔除USB。不要假設仍連線或仍離線。
+- native/BUILD-WINDOWS.md 有建置/稽核/備份指令；native/backup_android.py 已產出73檔來源ZIP（_private/android-backups），不含快取、產物、機器設定與憑證。
+- 原生 android/ 仍被Git忽略；重做腳本已提交，本機ZIP不是異機備份，原生獨立遠端repo尚未建立。
 
-## 下一步（按順序）
-1. itch.io：先完成 Windows 測試環境相容與遊戲驗證（現有測試寫死 Linux 路徑）；再首次推送 html5，於編輯頁指定新檔為瀏覽器遊玩並核對線上版本。既有檔案勿直接刪除。
-2. 修正/驗證原生套件名稱殘留，確認 webDir、三份遊戲內容 hash 與打包入口一致。
-3. 稽核 release 的 SDK/Manifest、離線網路與存檔備份/重啟行為；再決定商店申報。
-4. 政策與實際產物一致後，填入 Play Console 隱私政策網址；不要直接送審發布。
-5. 補齊測試環境與不含密鑰的原生重建/備份流程，另排 iOS 封裝。
+## 其他現況與未完成
+- butler v15.31.0 在 _private/butler，授權已成功；憑證僅存標準本機位置，不讀出、不提交。
+- itch project 4906809 已是HTML，目前檔名 goo-blaster-v0.9.31.html；尚無butler頻道，預定html5。
+- tools/publish_itch.cjs 預設僅打包；--push 要附通過測試之SHA256，參數只核對bytes，不代表測試自動通過。
+- 隱私政策 https://davidform.github.io/goo-blaster/privacy.html 已驗證HTTP200、與本機一致；政策已說明Preferences/平台備份/客服。
+- 尚未執行：release簽章與AAB派生安裝、升版/移除重裝/系統備份恢復、完整網路行為稽核、Play Console申報、iOS。
+- Android真機曾有non-cancelable touchmove的console警告，未證實影響；不等同pageerror，也未修改遊戲消除它。
+- 本次提交：build: verify Android package and offline save persistence（485821c）；測試提交以git log核對。
+- 測試 Commit Summary：test: make browser validation portable and preserve failure evidence

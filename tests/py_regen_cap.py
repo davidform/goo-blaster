@@ -24,6 +24,7 @@
 用法：python3 tests/py_regen_cap.py
 """
 import http.server, socketserver, threading, functools, sys
+from test_paths import BROWSER_CHANNEL, GAME_ROOT
 from playwright.sync_api import sync_playwright
 
 # ⚠ 逾時刻意放到 60 秒：這些 wait_for_function 都是「輪詢到條件成立為止」，
@@ -32,7 +33,7 @@ from playwright.sync_api import sync_playwright
 #   短逾時在那個情境下必定假紅字（AGENTS.md 第 3 節第 1 條）。
 
 
-ROOT = "/home/claude/goo/game"
+ROOT = GAME_ROOT
 PORT = 8801
 
 
@@ -112,7 +113,7 @@ def main():
     fails = []
     try:
         with sync_playwright() as p:
-            b = p.chromium.launch()
+            b = p.chromium.launch(channel=BROWSER_CHANNEL)
             pg = b.new_page(viewport={"width": 420, "height": 820})
             pg.goto(f"http://127.0.0.1:{port}/index.html")
             pg.wait_for_function("typeof update === 'function'", timeout=60000)

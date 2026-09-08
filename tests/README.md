@@ -1,30 +1,43 @@
-# 測試腳本
+# Browser test execution
 
-用 Playwright 驅動真實遊戲迴圈的整合測試，不是單元測試。
+The game remains a single offline HTML file. Playwright is a development dependency only.
 
-## 怎麼跑
+Windows PowerShell setup (Python and Node must already be installed):
 
-```bash
-npm init -y
-npm i playwright
-# 容器內已有 Chromium 就不用再 install；本機第一次要跑：
-npx playwright install chromium
-
-node test9.js
+```powershell
+python -m venv .venv
+.venv/Scripts/python.exe -m pip install playwright==1.62.0
+npm install --prefix _private/test-node --no-audit --no-fund playwright@1.62.0
+$env:NODE_PATH = (Join-Path (Get-Location) '_private/test-node/node_modules')
+$env:GOO_BROWSER_CHANNEL = 'msedge'
+.venv/Scripts/python.exe run_tests.py --jobs 4 --label baseline
 ```
 
-腳本裡的路徑是 `file:///home/claude/goo-blaster/index.html`，
-在自己的環境要改成你的 `index.html` 實際路徑。
+This uses installed Microsoft Edge with isolated browser profiles. It does not use personal tabs or logins.
+For Playwright Chromium, install it with `python -m playwright install chromium` using the same Python environment and omit `GOO_BROWSER_CHANNEL`.
 
-## 最重要的一支：test9.js
+`run_tests.py` reads the default suite names from `run_tests.sh`; it does not silently omit tests.
+It runs the performance test only after the concurrent batch. Do not run another build or stress job during that performance test.
+Use `--jobs 48 --label stress` for the full concurrent stress batch, or `--only py_test9 py_ab_base` for focused reruns.
+Each invocation writes separate logs and `results.json` under `_private/test-runs/`, with the tested game's SHA256.
+Exit 124 means a timeout; Windows timeout cleanup targets only that test's process tree.
+Failures printed by legacy Python tests and nonempty Node `errs` also fail the runner.
+Some legacy Node tests are diagnostic measurements, so a successful process is not a substitute for inspecting their results.
 
-裡面有一個刻意寫得很笨的 bot（只感知 170px 內的敵人、完全不看子彈、
-升級卡隨機亂點、幾乎不按加速鍵），代表「第一次玩的小朋友」的操作水準。
+Tests in the default suite now resolve the game directory from `GOO_ROOT`, then `GOO_GAME_DIR`, then the repository location. Older optional diagnostics may still contain Linux-specific paths.
+The v0.9.20 A/B baseline is extracted from historical commit `50b166b`; shallow clones must contain that commit.
+The legacy shell runner is retained for existing Linux workflows; the Python runner is the portable entry point.
 
-**第 1 關的驗收標準：這個笨 bot 必須零失誤通關。**
+`py_test9.py` is the novice gameplay gate: stage 1 must be cleared. A perfect/no-damage clear is a reported observation, not a probabilistic pass/fail requirement. The test now returns a failing exit code for a missed clear or browser error.
 
-每次調整難度數值後都要重跑，確認這條標準還成立。
-目前實測：第 1 關 48 秒通關、愛心一顆沒掉；連續闖關可過 1–5 關、死在第 6 關。
+Before itch.io publication, complete the required rounds and pass the SHA256 from the tested build:
+
+```powershell
+node tools/publish_itch.cjs --push --verified-sha256 <tested-sha256>
+```
+
+That parameter pins the bytes; it does not itself prove tests passed. Preserve and review the test logs first.
+The default command without `--push` only prepares files locally.
 
 ## 其他
 
