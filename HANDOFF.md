@@ -17,6 +17,9 @@
 - Chrome/GitHub Desktop/Android Studio 不必常開；執行工作需此專案工具環境、連網及電腦不睡眠。
 
 ## 目前任務與發布阻擋
+- 最新需求：Pixel 10 Pro卡頓、參考圖式柔和配色、研究市場後豐富介面。建議先實機定位/單項最佳化，再分版配色與介面；本輪尚未改正式遊戲。
+- docs-15-performance-and-art-direction.md 記錄3款案例、色彩/介面規格與效能診斷；對話已有奶油鼠尾草/霧藍薰衣草互動概念，尚非正式設計驗收。
+- adb devices 本輪無裝置；已詢問卡頓對應新/舊App或網頁、版本/關卡/場景，尚未收到答案。下一步接Pixel錄實際長幀；不拿桌機通過否定真機回報。
 - 本次已處理 Windows 測試相容、Android 套件修正、實際 APK/AAB 與真機驗證；index.html 沒有修改。
 - 上輪 Windows 全套為 46/47；2026-09-09 原 py_v0927_perf 單獨重跑已通過：無同伴42.7、有同伴42.6 FPS、損失0.2%，原門檻未改。不是新一輪全套47/47。
 - 48 工全平行壓力造成電腦嚴重失去回應與多項導頁逾時，已中止並清理；不得宣稱三輪全綠。
@@ -37,6 +40,8 @@
 - 本輪原效能證據：_private/test-runs/20260909-063939-575652-perf-handoff/results.json（exit0、原SHA不變）。
 - 新增 tests/py_perf_capacity.py：固定亂數、交替單頁/雙頁三輪，只做測試負載診斷，不取代原門檻或真機。
 - 三輪平均單頁無/有同伴59.47/53.47 FPS，雙頁34.11/35.17；12次pageerror皆0，證據_private/test-artifacts/perf-capacity-20260909-064053.json。
+- 新增py_render_profile.py：原版/關shadowBlur/DPR1，各3輪；原版54.94/55.44/43.19，其餘55.43–56.55 FPS，9次pageerror0。波動未定位，不宣稱降畫質有效。
+- 證據_private/test-artifacts/render-profile-20260909-065755.json；概念稿736/360/320px互動/排版驗證通過；正式遊戲11語系/三輪與真機美術可讀性未測。
 
 ## 已驗證：Android
 - 使用已安裝 JDK21（C:/Users/Surface/.jdks/jbr-21.0.11）、Gradle8.14.3、SDK36；Android Studio 隨附 JDK25，CLI本次未用它建置。
@@ -61,4 +66,4 @@
 - 尚未執行：release簽章與AAB派生安裝、升版/移除重裝/系統備份恢復、完整網路行為稽核、Play Console申報、iOS。
 - Android真機曾有non-cancelable touchmove的console警告，未證實影響；不等同pageerror，也未修改遊戲消除它。
 - 本次提交：build: verify Android package and offline save persistence（485821c）；測試提交以git log核對。
-- 本輪 Commit Summary：test: diagnose performance contention and document safe concurrency
+- 本輪 Commit Summary：test: profile render cost and document soft visual direction

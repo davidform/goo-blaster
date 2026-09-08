@@ -671,3 +671,17 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 本輪僅測試工具/文件；index.html未改、BUILD不升版。未重跑完整遊戲三輪，未推送itch.io、未重做Android或簽署/送審；不可把上輪46項加這次單項稱為本輪47/47。
 - 教訓：效能工具即使排除其他測試，內部雙頁仍互相競爭；量到低FPS不應直接宣稱機器有殘留程序或遊戲迴歸，須保留可驗證的診斷與限制。
 - Commit Summary：test: diagnose performance contention and document safe concurrency
+
+## 2026-09-09：Pixel卡頓初步量測與柔和美術研究（非遊戲版本）
+
+- 使用者回報Pixel 10 Pro會卡，要求較柔和配色與市場研究後的介面增豐。完整規格、案例與未完成項目見docs-15-performance-and-art-direction.md。
+- adb devices沒有裝置，尚無本轮真機profile；已詢問遊玩套件/版本/關卡/情境。不能用先前桌機效能門檻通過否定使用者回報。
+- 新增tests/py_render_profile.py，單頁三條件交替各3次8秒：原版54.94/55.44/43.19 FPS，關shadowBlur56.55/55.67/55.65，DPR1为56.40/56.30/55.43。9次pageerror0、三同伴均存在，實際畫布尺寸已量到。
+- 記錄draw/update呼叫時間、幀間隔与物件量，原版前兩輪繪圖呼叫約2.3ms、更新約1ms；不包含全部GPU/合成成本。第三輪原版下降、場景隨幀率演化，故沒有證明陰影或DPR是Pixel根因，也不宣稱固定改善百分比。
+- 原因目前未定；程式可見候選包括子彈×敵人的碰撞掃描、敵人分離及多層渲染。先真機量測再選單一變數改，不直接降敵人數或畫質。
+- 參考使用者兩張圖、Minami Lane／Isle of Arrows／Brotato官方資料，整理低彩度材質、章節小島、明確導航與戰鬥可讀性方向。市場案例不等於銷售因果。
+- 完成原創Canvas/CSS概念：奶油鼠尾草／霧藍薰衣草可切換，含主畫面與戰鬥，以及糖果屋/設定示意。沒有修改index.html或11語系字典；內容為示意、非真實遊玩/交易。
+- 概念實跑736/360/320px、雙配色/畫面回呼、開始/返回/糖果屋開關，無橫向溢出與pageerror；已視覺檢查截圖。證據在_private/test-artifacts/soft-*.png與soft-design-qa.json；效能原始證據render-profile-20260909-065755.json。
+- BUILD v0.9.40與SHA256未變；正式遊戲三輪、真機卡頓定位、11語系新介面、色覺/彈幕辨識、原生重建與發布尚未執行。既有48工壓力失敗仍保留。
+- 教訓：柔和色彩不直接降低計算量；介面應靠內容與材質增加層次，不能用更多持續粒子掩飾單調。
+- Commit Summary：test: profile render cost and document soft visual direction

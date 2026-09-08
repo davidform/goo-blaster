@@ -59,6 +59,15 @@ The fixed sampling window measures FPS; game readiness is checked by polling.
 These figures diagnose test-host contention; they neither change the original
 30 FPS / less-than-20% loss gates nor establish actual phone performance.
 
+`tests/py_render_profile.py` is a separate, single-page diagnostic. Run it alone
+with the same environment. It compares the unchanged game, shadowBlur disabled,
+and DPR1 in disposable contexts, with three alternating rounds. Timestamped JSON
+records frame gaps, draw/update call durations, actual canvas sizes, object counts,
+and page errors. Call durations exclude asynchronous rendering/compositing work;
+neither reduced-resolution measurements nor these experimental switches modify
+the game or replace acceptance tests. See docs-15-performance-and-art-direction.md
+for observed variability and the pending Pixel investigation.
+
 ## 其他
 
 | 檔案 | 驗什麼 |
