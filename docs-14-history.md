@@ -624,3 +624,19 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
   https://developer.android.com/identity/data/autobackup
   https://learn.chatgpt.com/docs/agent-configuration/agents-md
 - Commit Summary：docs: record handoff workflow and correct privacy disclosures
+
+## 2026-09-08：Windows Android 建置與真機離線存檔驗證（非遊戲版本）
+
+- 根因：Gradle 的新 applicationId/namespace 與 MainActivity.java、strings.xml 舊值不一致；原生目錄又被忽略，Git 乾淨不能證明可建置。
+- 新增 native/prepare_android.py：從 Capacitor 設定核對識別名稱，備份並修正已知舊值，複製遊戲到 webDir；不使用簽署憑證。原生變更可由腳本重做。
+- 實跑 Capacitor sync android；外掛為 Preferences 7.0.4、Splash Screen 7.0.5。
+- 使用本機 JDK 21.0.11、Gradle 8.14.3，執行 assembleDebug、bundleRelease 與 releaseRuntimeClasspath 依賴報告；BUILD SUCCESSFUL，332 tasks（264 executed）。
+- 實際 APK 4,261,164 bytes，SHA256 1e8e482bf089a8259e9f178278b4f5f5c0bb632d0fc4ccadd8ec95b77d00ba05；AAB 3,112,351 bytes，SHA256 32421b4996497783ab46c72a21968cd507b00847edcf37e8d2c9fc9d7426fdc1。
+- native/audit_artifacts.py 實際解開兩份產物：內含遊戲 hash 都等於 CC7E50FCB9D87979BE694C413C0B6173AF0435C4647A2166B599AEF10E267D6B；appId 與 MainActivity 正確。release 合併 Manifest 為 allowBackup=true、debuggable=false；targetSdk=36、minSdk=23。
+- release 依賴包含 AndroidX、Capacitor、Preferences、Splash Screen。Manifest 有 INTERNET 與 AndroidX 的簽章級 DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION；這不是完整第三方網路行為稽核。
+- Pixel 真機原有舊套件 io.itch.davidform.gooblaster；新 com.demjastudio.gooblaster 原先不存在，已並存安裝 debug APK，沒有覆蓋舊版。冷啟動 Activity 成功。
+- 使用者同意飛航並關閉 Wi-Fi後，native/test_device.cjs 驗證系統離線狀態、真實 Preferences、強制關閉重開；第3關、23金幣、實際強化與語言完整保留。再次啟動遊戲沒有觀察到 pageerror；網路觀察只涵蓋該測試片段。
+- 真機截圖與 JSON 在 _private/test-artifacts/；本機原生來源備份由 native/backup_android.py 產生，排除快取、產物、機器設定與憑證。尚不是異機備份，也未建立獨立原生遠端 repo。
+- 限制：AAB **未簽署**；真機使用 debug APK，未測 AAB 派生安裝、升版、移除重裝、雲端備份恢复、iOS。未送審或發布商店。
+- 遊戲 index.html 與 BUILD v0.9.40 完全未變。教訓：核對實際封裝 bytes、MainActivity 與真機存檔，不能以 Gradle成功取代這些驗證。
+- Commit Summary：build: verify Android package and offline save persistence

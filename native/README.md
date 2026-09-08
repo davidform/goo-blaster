@@ -3,14 +3,9 @@
 把 `index.html` 包成 Android / iOS App。**這個資料夾要另外開一個 repo**
 （見 `AGENTS.md` 第 4 節：E 區塊「原生封裝」跟遊戲本體分開）。
 
-> ⚠ **這份骨架我沒辦法在雲端幫你實測。** 我沒有 Android SDK / Xcode 環境，
-> 也不能在你的電腦上跑指令。**下面的設定與流程是照 Capacitor 官方做法寫的，
-> 但版本號、外掛名稱這類東西會隨時間變**——如果某個指令報錯，
-> 先去 https://capacitorjs.com/docs 對一次當下的版本，不要硬套這份。
->
-> ✅ **已經實測過的部分**：`index.html` 裡的儲存層。
-> `tests/py_native_store.py` 用一個假的 Preferences 外掛把原生環境模擬出來，
-> 六個情境全部驗過（含「localStorage 被清掉後救得回來」）。
+> 2026-09-08 更新：已在 Windows 建出 debug APK 與未簽署 release AAB，並在 Android 真機驗證離線冷啟動與 Preferences 存檔保留。
+> 目前可重複執行的指令、產物限制與備份方法見 [BUILD-WINDOWS.md](BUILD-WINDOWS.md)。
+> 以下保留原生外殼的一般說明；簽署、AAB 安裝、升版與系統備份恢復仍需另行驗證。
 
 ---
 
@@ -20,7 +15,7 @@
 |---|---|---|
 | Node.js（18 以上） | 兩者都要 | https://nodejs.org |
 | Android Studio | 打包 Android | 內含 Android SDK 與模擬器 |
-| JDK 17 | 打包 Android | Android Studio 通常會一起裝 |
+| JDK 21 | 打包 Android | Android Studio 通常會一起裝 |
 | Xcode | 打包 iOS | **只能在 Mac 上**。沒有 Mac 就先做 Android |
 
 **建議先只做 Android。** 理由見 `docs-12-上架路線圖.md`：
