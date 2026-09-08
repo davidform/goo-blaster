@@ -17,14 +17,18 @@
 - 這是工作分配建議，不是保證品質/節省比例；不自動更改使用者的模型或用量設定。
 - 遊戲三輪實跑；文件採相應檢查。效能獨立跑，測試證據必須區分未執行。
 - 每次回報 commit Summary；授權內可自動同步，商店送審/發布需另外授權。
+- itch.io 已獲明確授權：遊戲改版通過規定測試後，可自動更新 davidform/goo-blaster 的網頁遊戲；價格、文案與其他商店發布不包含在內。
 
 ## 目前任務
 - 已建立交接規則；已修正 PRIVACY.md 與 privacy.html 的中英文說明。
 - 本次不改 index.html、原生設定或產生 AAB，不提交 Play Console 聲明。
 - 同步收尾已完成：2026-09-08 實查本機與遠端 main 同為 f0ef768，git pull --ff-only 無更新。
 - 公開政策 HTTP 200；8614 字元與本機 privacy.html 完全一致（統一換行後比較）。
-- 本次 commit Summary：docs: confirm privacy deployment and handoff verification
+- 本次 commit Summary：build: prepare authenticated itch.io publishing workflow
 - 政策網址：https://davidform.github.io/goo-blaster/privacy.html
+- 目前接續 itch.io 自動更新設定；官方 butler v15.31.0 已安裝於 _private/butler，使用者已完成授權，憑證僅存標準本機位置，禁止讀出或提交。
+- butler status davidform/goo-blaster 成功，回傳尚無頻道；編輯頁 project 4906809 已是 HTML，現有檔名 goo-blaster-v0.9.31.html（尚未核對其內容版本）。
+- tools/publish_itch.cjs 預設只打包；--push 需附通過規定測試之 index.html SHA256。預定頻道 html5，尚未上傳或切換線上檔案。
 
 ## 本機已核對的事實（2026-09-08）
 - index.html：v0.9.40；本次修改前 SHA256：
@@ -51,7 +55,7 @@
 - 不把 BUILD SUCCESSFUL 畫面當作 signed release AAB 已產生的證據。
 
 ## 下一步（按順序）
-1. 政策 Git 同步與公開部署已驗證完成；後續政策有修改時須重新核對。
+1. itch.io：先完成 Windows 測試環境相容與遊戲驗證（現有測試寫死 Linux 路徑）；再首次推送 html5，於編輯頁指定新檔為瀏覽器遊玩並核對線上版本。既有檔案勿直接刪除。
 2. 修正/驗證原生套件名稱殘留，確認 webDir、三份遊戲內容 hash 與打包入口一致。
 3. 稽核 release 的 SDK/Manifest、離線網路與存檔備份/重啟行為；再決定商店申報。
 4. 政策與實際產物一致後，填入 Play Console 隱私政策網址；不要直接送審發布。
