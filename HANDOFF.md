@@ -21,8 +21,9 @@
 ## 目前任務
 - 已建立交接規則；已修正 PRIVACY.md 與 privacy.html 的中英文說明。
 - 本次不改 index.html、原生設定或產生 AAB，不提交 Play Console 聲明。
-- 同步狀態以 git status / git log / 遠端及公開頁面為準，不能只依本檔判定。
-- 本次 commit Summary：docs: record handoff workflow and correct privacy disclosures
+- 同步收尾已完成：2026-09-08 實查本機與遠端 main 同為 f0ef768，git pull --ff-only 無更新。
+- 公開政策 HTTP 200；8614 字元與本機 privacy.html 完全一致（統一換行後比較）。
+- 本次 commit Summary：docs: confirm privacy deployment and handoff verification
 - 政策網址：https://davidform.github.io/goo-blaster/privacy.html
 
 ## 本機已核對的事實（2026-09-08）
@@ -38,8 +39,8 @@
 - 本次尚未對新套件名稱完成 release AAB 與真機驗證，不能拿舊套件測試代替。
 
 ## 驗證範圍與限制
-- node tests/check_release_docs.cjs：8/8 通過；git diff --check 通過。
-- Playwright / Edge headless：1280×900 與 390×844 無橫向溢出/頁面錯誤，已檢視截圖。
+- 本次重跑 node tests/check_release_docs.cjs：8/8 通過；git diff --check 通過。
+- 上一輪 Playwright / Edge headless：1280×900 與 390×844 無橫向溢出/頁面錯誤並檢視截圖；本次未重跑。
 - index.html 修改後 SHA256 與上述基準相同；詳細檢查紀錄見 docs-14-history.md。
 - 本次核對存檔/重設/匯出程式、原生依賴及備份設定；並非完整網路行為稽核。
 - 政策說明客服郵件、平台託管/付款/備份，不再宣稱所有情境皆零資料。
@@ -50,7 +51,7 @@
 - 不把 BUILD SUCCESSFUL 畫面當作 signed release AAB 已產生的證據。
 
 ## 下一步（按順序）
-1. 核對本次 Git 同步及線上 privacy.html；未部署完成就先不要填舊政策。
+1. 政策 Git 同步與公開部署已驗證完成；後續政策有修改時須重新核對。
 2. 修正/驗證原生套件名稱殘留，確認 webDir、三份遊戲內容 hash 與打包入口一致。
 3. 稽核 release 的 SDK/Manifest、離線網路與存檔備份/重啟行為；再決定商店申報。
 4. 政策與實際產物一致後，填入 Play Console 隱私政策網址；不要直接送審發布。
