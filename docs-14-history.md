@@ -597,3 +597,30 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
   （v0.9.39 綠殼的基準）都完好，兩版的真人回饋都還可以繼續累積。
 - **沒有做糖果屋永久強化缺口（待辦 B）**——那件事要先量再動手，一版一項。
 - **沒有加位移卡進救命卡名單**，理由見上面第 2 點。
+
+---
+
+## 2026-09-08：交接流程與隱私政策校正（非遊戲版本）
+
+- 根因：舊政策把單檔遊戲的零執行期相依，誤寫成原生 App 沒有第三方 SDK；
+  又把「從第 1 關重來」寫成清除全部資料，忽略原生系統備份與客服情境。
+- 本機證據：native/package.json 包含 Capacitor、Preferences、Splash Screen；
+  AndroidManifest.xml 的 allowBackup=true；index.html 的 btnResetConfirm 只重設
+  PROGRESS/SEL_IDX，saveGame 仍保存金幣、強化、語言與解鎖旗標。
+- 修正 PRIVACY.md / privacy.html 中英內容，區分遊戲本機存檔、平台備份、
+  託管、付款、使用者主動匯出及客服資訊。不宣稱整個 App 的網路行為已完成稽核。
+- AGENTS.md / CLAUDE.md 同步追加精簡交接契約，建立 HANDOFF.md；
+  固定換對話提示、風險相應驗證、commit Summary 及已授權的 Git 同步邊界。
+- 驗證：node tests/check_release_docs.cjs 共 8/8 通過；git diff --check 通過。
+  Playwright 使用 Edge headless，1280×900 與 390×844 無橫向溢出及 pageerror；
+  行動版完整截圖已人工視覺檢視。截圖位於本機 Codex visualizations，未納入 repo。
+- 遊戲 SHA256 前後相同：CC7E50FCB9D87979BE694C413C0B6173AF0435C4647A2166B599AEF10E267D6B。
+  BUILD 保持 v0.9.40；完整遊戲三輪、signed release AAB、iOS 與真機測試未執行。
+- 尚未完成：原生 Gradle 已改新套件名稱，但 MainActivity.java / strings.xml 仍舊；
+  原生目錄受 gitignore 排除，不能以 Git 乾淨判定原生配置已可重建或發布。
+- 教訓：文件必須對照程式與平台行為；Git push、網站部署、商店申報與 App 發布
+  是不同狀態，不互相代替。新對話須核對事實，不能把摘要當驗證結果。
+- 參考（2026-09-08 核對）：
+  https://developer.android.com/identity/data/autobackup
+  https://learn.chatgpt.com/docs/agent-configuration/agents-md
+- Commit Summary：docs: record handoff workflow and correct privacy disclosures
