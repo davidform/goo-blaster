@@ -436,7 +436,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.54';
+const BUILD='v0.9.55';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -2345,7 +2345,7 @@ function buildBosses(L){
     const b=BOSS_CHAPTER[L.bossChapter||0];
     bosses.push({...b,
       t: Math.round(L.dur*0.93),
-      hp: Math.round(b.hp*L.bossHp*1.6),
+      hp: (L.bossChapter||0)<2?Math.round(b.hp*L.bossHp*1.6):Math.round(BOSS_CHAPTER[1].hp*LEVELS[9].bossHp*1.6*(1+.025*((L.bossChapter||0)-1))),
       spd: b.spd*L.espd,
       bspd: b.bspd*L.bspd,
       atkT: b.atkT*L.atkSlow,

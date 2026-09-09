@@ -32,7 +32,7 @@ else
       py_meta py_range_music py_spawn py_touch_real py_ui_edge py_ui_fixes \
       py_v0926_edge py_v0927 py_native_store py_save_code py_lv5_stress py_test9 py_v0930 \
       py_polaroid py_regen_cap py_boot_sel py_card_hp_weight py_revive_fx py_nuke_calm \
-      py_shell py_lifeline py_soft_ui py_audio_quality py_l10n_context py_revive_collision py_dash_protection py_visible_target py_range_reach py_range_ui py_report_export py_field_ui py_enemy_weight py_shop_pacing py_world_story py_upgrade_queue py_fire_trail"
+      py_shell py_lifeline py_soft_ui py_audio_quality py_l10n_context py_revive_collision py_dash_protection py_visible_target py_range_reach py_range_ui py_report_export py_field_ui py_enemy_weight py_shop_pacing py_world_story py_upgrade_queue py_fire_trail py_chapter_health"
   JS="test5 test6 test8 test9 test10 test11 testaudio testlead"
   # ⚠ 效能測試不能跟其他 36 支搶 CPU：平行時整台機器只剩個位數 FPS，
   #   連「有同伴 vs 沒同伴」的相對比較都失去解析度（2.6 fps vs 1.6 fps
