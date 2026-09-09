@@ -86,6 +86,8 @@
      font-family:inherit;padding:0;z-index:4;
      box-shadow:0 3px 0 #b3a389,0 5px 12px rgba(130,87,255,.45);
      transition:transform .07s;}
+  #playControls{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;display:flex;flex-direction:row;gap:12px;z-index:4;}
+  #playControls #btnPause,#playMute{position:static;width:44px;height:44px;border-radius:50%;padding:0;pointer-events:auto;cursor:pointer;background:var(--cream);color:var(--ink);border:2px solid var(--edge);box-shadow:0 2px 0 #aeb69f;font:800 19px system-ui;}
   #btnPause:active{transform:translateY(2px) scale(.94);box-shadow:0 1px 0 #b3a389;}
   /* v0.9.10：核彈按鈕，疊在左下角、加速鍵正上方；用發光+脈動強調「這是稀有道具」
      v0.9.30：width/height/left/bottom/font-size 這幾個字面值只是「resize() 還沒
@@ -409,7 +411,7 @@
       </div>
     </div>
 
-    <button id="btnPause" class="hide" title="Pause">⏸</button>
+<div id="playControls"><button id="btnPause" class="hide" title="Pause">⏸</button><button id="playMute" class="hide">♪</button></div>
     <button id="btnNuke" class="hide" title="Nuke">☢️</button>
     <div id="pauseOverlay" class="overlayBox hide">
       <div class="box">
@@ -425,7 +427,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.48';
+const BUILD='v0.9.49';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -482,7 +484,7 @@ const safeProbeB=document.createElement('div');
 safeProbeB.style.cssText='position:fixed;top:0;left:0;width:0;height:env(safe-area-inset-bottom,0px);pointer-events:none;';
 document.body.appendChild(safeProbe); document.body.appendChild(safeProbeB);
 const BTN={x:0,y:0,r:44};                     // 加速鍵（左下拇指區）
-const MUTE={x:0,y:0,r:17};                    // 靜音鍵
+const MUTE={x:0,y:0,r:22};                    // 靜音鍵
 function resize(){
   DPR=Math.min(devicePixelRatio||1,2);
   W=innerWidth; H=innerHeight;
@@ -503,7 +505,7 @@ function resize(){
   // 讓按鈕離角落更遠一點、落在真正舒服的拇指範圍，而不是死貼在邊緣。
   const btnMarginX=Math.max(20,shortSide*0.05), btnMarginY=Math.max(24,shortSide*0.055);
   BTN.x=BTN.r+btnMarginX; BTN.y=H-BTN.r-btnMarginY-SAFE_BOT;   // 左下拇指區
-  MUTE.x=W-MUTE.r-14; MUTE.y=SAFE_TOP+78;
+  MUTE.x=W-MUTE.r-14; MUTE.y=SAFE_TOP+92;
   // 核彈鍵（#btnNuke）疊在加速鍵正上方，原本是 CSS 寫死的 52px + 固定像素偏移，
   // 一樣不會跟著螢幕變大。改成每次 resize 都用 BTN 的最新尺寸重新算一次，
   // 兩顆按鈕永遠維持同一組比例關係，不會一個變大一個沒變、對不齊。
@@ -973,7 +975,7 @@ function raySegDist(x0,y0,ang,len,px,py){
 const IN={active:false,id:null,ox:0,oy:0,x:0,y:0,dx:0,dy:0,mag:0,hist:[]};
 let BTNPRESS=0, touchSeen=false, lastTouchAt=0;
 function inBtn(x,y){ return dist2(x,y,BTN.x,BTN.y) < (BTN.r*1.12)**2; }
-function inMute(x,y){ return dist2(x,y,MUTE.x,MUTE.y) < (MUTE.r*1.7)**2; }
+function inMute(x,y){ return dist2(x,y,MUTE.x,MUTE.y) < MUTE.r**2; }
 function startJoy(id,x,y){
   IN.active=true; IN.id=id; IN.ox=IN.x=x; IN.oy=IN.y=y;
   IN.dx=IN.dy=0; IN.mag=0; IN.hist.length=0;
@@ -2934,22 +2936,34 @@ function drawChests(){
   }
 }
 // 寶箱在畫面外時，邊緣顯示可愛箭頭 —— 這是「叫玩家跑過去」的主要提示
-function drawChestArrows(){
+// Group only off-screen chests; never let a second marker conceal the first.
+function chestMarkers(){
+  const groups=new Map();
   for(const c of G.CHEST){
-    const sx=c.x-G.cam.x+W/2, sy=c.y-G.cam.y+H/2, m=52;
-    if(sx>m&&sx<W-m&&sy>m&&sy<H-m) continue;
-    const ax=clamp(sx,m,W-m), ay=clamp(sy,m,H-m);
-    const a=Math.atan2(sy-H/2,sx-W/2);
-    const pulse=0.6+0.4*Math.sin(G.t*5);
-    ctx.save(); ctx.translate(ax,ay);
-    ctx.fillStyle='hsla('+c.type.hue+',95%,62%,'+(0.55+pulse*0.35)+')';
-    ctx.beginPath(); ctx.arc(0,0,20,0,6.283); ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
-    ctx.font='900 17px system-ui'; ctx.textAlign='center'; ctx.fillStyle='#fff';
-    ctx.fillText(c.type.ic,0,6);
-    ctx.rotate(a);
-    ctx.fillStyle='hsla('+c.type.hue+',95%,70%,'+(0.6+pulse*0.4)+')';
-    ctx.beginPath(); ctx.moveTo(30,0); ctx.lineTo(19,8); ctx.lineTo(19,-8); ctx.closePath(); ctx.fill();
+    if(c.life<=0)continue;
+    const sx=c.x-G.cam.x+W/2,sy=c.y-G.cam.y+H/2;
+    if(sx>=26&&sx<=W-26&&sy>=SAFE_TOP+112&&sy<=H-SAFE_BOT-40)continue;
+    const a=Math.atan2(sy-H/2,sx-W/2),bin=(Math.round(a/(Math.PI/4))+8)%8;
+    const d=Math.hypot(sx-W/2,sy-H/2),old=groups.get(bin);
+    if(!old)groups.set(bin,{c,a,d,count:1,bin});
+    else{old.count++;if(d<old.d)Object.assign(old,{c,a,d});}
+  }
+  const left=34,right=W-80,top=Math.min(SAFE_TOP+146,H*.38),bottom=Math.max(top+70,H-SAFE_BOT-212);
+  const midX=(left+right)/2,midY=(top+bottom)/2;
+  const points=[[right,midY],[right,bottom],[midX,bottom],[left,bottom],[left,midY],[left,top],[midX,top],[right,top]];
+  return [...groups.values()].map(m=>({...m,x:points[m.bin][0],y:points[m.bin][1]}));
+}
+function drawChestArrows(){
+  for(const m of chestMarkers()){
+    ctx.save();ctx.translate(m.x,m.y);
+    ctx.fillStyle='#fff5d8';ctx.strokeStyle='#594c3c';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(0,0,23,0,Math.PI*2);ctx.fill();ctx.stroke();
+    // Box silhouette remains recognizable without an emoji font.
+    ctx.fillStyle='#c29863';ctx.fillRect(-13,-10,26,21);ctx.strokeRect(-13,-10,26,21);
+    ctx.beginPath();ctx.moveTo(-13,-2);ctx.lineTo(13,-2);ctx.stroke();
+    ctx.fillStyle='#fff2b7';ctx.fillRect(-3,-5,6,9);
+    ctx.save();ctx.rotate(m.a);ctx.fillStyle='#594c3c';ctx.beginPath();ctx.moveTo(33,0);ctx.lineTo(24,-6);ctx.lineTo(24,6);ctx.closePath();ctx.fill();ctx.restore();
+    if(m.count>1){ctx.fillStyle='#594c3c';ctx.beginPath();ctx.arc(17,-17,10,0,Math.PI*2);ctx.fill();ctx.font='800 12px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff9ec';ctx.fillText(String(m.count),17,-13);}
     ctx.restore();
   }
 }
@@ -3853,6 +3867,12 @@ function drawHUD(){
   // v0.9.10：暫停鍵、核彈按鈕是不是要顯示，每幀在這裡統一判斷（唯一的判斷來源），
   // 不要在 start()/endGame()/showCards() 等一堆地方各自 toggle，容易漏掉某個路徑。
   pauseBtnEl.classList.toggle('hide', !(G.running && !G.paused));
+  const muteEl=document.getElementById('playMute');
+  muteEl.classList.toggle('hide', !(G.running && !G.paused));
+  muteEl.textContent=SFX.isMuted()?'♫̸':'♫';
+  muteEl.setAttribute('aria-label',T(SFX.isMuted()?'soundOff':'soundOn'));
+  if(G.running&&!G.paused){const mr=muteEl.getBoundingClientRect();MUTE.x=mr.x+mr.width/2;MUTE.y=mr.y+mr.height/2;}
+
   nukeBtnEl.classList.toggle('hide', !(G.running && !G.paused && P.nukeHeld));
   // 受擊全螢幕紅閃 + 邊緣暗角（比血條扣血更快被眼睛接收到）
   if(G.hurt>0){
@@ -4112,19 +4132,6 @@ function drawHUD(){
     const st2=T('hudSpeed',sc.toFixed(2));
     ctx.strokeText(st2, W-pad, RIGHT_HUD_Y+18);
     ctx.fillStyle='#526b60'; ctx.fillText(st2, W-pad, RIGHT_HUD_Y+18);
-  }
-  // 靜音鍵
-  ctx.beginPath(); ctx.arc(MUTE.x,MUTE.y,MUTE.r,0,6.283);
-  ctx.fillStyle='rgba(255,249,236,.9)'; ctx.fill();
-  ctx.strokeStyle='rgba(180,160,230,.45)'; ctx.lineWidth=1.5; ctx.stroke();
-  // 用向量畫音符，不用 emoji（不同裝置的 emoji 字型差異很大）
-  ctx.textAlign='center';
-  ctx.fillStyle=SFX.isMuted()?'rgba(160,145,195,.5)':'#424940';
-  ctx.font='900 16px system-ui';
-  ctx.fillText('♪',MUTE.x,MUTE.y+6);
-  if(SFX.isMuted()){
-    ctx.strokeStyle='#ff6b8a'; ctx.lineWidth=2.2;
-    ctx.beginPath(); ctx.moveTo(MUTE.x-9,MUTE.y+9); ctx.lineTo(MUTE.x+9,MUTE.y-9); ctx.stroke();
   }
   // 護盾／暴走指示
   // ⚠ v0.9.21：原本畫在 hy+56，而關卡名稱那一行在 hy+54 —— 只差 2px，
@@ -4810,6 +4817,7 @@ const doPause=()=>{
   G.paused=true; pauseOverlayEl.classList.remove('hide');
 };
 bindTapBtn(pauseBtnEl, doPause);
+bindTapBtn(document.getElementById('playMute'),()=>{if(G&&G.running&&!G.paused){SFX.toggle();refreshSoundLabel();}});
 document.getElementById('btnResume').onclick=()=>{
   if(!G)return;
   G.paused=false; pauseOverlayEl.classList.add('hide');
