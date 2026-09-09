@@ -838,3 +838,14 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 原生Java實際compileDebugJavaWithJavac成功（report-native-compile.log）；封裝工具另驗最終DEX含BattleReportPlugin與CREATE_DOCUMENT，避免只有HTML更新。真實選檔／磁碟寫入／取消仍須Pixel驗證，後續測試APK沿固定通道提供。
 - 教訓：圖片能畫出來不等於可存到手機；必須測真實按鈕、平台能力與結果回饋。設定／橋接模擬、原生編譯、APK核對與真機是不同證據層。
 - Commit Summary：v0.9.48: restore battle report saving on Android
+
+### v0.9.48 手機測試版交付證據
+
+- python native/build_test_apk.py --tests _private/test-runs/20260909-124035-339602-report-final/results.json 實跑成功，build-v0948.log；149項Gradle任務，BUILD SUCCESSFUL。未建置／發布AAB。
+- 實際APK 4270375 bytes，versionCode 94800、versionName 0.9.48-test.0，appId com.demjastudio.gooblaster；APK SHA256 5df277d0cbced790d4f07e98b3661730288fcd2caf71dece1f16d8454ea50f2b，內嵌遊戲SHA 027b00f8bccb94a50c16e8c0fa81db3b20af933b432c4ddcefd5c9f8368d66de。
+- APK中的DEX確認有BattleReportPlugin及CREATE_DOCUMENT；新舊簽章相同，public fingerprint仍由test-channel.json固定。沒有以原始碼正確代替APK內容核對。
+- python native/publish_test_apk.py --publish 更新既有Prerelease成功；固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test，release 385210316、asset 552038154。公開未登入下載SHA一致，頁面HTTP200且有正確檔名與Pixel待驗說明；tag已沿歷史前進至 fdeff0293d2354e8c248545b818b5784630f5ad4。
+- i18n/build_v0948.py 重跑維持最終SHA；保留原換行，避免Windows重建僅改換行就使驗證報告失配。5鍵×11語言、所有原翻譯不變。
+- native/backup_android.py兩次實跑，加入原生來源與測試通道工具的內容斷言；最終android-source-20260909-130737.zip共80檔、418753 bytes，復原所需的MainActivity與BattleReportPlugin來源均在內，不含私鑰。
+- 未完成：Pixel實際選位置／PNG寫入／取消後重試／覆蓋更新與進度保留；全平行、母語潤稿及後期真人難度。這次沒有宣稱手機操作已通過，也沒有正式商店發布。
+- Commit Summary：docs: record v0.9.48 mobile test delivery

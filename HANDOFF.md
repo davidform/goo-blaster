@@ -55,8 +55,8 @@
 
 ## 固定手機測試入口（已上線）
 - https://github.com/davidform/goo-blaster/releases/tag/android-test ，加入Pixel本機瀏覽器書籤；不依賴USB／PC開機。
-- v0.9.47，Android versionCode 94700／versionName 0.9.47-test.0；APK 4265582 bytes。
-- APK SHA d4da27d4aa3f8161a188c181a0d4e57dabc9775d23186ec95ba3aa1031505e74；內嵌遊戲SHA等於根目錄。
+- v0.9.48，Android versionCode 94800／versionName 0.9.48-test.0；APK 4270375 bytes。
+- APK SHA 5df277d0cbced790d4f07e98b3661730288fcd2caf71dece1f16d8454ea50f2b；內嵌遊戲SHA等於根目錄，DEX確認含原生儲存外掛。
 - appId com.demjastudio.gooblaster，與舊APK同簽章；公開指紋固定於native/test-channel.json，私鑰不入Git。
 - _private/mobile-test/latest.json／published.json保存稽核；公開下載SHA一致、未登入頁面HTTP200、版本／連結／限制說明存在。
 - 首次發布遇草稿untagged網址檢查失敗，修正後沿同草稿完成；release385210316、asset551909536，無重複發布。
@@ -67,8 +67,8 @@
 - Pixel先前v40離線／Preferences／冷啟動曾通過；新版揚聲器／耳機／效能／存檔仍待試玩。
 
 ## 本次接手：戰報與工作室系統
-- v48修復存戰報：原生ACTION_CREATE_DOCUMENT、自選位置寫PNG、成功／取消／失敗提示與結算捲動；玩法數值不變。
-- 最終56/56：20260909-124035-339602-report-final；CPU4／離線通過，原生Java編譯成功；APK正在依固定通道更新，實際數字見後續稽核。
+- v48 fdeff02已push，修復存戰報：原生ACTION_CREATE_DOCUMENT、自選位置寫PNG、成功／取消／失敗提示與結算捲動；玩法數值不變。
+- 最終56/56：20260909-124035-339602-report-final；CPU4／離線通過，原生Java編譯成功；APK已公開，asset 552038154、公開下載SHA與HTTP200核對通過。
 
 - 工作室流程2f8d936已push：studio/README.md、studio.project.json與game-studio skill；8項工具測試與官方skill驗證通過。
 - skill已安裝C:/Users/Surface/.agents/skills/game-studio；未來新遊戲沿用流程，不繼承本作App身分／簽章／售價／授權。
