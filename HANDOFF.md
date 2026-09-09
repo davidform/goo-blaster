@@ -16,12 +16,14 @@
 - 使用者要求重新構思升級寶箱、確認連升三級、進行下一步；已依game-studio單代理執行。
 - v53已修連續獎勵顯示與歸屬：34×2XP仍升3級，標題由錯誤Lv.2／1/2改成Lv.4／1/3→2/3→3/3；XP與卡池不動。
 - 舊卡事件只接受一次；Boss延遲獎勵不跨局；11語言說明已完成。
-- BUILD v0.9.53；SHA 12e085900b78e800e44a765545ebe0e12ae1324a0855045eeb8d19440c33052e。
+- BUILD v0.9.54；SHA 2a06dd5423f5d20a1be553fcb536acc09b4ad42edf0a5010ab5b9685c0ba2548。
 - v53完整61/61：_private/test-runs/20260909-192602-386494-upgrade-queue-final/results.json；CPU4與離線通過，單局45.0FPS；負對照v52確實失敗。
-- v54火焰糖試作在_private/fire-preview，尚未套到正式index；6秒留火焰／每塊2秒／每秒24基礎傷害／重疊不加倍／只直接傷普通敵人／最多16塊。
-- _private/prepare54.py從v53產生；build_v0954.py更新11語言；py_fire_trail.py已跑草稿驗證。正式套用後仍須完整／CPU／離線／APK。
+- v54火焰糖已完成，6秒留火焰／每塊2秒／每秒24基礎傷害／重疊不加倍／只直接傷普通敵人／最多16塊。
+- v54首跑61/62，舊凝膠文字測試修正後同SHA補跑合併62/62：_private/test-runs/20260909-194555-526485-fire-trail-full/results.json＋20260909-201300-555777-fire-context-retry；CPU4／離線過；單局48.4FPS，16火焰上限獨立ABBA過。
+- i18n/build_v0954.py與tests/py_fire_trail.py已納入；fire54-ab.json含16個完成樣本，末關仍0/2。
 - docs-15-upgrade-design.md：三種打法、十種寶箱定位與3種未實作構想。不要把後續构想宣稱已完成。
-- 下一步完成v54、獨立提交，再建置最終APK到固定入口；不止於v53。
+- v55候選_private/boss-health-preview：只調後段章節Boss血量，初始與保留種子驗證後才決定套用；不得與v54同版混改。
+- 下一步依候選結果完成末章單變數驗證／提交，再建置最終APK到固定入口。
 
 ## 驗證證據
 - 環境：.venv/Scripts/python.exe、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules、PYTHONUTF8=1。

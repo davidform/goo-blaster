@@ -39,7 +39,8 @@ with sync_playwright() as pw:
     });}''')
     assert all(row['shown'] for row in counts),counts
     keys=['b1','b2','b3']+['sb'+str(i) for i in range(10)]
-    gel_keys=['hudGoo','w_graffiti_d','e_bubble_n','e_bubble_d','e_graffiti_n','e_graffiti_d','u_chain_d','u_mine_n','u_mine_d','u_mine_d2','c_fire_go','shotGoo','lv7d']
+    # Fire candy now creates its own trail; it no longer describes gel ignition.
+    gel_keys=['hudGoo','w_graffiti_d','e_bubble_n','e_bubble_d','e_graffiti_n','e_graffiti_d','u_chain_d','u_mine_n','u_mine_d','u_mine_d2','shotGoo','lv7d']
     rows=[]
     for lang in page.evaluate('Object.keys(L10N)'):
         row=page.evaluate('''([lang,keys,gelKeys])=>{applyLanguage(lang);
