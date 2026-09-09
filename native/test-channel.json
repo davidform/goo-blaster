@@ -1,0 +1,5 @@
+{
+  "channel": "android-test",
+  "application_id": "com.demjastudio.gooblaster",
+  "signer_sha256": "fa00189cc20d1c630da9c5ad9d3b1c54ddd230f61b84ecf1ba1531914fa14513"
+}

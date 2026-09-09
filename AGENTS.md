@@ -373,3 +373,11 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
   權限不足時走工具核准流程，不聲稱提交成功；push 可能觸發 Pages 公開部署。
   商店送審、正式發布、定價或敏感憑證操作不包含在一般 Git 同步授權內。
 - 預設採單一代理、單一任務；需要多代理或付費工具前再確認，避免無謂 token 消耗。
+
+## 8. 手機遠端測試流程（2026-09-09 使用者要求）
+
+- 使用者經常以手機遠端操作電腦，不會維持 USB 連線；往後預設透過固定的 [Android 測試下載頁](https://github.com/davidform/goo-blaster/releases/tag/android-test) 提供測試版，不把接線當成提供新版的前提。
+- 每次遊戲改動完成既定瀏覽器／邊角／CPU／離線驗證後，依 [native/MOBILE-TESTING.md](native/MOBILE-TESTING.md) 建置、稽核並更新此 Prerelease 測試通道。這是已授權的後續測試流程，不必重複問是否提供 APK。
+- 固定 applicationId 與測試簽章、增加 Android versionCode；實際核對 APK 內容、簽章及公開下載 SHA256。不可用卸載／清除資料處理更新問題，不得把私鑰放入 Git 或 Release。
+- 此授權僅涵蓋測試 APK 分發；全平行或真機尚未完成時必須明示，不能宣稱正式驗收。正式 Pages／itch.io、商店送審、定價及更換簽章仍不在此授權內。
+- 不讓 Android 建置與效能測試同時執行。每次回報附固定入口、實際版本、驗證證據與仍需使用者在手機確認的項目。

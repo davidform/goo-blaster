@@ -794,3 +794,19 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 教訓：遠距離屬性必須驗實際命中；加速還須驗最大合法步長。金幣上限要用真實META測，不能在結算函式之外再乘加成。
 - 全平行、Pixel手感／效能與母語潤稿未完成；正式Pages／itch／AAB不發布。使用者本日另授權固定Android測試通道，測試APK須另做實際產物與公開下載稽核，結果另記於手機測試流程。
 - Commit Summary：v0.9.47: make range upgrades extend projectile reach
+
+## 固定 Android 手機測試通道（2026-09-09，非遊戲版本改動）
+
+- 使用者經常透過手機遠端操作電腦，無法保持USB連線；依其要求建立固定GitHub Prerelease入口，往後自動依此流程提供測試APK。正式Pages／itch／商店未發布。
+- 固定入口：https://github.com/davidform/goo-blaster/releases/tag/android-test 。Pixel本機瀏覽器下載後選「更新」，不用PC持續開機，不卸載舊版。AGENTS第8節與native/MOBILE-TESTING.md記錄持續授權與限制。
+- native/build_test_apk.py要求完整套件報告、同遊戲SHA的補驗證、已提交遊戲；檢查实际APK內容、App身分、版本、簽章。9項單元測試通過，包含舊SHA／失敗／未完成／非完整報告拒絕及草稿重用，證據mobile-release-gate.log。
+- 建置命令：python native/build_test_apk.py --tests _private/test-runs/20260909-105935-518167-range-full/results.json --retry _private/test-runs/20260909-113211-349164-range-perf-isolated/results.json 。Gradle assembleDebug成功，未建AAB；原始碼BUILD不因流程工具改動增加。
+- 實際v0.9.47 APK 4265582 bytes，Android versionCode由舊1升至94700，versionName 0.9.47-test.0，appId com.demjastudio.gooblaster；來源c1167c3a527a3c02703e09b41eff0e064bed723f。
+- APK SHA256 d4da27d4aa3f8161a188c181a0d4e57dabc9775d23186ec95ba3aa1031505e74；內嵌index.html SHA ccbbe524fefb40cb4ff4945c3a8691456ac4a86492487063deeb57ec3c33936c，等於完整測試的遊戲。
+- apksigner驗證新舊簽章相同；公開指紋fa00189cc20d1c630da9c5ad9d3b1c54ddd230f61b84ecf1ba1531914fa14513固定於native/test-channel.json。没有匯出或提交私鑰。
+- python native/publish_test_apk.py --publish：沿已管理測試通道更新，APK独立檔名、舊檔不刪，伺服器digest與公開未登入下載SHA均吻合；公開頁HTTP200並含版本、APK連結與測試限制。latest.json／published.json保存在_private/mobile-test。
+- 首次上傳成功但停於草稿：GitHub草稿資產URL使用untagged暫時路徑，原永久URL斷言失敗。修正為查找並沿用草稿、公開後核對永久URL；同一release385210316／asset551909536成功，沒有重複發布。另補草稿重用／重複拒絕測試。
+- 外部網頁讀取工具一度Cache miss，另以未登入HTTP實際請求確認200；不把工具cache miss說成網站失效。
+- 未完成：全平行壓測、新APK在Pixel覆蓋更新／進度保留、手機音訊／效能、末章真人難度、母語潤稿。下載頁已明示；簽章相同只證明更新相容条件，不等於手機實測完成。
+- 教訓：遠端控制電腦不應等於透過串流測手遊；固定下載APK可讓手機直接執行，也避免把遠端延遲誤認為遊戲卡頓。
+- Commit Summary：build: add a permanent Android test download channel

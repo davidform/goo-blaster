@@ -1,70 +1,67 @@
 # GOO BLASTER — 目前交接
-更新：2026-09-09；詳細研究／歷史見docs-14、docs-15、docs-16。
+更新：2026-09-09；詳細歷史／研究見 docs-14、docs-15、docs-16。
 
 ## 接手與授權
-- 完整讀AGENTS.md與本檔，核對Git差異／BUILD；安全同步，不reset覆蓋。
-- 單一代理，繁體中文；三輪實跑、效能單獨；區分已驗證／失敗／未執行。
-- Git可自動commit/push本次檔案。分支codex/soft-world-ui；Pages只在main push部署。
-- 全平行門檻尚未完成，不發布Pages／itch／APK／AAB；商店送審、價格、憑證另行授權。
-- 兒童可离線、US$2.99一次買斷；無廣告、訂閱、消耗型購買、付費隨機或FOMO。
+- 完整讀 AGENTS.md 與本檔，核對 Git 差異／BUILD；安全同步，不 reset 覆蓋。
+- 單一代理、繁體中文；三輪實跑、效能單獨；區分已驗證／失敗／未執行。
+- Git 可自動 commit/push 本次檔案；分支 codex/soft-world-ui，Pages 只在 main push 部署。
+- 使用者要求固定手機測試方式，無需 USB；往後依 native/MOBILE-TESTING.md 自動提供已驗證的測試 APK。
+- 不含正式 Pages／itch／商店／AAB 發布、价格或更換簽章。全平行與真機缺口必須明示。
+- 兒童可離線、US$2.99 一次買斷；無廣告、訂閱、消耗型購買、付費隨機或 FOMO。
 - 一般階段完成更新交接並繼續，不因此要求換對話。
 
-## 目前狀態與已完成版本
-- v41 4839c6a：柔和配色、可愛果凍、Adventure／Upgrades／Settings導覽；已push開發分支。
-- v42 02eb0e5：柔和音樂／武器音色、實際Boss曲切換、音訊亂數隔離、停止競態與音源回收；已push。
-- v43 a29d96c：13個Boss×11語言重新命名、過期章節規則修正、日韓膠體術語、文字區捲動、Boss總數；已push。
-- v43字典仍241keys×11、預設英文；未改關卡數值、卡池、商店或存檔。i18n/build_v0943.py可重建且冪等。
-- v43 Commit Summary：v0.9.43: clarify monster names and localized game rules；實際提交狀態請核對git log。
-- v44完成畫格安全修正：清彈後跳出舊索引迴圈；重開局的舊rAF時間戳不得令dt為負。提交以git log核對。
-- 使用者要求音訊、命名、11語言精準度、難度／局內道具／商店滿級困境，工作尚在持續。
-- 母語潤稿／跨國玩家理解率未做，不宣稱全部翻譯精準自然。
+## 實際遊戲與提交
+- BUILD v0.9.47；SHA ccbbe524fefb40cb4ff4945c3a8691456ac4a86492487063deeb57ec3c33936c。
+- v41 4839c6a：柔和配色、可愛果凍、Adventure／Upgrades／Settings 導覽。
+- v42 02eb0e5：柔和音樂／武器音色、Boss 曲切換、音訊亂數隔離、停止競態與音源回收。
+- v43 a29d96c：13 個 Boss ×11 語言命名、章節規則、日韓術語、文字區捲動、Boss 數量。
+- v44 01779c3：復活清彈後舊索引與重開局負 dt 的崩潰修正。
+- v45 da99b82：翻滾保留較長既有無敵，不再覆蓋成 0.42 秒。
+- v46 540e0d3：大型 Boss 可見身體時可鎖定；53px 露出時射擊 0→1 發。
+- 測試工具 83fed99：test: measure absolute FPS without a competing game。
+- v47 c1167c3：v0.9.47: make range upgrades extend projectile reach。
+- 以上已 push；手機流程提交以 git log 核對，不把文件當成 Git 現況證據。
+- 字典 241 keys ×11、預設英文；v47 僅改 3 鍵，builder 重跑 SHA 不變。
 
-## 測試證據
-- v41 48/48：20260909-075803-379699-soft-final，2工；CPU4 UI132組及離線重啟通過。效能45.5→45.1FPS。
-- v42 49/49：20260909-082740-083723-audio-full，2工；CPU4音訊／離線通過，效能39.5→39.3FPS。
-- v43 50/50：20260909-091709-010332-localization-final，2工、source unchanged；CPU4語境／離線通過。
-- v43 SHA fe9a39cec887aaaccdc84e3c79e17204edde9fa27787e366b8a2e5b45df57b05。
-- v44最終51/51：20260909-100123-816241-revive-final；SHA a14d97a6f383d95026d1ffda0108fe6bf0333f3e4505ab180dfa8b905a87fc63。
-- v44 CPU4／離線最終通過：revive-cpu4-final.log、revive-offline-final.log；獨立效能39.6→39.4FPS。
-- v44首輪50/51（py_v0927固定300ms未等到dmgEff），修為狀態輪詢；另CPU4找到負dt／负半徑，修好後已整套重跑。
-- v43第一輪報告原子替換遇Windows暫時鎖定，程序中斷；中途亦補Boss計數，不算完整驗收。
-- run_tests.py加入短暫PermissionError重試；tests/check_runner_checkpoint.py用真實Windows讀取handle驗證通過。
-- 新py_l10n_context：11語言13Boss、50關數量／章節規則、日韓术語、實際320×480文字區滑動0→91。
-- l10n-cpu4.log、l10n-offline.log與l10n-*.png在_private/test-artifacts；完整紀錄在_private/test-runs。
-- 原48工曾讓Surface失去回應，本機不重試；2/4工不替代全平行門檻，不宣稱三輪全綠。
-- 環境：.venv Python Playwright、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
-- run_tests.py讀run_tests.sh清單，主效能最後單獨。勿讓診斷與其同時吃CPU。
+## 測試證據（_private/test-runs 與 _private/test-artifacts）
+- v41 48/48：20260909-075803-379699-soft-final；v42 49/49：20260909-082740-083723-audio-full。
+- v43 50/50：20260909-091709-010332-localization-final；v44 51/51：20260909-100123-816241-revive-final。
+- v45 52/52：20260909-102121-309160-dash-full；上述版本CPU4／離線皆有通過證據，詳歷史。
+- v46首輪52/53：20260909-103706-761985-target-full；僅效能28.8失敗，獨立重跑35.6→35.2通過。
+- v47首輪54/55：20260909-105935-518167-range-full/results.json；功能54通過，原雙局效能27.1失敗。
+- 未改測法的重跑仍23.8失敗：20260909-112203-606200-range-perf-retry；兩次失敗保留。
+- 查明雙局資源競爭後，保留30FPS門檻，改以單局測絕對值；雙局仍驗同伴相對損失<20%。
+- 修正後1/1：20260909-113211-349164-range-perf-isolated/results.json；同一遊戲SHA，單局均值51.3FPS。
+- 不宣稱一次55/55全綠；完整功能與修正後獨立效能兩份報告合併驗證。
+- v47 CPU4／離線：range-cpu4.log、range-ui-cpu4.log、range-offline.log；36組射程、12組最大dt命中、11語言320px商店／卡片皆過。
+- 同場景來源A/B：v46中位52.15、v47中位50.42FPS；range-matched-20260909-112853/results.json。不是Pixel結果。
+- 固定120敵場景中位56.79→56.77；range-perf.json，不能跨測法混比。
+- 原48工曾讓Surface失去回應，本機不重試；2工完整套件不替代全平行門檻。
+- 環境：.venv Python、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
+- run_tests.py --jobs 2；效能最後單獨。禁止診斷／Gradle與效能測試競爭CPU。
 
-## 下一步：v47射程收益
-- v44原始證據revive-collision-before.json、negative-frame-before.json；tests/py_revive_collision.py已加入套件。
-- v44 Commit Summary：v0.9.44: prevent revival crashes from stale bullets and frames。
-- 已直接重現tryDash把各來源保護覆蓋成0.42：一般受傷1.45、panic2.1、護盾0.9、復活3.2都縮短（dash-iframe-before.json）。
-- v45只改P.iframe=Math.max(P.iframe,.42)；不增加原保護秒數。_private/py_dash_protection.py在dash-only候選已過（含真實雙指／後續子彈）。
-- v45正式52/52通過：20260909-102121-309160-dash-full；CPU4／離線皆過，僅BUILD與iframe最大值改動，提交核對git log。
-- 遠視糖鏡確定只加鎖定數字：390×844的860個可視樣本各等級都860；噴槍300px靶都0傷害；yoyo前進149.77px不變。
-- 後續射程候選：永久射程每級投射物速度+10%，局內射程每級+15%，合計封頂+60%；壽命／數量不變，零強化不變。
-- _private/apply47.py已準備正式套用；final-candidate含射程／11語言／加速彈整段碰撞候選，仍須全套。
-- 候選實測噴槍第2級能打中300px靶，第3級yoyo前進206.55px；range-hit-before／candidate.json。
-- 候選36組射程、12組最大dt命中、11語言320px商店／卡片已過；單純加速曾讓子彈跨過小怪，候選以sweep修好，不修改未強化彈。
-- 已重現大型Boss露出53px身體卻不鎖定／不開火；boss-visibility-before.json/png。v46正式max(44,e.r)，功能52/52＋效能獨立重跑通過：20260909-103706-761985-target-full；CPU4／離線通過，實際53px可見時0→1發，提交核對git log。
+## 難度、道具與語言：結論及下一步
+- v47永久射程每級投射速度+10%、局內每級+15%、合計封頂60%；原先只增加已被可視範圍封頂的鎖定數字。
+- 壽命／彈數／傷害／敵彈／價格／掉落權重未改；同伴繼承，只有加速彈使用整段移動碰撞防穿透。
+- 噴槍永久第2級能打中300px靶（21傷害）；第3級溜溜球前進149.77→206.55px。
+- 正式v47的v0947-progression.json：63個完成樣本、固定重播一致；tests/diagnose_progression.py，不是FPS或真人勝率。
+- 三組零強化／沿前10關收入購買／全滿，每格3種子；1／6／7關皆3/3，9／10／30关零強化0/3、其餘3/3；50關皆0/3真正陣亡。
+- bot有時沒拾寶箱／核彈，避敵也可能讓Boss離開畫面；不可宣稱已解決末章難度。
+- 下一步透過手機回饋記錄關卡、受傷／補給／Boss情境，再選一項後期數值調整；未採用任意降彈速、延冷卻或無限商店等級。
+- 舊360秒樣本含unfinished，不等於敗北；新工具900上限，未完成報錯，勿沿用舊假0/3。
+- 商店成本8930、含幣加成單局上限520；py_meta原832是假高估，已修工具，收入價格沒改。
+- 救命卡加權、再生2／4次上限、綠殼第9關入池不變；局內卡滿補心與永久商店滿級不同。
+- 11語言完成鍵／參數／數值／語境／版面核對；母語潤稿與跨國兒童理解度未做，不宣稱全部精準自然。
 
-## 難度與道具診斷（尚不能宣稱完成）
-- _private/balance_probe.py：真實loop／TouchEvent／選卡、虛擬60Hz計時器，停用畫圖；不是FPS或真人勝率。
-- 固定同種子重播一致；三種狀態zero／逐局收入購買的earned／max。earned只沿可通關進程買最便宜戰鬥強化。
-- 舊360秒虛擬牆鐘樣本含win:false/over:false，**未完成不等於陣亡**；不可沿用舊0/3當勝率。新工具clear/defeat/unfinished分開、上限900，未完成明確報錯。
-- finished-balance-ab.json：reactive策略滿商店，第30關射程前2/3→後3/3；第50關真實0/3；bot不是玩家勝率。
-- prepared/ reactive會拾取、使用核彈，reactive在危險時可立即翻滾；planner另看短期彈道，僅屬操作參考。
-- 完成勝負的降彈速／減攻擊頻率實驗仍0/3，未採用；加倍受傷保護結果完全相同，追查才找到翻滾覆蓋iframe。
-- dash-preservation-ab.json：50關修保護後存活約276~282秒、加射程約307~315秒，但此bot仍陣亡；勿宣稱已解決所有難度問題。
-- _private/range_balance_ab.py以GOO_BOT_POLICY／GOO_AB_LEVELS／GOO_AB_ARMS／GOO_AB_OUTPUT控制；只讀候選檔，勿與獨立效能競爭CPU。
-- 固定50關純Boss火力：6→7峰值31→59、平均19.51→41.80；非舊幾何，不沿用舊+178%當現況。
-- 一般ring冷卻×1.6候選讓7關峰值50／平均33.74，未寫進遊戲。另版才可調，不能與射程收益混改。
-- 商店总成本8930、每局幣上限實際520；py_meta舊診斷額外乘幣加成印832是假高估，下一次應修測量工具。
-
-## 原生／效能／發布限制
-- 原生實際APK/AAB仍v0.9.40；appId com.demjastudio.gooblaster，debug APK4261164bytes、未簽AAB3112351bytes。
-- SHA cc7e50fcb9d87979be694c413c0b6173af0435c4647a2166b599aef10e267d6b；JDK21/SDK36。
-- Pixel先前離線／Preferences／冷啟動通過；目前未連線，卡頓版本與情境不明，不能宣稱新版本真機改善。
-- native/BUILD-WINDOWS.md與prepare_android.py／audit_artifacts.py／test_device.cjs可重做；原生獨立repo未建。
-- 簽章AAB派生安裝、升版／重裝／系統備份、完整網路稽核、Play Console／iOS皆未做。
-- itch仍v0.9.31，butler授權但尚無頻道；隱私政策公開HTTP200已驗。新聲音手機揚聲器／耳機聽感待玩家試玩。
+## 固定手機測試入口（已上線）
+- https://github.com/davidform/goo-blaster/releases/tag/android-test ，加入Pixel本機瀏覽器書籤；不依賴USB／PC開機。
+- v0.9.47，Android versionCode 94700／versionName 0.9.47-test.0；APK 4265582 bytes。
+- APK SHA d4da27d4aa3f8161a188c181a0d4e57dabc9775d23186ec95ba3aa1031505e74；內嵌遊戲SHA等於根目錄。
+- appId com.demjastudio.gooblaster，與舊APK同簽章；公開指紋固定於native/test-channel.json，私鑰不入Git。
+- _private/mobile-test/latest.json／published.json保存稽核；公開下載SHA一致、未登入頁面HTTP200、版本／連結／限制說明存在。
+- 首次發布遇草稿untagged網址檢查失敗，修正後沿同草稿完成；release385210316、asset551909536，無重複發布。
+- 每版獨立APK檔名、保留舊檔、固定測試tag只沿歷史前進；拒絕改寫未管理的Release。
+- native/build_test_apk.py --tests <完整報告> --retry <同SHA補驗證報告>；見MOBILE-TESTING.md。
+- 手機按「更新」，勿解除安裝／清資料；此APK覆蓋更新與存檔保留尚待Pixel實測，不能以簽章核對代替。
+- 原AAB仍v40且未簽；正式Pages／itch／商店未更新，itch仍v31。Play／iOS／原生獨立repo未完成。
+- Pixel先前v40離線／Preferences／冷啟動曾通過；新版揚聲器／耳機／效能／存檔仍待試玩。
