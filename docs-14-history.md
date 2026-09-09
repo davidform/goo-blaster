@@ -716,3 +716,19 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 未完成：全49工平行仍受本機既有48工失去回應限制；Pixel揚聲器/耳機聽感與效能、原生重建及發布未執行。只提交開發分支，不宣稱三輪全綠。
 - 教訓：註解說「兩首主題」不是播放證據；音樂狀態必須從真實Boss路徑驗。聲音微變不能消耗玩法的亂數，否則調音會污染難度比較。
 - Commit Summary：v0.9.42: soften audio and restore boss music transitions
+
+## v0.9.43：清楚的怪物名稱與正確的在地化規則（2026-09-09）
+
+- 根因：舊名稱有生僻／文化限定的用詞，日韓地面Goo為難以理解的音譯；lv10d全部語言沿用改版前「第一章、首次Mega、每10關」的錯誤規則。既有鍵數檢查無法發現原文自己過期。
+- 只改文案與其呈現：i18n/build_v0943.py同步11語言的13個Boss、5段教學／關卡提示、日韓地面膠體術語；保留固定ID、241keys及預設英文。章節與間距由實際關卡表填參數；未改出怪、傷害、卡池、商店或存檔。
+- 手機實際手勢發現v41文字子元素touch-action:none擋住主畫面捲動；修正為pan-y。320×480從說明文字起滑，scrollTop 0→91。截圖核對又抓到Boss計數漏算章節Boss，第5關1→2、第10關3→4，改讀真正出場表。
+- 新增py_l10n_context至預設套件：11語言13個Boss身份、章節5/10…50、日韓术語、50關畫面Boss數及實際小螢幕手勢；舊末章測試從綁死Omega改驗sb9身份。
+- 第一輪localization-full在Windows原子替換results.json時遇到暫時存取拒絕，程序中斷；其間補了Boss計數，亦非最後來源版本。不列完整通過。原始失敗紀錄保留於20260909-090017-331317-localization-full。
+- 測試報告改為遇短暫PermissionError重試原子替換（最多1秒），不覆寫成部分JSON。實際開啟不允許刪除的Windows讀取handle，0.25秒後釋放，0.263秒完成checkpoint，證據_private/test_checkpoint_retry.py。
+- 最終完整回歸及CPU4驗證另記於下方完成紀錄；母語者與跨國玩家理解度調查仍未執行。
+- 教訓：術語應以角色與實際可玩的語境驗證；主畫面的靜態overflow檢查不能代替從文字區開始的觸控手勢。Boss數也不能直接等同一般Boss設定欄位。
+- Commit Summary：v0.9.43: clarify monster names and localized game rules
+
+- 最終完成紀錄：完整 50/50，run_tests.py --jobs 2 --label localization-final；紀錄20260909-091709-010332-localization-final/results.json，source unchanged，SHA256 fe9a39cec887aaaccdc84e3c79e17204edde9fa27787e366b8a2e5b45df57b05。
+- GOO_L10N_CPU=4 的 py_l10n_context、py_release_smoke 通過；真實手勢／離線／冷重啟，證據l10n-cpu4.log、l10n-offline.log。截圖l10n-zh-Hant-stage5.png、l10n-en-stage10.png及l10n-small-scroll.png。效能獨立36.6→36.5FPS，同伴損失0.3%，原門檻通過。
+- 全平行、Pixel及發布仍未執行；本版只同步開發分支。後續診斷另重現蠟燭復活清彈索引錯誤，已準備候選修正与反證測試，不能因舊套件通過就忽略。

@@ -131,7 +131,7 @@ with sync_playwright() as pw:
     for x in r: print(f"  第{x['關']:>2}關 ch{x['ch']} {x['icon']} {x['name']}")
     ck("10 章的 chIdx 與圖示都對應正確", not bad, bad[:2])
     ck("Boss 血量隨章節遞增", all(r[i]['hp']<r[i+1]['hp'] for i in range(9)))
-    ck("最終章是 Omega, the Ender", 'Omega' in (r[9]['name'] or ''), r[9]['name'])
+    ck("最終章對應最後的章節Boss（固定sb9識別，不綁舊譯名）", r[9]['name']==pg.evaluate("T('sb9')"), r[9]['name'])
 
     print("\n=== 5. 第1~4關沒有章節Boss（新手不該被縮放邏輯影響）===")
     r=pg.evaluate("""()=>{

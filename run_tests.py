@@ -52,7 +52,16 @@ def checkpoint(complete=False):
                   complete=complete, planned=regular + solo, active=active, results=results)
     temporary = logs / 'results.tmp'
     temporary.write_text(json.dumps(report, indent=2), encoding='utf-8')
-    temporary.replace(logs / 'results.json')
+    # Windows readers/virus scanners can briefly deny replacement of an open
+    # report. Keep the previous atomic checkpoint intact and retry the rename.
+    for attempt in range(20):
+        try:
+            temporary.replace(logs / 'results.json')
+            break
+        except PermissionError:
+            if attempt == 19:
+                raise
+            time.sleep(0.05)
 checkpoint()
 print('Logs:', logs, '\nSHA256:', sha, flush=True)
 subprocess.run(['node', 'tests/syntax_check.js'], cwd=ROOT, env=env, check=True)

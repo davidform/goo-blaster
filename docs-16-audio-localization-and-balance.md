@@ -26,13 +26,15 @@
 
 `py_audio_quality.py`走真實AudioContext：三種武器同時有音源、Boss出現/死亡主題切換、快速停止重啟、靜音不分配音源、音源結束後回收、音訊不消耗遊戲亂數。舊v41對照確實在亂數斷言失敗；新版通過，78個音源全部結束並斷開。完整套件與最終壓測狀態見HANDOFF及歷史。
 
-## 命名與11語言：研究中，尚未宣稱全部精準
+## 命名與11語言：v0.9.43，未宣稱母語潤稿完成
 
 - [Microsoft writing style](https://learn.microsoft.com/en-us/windows/apps/design/style/writing-style)建議採常用而清楚的詞；[IGDA在地化建議](https://igda.org/news-archive/high-quality-localization-help-loc-help-you/)強調可玩的版本、語境與術語。這比孤立地逐字翻譯更適合本作。
-- 目前Boss名稱含Molar、Archfiend、Omega等詞；Jawbreaker亦有特定糖果語境，見[Cambridge詞條](https://dictionary.cambridge.org/us/dictionary/english/jawbreaker?topic=sweets)。命名將優先用角色輪廓與常見角色稱呼，固定b1-b3/sb0-sb9識別碼。
-- 已確認錯誤：lv10d仍說第一章、Mega Boss首次登場、之後每10關一次；實際第一個Mega Boss在第5關、每5關一章。這是所有語言一起沿用過期原文，鍵完整性測試抓不到。
-- 日文グー、韓文구把地面Goo直接音譯，缺乏材質線索；會對照其餘語言，改成一致且可理解的果凍/膠體用詞。
-- 現有241鍵×11語言已做數值字面比對；29筆差異主要來自日韓用數字表達英文one/double等，以及舊lv10d。這不是語意準確度分數。母語者潤稿尚未完成，不能宣稱每句都精準自然。
+- 舊Boss名稱含Molar、Archfiend、Omega等詞；Jawbreaker亦有特定糖果語境，見[Cambridge詞條](https://dictionary.cambridge.org/us/dictionary/english/jawbreaker?topic=sweets)。改為輪廓／常見角色稱呼，固定b1-b3/sb0-sb9識別碼，11語言同步：Jelly Giant、Caramel Guard、Candy King，以及Spiky Jelly、Candy Knight、Horned Jelly、Blue Guardian、Crowned Jelly、Glowing Giant、Winged King、Golden Beast、Star King、Jelly Dragon。此為易讀性的設計判斷，尚無跨國玩家理解率調查。
+- 修正lv10d沿用「第一章、首次Mega Boss、每10關」的過期原文。第5/10關說明現在從實際章節欄位與首個章節Boss間距填參數；實測Boss在5、10…50關。兔子速度改為相對說明，避免速度上限造成「兩倍」不實；自爆怪改用Burst Jellies等描述名稱，翻滾提示不再用i-frames縮寫。
+- 日文地面Goo統一為ジェル，韓文為젤，明示膠體材質。角色名稱仍用各語言的Jelly／果凍詞，不將地面危險與怪物識別碼混在一起。
+- 241鍵×11語言已做數值字面比對及語境修正；字面差異仍包含one/double與日韓數字寫法，這不是語意準確度分數。母語者潤稿尚未完成，不能宣稱每句都精準自然。
+- 長文案實際手勢測試發現v41主畫面的子元素仍是touch-action:none：320×480從說明文字滑動，scrollTop為0。修正子元素後同樣手勢為91，開始按鈕完整可見。新增py_l10n_context覆蓋實際手勢、章節規則、13個Boss身份及日韓術語；不再只檢查overflow數值。
+- 截圖另抓到章節Boss未計入主畫面Boss數：第5關1→2、第10關3→4。改讀buildBosses(L).length，新增50關實際出場表與畫面計數核對。
 
 ## 難度、局內道具與糖果屋：待實測後選單一槓桿
 
@@ -40,3 +42,12 @@
 - 分開量零永久強化、合理累積、全滿三種狀態；固定輸入、同批比較。既有笨bot隨機選卡不能代表真人會優先點救命卡，也不能把少量試跑當成玩家勝率。
 - 優先檢查第7關多種變化同時出現，以及晚期滿強化是否仍有有效的閃避／輸出窗口。先確認增益確實套用，再判斷是否足以應對。
 - 現有商店總成本8930；既有測試確認滿級會增加生命、傷害、攻速、拾取、起始武器、復活與經驗收益。但這只能證明功能生效，不能證明50關的体验都合理。不得以增加無限強化或新貨幣取代難度檢查。
+
+研究取捨：Mike Lopez的[Gameplay Progression](https://www.gamedeveloper.com/design/gameplay-design-fundamentals-gameplay-progression)將機制、時長、回饋與難度一起評估；[Hades官方FAQ](https://www.supergiantgames.com/blog/hades-faq/)則說明永久成長之外另有可選生存輔助。對本作的推論是：不應把刷滿商店當成所有操作程度玩家都能通關的保證，也不必用無限成長掩蓋關卡跳升。
+
+2026-09-09診斷新發現（先修實際錯誤，再繼續整體比較）：
+
+- 固定位置／30秒／停用玩家武器、Boss不受傷的50關火力診斷，第6→7關同時敵彈峰值31→59、平均19.51→41.80。這與舊工具幾何、暴走時機不同，不拿舊+178%直接當現況。一般ring冷卻×1.6的實驗使第7關峰值50、平均33.74；尚未寫入遊戲。
+- 遠視糖鏡在390×844畫面860個可視位置，0→3級可鎖目標皆860；噴槍初速470、壽命0.52秒也不變。實際300px外的固定敵人，噴槍四種商店等級皆0傷害；溜溜球最大前進距離皆149.77px。這證明「數字有加」不代表有效射程有增加。證據range-probe.json、range-hit-before.json；此時尚未修改強化。
+- 固定60Hz、虛擬計時器、真實loop/TouchEvent/選卡處理的診斷，在第30關長局遇到敵彈讀取undefined。簡化重現：1心、1次蠟燭、3顆重疊敵彈，update觸發復活清彈後仍讀取舊索引，得到TypeError。真實rAF碰撞回歸測試亦失敗，不是模擬計時器獨有。證據revive-collision-before.json與revive-collision-old.log。
+- 此次生存矩陣因錯誤中斷，不能宣稱50關難度完成驗收。已完成的樣本顯示強化有幫助，但bot策略與三個固定種子不是玩家勝率；完成修正後須重跑。虛擬時間診斷停用畫圖，不用來判定FPS或Pixel體驗。
