@@ -419,7 +419,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.43';
+const BUILD='v0.9.44';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -2970,7 +2970,8 @@ function drawNukeArrow(){
 let lastT=performance.now();
 function loop(now){
   requestAnimationFrame(loop);
-  let dt=Math.min((now-lastT)/1000,.05); lastT=now;
+  // A queued frame may predate start()'s new timestamp; never run time backwards.
+  let dt=Math.min(Math.max((now-lastT)/1000,0),.05); lastT=Math.max(lastT,now);
   if(G&&G.hurt>0) G.hurt=Math.max(0,G.hurt-dt*6.5);   // 受擊紅閃：約 0.15 秒衰減完，用真實時間不受慢動作影響
   if(G&&G.nukeFlash>0) G.nukeFlash=Math.max(0,G.nukeFlash-dt*2.2);  // v0.9.38：從 3.3 放慢到 2.2，配合 1.5 的起始值＝全白 0.23s + 淡出 0.45s
   // v0.9.37：復活演出。跟上面兩行一樣用**真實時間**衰減，不受 hitstop／慢動作影響——
@@ -3279,6 +3280,8 @@ function update(dt,rawdt){
       const dead = P.iframe<=0 ? hurtPlayer() : false;
       G.EB.splice(i,1);
       if(dead) return;
+      // Revival clears every bullet inside hurtPlayer; remaining indices no longer exist.
+      if(!G.EB.length) break;
     }
   }
   //--- 閃避穿彈幕 → 子彈時間

@@ -80,7 +80,7 @@ with sync_playwright() as pw:
         META={}; LV_IDX=4; start(); G.hasMoved=true; DIAG.touch=3;
         G.P.wep={bubble:3}; G.P.x=0; G.P.y=0;
     }""")
-    pg.wait_for_timeout(300)                      # 讓 update() 至少跑過一幀，算出 dmgEff
+    pg.wait_for_function('G && Number.isFinite(G.P.dmgEff) && G.P.dmgEff > 0')
     # ⚠ 目標敵人要在「開火的同一個 evaluate 裡」現生。上一版先生好再等 300ms，
     #   等的期間玩家的自動攻擊已經把它打死了 → nearest() 找不到目標 → 根本沒開火。
     r=pg.evaluate("""()=>{

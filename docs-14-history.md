@@ -732,3 +732,18 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 最終完成紀錄：完整 50/50，run_tests.py --jobs 2 --label localization-final；紀錄20260909-091709-010332-localization-final/results.json，source unchanged，SHA256 fe9a39cec887aaaccdc84e3c79e17204edde9fa27787e366b8a2e5b45df57b05。
 - GOO_L10N_CPU=4 的 py_l10n_context、py_release_smoke 通過；真實手勢／離線／冷重啟，證據l10n-cpu4.log、l10n-offline.log。截圖l10n-zh-Hant-stage5.png、l10n-en-stage10.png及l10n-small-scroll.png。效能獨立36.6→36.5FPS，同伴損失0.3%，原門檻通過。
 - 全平行、Pixel及發布仍未執行；本版只同步開發分支。後續診斷另重現蠟燭復活清彈索引錯誤，已準備候選修正与反證測試，不能因舊套件通過就忽略。
+
+## v0.9.44：修正復活與重開局時的畫格錯誤（2026-09-09）
+
+- 根因：長局滿強化診斷在第30關遇到undefined.life。hurtPlayer觸發重生蠟燭時清空G.EB，但敵彈反向迴圈仍沿用清空前的索引。若致命子彈不是索引0，下一次迴圈就拋例外。
+- 最小實際重現：1顆心、1次蠟燭、3顆重疊敵彈；更新後已復活成3心且敵彈0，卻同時拋TypeError。證據revive-collision-before.json；真實rAF版測試亦明確失敗（revive-collision-old.log），不依賴診斷用虛擬計時器。
+- 改動：碰撞處理後若敵彈陣列已清空，就結束這個敵彈迴圈，繼續同幀後續更新；延遲到來的舊畫格不得倒退時間。未改復活次數、血量、無敵時間、清彈範圍或關卡平衡。
+- 新tests/py_revive_collision.py加入預設套件：1／3／100顆敵彈、命中在前／中／後位置，實際rAF繼續推進；另驗普通受傷、護盾與沒有蠟燭的死亡路徑。原測試直接呼叫hurtPlayer，因此一直沒有測到其呼叫者的陣列迭代失效。
+- 教訓：驗證狀態已變成「復活」不夠，必須讓真正的碰撞迴圈完成並持續運作；滿級長局可走到新手／孤立函式測試沒有覆盖的路徑。
+- 第一輪完整50/51（20260909-093805-240613-revive-full、遊戲SHA ab9086885ddd20cd43b5bcca5bec2f338a460bdc1420e9629345ff5982aa05fd）：py_v0927等固定300ms後dmgEff仍未初始化。改為輪詢真實初始化狀態，原傷害斷言保留；revive-focused單獨通過。效能單獨37.5→37.3FPS（損失0.7%）。
+- 其後CPU4實際重現負半徑(-4.976)繪圖例外。儀器證明rAF舊時間戳比start()更新的lastT早，負dt會讓復活衝擊環半徑變負；最小重現loop(lastT-50)得到dt=-0.05、G.t=-0.05、首環半徑-16，draw拋IndexSizeError（negative-frame-before.json）。
+- dt下限設0，lastT維持單調；不是只把arc半徑截斷掩蓋時間錯誤。py_revive_collision新增真正呼叫loop/draw的過期畫格案例，CPU4通過後重新跑整套。revive-scope.json核對除BUILD及兩個畫格防護外，與a29d96c一致。
+- Commit Summary：v0.9.44: prevent revival crashes from stale bullets and frames
+- 最終完整51/51：run_tests.py --jobs 2 --label revive-final，20260909-100123-816241-revive-final/results.json；source unchanged，SHA a14d97a6f383d95026d1ffda0108fe6bf0333f3e4505ab180dfa8b905a87fc63。
+- 最終CPU4 py_revive_collision及離線冷重啟py_release_smoke皆過（revive-cpu4-final.log／revive-offline-final.log），pageerror0。效能單獨39.6→39.4FPS，損失0.6%。
+- 全平行、Pixel與發布仍未執行；只同步開發分支。後续另已重現翻滾把較長無敵覆蓋為0.42秒，留下一版單獨修復，不混改本版。

@@ -124,6 +124,8 @@ non-finite/clipped/silent output, but does not grade taste or replace phone list
 Omit `--label` to use a timestamp and preserve earlier samples.
 # v0.9.43 語境與長翻譯
 
+`py_revive_collision.py`（v0.9.44）已加入預設套件。用真正敵彈碰撞觸發蠟燭復活，驗證清空敵彈後的剩餘索引不會讓遊戲拋例外；也涵蓋普通受傷、護盾與死亡。`GOO_REVIVE_CPU=4` 可執行 CPU 節流版本。
+
 `py_l10n_context.py` 已加入預設套件：11 語言的實際 Boss 名稱、每五關章節規則、日韓地面膠體術語，以及 320×480 從說明文字開始的真實觸控捲動。可設 `GOO_L10N_CPU=4` 做 CPU 節流。截圖／JSON 在 `_private/test-artifacts/l10n-*`。鍵完整與排版通過不代表母語潤稿完成。
 
 `python tests/check_runner_checkpoint.py` 單獨驗證 Windows 報告檔被讀取鎖定時的原子替換重試：使用真實 Windows handle，並非只模擬例外。其他平台明確 SKIP；這是測試工具的診斷，不計入遊戲瀏覽器套件數。
