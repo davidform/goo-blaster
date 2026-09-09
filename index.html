@@ -427,7 +427,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.50';
+const BUILD='v0.9.51';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -2002,6 +2002,13 @@ const META_UPGRADES=[
   {id:'coin',   ic:'💰', n:'糖幣獵人',  max:4, cost:n=>[80,180,380,700][n],
    d:n=>'每局獲得的糖果幣 +'+((n+1)*15)+'%'}
 ];
+
+// Keep early help affordable; later ranks become a campaign-long investment.
+// Existing purchased ranks and effects are unchanged, including already-maxed saves.
+for(const u of META_UPGRADES){
+  const baseCost=u.cost;
+  u.cost=n=>{const v=baseCost(n);return Number.isFinite(v)?Math.round(v*([1,1,2,2.5,3][n]||1)/5)*5:v;};
+}
 
 let PROGRESS=1;
 let COINS=0;

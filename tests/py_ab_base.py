@@ -120,6 +120,20 @@ print(("  PASS  " if same4 else "  FAIL  ")+"第5關的其他欄位完全沒動"
 if not same4: fails.append('level5-other')
 old['levels'][4]=new['levels'][4]   # 已個別驗過，從整體比對中排除
 
+# v51 changes only later-rank prices; explicitly pin the approved price list.
+if int(new['build'].split('.')[-1])>=51:
+    expected={'hearts':[60,220],'dmg':[40,90,360,800,1560],
+              'aspd':[40,90,360,800,1560],'wep':[120,300,1300],
+              'range':[70,160,680],'xp':[50,120,520,1200],
+              'pickup':[45,110,480],'dash':[55,130,560],
+              'revive':[400,1200],'coin':[80,180,760,1750]}
+    assert {row[0]:row[2] for row in new['meta_upg']}==expected
+    assert [(r[0],r[1]) for r in old['meta_upg']]==[(r[0],r[1]) for r in new['meta_upg']]
+    assert sum(sum(r[2]) for r in old['meta_upg'])==8930
+    assert sum(sum(r[2]) for r in new['meta_upg'])==16250
+    print('  PASS  approved later-rank prices: 8930 -> 16250; IDs, caps and actual start effects retained')
+    old['meta_upg']=new['meta_upg']  # Only after the exact delta above has passed.
+
 for k in ['levels','tiers','startWep','starts','meta_upg','upgrades']:
     same = json.dumps(old[k],sort_keys=True)==json.dumps(new[k],sort_keys=True)
     print(("  PASS  " if same else "  FAIL  ")+f"{k} 兩版完全相同")

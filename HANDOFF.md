@@ -20,7 +20,7 @@
 - 不得因v49完成就停止整個八項任務；仍須序列完成後續版本與最終APK。
 
 ## 當前來源與驗證
-- BUILD v0.9.50；SHA 4e84f759de441ac33d0e538a1e2b166177f86b8e108eba37cb8193bef810476b。
+- BUILD v0.9.51；SHA c9c29339cd073be1c2c8658aa8d7450ab30f5b0e0d63a6d461d140b043104d14。
 - v49：右上兩個44px DOM按鈕共用flex橫列、12px間距；遠方箱八方向分組＋箱型＋數量。
 - `_private/test-runs/20260909-135759-427624-field-ui-final/results.json` 57/57 PASS；單局有同伴46.1FPS，同批相對-0.6%。
 - 邊角 tests/py_field_ui.py 四視窗×兩安全區真實點擊；24箱→8標×3。
@@ -35,9 +35,12 @@
 - v50完整初輪57/58；舊基準表引用失敗，另發現py_balance吞100關例外。修工具後2/2補驗證，合併58項通過；CPU4／離線通過。
 - v50完整20260909-142237-869825-enemy-weight-full，補測20260909-144428-666138-enemy-weight-recheck；單局48.0FPS。
 - 16個固定完成bot A/B：第9關zero：0/2→0/2；第9關max：2/2→2/2；第50關zero：0/2→0/2；第50關max：0/2→0/2；有限樣本不等於真人勝率，詳late-speed-ab.json。
-- edit51.py／py_shop_pacing.py：前兩級原價、高階倍率[1,1,2,2.5,3]，保留舊MAX存檔與收入。
+- v51已完成高階價格：8930→16250，前兩級／愛心／復活／已MAX存檔保留；真實按鈕扣款與重載過。
+- v51完整59/59：20260909-145033-416041-shop-pacing-full；CPU4／離線過，單局46.4FPS。
+- shop-campaign-ab.json：同一固定操作／實賺收入購買，前後各10場皆通過前10關；級數22→20，不是人類勝率。
 - world-presentation.js／edit52.py／story_builder.py／py_world_story.py：十章插畫、50組章節／推進短篇×11語言、Boss護盾尖牙與核彈演出。
-- v51價格草稿未套用；v52曾在_private/world-preview執行視覺草稿檢查（550故事／十Boss／發射），但最新草稿仍須正式套用後完整驗證。
+- v52在_private/world-preview已跑草稿檢查（550故事組合／十Boss／發射）；最新控制鍵語系／色調修改仍須正式套用後完整驗證。
+- v52套用edit52.py，story_builder.py複製i18n/build_v0952.py執行；py_world_story.py移tests，py_field_ui52.py覆蓋tests/py_field_ui.py，註冊world測試。
 - 後續i18n builder要移至i18n，測試移至tests並註冊run_tests.sh；各版各跑完整套件。
 
 ## 前版與未解問題
