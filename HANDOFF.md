@@ -16,7 +16,7 @@
 - v49 aea0d88：暫停／靜音兩個44px DOM按鈕，橫列間距12px；寶箱方向分組。
 - v50 edeab83：普通敵人越強越慢，保留類型差異；只改速度，不改Boss／HP／射擊。
 - v51 8144464：糖果屋高階成本8930→16250，前兩級／愛心／復活不動，MAX存檔保留。
-- v52：十章地圖可愛→陰森→火海；50關章節背景＋推進短篇×11語言，可收合閱讀。
+- v52 7522f97：十章地圖可愛→陰森→火海；50關章節背景＋推進短篇×11語言，可收合閱讀。
 - v52：核彈升空0.48秒後爆光／爆音，1.35秒結束；清怪、Boss免疫、2.5秒淨空仍立即生效。
 - v52：十隻章節Boss各異，後期加盔甲外盾／尖牙／怒眉；不增加減傷或改血量。
 - v52：補給箭頭包含核彈，八方向合併數量、稀有優先；短螢幕／橫向避開核彈鍵。
@@ -24,15 +24,15 @@
 
 ## 驗證證據
 - 環境：.venv/Scripts/python.exe、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules、PYTHONUTF8=1。
-- v52完整60項：_private/test-runs/20260909-151918-794758-world-story-full/results.json；提交前由record52.py核對全過／同SHA／來源未變。
+- v52完整60/60 PASS：_private/test-runs/20260909-151918-794758-world-story-full/results.json；同SHA／來源未變，單局有同伴44.2FPS，相對+1.2%。
 - CPU4：world52-field-cpu4.log、world52-story-cpu4.log；離線／零永久強化／冷啟動：world52-offline.log。
 - 六視窗×兩安全區真實觸控；24箱／25補給幾何、550故事組合、十Boss、發射時序皆驗。
 - world52-i18n-scope.json：264key×11，18新增＋2既有關名改動，builder重跑位元組相同。
 - 已檢視world-scene-1..10、boss-world-5..50、world-stage-1/15/25/50、核彈時間序列、field-ui-v0.9.52.png。
 - v51完整59/59：20260909-145033-416041-shop-pacing-full；CPU4／離線過，單局46.4FPS。
-- v50初輪57/58；舊基準引用失敗，另發現py_balance吞100關例外。修工具後2/2补驗證，同SHA合併58項通過；CPU4／離線過。
-- v50報告20260909-142237-869825-enemy-weight-full＋20260909-144428-666138-enemy-weight-recheck，单局48.0FPS。
-- v49完整57/57：20260909-135759-427624-field-ui-final；CPU4／離線過，单局46.1FPS。
+- v50初輪57/58；舊基準引用失敗，另發現py_balance吞100關例外。修工具後2/2補驗證，同SHA合併58項通過；CPU4／離線過。
+- v50報告20260909-142237-869825-enemy-weight-full＋20260909-144428-666138-enemy-weight-recheck，單局48.0FPS。
+- v49完整57/57：20260909-135759-427624-field-ui-final；CPU4／離線過，單局46.1FPS。
 
 ## 數值與未解事項
 - 實際末波速度：第一關slime43.83不變；末關slime／bunny／drone／bomber為30.68／61.37／38.60／47.51。
@@ -47,8 +47,10 @@
 
 ## 手機測試交付
 - 固定入口：https://github.com/davidform/goo-blaster/releases/tag/android-test
-- 最終APK建置／發布狀態以_private/mobile-test/latest.json與published.json核對，不以原始碼版本猜測。
+- 已公開v0.9.52／95200／0.9.52-test.0，4286598bytes；來源7522f97、測試標籤同commit。
+- APK SHA 5db689e8189cf7ba1135700fcd09e1703851141f8347511624fb422c0daed9ca；同舊簽章，APK內HTML同完整測試SHA，DEX戰報外掛核對通過。
+- latest.json／published.json／page-v52.json：公開下載hash一致、頁面HTTP200／新版連結過；android-source-20260909-154414.zip備份80檔。
 - appId com.demjastudio.gooblaster；簽章固定於native/test-channel.json，私鑰不可入Git。
 - 依native/MOBILE-TESTING.md：完整通過並提交→build_test_apk.py --tests <報告>→notes.md→publish_test_apk.py --publish。
-- Pixel待驗：更新保留進度、新HUD／补給方向、核彈、音效／卡頓、戰報PNG與取消重試；舊v40真機證據不能替代新版。
+- Pixel待驗：更新保留進度、新HUD／補給方向、核彈、音效／卡頓、戰報PNG與取消重試；舊v40真機證據不能替代新版。
 - AAB仍v40未簽；正式Pages／itch／商店未更新。工作室skill已安裝，8項工具測試＋驗證過。

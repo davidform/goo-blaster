@@ -900,3 +900,13 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 已檢視十章場景、十Boss、手機地圖／故事、核彈時間序列與field-ui-v0.9.52.png。草稿測試曾因捲動未夾上限及測試箱在玩家身上造成假畫面而調整工具；正式來源完整批次失敗情況見原始報告，不隱藏紀錄。
 - 尚未執行：Pixel新APK實裝／效能／覆蓋更新、11語言母語者驗收、全平行壓測。v50第50關MAX bot仍0/2；本版純演出不聲稱修好末關難度。
 - 教訓：測試須同時看實際遊戲截圖與控制區幾何；獨立的稀有道具箭頭也可能造成「寶箱標示消失」體感。多章氣氛要靠地標與輪廓，僅改背景色不足。
+
+### v0.9.52 手機測試交付（2026-09-09）
+
+- `7522f97` 遊戲提交已push至codex/soft-world-ui；固定android-test標籤前進至同commit，未更新main／Pages／itch／正式商店。
+- 建置命令：`.venv/Scripts/python.exe native/build_test_apk.py --tests _private/test-runs/20260909-151918-794758-world-story-full/results.json`。Gradle assembleDebug成功，效能測試全部結束後執行。
+- APK `goo-blaster-v0.9.52-95200.apk`，versionCode 95200，versionName 0.9.52-test.0，4286598bytes；applicationId com.demjastudio.gooblaster。
+- APK SHA256 `5db689e8189cf7ba1135700fcd09e1703851141f8347511624fb422c0daed9ca`；HTML SHA256 `0a79ad312c1a53648a64e5a09c32a22580c1b6830625f9ea6aefc495af91e82f` 等於完整60/60測試來源。簽章SHA256 `fa00189cc20d1c630da9c5ad9d3b1c54ddd230f61b84ecf1ba1531914fa14513` 與舊版及固定指紋一致；實際DEX含戰報外掛與ACTION_CREATE_DOCUMENT。
+- `native/backup_android.py` 建置來源備份android-source-20260909-154414.zip，80檔／433560bytes，排除私鑰；`native/publish_test_apk.py --publish` 更新既有Prerelease，不刪除舊APK。
+- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；資產ID 552265091。公開下載重新核對SHA256一致，public_download_verified=true；公開頁HTTP200及v52下載連結另驗。沙盒git網路與web讀取工具曾連線／快取失敗，經核准的公開唯讀網路驗證成功；沒有當成發布失敗或跳過核對。
+- 證據：_private/mobile-test/latest.json、published.json、page-v52.json、build-v52.log、publish-v52.log。Pixel覆蓋更新／真機FPS／PNG儲存仍未執行；全平行未執行，下載頁明示限制。AAB仍v40未簽。
