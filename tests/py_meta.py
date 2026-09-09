@@ -57,10 +57,12 @@ with sync_playwright() as pw:
     r=pg.evaluate("""()=>{
         let total=0;
         for(const u of META_UPGRADES) for(let i=0;i<u.max;i++) total+=u.cost(i);
-        const best=runCoins(true,99,10000,323,323)*(1+4*0.15);
+        const previous=META;META={coin:4};
+        const best=runCoins(true,49,10000,323,323);META=previous;
         return {買滿總成本:total, 單場最高收益:Math.round(best), 佔比:+(best/total*100).toFixed(1)};
     }""")
     print(f"  {r}")
+    assert r['單場最高收益']==520, r
     assert r['佔比']<20, f"FAIL: 單場最高收益佔買滿成本的 {r['佔比']}%，太高會讓進程瞬間崩掉"
     print("  PASS\n")
 

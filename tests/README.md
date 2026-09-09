@@ -141,3 +141,9 @@ Omit `--label` to use a timestamp and preserve earlier samples.
 ## 絕對效能量測（2026-09-09）
 
 `py_v0927_perf.py`的兩局同批A/B保留<20%同伴損失門檻；30FPS門檻改由同場景的三輪單局平均檢查，並確認沒有其他browser context殘留。原雙局絕對門檻失敗紀錄不改写。`py_art_perf.py --baseline <commit>`可比較任意已提交來源，暖機與音訊啟動條件與主效能測試一致，另記錄場景物件數與遊戲時間。
+
+## 射程收益（v0.9.47）
+
+`py_range_reach.py`驗36種混合強化、真實命中／飛行距離、同伴及12種最大步長射擊；`py_range_ui.py`驗11語言商店下一級／滿級及兩階卡片。可設`GOO_RANGE_CPU=4`。兩支都在預設完整套件。
+
+`GOO_BROWSER_CHANNEL=msedge`環境下執行`python tests/diagnose_progression.py 1 6 7 9 10 30 50`，以真實遊戲迴圈／觸控／卡片比較零強化、逐局賺幣購買與滿級。預設reactive；`GOO_BOT_POLICY=engaged`加上接近Boss的操作參考。固定種子與重播、遊戲／工具SHA、clear/defeat/unfinished分離，未完成直接報錯。預設時間戳檔案避免覆蓋；`GOO_BALANCE_OUTPUT`可指定輸出名。這是診斷，不是人類勝率、FPS測試或預設硬性驗收門檻；不要與效能測試同時跑。

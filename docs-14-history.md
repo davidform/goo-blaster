@@ -778,3 +778,19 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - Commit Summary：test: measure absolute FPS without a competing game
 
 - 修正後實跑：20260909-113211-349164-range-perf-isolated/results.json，1/1通過、同一遊戲SHA；同批相對32.2→32.3 FPS，單局三輪52.2／50.9／50.8，平均51.3 FPS。
+
+## v0.9.47：射程強化增加實際投射距離（2026-09-09）
+
+- 根因：永久射程只加鎖定半徑，手機可視上限常已封頂；噴槍／溜溜球速度與壽命沒變。390×844的860個可視樣本，四種商店等級皆860；300px噴槍靶皆0傷害，溜溜球最大前進皆149.77px。
+- 本版唯一平衡槓桿是射程收益：永久射程每級投射速度+10%、局內望遠糖鏡每級+15%、合計封頂+60%；同伴繼承。保留原鎖定增加量，未改彈數、壽命、傷害、敵彈、關卡、卡池或價格。零射程強化沿用原速度／碰撞判定。
+- 較快子彈使用整段移動路徑判碰撞，避免低幀率跨過小怪；單純加速候選在最大dt／340px固定靶的12種组合有4組漏判，補整段判定後0組。此檢查只標記實際加速的武器彈，未擴大未強化與碎片彈的命中規則。
+- 實際收益：噴槍永久第2級可打中300px靶（21傷害），第3級溜溜球前進206.55px；不是只驗P.atkRange標籤。py_range_reach覆蓋36組武器／永久／局內混合、上限／負值／未定義、同伴、敵彈／碎片不變、12組最大dt命中及線段幾何。
+- i18n/build_v0947.py同步3鍵×11語言，MD填入速度百分比；241鍵與預設英文不變。py_range_ui實際驗11語言320px商店下一級／滿級及兩階卡片，截圖range-shop-*、range-card-*已目視。
+- py_meta原診斷在runCoins後額外乘1.6，印出832是假高估；改以真實META.coin=4呼叫，確認含加成上限520，總商店8930。遊戲收入與價格沒有改。
+- 全套首輪54/55，僅效能未達門檻；修正單局絕對量測方法後重跑通過（range-perf-retry.log），原失敗保留：run_tests.py --jobs 2 --label range-full，20260909-105935-518167-range-full/results.json；source unchanged，SHA ccbbe524fefb40cb4ff4945c3a8691456ac4a86492487063deeb57ec3c33936c。
+- GOO_RANGE_CPU=4的py_range_reach／py_range_ui、py_release_smoke皆過（range-cpu4.log、range-ui-cpu4.log、range-offline.log）；含離線／零強化／CPU4／冷重啟。
+- 獨立高負載A/B（120敵、三把滿級武器、滿永久、同伴，三輪交錯、未與其他瀏覽器測試競爭）：中位56.79→56.77FPS，比例0.99964；range-perf.json。這是固定場景，不能與完整敵彈場景或Pixel FPS混比。
+- tests/diagnose_progression.py加入可重跑診斷（非硬性勝率門檻）：真實loop／觸控／卡片、固定種子重播一致、三種經濟進程，63個樣本都有勝負，遊戲／工具SHA固定，見v0947-progression.json及docs-16表格。第50關仍無此bot通關，沒有把有限樣本說成真人難度已合理。
+- 教訓：遠距離屬性必須驗實際命中；加速還須驗最大合法步長。金幣上限要用真實META測，不能在結算函式之外再乘加成。
+- 全平行、Pixel手感／效能與母語潤稿未完成；正式Pages／itch／AAB不發布。使用者本日另授權固定Android測試通道，測試APK須另做實際產物與公開下載稽核，結果另記於手機測試流程。
+- Commit Summary：v0.9.47: make range upgrades extend projectile reach
