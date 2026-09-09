@@ -379,7 +379,7 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
 - 使用者經常以手機遠端操作電腦，不會維持 USB 連線；往後預設透過固定的 [Android 測試下載頁](https://github.com/davidform/goo-blaster/releases/tag/android-test) 提供測試版，不把接線當成提供新版的前提。
 - 每次遊戲改動完成既定瀏覽器／邊角／CPU／離線驗證後，依 [native/MOBILE-TESTING.md](native/MOBILE-TESTING.md) 建置、稽核並更新此 Prerelease 測試通道。這是已授權的後續測試流程，不必重複問是否提供 APK。
 - 固定 applicationId 與測試簽章、增加 Android versionCode；實際核對 APK 內容、簽章及公開下載 SHA256。不可用卸載／清除資料處理更新問題，不得把私鑰放入 Git 或 Release。
-- 此授權僅涵蓋測試 APK 分發；全平行或真機尚未完成時必須明示，不能宣稱正式驗收。正式 Pages／itch.io、商店送審、定價及更換簽章仍不在此授權內。
+- 此授權僅涵蓋測試 APK 分發；全平行或真機尚未完成時必須明示，不能宣稱正式驗收。正式 Pages、商店送審、定價及更換簽章仍不在此授權內；itch.io 後續同步另依下列新授權。
 - 不讓 Android 建置與效能測試同時執行。每次回報附固定入口、實際版本、驗證證據與仍需使用者在手機確認的項目。
 
 ## 9. 工作室共用流程（2026-09-09）
@@ -388,3 +388,10 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
 - 新遊戲可由自然語言想法開始；沿用工作流程，不複製本作 App 身分、簽章、售價、存檔或發布授權。
 - 本作仍遵守單檔、11語言及既有驗證要求；共用架構不構成重構 index.html 的授權。
 - 多 agents 仍為按需且先確認，預設單一代理；不用為了流程一致而常駐多個代理。
+
+## 10. itch.io 同步與 USB 更新（2026-09-09 使用者新增授權）
+
+- 使用者明確要求「往後直接更新itch.io」：每次遊戲改動完成既定驗證後，除 Android 測試通道外，直接同步既有 https://davidform.itch.io/goo-blaster，不必重複詢問。
+- 使用固定 Butler 通道 `davidform/goo-blaster:html5`，流程見 [native/ITCH-PUBLISHING.md](native/ITCH-PUBLISHING.md)。只發布已驗證的 index.html，不上傳 repo、存檔或憑證；核對公開遊戲內容與實際啟動，不把上傳成功等同網頁已更新。
+- 保留現有價格、公開狀態與專案身分；此授權不擴及其他遊戲、正式 Pages、Google Play／App Store 送審、定價或更換簽章。
+- 本次使用者授權直接透過 USB 更新 Pixel；使用 `adb install -r`，核對既有App與簽章、版本及進度，不卸載／清資料。未連線時仍提供固定APK入口，不把USB當成發版前提。

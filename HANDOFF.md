@@ -9,7 +9,7 @@
 - 三輪實跑；效能獨立，勿與其他瀏覽器或Gradle同跑。
 - Surface曾在48工失去回應，勿重試全平行；本次2工＋CPU4不是全平行通過。
 - 固定Prerelease APK分發已授權；保留appId／簽章、增加versionCode，勿卸載／清資料。
-- 正式Pages／itch／商店／AAB／價格／私鑰操作不包含在一般Git與測試分發授權。
+- itch.io已新增同步授權；正式Pages／商店／AAB／價格／私鑰操作仍不包含。
 - US$2.99買斷、家庭受眾，無付費隨機／廣告／FOMO；私人簽章不入Git。
 
 ## 本次完成範圍
@@ -52,6 +52,13 @@
 - 流程native/MOBILE-TESTING.md：遊戲提交→build_test_apk.py --tests <v55報告>→backup_android.py→notes.md→publish_test_apk.py --publish。
 - latest.json／published.json需確認版本、APK內HTML同SHA、同簽章、公開下載hash；來源正確不等於APK／真機正確。
 - appId com.demjastudio.gooblaster，簽章固定native/test-channel.json；不更換。
-- Pixel待驗：覆蓋更新保留進度、連續選卡、火焰走位、後段難度、音效／卡頓、戰報PNG與取消重試。
-- 全平行／母語者與兒童理解度未執行；AAB仍v40未簽，正式Pages／itch／商店未更新。
+- Pixel已由v52覆蓋安裝v55／95500，原生存檔逐位元不變，WebView進度／糖果幣／永久強化一致；pixel-update-v55.json與pixel-runtime-v55.json。
+- Pixel仍待手感驗證：連續選卡、火焰走位、後段難度、音效／卡頓、戰報PNG與取消重試。
+- 全平行／母語者與兒童理解度未執行；AAB仍v40未簽，正式Pages／商店未更新；itch已更新v55。
 - 本次範圍已交付；下一步收Pixel回饋，再選下一個單一槓桿；不直接把誘餌／糖環／回力標一起塞進池子。
+
+## itch.io 新授權與交付
+- 往後完成驗證後直接同步itch.io，不重複問；固定davidform/goo-blaster:html5，見native/ITCH-PUBLISHING.md。
+- v55 upload19167726／build1962179，公開頁Run game與暫停實測通過；舊v31手動檔隱藏保留，未刪除，價格未改。
+- itch-v55.json：完整遊戲payload同測試SHA；CDN另追加static.itch.io/htmlgame.js，所以公開整檔SHA不同，不能宣稱位元組全部相同。
+- 本次無遊戲源碼改動，不提高BUILD或重跑63項；沿用同SHA完整報告，加做安裝／線上發布驗證。

@@ -10,18 +10,63 @@
   "handoff": "HANDOFF.md",
   "history": "docs-14-history.md",
   "default_language": "en",
-  "languages": ["en", "zh-Hant", "zh-Hans", "ja", "ko", "de", "fr", "es", "it", "pt-BR", "ru"],
-  "business": {"model": "paid-once", "price": {"currency": "USD", "amount": 2.99}, "audience": "family"},
-  "environment": {"PYTHONUTF8": "1", "GOO_BROWSER_CHANNEL": "msedge", "NODE_PATH": "_private/test-node/node_modules"},
+  "languages": [
+    "en",
+    "zh-Hant",
+    "zh-Hans",
+    "ja",
+    "ko",
+    "de",
+    "fr",
+    "es",
+    "it",
+    "pt-BR",
+    "ru"
+  ],
+  "business": {
+    "model": "paid-once",
+    "price": {
+      "currency": "USD",
+      "amount": 2.99
+    },
+    "audience": "family"
+  },
+  "environment": {
+    "PYTHONUTF8": "1",
+    "GOO_BROWSER_CHANNEL": "msedge",
+    "NODE_PATH": "_private/test-node/node_modules"
+  },
   "verification": {
-    "full": [".venv/Scripts/python.exe", "run_tests.py", "--jobs", "2"],
-    "edges": [".venv/Scripts/python.exe", "tests/py_report_export.py"],
+    "full": [
+      ".venv/Scripts/python.exe",
+      "run_tests.py",
+      "--jobs",
+      "2"
+    ],
+    "edges": [
+      ".venv/Scripts/python.exe",
+      "tests/py_report_export.py"
+    ],
     "stress": null,
-    "offline": [".venv/Scripts/python.exe", "tests/py_release_smoke.py"],
+    "offline": [
+      ".venv/Scripts/python.exe",
+      "tests/py_release_smoke.py"
+    ],
     "device": null
   },
   "test_channel": "https://github.com/davidform/goo-blaster/releases/tag/android-test",
-  "authorization": {"git_sync": true, "test_distribution": true, "official_release": false, "pricing_changes": false},
-  "limitations": ["Surface曾因全平行測試無回應，不在本機重試；CPU4不取代全平行", "Pixel透過APK下載測試，真機未連線時不宣稱已驗證"],
-  "native_procedure": "native/MOBILE-TESTING.md"
+  "authorization": {
+    "git_sync": true,
+    "test_distribution": true,
+    "official_release": false,
+    "pricing_changes": false,
+    "itch_distribution": true
+  },
+  "limitations": [
+    "Surface曾因全平行測試無回應，不在本機重試；CPU4不取代全平行",
+    "Pixel透過APK下載測試，真機未連線時不宣稱已驗證"
+  ],
+  "native_procedure": "native/MOBILE-TESTING.md",
+  "itch_channel": "davidform/goo-blaster:html5",
+  "itch_procedure": "native/ITCH-PUBLISHING.md"
 }

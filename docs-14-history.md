@@ -959,3 +959,13 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - `native/backup_android.py`備份80檔至android-source-20260909-203116.zip；核對notes後`native/publish_test_apk.py --publish`更新既有Prerelease，舊APK保留。
 - 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；公開APK https://github.com/davidform/goo-blaster/releases/download/android-test/goo-blaster-v0.9.55-95500.apk。published.json確認無授權標頭公開下載SHA一致；page-v55.json頁面HTTP200／新版連結過。遠端開發分支與android-test標籤均核對3244ce3。
 - 仍未執行：新Pixel實際覆蓋更新／進度保留、火焰手感、後段真人難度、戰報PNG儲存與取消重試、音效／卡頓；全平行與母語者潤稿未做。正式Pages／itch／商店／AAB未更新。不可由原始碼或APK稽核推論上述真機通過。
+
+### v0.9.55 Pixel直接更新與itch.io同步授權（2026-09-09）
+
+- 使用者本次明確要求USB直接更新與往後直接更新itch.io；更新AGENTS第10節、studio.project.json與兩份平台流程。授權只擴大至本作itch既有頁，Pages／商店／價格／簽章不動。
+- ADB實際識別Pixel 10 Pro，原版95200；對既有com.demjastudio.gooblaster執行install -r，Success後95500／0.9.55-test.0。沒有卸載／清資料；原生CapacitorStorage.xml前後逐位元相同，遊戲存檔備份只留_private。
+- 實際手機WebView讀到v55，載入的progress／coins／meta與更新前存檔一致；pixel-update-v55.json、pixel-runtime-v55.json。WebView截圖逾時，未冒稱有截圖；後續ADB發現前景為設定頁，因此沒有擷取其他App畫面。安裝與載入通過不等於難度／音效／戰報PNG實測通過。
+- itch舊版是手動上傳v31，沒有Butler通道。新建davidform/goo-blaster:html5，僅index.html，userversion v0.9.55；upload19167726／build1962179處理完成。舊檔隱藏保留，未刪除；新版為唯一網頁遊玩檔案，價格／公開狀態不變。
+- 公開https://davidform.itch.io/goo-blaster按Run game，看到v0.9.55，實際START GAME與Pause game→Paused／Resume通過。
+- 第一次公開整檔逐位元比較失敗：平台在完整原HTML結尾追加87bytes的static.itch.io/htmlgame.js。精確核對只有這個suffix，原完整遊戲payload SHA仍2cb6787d111a950c14ae1bae78d24fa6294dcda278c0fd31d14d04e49a4da9ef；不是遊戲內容被改，證據itch-v55.json。
+- 本次源碼未變，沿用20260909-201434-055020-chapter-health-full的63/63與同SHAAPK稽核；新增的是USB安裝／載入及公開頁驗證，沒有聲稱重跑三輪或完成手機效能測試。

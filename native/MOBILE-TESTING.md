@@ -2,7 +2,7 @@
 
 使用者於 2026-09-09 要求：手機經常遠端操作電腦，不會一直用 USB 連線；往後都透過固定方式取得測試版。
 
-固定入口：[Android 手機測試版](https://github.com/davidform/goo-blaster/releases/tag/android-test)。這是 **Prerelease 測試通道**，不更新正式 Pages、itch.io 或商店版本。入口不依賴這台電腦開機。
+固定入口：[Android 手機測試版](https://github.com/davidform/goo-blaster/releases/tag/android-test)。這是 **Prerelease 測試通道**，不更新正式 Pages 或商店版本。itch.io 已另獲同步授權，依 [ITCH-PUBLISHING.md](ITCH-PUBLISHING.md) 同步。入口不依賴這台電腦開機。
 
 ## 手機怎麼測
 
@@ -16,7 +16,7 @@ Android 仍需使用者確認安裝；這個流程不會偷偷更新 App，也�
 
 ## 後續開發預設流程
 
-每次本次範圍的遊戲改動驗證完成後，自動更新此測試通道，無需再問一次是否提供手機測試版。使用者的授權限於測試 APK，不含正式上架、價格或更換簽章。
+每次本次範圍的遊戲改動驗證完成後，自動更新此測試通道，無需再問一次是否提供手機測試版。測試 APK 授權不含商店正式上架、價格或更換簽章；2026-09-09 新增 itch.io 同步授權，完成驗證後一併執行。
 
 1. 完成並提交遊戲改動；取得同一份 `index.html` 的完整通過測試報告。保留首輪失敗與補驗證證據，不將未完成算通過。
 2. 效能測試全部結束後才建置 Android，不讓 Gradle 與效能測試競爭 CPU。
@@ -47,3 +47,7 @@ GitHub 使用現有 Git 登入，憑證只留在程序記憶體，不寫入報�
 原始碼驗證、APK 內容與簽章驗證、實際手機安裝是三件事。全平行壓測與新 APK 的真機覆蓋更新若仍未完成，測試通道必須明示，不能宣稱正式驗收完成。
 
 參考：[Android 版本管理](https://developer.android.com/studio/publish/versioning)、[APK 簽章驗證](https://developer.android.com/tools/apksigner)、[GitHub Release API](https://docs.github.com/en/rest/releases/releases)。
+
+## 已連線手機
+
+使用者要求直接更新且 ADB 顯示該手機為 device 時，可對指定裝置使用 `adb install -r <已稽核APK>`。先核對既有 package/version、備份本遊戲存檔；更新後核對版本、存檔與實際 WebView。不得卸載或清資料；連線未授權時請使用者在手機允許，未連線時維持固定下載入口。
