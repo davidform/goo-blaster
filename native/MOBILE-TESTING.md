@@ -40,6 +40,8 @@ Android 仍需使用者確認安裝；這個流程不會偷偷更新 App，也�
 
 建置會增加 Android `versionCode`，檢查 APK 內實際遊戲 SHA256、applicationId、versionName、簽章與前一 APK。`native/test-channel.json` 只固定公開簽章指紋，不含私鑰；簽章不一致就停止，不能要求玩家卸載來掩蓋問題。私鑰不得放進 Git 或 Release。
 
+v0.9.48 起，戰報匯出的原生來源放在 `native/android-src`，由 `prepare_android.py` 同步到生成的 Android 專案。修改原生功能須改這份受版本管理的來源；APK 建置另外檢查 DEX 有儲存外掛與系統選檔動作。`backup_android.py` 同時保存來源與建置／發布工具，避免復原時缺少外掛。這些核對仍不取代 Pixel 實際選位置、儲存 PNG、取消後重試的測試。
+
 GitHub 使用現有 Git 登入，憑證只留在程序記憶體，不寫入報告。`android-test` 是此工具管理的可前進測試標籤；只有帶管理標記的 Prerelease 可更新。每個 APK 使用包含遊戲版本與 Android 版本號的獨立檔名，舊資產不刪除／不覆寫；標籤只允許沿原提交歷史前進。來源 commit 與 APK SHA256 明列在下載頁。正式標籤及 `main` 不受此流程修改。
 
 原始碼驗證、APK 內容與簽章驗證、實際手機安裝是三件事。全平行壓測與新 APK 的真機覆蓋更新若仍未完成，測試通道必須明示，不能宣稱正式驗收完成。

@@ -69,6 +69,9 @@ def build_test(tests,java,sdk,retries=()):
         assert sha(z.read('assets/public/index.html'))==game_sha
         config=json.loads(z.read('assets/capacitor.config.json'))
         assert config['appId']=='com.demjastudio.gooblaster'
+        dex=b''.join(z.read(n) for n in z.namelist() if re.fullmatch(r'classes\d*\.dex',n))
+        assert b'Lcom/demjastudio/gooblaster/BattleReportPlugin;' in dex,'APK is missing the native report exporter'
+        assert b'android.intent.action.CREATE_DOCUMENT' in dex,'APK is missing the system document export action'
     badging=run([aapt,'dump','badging',apk],env=env)
     package=re.search(r"package: name='([^']+)' versionCode='([^']+)' versionName='([^']+)'",badging)
     assert package and package.groups()==(config['appId'],str(code),name)
@@ -88,7 +91,7 @@ def build_test(tests,java,sdk,retries=()):
       'game_sha256':game_sha,'apk_sha256':sha(out.read_bytes()),'apk_path':str(out),'bytes':out.stat().st_size,
       'signer_sha256':cert,'previous_signer_sha256':previous,'same_signer_as_previous_apk':previous==cert,
       'test_results':[str(p.resolve()) for p in [tests,*retries]],'source_commit':run(['git','rev-parse','HEAD'],cwd=ROOT).strip(),
-      'device_update_verified':False,'channel':'android-test','official_release':False}
+      'native_report_export_present':True,'device_update_verified':False,'channel':'android-test','official_release':False}
     (target/'latest.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print(json.dumps(report,indent=2),flush=True)
 

@@ -47,6 +47,10 @@ for file in [activity, strings]:
         if not backup.exists():
             shutil.copy2(file, backup)
         file.write_text(updated, encoding='utf-8', newline='\n')
+# Tracked native feature sources must be copied on every build, not only on this PC.
+for name in ['MainActivity.java', 'BattleReportPlugin.java']:
+    source = NATIVE / 'android-src' / name
+    shutil.copyfile(source, activity.parent / name)
 web = (NATIVE / config['webDir']).resolve()
 if not web.is_relative_to(NATIVE):
     raise ValueError('webDir must remain inside native')

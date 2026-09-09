@@ -11,7 +11,7 @@
 - 一般階段完成更新交接並繼續，不因此要求換對話。
 
 ## 實際遊戲與提交
-- BUILD v0.9.47；SHA ccbbe524fefb40cb4ff4945c3a8691456ac4a86492487063deeb57ec3c33936c。
+- BUILD v0.9.48；SHA 027b00f8bccb94a50c16e8c0fa81db3b20af933b432c4ddcefd5c9f8368d66de。
 - v41 4839c6a：柔和配色、可愛果凍、Adventure／Upgrades／Settings 導覽。
 - v42 02eb0e5：柔和音樂／武器音色、Boss 曲切換、音訊亂數隔離、停止競態與音源回收。
 - v43 a29d96c：13 個 Boss ×11 語言命名、章節規則、日韓術語、文字區捲動、Boss 數量。
@@ -21,7 +21,7 @@
 - 測試工具 83fed99：test: measure absolute FPS without a competing game。
 - v47 c1167c3：v0.9.47: make range upgrades extend projectile reach。
 - 以上已 push；手機流程提交以 git log 核對，不把文件當成 Git 現況證據。
-- 字典 241 keys ×11、預設英文；v47 僅改 3 鍵，builder 重跑 SHA 不變。
+- 字典246 keys ×11、預設英文；v48新增5個儲存回饋鍵，原翻譯不變。
 
 ## 測試證據（_private/test-runs 與 _private/test-artifacts）
 - v41 48/48：20260909-075803-379699-soft-final；v42 49/49：20260909-082740-083723-audio-full。
@@ -65,3 +65,12 @@
 - 手機按「更新」，勿解除安裝／清資料；此APK覆蓋更新與存檔保留尚待Pixel實測，不能以簽章核對代替。
 - 原AAB仍v40且未簽；正式Pages／itch／商店未更新，itch仍v31。Play／iOS／原生獨立repo未完成。
 - Pixel先前v40離線／Preferences／冷啟動曾通過；新版揚聲器／耳機／效能／存檔仍待試玩。
+
+## 本次接手：戰報與工作室系統
+- v48修復存戰報：原生ACTION_CREATE_DOCUMENT、自選位置寫PNG、成功／取消／失敗提示與結算捲動；玩法數值不變。
+- 最終56/56：20260909-124035-339602-report-final；CPU4／離線通過，原生Java編譯成功；APK正在依固定通道更新，實際數字見後續稽核。
+
+- 工作室流程2f8d936已push：studio/README.md、studio.project.json與game-studio skill；8項工具測試與官方skill驗證通過。
+- skill已安裝C:/Users/Surface/.agents/skills/game-studio；未來新遊戲沿用流程，不繼承本作App身分／簽章／售價／授權。
+- 預設單一agent；按需經同意後才分工。無需先轉ChatGPT，若想先構思可用studio/game-studio/references/idea-brief.md。
+- 待Pixel確認：更新後存戰報能開系統儲存視窗、實際PNG可開、取消後可重試；未冒稱已真機通過。

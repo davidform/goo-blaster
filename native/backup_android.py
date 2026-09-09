@@ -26,11 +26,15 @@ for file in (native / 'android').rglob('*'):
             raise ValueError('Credential-related configuration needs manual exclusion: ' + str(relative))
     files.append(file)
 files += [native / name for name in ['package.json', 'package-lock.json', 'capacitor.config.json',
-                                   'prepare_android.py', 'test_device.cjs', 'audit_artifacts.py', 'backup_android.py', 'README.md', 'BUILD-WINDOWS.md']]
+                                   'prepare_android.py', 'test_device.cjs', 'audit_artifacts.py', 'backup_android.py', 'README.md', 'BUILD-WINDOWS.md',
+                                   'android-src/MainActivity.java', 'android-src/BattleReportPlugin.java',
+                                   'build_test_apk.py', 'publish_test_apk.py', 'test-channel.json', 'MOBILE-TESTING.md']]
 with zipfile.ZipFile(destination, 'w', zipfile.ZIP_DEFLATED) as archive:
     for file in files:
         archive.write(file, file.relative_to(native).as_posix())
 with zipfile.ZipFile(destination) as archive:
     assert archive.testzip() is None
     assert not any(name.endswith(tuple(excluded_names)) for name in archive.namelist())
+    assert archive.read('android-src/BattleReportPlugin.java') == (native/'android-src/BattleReportPlugin.java').read_bytes()
+    assert archive.read('android-src/MainActivity.java') == (native/'android-src/MainActivity.java').read_bytes()
 print(json.dumps({'backup':str(destination), 'files':len(files), 'bytes':destination.stat().st_size}, indent=2))

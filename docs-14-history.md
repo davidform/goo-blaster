@@ -823,3 +823,18 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - ChatGPT構想整理為可選流程，idea-brief.md提供完整可貼上的簡報指令；本對話也可直接接收自然語言想法，不必先搬到另一處。
 - 教訓：統一的是可驗證的開發與交付流程，不能把上一款遊戲的商業決定與身分也當成共用設定。
 - Commit Summary：build: establish a reusable paid-game studio workflow
+
+## v0.9.48：Android戰報儲存與明確回饋（2026-09-09）
+
+- 使用者回報通關後「存戰報」沒反應。根因：按鈕只有data URL的a.download／click，Android WebView外殼沒有儲存處理，UI也沒有完成或失敗回饋。原py_polaroid只驗圖片畫素，從未點擊輸出按鈕。
+- 舊版實跑：真實PNG瀏覽器下載內容吻合，但提供Android橋接後原按鈕完全未呼叫，report-export-before.log於等待nativeCalls逾時；這是瀏覽器模擬原生能力的重現，不冒稱已操作Pixel。
+- 新增BattleReportPlugin，以Android ACTION_CREATE_DOCUMENT讓玩家自選檔案位置，寫入PNG並回覆saved／cancelled／reject。無新增儲存／相片權限、不改存檔資料，不代使用者分享給任何人。原生sources與MainActivity註冊納入版本管理，prepare_android每次同步，避免僅修改ignored生成目錄。
+- Web仍下載原始PNG；下載「已開始」不宣稱系統已完成寫檔。Android等待期間禁用連點，成功／取消／失敗／橋接缺失皆有本地化提示；未知結果不得當成功。
+- 小螢幕實測又找到結算按鈕在viewport外且無法捲動，開放結算捲動、限制預覽高度；儲存回饋使用奶油底色，避免煙火背景遮蔽文字。沒有修改關卡、傷害、商店或掉落。
+- i18n/build_v0948.py新增5鍵×11語言，共246鍵；所有原有翻譯不變，report-language-scope.json。成功畫面report-export-zh-Hant.png已目視；用模擬原生成功回應截圖，非手機系統選檔畫面。
+- 第一個完整候選56/56：20260909-122212-675704-report-full，SHA5448298372bc76cd477c5dde2e966b1e24b20fc2b670d93b89b00bef0bcb21dc。後續加強提示底色，重新跑全部，沒有沿用舊SHA當最終證據。
+- 最終python run_tests.py --jobs 2 --label report-final：56/56通過，20260909-124035-339602-report-final/results.json，source unchanged，SHA 027b00f8bccb94a50c16e8c0fa81db3b20af933b432c4ddcefd5c9f8368d66de。效能最後單獨，單局平均46.6FPS；非Pixel性能。
+- 第二／三輪：GOO_REPORT_CPU=4的py_report_export與py_release_smoke通過（report-export-cpu4-final.log、report-offline-final.log），覆蓋零永久強化、真實PNG下載bytes、原生成功／取消／失敗／重試／缺失／未知結果、連點、11語言320px與離線冷重啟。全平行未跑，本機曾失去回應，沒有宣稱三輪全綠。
+- 原生Java實際compileDebugJavaWithJavac成功（report-native-compile.log）；封裝工具另驗最終DEX含BattleReportPlugin與CREATE_DOCUMENT，避免只有HTML更新。真實選檔／磁碟寫入／取消仍須Pixel驗證，後續測試APK沿固定通道提供。
+- 教訓：圖片能畫出來不等於可存到手機；必須測真實按鈕、平台能力與結果回饋。設定／橋接模擬、原生編譯、APK核對與真機是不同證據層。
+- Commit Summary：v0.9.48: restore battle report saving on Android

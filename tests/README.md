@@ -147,3 +147,9 @@ Omit `--label` to use a timestamp and preserve earlier samples.
 `py_range_reach.py`驗36種混合強化、真實命中／飛行距離、同伴及12種最大步長射擊；`py_range_ui.py`驗11語言商店下一級／滿級及兩階卡片。可設`GOO_RANGE_CPU=4`。兩支都在預設完整套件。
 
 `GOO_BROWSER_CHANNEL=msedge`環境下執行`python tests/diagnose_progression.py 1 6 7 9 10 30 50`，以真實遊戲迴圈／觸控／卡片比較零強化、逐局賺幣購買與滿級。預設reactive；`GOO_BOT_POLICY=engaged`加上接近Boss的操作參考。固定種子與重播、遊戲／工具SHA、clear/defeat/unfinished分離，未完成直接報錯。預設時間戳檔案避免覆蓋；`GOO_BALANCE_OUTPUT`可指定輸出名。這是診斷，不是人類勝率、FPS測試或預設硬性驗收門檻；不要與效能測試同時跑。
+
+## 戰報輸出（v0.9.48）
+
+`py_report_export.py`真實點擊通關結算按鈕並讀下載PNG bytes；模擬Android bridge驗成功／取消／失敗／缺失／未知結果與連點，11語言320px提示。可設`GOO_REPORT_CPU=4`。不把bridge模擬當手機系統選檔成功；原生Java須編譯、APK須檢查，真機由固定手機通道驗證。
+
+`tests/test_studio.py`檢查共用專案初始化與授權隔離；`tests/test_mobile_release_gate.py`檢查發布證據門檻。這些為工具測試，獨立執行，不當作遊戲通關或原生實機驗證。
