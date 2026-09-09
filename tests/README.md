@@ -137,3 +137,7 @@ Omit `--label` to use a timestamp and preserve earlier samples.
 ## 大型目標（v0.9.46）
 
 `py_visible_target.py`驗橫豎畫面四邊的實際鎖定／開火，以及完全離屏、小怪與距離排除；`GOO_TARGET_CPU=4`可節流。
+
+## 絕對效能量測（2026-09-09）
+
+`py_v0927_perf.py`的兩局同批A/B保留<20%同伴損失門檻；30FPS門檻改由同場景的三輪單局平均檢查，並確認沒有其他browser context殘留。原雙局絕對門檻失敗紀錄不改写。`py_art_perf.py --baseline <commit>`可比較任意已提交來源，暖機與音訊啟動條件與主效能測試一致，另記錄場景物件數與遊戲時間。

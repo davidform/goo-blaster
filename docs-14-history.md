@@ -767,3 +767,14 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - GOO_TARGET_CPU=4與py_release_smoke通過（target-cpu4.log、target-offline.log）；target-scope.json證明僅BUILD與可視邊界變更。全平行／Pixel／发布仍未執行。
 - 教訓：可見性應使用實際碰撞身體尺寸；固定padding只能描述小怪，不能套到所有大型Boss。
 - Commit Summary：v0.9.46: target large bosses while their bodies are visible
+
+## 效能測量方法修正：絕對FPS須單局量測（2026-09-09）
+
+- v47全套功能54項通過，原雙局效能首輪27.1FPS、獨立重跑23.8FPS未達30；兩次原始失敗皆保留，未改成綠燈。
+- 同批來源A/B先量到雙局舊v46約23.8～27.0、新v47約25.0～29.7，表示雙局競爭也讓已驗證版本低於30。初版單局診斷以敵數100作暖機終點，改射程會改達到該敵數的時間，不能把那些不同遊戲年齡直接比較；另將音訊啟動條件同步原測試。
+- 校正為相同WORST、1.5秒暖機、8秒窗口、相同音訊啟動後，三輪單局v46為56.50／52.15／51.39，v47為50.42／48.60／53.10；中位52.15→50.42（約-3.3%）。來源与工具證據range-matched-20260909-112853/results.json；原有偏差的range-profile-20260909-112414也保留。
+- py_v0927_perf保留雙局的同伴相對損失<20%及對照組>=20可測門檻；**30FPS數值不變**，改以同場景、三輪單局平均驗證。每輪前後實際斷言browser.contexts為空，防止另一局殘留競爭。JS錯誤與3個同伴斷言涵蓋新增單局。
+- py_art_perf同步暖機／音訊條件、記錄遊戲時間與物件數，增加--baseline選擇來源。此為測量工具修正，不改index.html或任何玩法；不把桌機結果當成Pixel證據。
+- Commit Summary：test: measure absolute FPS without a competing game
+
+- 修正後實跑：20260909-113211-349164-range-perf-isolated/results.json，1/1通過、同一遊戲SHA；同批相對32.2→32.3 FPS，單局三輪52.2／50.9／50.8，平均51.3 FPS。

@@ -8,6 +8,7 @@ docs-11 明確標了這個風險：
 Lv.5，一次 7 發）、3 個同伴全開**，跟同一批次的「沒有同伴」對照。
 
 同批次 A/B，因為跨批次的 FPS 不能互比（平行分頁數會影響結果）。
+兩局A/B只驗相對損失；30FPS絕對門檻在單局、無其他測試context時量測。
 """
 import asyncio, http.server, socketserver, threading, functools, sys, statistics
 from test_paths import BROWSER_CHANNEL, GAME_ROOT
@@ -76,15 +77,24 @@ async def main():
             off.append(a); on.append(c2)
             print(f"  第{i+1}輪  無同伴 {a['fps']:>5} fps（敵{a['enemies']} 我彈{a['bullets']}）"
                   f"   ／ 有同伴 {c2['fps']:>5} fps（敵{c2['enemies']} 我彈{c2['bullets']} 同伴{c2['ally']}）")
+        print("=== 2. 單局絕對門檻：相同最壞場景，沒有另一局競爭資源 ===")
+        single=[]
+        for i in range(3):
+            assert not b.contexts, 'Absolute FPS must start without a competing game context'
+            sample=await one(b,True);single.append(sample)
+            assert not b.contexts, 'Sampler leaked a browser context'
+            print(f"  單局第{i+1}輪 {sample['fps']:.1f} fps（敌{sample['enemies']} 我彈{sample['bullets']} 同伴{sample['ally']}）")
         await b.close()
         f_off=statistics.mean(x['fps'] for x in off)
         f_on =statistics.mean(x['fps'] for x in on)
         b_off=statistics.mean(x['bullets'] for x in off)
         b_on =statistics.mean(x['bullets'] for x in on)
+        f_single=statistics.mean(x['fps'] for x in single)
         print()
         print(f"  平均 FPS    {f_off:.1f} → {f_on:.1f}   （{(f_on-f_off)/f_off*100:+.1f}%）")
         print(f"  場上我方子彈 {b_off:.0f} → {b_on:.0f}")
         ck("有同伴時確實有 3 個", all(x['ally']==3 for x in on), [x['ally'] for x in on])
+        ck("單局樣本也確實有 3 個同伴",all(x['ally']==3 for x in single),[x['ally'] for x in single])
         ck("同伴確實增加了子彈量（功能真的有在跑）", b_on>b_off, (round(b_off),round(b_on)))
         # ⚠ 對照組本身就跑不動的時候，連相對值都沒有解析度
         #   （2.6 fps vs 1.6 fps 在 8 秒裡只差兩幀）。這種情況要明說量不出來，
@@ -96,18 +106,15 @@ async def main():
         else:
             ck("同伴造成的 FPS 損失 < 20%（同批次相對值）",
                f_on > f_off*0.80, f"{(f_on-f_off)/f_off*100:+.1f}%")
-            # ⚠ 這個容器本身的天花板就在 46 fps 左右（無同伴的對照組也只有這個數字），
-            #   所以「≥45」等於是在跟容器的上限比，不是在測遊戲。
-            #   絕對門檻只用來抓「明顯掉到不能玩」，真正的判準是上面那個相對值。
-            #   ⚠⚠ 這裡量的是雲端容器，**不是真實手機**。真機效能只能靠實機驗證。
-            ck("有同伴時 FPS 仍 ≥ 30（容器天花板約 46，這條只抓明顯的崩潰）",
-               f_on>=30, round(f_on,1))
+            # 2026-09-09：兩局競爭資源的FPS不能當作單局絕對值。保留30門檻，
+            # 相同WORST／暖機／量測窗口，單獨一局執行；不是調低失敗門檻。
+            ck("單局有同伴時 FPS ≥ 30",f_single>=30,round(f_single,1))
         # ⚠ 絕對 FPS 只有「單獨跑這一支」時才有意義。35 支平行時整台機器的
         #   絕對值會掉到個位數——那量到的是容器負載，不是遊戲效能。
         #   （這正是專案方法論第 3 條：跨批次的數字不能互比。）
         #   所以絕對門檻只在明顯沒有被搶資源時才檢查。
-        ck("無 JS 錯誤", not any(x['errs'] for x in off+on),
-           [x['errs'][:1] for x in off+on if x['errs']][:2])
+        ck("無 JS 錯誤", not any(x['errs'] for x in off+on+single),
+           [x['errs'][:1] for x in off+on+single if x['errs']][:2])
         return 0
 
 rc=asyncio.run(main())
