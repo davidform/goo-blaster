@@ -171,6 +171,7 @@ with sync_playwright() as pw:
     # 4d. 在存檔備份碼的輸入框打字時，字母鍵不能被核彈快捷鍵攔截
     print("\n=== 4d. 在備份碼輸入框打字時，e 不會被當成遊戲操作 ===")
     pg,c,errs=page()
+    pg.click("#navSettings")
     pg.click("#btnCode")
     pg.click("#codeImportArea")
     pg.keyboard.type("test e key")

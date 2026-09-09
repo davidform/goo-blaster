@@ -685,3 +685,20 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - BUILD v0.9.40與SHA256未變；正式遊戲三輪、真機卡頓定位、11語系新介面、色覺/彈幕辨識、原生重建與發布尚未執行。既有48工壓力失敗仍保留。
 - 教訓：柔和色彩不直接降低計算量；介面應靠內容與材質增加層次，不能用更多持續粒子掩飾單調。
 - Commit Summary：test: profile render cost and document soft visual direction
+
+## v0.9.41：柔和世界與清楚的主畫面導覽（2026-09-09）
+
+- 根因：舊霓虹紫／青綠配色與使用者偏好的柔和參考不符，主畫面功能入口混在一起；概念稿獲使用者核可後實作。這版只處理視覺與主畫面導覽，不改關卡、卡池、傷害、碰撞、商店價格或存檔格式。
+- 改動：奶油／鼠尾草面板、草地與燕麥路徑、原創圖示及章節小屋；薄荷果凍共用於選關、戰鬥與拍立得，勝敗表情保留。敵人低彩度、敵彈莓紅菱形／我方藍色圓彈；核彈、重生、七彩無敵的時間與機制不動。
+- Adventure / Upgrades / Settings 固定導覽只出現在主介面；Candy Shop 保留為強化頁標題。設定集中語言、音效、備份、進度重置；原確認與存檔合併機制保留。切頁及糖果屋返回保留SEL_IDX，商品清單保留scrollTop。
+- 8個新key × 11語言 = 88筆，由i18n/build_v0941.py生成；各語言現有241keys，預設英文。單一離線index.html，沒有外部素材或執行期套件。
+- 新增py_soft_ui.py進入預設套件：11語言 × 4視窗 × 3頁面共132組；真實點擊／觸控、選關與捲動保留、設定入口、戰鬥隱藏導覽、零永久強化開局、升級標題對比。邊角測試先抓到糖果屋Back會跳回最前線，修正後通過；升級頁改奶油底，標題對比8.03:1。
+- 舊畫素測試py_polaroid與py_nuke_calm同步新主角色碼，保留臉／輪廓畫素量、勝敗差異、取樣容差、無敵顏色變化與120°間距的原門檻。py_save_code與py_v0930改走真實設定入口，未刪除存檔斷言。
+- 第一輪全套4工：45/48，SHA d8363c8467a55e7628df0c90647507aab824d2f98dbebecebefa5f76acbdf0c2 不變。失敗為py_card_hp_weight導頁30秒逾時、py_nuke_calm仍期待舊色碼、py_v0927_perf對照僅11.4FPS；原始紀錄20260909-073913-224767-soft-full保留，沒有把失敗改稱通過。
+- 效能診斷：唯讀檢查沒有殘留headless測試程序；新增py_art_perf.py，同批固定亂數v40/v41雙頁三輪FPS為24.92/25.29、16.83/16.35、37.57/37.71。單頁亦波動，不能推論Pixel變順。證據_private/test-artifacts/art-perf-20260909-075543/results.json；此工具不取代原30FPS門檻或真機。
+- 最終全套：48/48通過，紀錄_private/test-runs/20260909-075803-379699-soft-final/results.json（2工、source unchanged）；最終遊戲SHA256為421212514bc35e36f9ea0b1d38d0b0deb2112524d2b5d40a4e2896b4d249ac51。命令：GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules，.venv/Scripts/python.exe run_tests.py --jobs 2 --label soft-final。
+- 新手bot第1關45秒3/3心通關，第2關通關、第3關陣亡（後兩關參考，硬門檻為第1關）；py_ab_base、彈幕密度、full/demo、存檔、觸控及11語言檢查均通過。單獨原效能門檻45.5→45.1FPS、同伴損失1.0%，沒有修改門檻。
+- 三輪狀態：完整回歸、邊角新UI、CPU4新UI與離線已實跑。GOO_UI_CPU=4執行tests/py_soft_ui.py通過132組、pageerror0；tests/py_release_smoke.py通過CPU4、零強化、離線、實際關閉重開與存檔恢復，外部請求0。證據_private/test-artifacts/soft-cpu4.log及soft-offline.log；套件內第5關CPU4零強化壓測也通過。
+- 未完成：既有48工造成主機失去回應的限制仍在，本機不重試；全平行壓力、Pixel美術可讀性及卡頓定位未完成，不宣稱三輪全綠。因此只提交開發分支，不更新Pages／itch.io／APK／AAB。
+- 教訓：新配色不能只改色碼，必須重新看文字對比、主角辨識與畫素測試的取樣前提；新增導覽時，獨立Back按鈕也必須遵守相同的狀態保留規則。桌機波動不是手機根因的證據。
+- Commit Summary：v0.9.41: introduce soft visuals and clear hub navigation

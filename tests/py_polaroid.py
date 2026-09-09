@@ -12,8 +12,8 @@
 
 驗收標準（全部用真的讀畫素驗證，不是讀原始碼）：
   1. 過關圖與失敗圖必須「不一樣」——表情真的有隨勝負改變
-  2. 兩張圖的角色區域都必須有深色（#0d2430 系）畫素 = 臉真的畫上去了
-  3. 兩張圖都必須有角色本體色（#6ff0e0 系）與白色外框 = 角色本體還在
+  2. 兩張圖的角色區域都必須有深色（#364f48 系）畫素 = 臉真的畫上去了
+  3. 兩張圖都必須有角色本體色（#9dc5b1 系）與深色外框 = 角色本體還在
   4. 深色畫素必須落在角色圓形範圍內，而且左右兩側都要有 = 是「兩隻眼睛」
      而不是隨便一塊黑
 
@@ -81,14 +81,14 @@ async (win) => {
 
 
 def classify(px):
-    """把一個畫素分類成 dark(臉) / body(角色本體) / outline(白框) / other"""
+    """把一個畫素分類成 dark(臉) / body(角色本體) / outline(深色框) / other"""
     r, g, b = px
     if r < 70 and 20 <= g < 90 and 30 <= b < 100:
-        return "dark"          # #0d2430 系
-    if r < 160 and g > 190 and b > 180:
-        return "body"          # #6ff0e0 系
-    if r > 215 and g > 235 and b > 230:
-        return "outline"       # #e8fffb 系
+        return "dark"          # #364f48 系
+    if 140 <= r <= 170 and 180 <= g <= 210 and 160 <= b <= 195:
+        return "body"          # v0.9.41 approved mint body #9dc5b1
+    if 50 <= r <= 80 and 90 <= g <= 115 and 75 <= b <= 105:
+        return "outline"       # v0.9.41 dark contour #405f57
     return "other"
 
 
@@ -157,7 +157,7 @@ def main():
                 if counts["body"] < 3000:
                     fails.append(f"{label}：角色本體色太少（{counts['body']}）——本體不見了")
                 if counts["outline"] < 500:
-                    fails.append(f"{label}：白色外框太少（{counts['outline']}）——輪廓線不見了")
+                    fails.append(f"{label}：深色外框太少（{counts['outline']}）——輪廓線不見了")
 
             # 表情必須真的有隨勝負改變。
             # ⚠ 這裡刻意「不」比整張圖：照片區的 130 顆泡泡是每次呼叫都重抽的隨機顏色

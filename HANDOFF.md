@@ -1,69 +1,66 @@
 # GOO BLASTER — 目前交接
-更新：2026-09-09；本檔只保留現況，不複製完整對話。
+更新：2026-09-09；本檔只留現況，詳細歷史見docs-14-history.md。
 
-## 接手方式
-- 先完整讀 AGENTS.md 與本檔，再核對 git status、git log、BUILD 與本次任務。
-- 修改前先檢查未提交差異，再安全同步；禁止 reset/覆寫消除差異。
-- 只有評估對話長度過長、確實需要換新對話時才提醒，不因階段完成提醒。
-- 需要換對話時，在同一專案貼上：
-  > 依 AGENTS.md 與 HANDOFF.md 接手，先核對實際狀態，再完成目前任務。回報測試證據、未完成項目與 commit Summary。
+## 接手與授權
+- 完整讀AGENTS.md及本檔，再核對Git差異、版本與任務；安全同步，不reset覆蓋。
+- 單一代理，繁體中文；遊戲三輪實跑，效能單獨跑；回報區分已驗證／失敗／未執行。
+- Git可自動commit/push，只提交本次檔案。Pages僅main push部署；開發分支不自動部署。
+- itch.io已授權在規定測試通過後更新網頁遊戲；商店送審、正式發布、價格及敏感簽章另行授權。
+- 兒童可離線、US$2.99一次買斷、無廣告/訂閱/消耗型購買；正式年齡與資料申報未定。
+- 只有確實需要換對話才提醒；一般階段完成更新本檔並繼續，不為階段完成要求換對話。
 
-## 已確認方向與授權
-- 兒童可離線遊戲；US$2.99 一次付費下載完整遊戲，不含廣告/訂閱/消耗型購買，尚未接原生內購。
-- 家長是購買決策者；9–12 歲只是體驗研究方向，正式商店年齡與資料申報尚未定案。
-- 單一代理；遊戲改動三輪實跑，效能必須單獨跑；回報區分已驗證、失敗、未執行。
-- Git 可在授權範圍自動 commit/push，只提交本次檔案；商店送審/發布、定價與敏感簽章操作需另行授權。
-- itch.io 已明確授權：遊戲改版通過規定測試後自動更新 davidform/goo-blaster 的網頁遊戲；不含價格或商店文案。
-- Chrome/GitHub Desktop/Android Studio 不必常開；執行工作需此專案工具環境、連網及電腦不睡眠。
+## 目前正在收尾：v0.9.41
+- 使用者已核可柔和配色與可愛果凍，要求實作及改善Adventure/Candy Shop/Settings。
+- 工作分支codex/soft-world-ui；接手基準8c5bebd（v0.9.40）；本版已完成可在本機進行的驗證，提交以git log核對。
+- index.html已為v0.9.41：奶油鼠尾草世界、共用新角色、50關路徑、三頁導覽、設定集中。
+- 入口為Adventure/Upgrades/Settings，Candy Shop留作強化頁標題；切頁與Back保留選關、商品捲動。
+- 8新key×11語言；各語言241keys，預設英文；未改玩法、數值、卡池、商店價格或存檔格式。
+- 設定音效是既有本次執行開關，尚未增加持久化欄位。
+- 市場與導覽研究、規格見docs-15-performance-and-art-direction.md；概念稿不等於出貨遊戲。
+- 最終遊戲SHA256：421212514bc35e36f9ea0b1d38d0b0deb2112524d2b5d40a4e2896b4d249ac51。
+- Commit Summary：v0.9.41: introduce soft visuals and clear hub navigation
 
-## 目前任務與發布阻擋
-- 最新需求：Pixel 10 Pro卡頓、參考圖式柔和配色、研究市場後豐富介面。建議先實機定位/單項最佳化，再分版配色與介面；本輪尚未改正式遊戲。
-- docs-15-performance-and-art-direction.md 記錄3款案例、色彩/介面規格與效能診斷；對話已有奶油鼠尾草/霧藍薰衣草互動概念，尚非正式設計驗收。
-- adb devices 本輪無裝置；已詢問卡頓對應新/舊App或網頁、版本/關卡/場景，尚未收到答案。下一步接Pixel錄實際長幀；不拿桌機通過否定真機回報。
-- 本次已處理 Windows 測試相容、Android 套件修正、實際 APK/AAB 與真機驗證；index.html 沒有修改。
-- 上輪 Windows 全套為 46/47；2026-09-09 原 py_v0927_perf 單獨重跑已通過：無同伴42.7、有同伴42.6 FPS、損失0.2%，原門檻未改。不是新一輪全套47/47。
-- 48 工全平行壓力造成電腦嚴重失去回應與多項導頁逾時，已中止並清理；不得宣稱三輪全綠。
-- 同批固定亂數 v0.9.31/v0.9.40 重場景對照平均均約19.47 FPS；只是診斷，不能取代門檻或證明真機效能。
-- itch.io 尚未首次推送或切換檔案；不能把工具授權成功當作已發布。
-- 本機採已完整跑完的4工；48工不再重試。全平行壓力驗收需較充足的測試主機，仍未完成，不為發布放寬驗收。
+## 驗證與發布限制
+- 第一輪完整4工45/48：20260909-073913-224767-soft-full/results.json，source unchanged。
+- 失敗：py_card_hp_weight導頁30秒逾時；py_nuke_calm期待舊主角色碼；效能對照11.4FPS測不到。
+- 已修：畫素測試同步核可色碼、保留原門檻；Back保留選關；升級標題對比8.03:1。
+- py_soft_ui新增至預設套件：11語言×4尺寸×3頁＝132組，設定／切頁／零強化遊戲通過。
+- 最終完整2工48/48通過：_private/test-runs/20260909-075803-379699-soft-final/results.json，source unchanged。
+- CPU4新UI132組／離線重啟存檔通過，pageerror0、外部請求0；soft-cpu4.log與soft-offline.log。
+- 原套件py_lv5_stress（CPU4、零強化）通過；第1關bot45秒3/3心通關、第2通關、第3陣亡參考。
+- 原效能門檻單独45.5→45.1FPS、同伴損失1.0%，未改門檻。
+- 截圖_private/test-artifacts/soft-menu.png、soft-game.png、soft-upgrades.png、soft-settings.png、soft-cards.png。
+- 上輪48工讓Surface失去回應並導頁逾時；本機不再重試。2/4工不替代全平行驗收。
+- 全平行壓力需更充足測試主機，仍未完成；不得宣稱三輪全綠或據此發布。
+- 本版未推Pages/itch.io、未重建APK/AAB、未在Pixel實測美術或效能。
 
-## 已驗證：測試環境
-- .venv Python Playwright 1.62.0；Node Playwright 在 _private/test-node；官方 Chromium 下載逾時，改用已安裝 Edge。
-- tests/README.md 有完整指令；run_tests.py 讀取 run_tests.sh 原套件清單，支援 Windows，逐項保存結果與程序 PID。
-- 預設套件改為可攜路徑/可選瀏覽器；部分非預設診斷腳本仍有 Linux 路徑。
-- py_ab_base 固定提取 Git 50b166b 的真實 v0.9.20；修正兩處漏報失敗。py_test9 失敗會回傳非零，小圖示請求回204避免無關404。
-- 最終完整紀錄：_private/test-runs/20260908-234507-833719-final-functional/results.json（46/47、已完整結束）。
-- 第一輪紀錄：20260908-231458-436732-baseline（45/47，小圖示與效能）；壓力紀錄：20260908-233202-939857-stress（中止、只有逐支 log）。
-- 最終笨 bot 第1–3關通關且無 JS 錯誤；第5關CPU4x、零永久強化壓測通過；其他語系、排版、存檔、卡池等通過。
-- py_release_smoke.py：全新瀏覽器資料、離線、CPU4x、真實關閉重開存檔通過，外部請求0、pageerror0。
-- py_perf_baseline.py 僅做同批診斷；_private/test-artifacts/perf-baseline.json 有逐輪數字及GPU啟用狀態。
-- 本輪原效能證據：_private/test-runs/20260909-063939-575652-perf-handoff/results.json（exit0、原SHA不變）。
-- 新增 tests/py_perf_capacity.py：固定亂數、交替單頁/雙頁三輪，只做測試負載診斷，不取代原門檻或真機。
-- 三輪平均單頁無/有同伴59.47/53.47 FPS，雙頁34.11/35.17；12次pageerror皆0，證據_private/test-artifacts/perf-capacity-20260909-064053.json。
-- 新增py_render_profile.py：原版/關shadowBlur/DPR1，各3輪；原版54.94/55.44/43.19，其餘55.43–56.55 FPS，9次pageerror0。波動未定位，不宣稱降畫質有效。
-- 證據_private/test-artifacts/render-profile-20260909-065755.json；概念稿736/360/320px互動/排版驗證通過；正式遊戲11語系/三輪與真機美術可讀性未測。
+## Pixel效能與測試工具
+- adb最後無装置；卡頓對應新/舊App或網頁、版本/關卡/情境尚不明。不可用桌機否定真機回報。
+- 單獨診斷py_art_perf：固定v40/v41同批三輪，沒有殘留headless程序（唯讀程序檢查）。
+- paired FPS 24.92/25.29、16.83/16.35、37.57/37.71；兩版同步波動，不宣稱真機改善。
+- 證據_private/test-artifacts/art-perf-20260909-075543/results.json；不取代原30FPS門檻。
+- .venv Python Playwright1.62、GOO_BROWSER_CHANNEL=msedge；NODE_PATH指_private/test-node/node_modules。
+- run_tests.py讀run_tests.sh清單，效能放最後單獨跑；完整指令見tests/README.md。
+- 既有py_render_profile/py_perf_capacity/py_perf_baseline皆為診斷；原先47套件46/47不是新版驗收。
 
-## 已驗證：Android
-- 使用已安裝 JDK21（C:/Users/Surface/.jdks/jbr-21.0.11）、Gradle8.14.3、SDK36；Android Studio 隨附 JDK25，CLI本次未用它建置。
-- native/prepare_android.py 修正 MainActivity 與 strings 的舊識別值、同步webDir，保留備份；不修改遊戲。
-- cap sync android 成功；Preferences7.0.4、SplashScreen7.0.5；assembleDebug + bundleRelease 成功，332 tasks。
-- native/audit_artifacts.py 驗證實際 APK/AAB 內含遊戲與根目錄 SHA256 完全一致：
-  CC7E50FCB9D87979BE694C413C0B6173AF0435C4647A2166B599AEF10E267D6B（BUILD v0.9.40）。
-- appId/MainActivity 為 com.demjastudio.gooblaster；release merged Manifest allowBackup=true、debuggable=false、minSdk23/targetSdk36。
-- debug APK 4,261,164 bytes；release AAB 3,112,351 bytes，未簽署；詳細 hash 在 native/audit_artifacts.py 輸出及歷史。
-- Pixel 真機原有 io.itch.davidform.gooblaster；新套件並存安裝，未覆蓋舊版或舊存檔。
-- 真機在飛航1、Wifi disabled下，真實Preferences存檔、強制停止後冷啟動、進度保留與再次開局通過；保留使用者實際第3關/23金幣/強化/語言。
-- native/test_device.cjs 可重跑；_private/test-artifacts/android-device.json 與 android-offline-*.png 為證據。
-- 測試手機已可恢復網路；最後檢查時已拔除USB。不要假設仍連線或仍離線。
-- native/BUILD-WINDOWS.md 有建置/稽核/備份指令；native/backup_android.py 已產出73檔來源ZIP（_private/android-backups），不含快取、產物、機器設定與憑證。
-- 原生 android/ 仍被Git忽略；重做腳本已提交，本機ZIP不是異機備份，原生獨立遠端repo尚未建立。
+## 使用者新增的後續工作（逐項、分版）
+1. 研究並修改背景音樂與射擊等音效；下一版先做聲音，保持原創、離線、零執行期相依。
+2. 研究怪物名字的跨語言理解，必要時重新命名；固定ID、11語言同步。
+3. 逐項核對11語言語意／數值／術語。完整key及排版通過不代表母語自然或全部精準。
+4. 研究難度曲線、局內卡與寶箱、糖果屋增益；測零強化／合理累積／全滿強化，固定輸入同批比較。
+5. 特別查滿級糖果屋仍卡關：先分清增益未生效或強度/操作需求問題，不盲加無限強化。
+- 已實跑發現Boss出現仍theme=cute；musicIntensity只加BPM，Boss分支未觸發。audio-theme-baseline.json有證據。
+- 原音訊已離線取樣至audio-v0941（含cute/boss/mix及各SFX WAV）；工具_private/audio_probe.py，尚未修改聲音。
+- 已發現lv10d仍說第一章／每10關Boss，與v23後每5關一章不符；命名多為生僻詞。尚未修改。
+- 初步來源及診斷筆記在_private/next-work-notes.md；正式實作後寫歷史，不把研究宣稱已完成修改。
 
-## 其他現況與未完成
-- butler v15.31.0 在 _private/butler，授權已成功；憑證僅存標準本機位置，不讀出、不提交。
-- itch project 4906809 已是HTML，目前檔名 goo-blaster-v0.9.31.html；尚無butler頻道，預定html5。
-- tools/publish_itch.cjs 預設僅打包；--push 要附通過測試之SHA256，參數只核對bytes，不代表測試自動通過。
-- 隱私政策 https://davidform.github.io/goo-blaster/privacy.html 已驗證HTTP200、與本機一致；政策已說明Preferences/平台備份/客服。
-- 尚未執行：release簽章與AAB派生安裝、升版/移除重裝/系統備份恢復、完整網路行為稽核、Play Console申報、iOS。
-- Android真機曾有non-cancelable touchmove的console警告，未證實影響；不等同pageerror，也未修改遊戲消除它。
-- 本次提交：build: verify Android package and offline save persistence（485821c）；測試提交以git log核對。
-- 本輪 Commit Summary：test: profile render cost and document soft visual direction
+## 原生與商店現況
+- 現有實際APK/AAB仍v0.9.40，SHA cc7e50fcb9d87979be694c413c0b6173af0435c4647a2166b599aef10e267d6b。
+- appId com.demjastudio.gooblaster；debug APK4,261,164bytes，未簽AAB3,112,351bytes；JDK21/SDK36。
+- Pixel曾飛航離線、Preferences存檔、強制停止冷啟動通過；與舊io.itch.davidform.gooblaster並存，未覆蓋。
+- native/BUILD-WINDOWS.md、prepare_android.py、audit_artifacts.py、test_device.cjs及backup_android.py可重做。
+- 原生android/仍Git忽略；本機73檔來源ZIP不是異機備份，獨立原生遠端repo未建。
+- 尚未執行簽章AAB派生安裝、升版/重裝/系統備份恢復、完整網路稽核、Play Console與iOS。
+- butler15.31已授權但從未首次推送；itch目前goo-blaster-v0.9.31.html、尚無butler頻道。
+- tools/publish_itch.cjs --push的SHA參數只核bytes，不會代替測試驗收。
+- 公開隱私政策已驗HTTP200且與本機一致：https://davidform.github.io/goo-blaster/privacy.html。

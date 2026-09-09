@@ -42,6 +42,12 @@ def ready(pg):
         timeout=60000)
 
 
+def open_code(pg):
+    if not pg.locator('#btnCode').is_visible():
+        pg.click('#navSettings')
+    pg.click('#btnCode')
+
+
 with sync_playwright() as pw:
     b=pw.chromium.launch(channel=BROWSER_CHANNEL, args=["--autoplay-policy=no-user-gesture-required"])
     def page(locale="en-US"):
@@ -57,7 +63,7 @@ with sync_playwright() as pw:
     print("=== 1. 開啟面板、匯出碼格式 ===")
     pg,c,errs=page()
     pg.evaluate("()=>{ PROGRESS=9; COINS=456; META={dmg:2,hearts:1}; PREM_OWNED=false; saveGame(); }")
-    pg.click("#btnCode")
+    open_code(pg)
     visible = pg.eval_on_selector("#codeBox", "el=>!el.classList.contains('hide')")
     ck("面板打開", visible)
     code = pg.eval_on_selector("#codeExportArea", "el=>el.value")
@@ -73,14 +79,14 @@ with sync_playwright() as pw:
     print("\n=== 2. round-trip（模擬「進度不見了」的情境）===")
     pg,c,errs=page()
     pg.evaluate("()=>{ PROGRESS=23; COINS=999; META={wep:3,aspd:2}; PREM_OWNED=false; saveGame(); }")
-    pg.click("#btnCode")
+    open_code(pg)
     code = pg.eval_on_selector("#codeExportArea", "el=>el.value")
     # 模擬「localStorage 被系統清掉」：直接清掉存檔、重新整理頁面（回到全新玩家狀態）
     pg.evaluate("()=>localStorage.clear()")
     pg.reload(); ready(pg)
     fresh = pg.evaluate("()=>({p:PROGRESS,c:Math.round(COINS)})")
     ck("重新整理後確實變成新玩家（前提條件）", fresh["p"]==1 and fresh["c"]==0, fresh)
-    pg.click("#btnCode")
+    open_code(pg)
     pg.fill("#codeImportArea", code)
     pg.click("#btnCodeImport")
     restored = pg.evaluate("()=>({p:PROGRESS,c:Math.round(COINS),m:META})")
@@ -102,7 +108,7 @@ with sync_playwright() as pw:
     pg.evaluate("()=>{ PROGRESS=30; COINS=5000; PREM_OWNED=true; saveGame(); }")
     # 產生一段「進度很低」的舊碼（模擬玩家不小心貼到很久以前存的碼）
     old_code = pg.evaluate("()=>{ const cur={progress:PROGRESS,coins:COINS,meta:META,lang:LANG,v:SAVE_VER,prem:1}; PROGRESS=2; COINS=10; const c=saveCodeEncode(); PROGRESS=cur.progress; COINS=cur.coins; saveGame(); return c; }")
-    pg.click("#btnCode")
+    open_code(pg)
     pg.fill("#codeImportArea", old_code)
     pg.click("#btnCodeImport")
     after = pg.evaluate("()=>({p:PROGRESS,c:Math.round(COINS),prem:PREM_OWNED})")
@@ -117,7 +123,7 @@ with sync_playwright() as pw:
     pg.evaluate("()=>{ PROGRESS=5; COINS=100; saveGame(); }")
     bad_codes = ["", "not a code at all", "GOO1-XXXXXX-", "GOO1-XXXXXX-Ym9ndXM=", "GOO2-000000-"+"A"*20]
     for bc in bad_codes:
-        pg.click("#btnCode")
+        open_code(pg)
         pg.fill("#codeImportArea", bc)
         pg.click("#btnCodeImport")
         st = pg.eval_on_selector("#codeStatus", "el=>el.classList.contains('err')")
@@ -128,7 +134,7 @@ with sync_playwright() as pw:
     # 手動改一個字元讓 checksum 對不上（模擬複製貼上漏字/貼壞）
     good = pg.evaluate("()=>saveCodeEncode()")
     tampered = good[:-3] + ("Z" if good[-1]!="Z" else "Y") + good[-2:]
-    pg.click("#btnCode")
+    open_code(pg)
     pg.fill("#codeImportArea", tampered)
     pg.click("#btnCodeImport")
     st_err = pg.eval_on_selector("#codeStatus", "el=>el.classList.contains('err')")
@@ -139,11 +145,11 @@ with sync_playwright() as pw:
     # ═══ 5. 語言切換：面板文字要跟著換，不能有寫死的英文殘留 ═══
     print("\n=== 5. 多語系：面板文字跟著切換 ===")
     pg,c,errs=page()
-    pg.click("#btnCode")
+    open_code(pg)
     en_title = pg.eval_on_selector("#codeTitle", "el=>el.textContent")
     pg.click("#btnCodeClose")
     pg.evaluate("()=>{ applyLanguage('zh-Hant'); saveGame(); }")
-    pg.click("#btnCode")
+    open_code(pg)
     zh_title = pg.eval_on_selector("#codeTitle", "el=>el.textContent")
     zh_btn_label = pg.eval_on_selector("#btnCodeImport", "el=>el.textContent")
     ck("標題跟著語言變了（不是還停在英文）", zh_title != en_title and "存檔" in zh_title, zh_title)
@@ -158,7 +164,7 @@ with sync_playwright() as pw:
         // 模擬「Clipboard API 存在但被瀏覽器拒絕」的情境（itch.io iframe 常見）
         navigator.clipboard.writeText = () => Promise.reject(new Error('denied'));
     }""")
-    pg.click("#btnCode")
+    open_code(pg)
     pg.click("#btnCodeCopy")
     # 同樣不要固定 sleep：輪詢到狀態列真的有字為止。
     # 包 try 是為了「功能真的壞掉」時仍然走到下面的 ck() 給出可讀的失敗訊息，

@@ -99,3 +99,17 @@ MDN建議快取重複畫面與避免不必要的shadowBlur；Chrome文件說明�
 - 未執行：Pixel本輪profile、正式遊戲實作與三輪回歸、11語系正式畫面排版、色覺差異與彈幕高密度可讀性、APK/AAB重建及發布。
 
 Commit Summary：`test: profile render cost and document soft visual direction`
+
+## v0.9.41：使用者核可後的正式實作
+
+使用者已核可奶油鼠尾草配色與可愛果凍，要求實作並改善 Adventure / Candy Shop / Settings。本節取代上方「尚未實作」的現況；概念稿仍只是設計歷程。
+
+- 導覽採「Adventure / Upgrades / Settings」三個固定目的地。保留 Candy Shop 為強化頁標題，讓入口說明用途、頁內保留世界觀。這是依現有功能作的設計判斷，不是玩家研究的量化結論。
+- 各入口同時使用原創圖示與文字，選中時有鼠尾草底的標記；點擊區至少58px高。參考 [Apple Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars) 的圖示搭文字建議，以及 [Material Bottom navigation](https://github.com/material-components/material-components-android/blob/master/docs/components/BottomNavigation.md) 的目的地導覽方式（2026-09-09查閱）。
+- 冒險頁將目前章節、糖果金幣、可捲動的50關路徑、關卡說明、開始按鈕分出層次。切到強化或設定再回來不跳回最新關；局內隱藏導覽，避免誤觸離開。
+- 強化頁顯示真實金幣、永久效果、已購等級與價錢；不足時停用購買鍵。切頁保留商品捲動位置。沿用原有花費與升級邏輯，沒有新貨幣或商業機制。
+- 設定集中語言、音效、備份碼及進度重置；重置沿用原確認流程。音效仍是既有本次執行開關，未增加持久化存檔欄位。
+- 選關、戰鬥、戰報採共用果凍畫法。草地／路徑採低彩度，敵彈仍用莓紅菱形、我方彈藍色圓形。核彈白閃、彩虹無敵、重生金光保留；本版不調事件強度與時間。
+- 新增8個文字key、11種語言共88筆翻譯，由i18n/build_v0941.py更新；預設仍英文。沒有新增外部素材、執行期依賴或付費工具。
+
+正式測試與發布狀態以 HANDOFF.md 及 docs-14-history.md 的 v0.9.41 節為準。Pixel效能定位、母語者潤稿及高密度彈幕的真機辨識不由桌機排版檢查替代。

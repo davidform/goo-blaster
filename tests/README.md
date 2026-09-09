@@ -19,7 +19,7 @@ For Playwright Chromium, install it with `python -m playwright install chromium`
 `run_tests.py` reads the default suite names from `run_tests.sh`; it does not silently omit tests.
 It runs the performance test only after the concurrent batch. Do not run another build or stress job during that performance test.
 Use `--only py_test9 py_ab_base` for focused reruns. On this 16 GB Surface, retain
-`--jobs 4`: the previous 48-worker attempt made the host unresponsive and timed out.
+`--jobs 2` or `--jobs 4`: the previous 48-worker attempt made the host unresponsive and timed out.
 Do not repeat that configuration on this machine. Four workers are a previously
 completed operating point, not a measured maximum or a substitute for the required
 full-concurrency stress round. That round remains incomplete and needs a more capable
@@ -89,3 +89,22 @@ for observed variability and the pending Pixel investigation.
 
 曾經因此誤以為證明了某個假設 —— 實際上沒有。
 做行動裝置相容性驗證時要意識到這個極限，最終還是要真機測試。
+## Soft-world UI (v0.9.41)
+
+`py_soft_ui.py` is included in the default suite. It checks actual navigation,
+selected-stage and shop-scroll preservation, settings entry points, all 11
+languages at four viewport sizes, title contrast and zero-meta gameplay.
+Screenshots are written to `_private/test-artifacts/soft-*.png`.
+
+```powershell
+$env:GOO_BROWSER_CHANNEL='msedge'
+$env:GOO_UI_CPU='4'
+.venv/Scripts/python.exe tests/py_soft_ui.py
+Remove-Item Env:GOO_UI_CPU
+```
+
+`py_art_perf.py` is a standalone diagnostic comparing the committed v0.9.40
+source (`8c5bebd`) to the working game with fixed seeds, three alternating
+single-page rounds and three paired rounds. Run it alone. Timestamped evidence
+goes to `_private/test-artifacts/art-perf-*/results.json`; it does not replace
+`py_v0927_perf`, the full-parallel stress gate or physical-device testing.
