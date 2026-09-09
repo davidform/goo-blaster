@@ -9,7 +9,16 @@
 - 兒童可離線、US$2.99一次買斷、無廣告/訂閱/消耗型購買；正式年齡與資料申報未定。
 - 只有確實需要換對話才提醒；一般階段完成更新本檔並繼續，不為階段完成要求換對話。
 
-## 目前正在收尾：v0.9.41
+## 目前任務：v0.9.42 聲音修改
+- v0.9.41已commit/push至開發分支4839c6a，公開版與原生產物未更新。
+- 正在修改v0.9.42：柔和旋律/武器音色、Boss主題切換、重啟音樂競態、音訊亂數獨立及資源回收。
+- py_audio_quality已通過；舊v41對照在音訊污染遊戲亂數斷言確實失敗。新舊離線音訊各7段已輸出。
+- v42全套49/49：20260909-082740-083723-audio-full/results.json（2工、source unchanged）。CPU4音訊／離線重啟皆過。
+- v42 SHA8db9e1206ed2a376c9eb36258f5fd4a181f0c235f122bf1e435fc445697e833f；效能單獨39.5→39.3FPS（損失0.5%）。
+- v42 Commit Summary：v0.9.42: soften audio and restore boss music transitions；提交以git log核對。
+- 下一步v43文案：_private/build_v0943.py已準備但未執行；需動態填入章節說明的參數並更新最後Boss名稱測試。
+
+## 已完成：v0.9.41
 - 使用者已核可柔和配色與可愛果凍，要求實作及改善Adventure/Candy Shop/Settings。
 - 工作分支codex/soft-world-ui；接手基準8c5bebd（v0.9.40）；本版已完成可在本機進行的驗證，提交以git log核對。
 - index.html已為v0.9.41：奶油鼠尾草世界、共用新角色、50關路徑、三頁導覽、設定集中。
@@ -50,7 +59,7 @@
 4. 研究難度曲線、局內卡與寶箱、糖果屋增益；測零強化／合理累積／全滿強化，固定輸入同批比較。
 5. 特別查滿級糖果屋仍卡關：先分清增益未生效或強度/操作需求問題，不盲加無限強化。
 - 已實跑發現Boss出現仍theme=cute；musicIntensity只加BPM，Boss分支未觸發。audio-theme-baseline.json有證據。
-- 原音訊已離線取樣至audio-v0941（含cute/boss/mix及各SFX WAV）；工具_private/audio_probe.py，尚未修改聲音。
+- 音訊新舊取樣audio-v0941／audio-v0942-final；工具tests/render_audio_samples.py；研究見docs-16-audio-localization-and-balance.md。
 - 已發現lv10d仍說第一章／每10關Boss，與v23後每5關一章不符；命名多為生僻詞。尚未修改。
 - 初步來源及診斷筆記在_private/next-work-notes.md；正式實作後寫歷史，不把研究宣稱已完成修改。
 

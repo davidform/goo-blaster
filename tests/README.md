@@ -108,3 +108,17 @@ source (`8c5bebd`) to the working game with fixed seeds, three alternating
 single-page rounds and three paired rounds. Run it alone. Timestamped evidence
 goes to `_private/test-artifacts/art-perf-*/results.json`; it does not replace
 `py_v0927_perf`, the full-parallel stress gate or physical-device testing.
+
+## Audio (v0.9.42)
+
+`py_audio_quality.py` is in the default suite. It uses real Web Audio nodes to
+check weapon coexistence, Boss music transitions, stop/start races, mute,
+source cleanup and isolation from the gameplay random stream. Set
+`GOO_AUDIO_CPU=4` for the focused CPU-throttled run.
+
+`python tests/render_audio_samples.py --label audio-review` writes seven stereo
+WAVs and signal/source-count JSON under `_private/test-artifacts/audio-review`.
+It injects a scheduling hook into a disposable copy and renders the actual
+instruments through OfflineAudioContext; it never edits the game. It fails on
+non-finite/clipped/silent output, but does not grade taste or replace phone listening.
+Omit `--label` to use a timestamp and preserve earlier samples.

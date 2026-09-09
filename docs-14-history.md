@@ -702,3 +702,17 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 未完成：既有48工造成主機失去回應的限制仍在，本機不重試；全平行壓力、Pixel美術可讀性及卡頓定位未完成，不宣稱三輪全綠。因此只提交開發分支，不更新Pages／itch.io／APK／AAB。
 - 教訓：新配色不能只改色碼，必須重新看文字對比、主角辨識與畫素測試的取樣前提；新增導覽時，獨立Back按鈕也必須遵守相同的狀態保留規則。桌機波動不是手機根因的證據。
 - Commit Summary：v0.9.41: introduce soft visuals and clear hub navigation
+
+## v0.9.42：柔和聲音與Boss音樂切換（2026-09-09）
+
+- 根因：使用者不喜歡音樂及射擊音效。實際spawnBoss後theme仍為cute，musicIntensity只改BPM，Boss編曲是死分支；同時發現延遲musicStop能停掉新musicStart、音效與遊戲共用亂數。密集琶音／高頻鼓容易疲勞屬設計判斷，已提供實際合成器的試聽，不冒稱真人聽感調查。
+- 本版只改SFX區塊與BUILD；已用4839c6a逐字比對區塊外相同，證據audio-scope.json。未改關卡、商店、卡池、傷害或視覺。
+- 變更：104/124 BPM的普通／Boss獨立句型、旋律休止與柔和鍵音、減少高頻噪音；三種武器有不同滑音／噴霧與獨立節流，降低命中／拾取連續提示的密度。音訊私有亂數、結束後斷線、靜音不排音源、停止回呼以世代避免干擾新音樂。
+- 量測：固定四小節一般音源132→78、Boss132（錯用cute）→88；代表性混音815→681。新舊各7段OfflineAudioContext WAV與JSON，0削波／非有限樣本，見_private/test-artifacts/audio-v0941與audio-v0942-final。是音訊節點數，不是手機FPS改善比例。
+- 新增py_audio_quality.py至預設套件。真實AudioContext驗三武器同時發聲、Boss出現/死亡主題切換、快速停止重啟、靜音、結束回收及亂數隔離；v41對照明確失敗（音效消耗遊戲亂數22次），v42為0。測試暫停rAF來隔離遊戲時，輪詢必須改計時器，否則Playwright預設rAF輪詢也會被停掉；初版量測工具的逾時已修正，不是遊戲失效。
+- 第一輪完整回歸49/49通過：.venv/Scripts/python.exe run_tests.py --jobs 2 --label audio-full；環境msedge、NODE_PATH=_private/test-node/node_modules。紀錄_private/test-runs/20260909-082740-083723-audio-full/results.json，source unchanged，SHA256 8db9e1206ed2a376c9eb36258f5fd4a181f0c235f122bf1e435fc445697e833f。
+- 第1關bot49秒3/3心通關；第2關通關、第3關陣亡參考；A/B數值、卡池、語言、存檔與觸控皆過。效能單獨39.5→39.3FPS、同伴損失0.5%，原門檻未改；不跨批次比較v41 FPS。
+- 第二輪音訊邊角與舊版反證完成；第三輪GOO_AUDIO_CPU=4執行tests/py_audio_quality.py、tests/py_release_smoke.py皆通過，音源全部結束並斷開、pageerror0、外部請求0、離線冷重啟進度保留。證據audio-cpu4.log、audio-offline.log；套件亦含第5關CPU4零強化壓測。
+- 未完成：全49工平行仍受本機既有48工失去回應限制；Pixel揚聲器/耳機聽感與效能、原生重建及發布未執行。只提交開發分支，不宣稱三輪全綠。
+- 教訓：註解說「兩首主題」不是播放證據；音樂狀態必須從真實Boss路徑驗。聲音微變不能消耗玩法的亂數，否則調音會污染難度比較。
+- Commit Summary：v0.9.42: soften audio and restore boss music transitions

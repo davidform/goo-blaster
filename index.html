@@ -417,7 +417,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.41';
+const BUILD='v0.9.42';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -518,8 +518,10 @@ addEventListener('resize',resize); addEventListener('orientationchange',()=>setT
 // 避免「同一顆取樣重複播放」的機械感。
 const SFX=(()=>{
   let ac=null,master=null,sfxBus=null,musBus=null,muted=false,initFailed=null;
-  const last={}; let noiseBuf=null;
-  const R=(a,b)=>a+Math.random()*(b-a);
+  const last={}; let noiseBuf=null, soundSeed=0x6d2b79f5;
+  // Audio variation must never consume the gameplay/card random stream.
+  const soundRand=()=>{soundSeed^=soundSeed<<13;soundSeed^=soundSeed>>>17;soundSeed^=soundSeed<<5;return (soundSeed>>>0)/4294967296;};
+  const R=(a,b)=>a+soundRand()*(b-a);
 
   function init(){
     if(ac||initFailed)return;
@@ -539,20 +541,20 @@ const SFX=(()=>{
     master.connect(ac.destination);
     noiseBuf=ac.createBuffer(1,ac.sampleRate*1.2,ac.sampleRate);
     const d=noiseBuf.getChannelData(0);
-    for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+    for(let i=0;i<d.length;i++) d[i]=soundRand()*2-1;
     }catch(e){ initFailed=String(e&&e.message||e); ac=null; }
   }
   // 音訊出任何問題都只能讓遊戲「沒聲音」，絕對不能讓操作失效
   function unlock(){ try{ init(); if(ac&&ac.state==='suspended') ac.resume(); }catch(e){ initFailed=String(e&&e.message||e); } }
   function ok(key,gap){
     if(!ac||muted)return false;
-    if(gap){ const n=ac.currentTime; if(last[key]&&n-last[key]<gap)return false; last[key]=n; }
+    if(gap){ const n=ac.currentTime; if(last[key]!==undefined&&n-last[key]<gap)return false; last[key]=n; }
     return true;
   }
   // 一顆振盪器 + 可選濾波 + 可選聲相
   function osc(o){
     const t=ac.currentTime+(o.delay||0), dest=o.dest||sfxBus;
-    const g=ac.createGain(), s=ac.createOscillator();
+    const g=ac.createGain(), s=ac.createOscillator(), chain=[s,g];
     s.type=o.type||'sine';
     s.frequency.setValueAtTime(o.f0,t);
     if(o.f1) (o.lin?s.frequency.linearRampToValueAtTime:s.frequency.exponentialRampToValueAtTime)
@@ -564,16 +566,17 @@ const SFX=(()=>{
     g.gain.exponentialRampToValueAtTime(0.0001,t+o.dur);
     let node=s;
     if(o.filter){
-      const f=ac.createBiquadFilter(); f.type=o.filter;
+      const f=ac.createBiquadFilter(); chain.push(f); f.type=o.filter;
       f.frequency.setValueAtTime(o.ff0||1200,t);
       if(o.ff1) f.frequency.exponentialRampToValueAtTime(Math.max(60,o.ff1),t+o.dur);
       f.Q.value=o.q||1; node.connect(f); node=f;
     }
     if(o.pan!==undefined&&ac.createStereoPanner){
-      const p=ac.createStereoPanner(); p.pan.value=Math.max(-1,Math.min(1,o.pan));
+      const p=ac.createStereoPanner(); chain.push(p); p.pan.value=Math.max(-1,Math.min(1,o.pan));
       node.connect(p); node=p;
     }
     node.connect(g); g.connect(dest);
+    s.onended=()=>{for(const n of chain)n.disconnect();};
     s.start(t); s.stop(t+o.dur+0.03);
   }
   // 一段噪音 + 帶通/低通掃頻
@@ -585,16 +588,17 @@ const SFX=(()=>{
     f.frequency.setValueAtTime(o.f0||1200,t);
     if(o.f1) f.frequency.exponentialRampToValueAtTime(Math.max(60,o.f1),t+o.dur);
     f.Q.value=o.q||1;
-    const g=ac.createGain();
+    const g=ac.createGain(),chain=[s,f,g];
     g.gain.setValueAtTime(0.0001,t);
     g.gain.linearRampToValueAtTime(o.vol,t+(o.atk!==undefined?o.atk:0.004));
     g.gain.exponentialRampToValueAtTime(0.0001,t+o.dur);
     let node=f;
     if(o.pan!==undefined&&ac.createStereoPanner){
-      const p=ac.createStereoPanner(); p.pan.value=Math.max(-1,Math.min(1,o.pan));
+      const p=ac.createStereoPanner(); chain.push(p); p.pan.value=Math.max(-1,Math.min(1,o.pan));
       f.connect(p); node=p;
     }
     s.connect(f); node.connect(g); g.connect(dest);
+    s.onended=()=>{for(const n of chain)n.disconnect();};
     s.start(t); s.stop(t+o.dur+0.03);
   }
 
@@ -636,63 +640,52 @@ const SFX=(()=>{
   // 移調表：用五度圈間隔（每步±7半音，取 mod12 落在 -5~6 半音內）排出12個調，
   // 相鄰調聽起來自然相關（不是隨機半音亂跳），但排列順序又不是單純半音爬升。
   const KEY_OFFSETS=(()=>{ const out=[]; for(let i=0;i<12;i++){ let v=(i*7)%12; if(v>6) v-=12; out.push(v); } return out; })();
-  const M={on:false,step:0,next:0,timer:null,bpm:112,intensity:0,theme:'cute',keyOffset:0,arp:null,arpIdx:0};
+  const MELODY_CUTE=[
+    [0,-1,-1,-1,1,-1,2,-1,3,-1,-1,-1,2,-1,1,-1],
+    [2,-1,-1,-1,1,-1,0,-1,1,-1,-1,-1,2,-1,-1,-1],
+    [0,-1,1,-1,2,-1,-1,-1,1,-1,0,-1,3,-1,-1,-1],
+    [1,-1,-1,-1,0,-1,-1,-1,2,-1,1,-1,0,-1,-1,-1]
+  ];
+  const MELODY_BOSS=[
+    [0,-1,0,-1,2,-1,-1,-1,1,-1,2,-1,3,-1,-1,-1],
+    [2,-1,-1,-1,1,-1,0,-1,2,-1,-1,-1,1,-1,0,-1],
+    [0,-1,1,-1,2,-1,-1,-1,3,-1,2,-1,1,-1,-1,-1],
+    [1,-1,-1,-1,2,-1,1,-1,0,-1,-1,-1,0,-1,-1,-1]
+  ];
+  const M={on:false,step:0,next:0,timer:null,bpm:104,intensity:0,theme:'cute',keyOffset:0,arp:null,arpIdx:0,generation:0};
   function stepDur(){ return 60/M.bpm/4; }
+  // A four-bar phrase with rests, soft toy keys and a quiet rhythm section.
+  // Bosses use a distinct minor phrase, not merely a faster normal tune.
   function playStep(i,t){
-    const boss=M.theme==='boss';
-    const PROG = boss?PROG_BOSS:PROG_CUTE;
-    const bar=Math.floor(i/16)%4, k=i%16, ch=PROG[bar];
-    const dt0=t-ac.currentTime;
-
-    if(boss){
-      // Boss戰：驅動型八分音符貝斯（鋸齒波，比可愛版密集一倍），營造壓迫感
-      if(k%4===0)
-        osc({f0:NOTE(ch.root),f1:NOTE(ch.root)*0.985,dur:0.20,vol:0.24,type:'sawtooth',
-             filter:'lowpass',ff0:1100,ff1:260,delay:dt0,dest:musBus});
-      // 琶音：鋸齒波、更快更硬，每兩拍疊一次高八度製造衝突感
-      const nt=ch.tones[(M.arp||ARP_VARIANTS[0])[k]] + (k%8===0?12:0);
-      osc({f0:NOTE(nt),dur:0.13,vol:0.085,type:'sawtooth',
-           filter:'lowpass',ff0:3200,ff1:900,q:5,
-           pan:(k%4-1.5)*0.24,delay:dt0,dest:musBus});
-      // 鼓組：每拍都有大鼓（比可愛版密集兩倍）、2/4拍小鼓、高帽更密
-      if(k%4===0) osc({f0:140,f1:38,dur:0.15,vol:0.30,type:'sine',delay:dt0,dest:musBus});
-      if(k===4||k===12) nz({dur:0.12,vol:0.16,f0:2400,f1:1000,q:1.0,delay:dt0,dest:musBus});
-      if(k%2===1) nz({dur:0.03,vol:0.06,f0:9000,q:2,pan:k%4===1?-0.3:0.3,delay:dt0,dest:musBus});
-      // 每輪結尾加一顆不和諧的緊張墊音，強化「快出事了」的感覺
-      if(k===14&&bar===3)
-        osc({f0:NOTE(ch.tones[1]+1),dur:0.5,vol:0.05,type:'square',atk:0.02,
-             filter:'bandpass',ff0:1400,q:6,delay:dt0,dest:musBus});
-      return;
+    const boss=M.theme==='boss',bar=Math.floor(i/16)%4,k=i%16;
+    const ch=(boss?PROG_BOSS:PROG_CUTE)[bar],motif=(boss?MELODY_BOSS:MELODY_CUTE)[bar];
+    const delay=Math.max(0,t-ac.currentTime),root=NOTE(ch.root);
+    if(k===0||k===8||(boss&&(k===6||k===14)))
+      osc({f0:root,dur:boss?.24:.38,vol:.15,type:'triangle',atk:.012,
+           filter:'lowpass',ff0:600,ff1:240,q:.6,delay,dest:musBus});
+    if(motif[k]>=0){
+      const degree=(k===6||k===14)?(M.arp||ARP_VARIANTS[0])[(k+bar)%16]:motif[k];
+      const f=NOTE(ch.tones[degree]),pan=(bar%2?1:-1)*.16;
+      osc({f0:f,dur:boss?.27:.38,vol:boss?.095:.085,type:'sine',atk:.009,pan,delay,dest:musBus});
+      osc({f0:f*2,dur:.16,vol:.016,type:'triangle',atk:.006,
+           filter:'lowpass',ff0:1800,ff1:650,q:.6,pan,delay,dest:musBus});
     }
-
-    // 可愛主題：三角波+鐘鈴亮片，比原本更甜、更彈跳
-    // 低音：小節第 1、3 拍，短促而有彈性
+    // Soft sustained harmony leaves room for weapon and warning cues.
+    if(k===0)for(const degree of [0,2])
+      osc({f0:NOTE(ch.tones[degree]-12),dur:1.65,vol:.022,type:'triangle',atk:.12,
+           filter:'lowpass',ff0:750,ff1:320,q:.5,delay,dest:musBus});
     if(k===0||k===8)
-      osc({f0:NOTE(ch.root),f1:NOTE(ch.root)*0.995,dur:0.30,vol:0.18,type:'triangle',
-           filter:'lowpass',ff0:900,ff1:340,delay:dt0,dest:musBus});
-    // 琶音：三角波，比原本的方波更柔更甜
-    const nt=ch.tones[(M.arp||ARP_VARIANTS[0])[k]];
-    osc({f0:NOTE(nt),dur:0.14,vol:0.058,type:'triangle',
-         filter:'lowpass',ff0:2000,ff1:750,q:2.4,
-         pan:(k%4-1.5)*0.28,delay:dt0,dest:musBus});
-    // 亮片層：固定節奏（非隨機，音訊要可重現）在弱拍加一顆高八度鐘鈴聲，增加可愛的閃爍感
-    if((k===2||k===6||k===10||k===14) && bar%2===0)
-      osc({f0:NOTE(nt+12),dur:0.22,vol:0.035,type:'sine',atk:0.002,
-           delay:dt0,dest:musBus});
-    // 墊音：每小節開頭一顆長音，很輕
-    if(k===0)
-      osc({f0:NOTE(ch.tones[0]-12),dur:1.9,vol:0.045,type:'sawtooth',atk:0.25,
-           filter:'lowpass',ff0:520,ff1:260,delay:dt0,dest:musBus});
-    // 鼓組：輕巧
-    if(k===0||k===8) osc({f0:132,f1:44,dur:0.16,vol:0.24,type:'sine',delay:dt0,dest:musBus});
-    if(k===4||k===12) nz({dur:0.11,vol:0.10,f0:2100,f1:900,q:1.1,delay:dt0,dest:musBus});
-    if(k%2===1) nz({dur:0.035,vol:0.038,f0:8200,q:2,pan:k%4===1?-0.3:0.3,delay:dt0,dest:musBus});
+      osc({f0:boss?120:100,f1:48,dur:.15,vol:boss?.15:.11,type:'sine',atk:.008,delay,dest:musBus});
+    if(k===4||k===12)
+      nz({dur:.075,vol:boss?.035:.022,f0:1200,f1:500,q:.55,atk:.006,delay,dest:musBus});
+    if(k===14&&bar%2===0)
+      osc({f0:740,f1:620,dur:.045,vol:.023,type:'sine',atk:.005,delay,dest:musBus});
   }
   function pump(){
     if(!M.on||!ac)return;
     const sd=stepDur();
     while(M.next < ac.currentTime+0.14){
-      if(M.next>ac.currentTime-0.05) playStep(M.step,M.next);
+      if(M.next>ac.currentTime-0.05&&!muted) playStep(M.step,M.next);
       M.next+=sd; M.step++;
     }
   }
@@ -706,8 +699,8 @@ const SFX=(()=>{
     },
     musicStart(){
       unlock(); if(!ac)return;
-      M.on=true; M.step=0; M.next=ac.currentTime+0.1; M.intensity=0; M.theme='cute';
-      M.bpm=112;
+      M.generation++; M.on=true; M.step=0; M.next=ac.currentTime+0.1; M.intensity=0; M.theme='cute';
+      M.bpm=104;
       // v0.9.15：每次啟動音樂先重置回預設調（C大調、原版琶音）——選單音樂沒有
       // 「關卡」概念，靠這行確保選單一律是熟悉的原版主題曲，不會殘留上一關的移調。
       // 真正要玩關卡時，start() 會緊接著呼叫 musicSetLevel() 蓋成該關卡專屬的調。
@@ -731,13 +724,14 @@ const SFX=(()=>{
     // 這個問題在 v0.9.18/19/20 連續三個版本、用三種不同的等待策略都還是會偶發失敗
     // （多個測試平行搶 CPU 時特別容易）。與其繼續補等待時間，不如直接把「要驗的狀態」
     // 暴露出來：兩個數字、無副作用，測試從此不依賴任何時序。
-    musicDebug(){ return {keyOffset:M.keyOffset|0, arpIdx:M.arpIdx|0, theme:M.theme, on:M.on}; },
+    musicDebug(){ return {keyOffset:M.keyOffset|0, arpIdx:M.arpIdx|0, theme:M.theme, on:M.on, bpm:M.bpm}; },
     musicStop(fade){
       if(!ac||!M.on)return;
       musBus.gain.setTargetAtTime(0.0001,ac.currentTime,fade===false?0.05:0.5);
-      setTimeout(()=>{ M.on=false; clearInterval(M.timer); }, fade===false?120:1400);
+      const generation=M.generation;
+      setTimeout(()=>{if(M.generation===generation){M.on=false;clearInterval(M.timer);}},fade===false?120:1400);
     },
-    musicIntensity(n){ M.intensity=n; M.bpm= n>0?158:112; },
+    musicIntensity(n){M.intensity=n;M.theme=n>0?'boss':'cute';M.bpm=n>0?124:104;},
     // v0.9.10：切到背景（切別的App、鎖螢幕、滑掉）時立刻讓所有聲音停住。
     // 音樂用 lookahead 排程，note 一旦排進 Web Audio 的音訊執行緒，就算主執行緒被瀏覽器
     // 節流（分頁不可見時 rAF 幾乎都會被瀏覽器暫停，但 Web Audio 播放走獨立執行緒，
@@ -748,60 +742,60 @@ const SFX=(()=>{
 
     // ---- 音效：每一發都有隨機微變，且分層 ----
     shoot(w,pan){
-      if(!ok('s',0.045))return;
-      const p=(pan||0)*0.5;
-      if(w==='graffiti'){                                  // 噴槍：噴霧感
-        nz({dur:R(.07,.10),vol:R(.045,.065),f0:R(2600,3600),f1:R(900,1400),q:.8,pan:p});
-        osc({f0:R(400,520),f1:R(190,240),dur:.06,vol:.035,type:'square',
-             filter:'lowpass',ff0:2600,ff1:900,pan:p});
-      }else if(w==='yoyo'){                                // 溜溜球：轉動呼嘯
-        osc({f0:R(240,300),f1:R(620,760),dur:.16,vol:.055,type:'sine',pan:p});
-        osc({f0:R(480,600),f1:R(1240,1520),dur:.16,vol:.022,type:'triangle',detune:8,pan:p});
-        nz({dur:.10,vol:.022,f0:1600,f1:3400,q:2.5,pan:p});
-      }else{                                               // 水槍：水感雙層 + 氣音
-        const f=R(680,820);
-        osc({f0:f,f1:f*0.33,dur:.075,vol:.048,type:'triangle',
-             filter:'lowpass',ff0:3200,ff1:1100,pan:p});
-        osc({f0:f*1.995,f1:f*0.7,dur:.055,vol:.022,type:'sine',detune:R(-14,14),pan:p});
-        nz({dur:.045,vol:.026,f0:R(3200,4200),f1:1500,q:1.2,pan:p});
+      // Separate weapon voices remain audible together without sounding every projectile.
+      if(!ok('s:'+w,w==='bubble'?.10:.14))return;
+      const p=(pan||0)*.45;
+      if(w==='graffiti'){
+        nz({dur:.11,vol:.10,f0:R(1100,1400),f1:430,q:.55,atk:.008,pan:p});
+        osc({f0:R(250,290),f1:150,dur:.09,vol:.085,type:'triangle',atk:.008,
+             filter:'lowpass',ff0:1200,ff1:500,q:.6,pan:p});
+      }else if(w==='yoyo'){
+        osc({f0:R(240,270),f1:510,dur:.20,vol:.12,type:'sine',atk:.014,pan:p});
+        osc({f0:R(500,540),f1:310,dur:.22,vol:.035,type:'triangle',atk:.02,
+             filter:'lowpass',ff0:1400,ff1:700,q:.6,pan:p});
+      }else{
+        const f=R(500,560);
+        osc({f0:f,f1:180,dur:.10,vol:.15,type:'sine',atk:.006,pan:p});
+        osc({f0:f*1.5,f1:270,dur:.055,vol:.028,type:'triangle',atk:.004,
+             filter:'lowpass',ff0:1600,ff1:600,q:.6,pan:p});
       }
     },
     hit(pan){
-      if(!ok('h',0.028))return;
-      const p=(pan||0)*0.6;
-      nz({dur:R(.035,.055),vol:R(.045,.062),f0:R(2100,3200),f1:R(700,1100),q:1.4,pan:p});
-      osc({f0:R(340,460),f1:R(140,190),dur:.05,vol:.030,type:'triangle',pan:p});
+      if(!ok('h',.04))return;
+      const p=(pan||0)*.5;
+      osc({f0:R(290,340),f1:145,dur:.065,vol:.075,type:'triangle',atk:.005,pan:p});
+      nz({dur:.035,vol:.035,f0:900,f1:400,q:.6,atk:.005,pan:p});
     },
     crit(pan){
-      if(!ok('c',0.05))return;
-      const p=(pan||0)*0.6, f=R(1000,1250);
-      osc({f0:f,f1:f*0.42,dur:.11,vol:.070,type:'square',filter:'lowpass',ff0:5200,ff1:1400,pan:p});
-      osc({f0:f*1.5,f1:f*0.6,dur:.09,vol:.030,type:'triangle',detune:12,pan:p});
-      nz({dur:.07,vol:.045,f0:5200,f1:1800,q:1,pan:p});
+      if(!ok('c',.09))return;
+      const p=(pan||0)*.5,f=R(620,690);
+      osc({f0:f,f1:330,dur:.13,vol:.13,type:'sine',atk:.006,pan:p});
+      osc({f0:f*1.5,f1:495,dur:.10,vol:.035,type:'triangle',atk:.008,
+           filter:'lowpass',ff0:2000,ff1:850,q:.6,pan:p});
     },
     kill(pan){
-      if(!ok('k',0.026))return;
-      const p=(pan||0)*0.6, f=R(300,400);
-      osc({f0:f,f1:f*0.32,dur:R(.09,.13),vol:.060,type:'triangle',pan:p});   // 果凍破掉的「啵」
-      nz({dur:R(.05,.08),vol:.034,f0:R(700,1100),f1:R(260,380),q:.9,pan:p});
+      if(!ok('k',.07))return;
+      const p=(pan||0)*.5,f=R(280,340);
+      osc({f0:f,f1:95,dur:.13,vol:.10,type:'sine',atk:.006,pan:p});
+      nz({dur:.05,vol:.03,f0:700,f1:260,q:.6,atk:.007,pan:p});
     },
     pickup(){
-      if(!ok('p',0.035))return;
-      const f=R(920,1080);
-      osc({f0:f,f1:f*1.55,dur:.055,vol:.032,type:'sine'});
-      osc({f0:f*2,f1:f*3.1,dur:.045,vol:.012,type:'triangle',delay:.012});
+      if(!ok('p',.075))return;
+      const f=R(720,780);
+      osc({f0:f,dur:.10,vol:.052,type:'sine',atk:.006});
+      osc({f0:f*1.5,dur:.13,vol:.022,type:'sine',atk:.008,delay:.035});
     },
     dash(){
-      if(!ok('d',0.09))return;
-      nz({dur:.22,vol:.085,f0:R(2400,3000),f1:R(320,460),q:.9});
-      osc({f0:R(760,900),f1:150,dur:.22,vol:.045,type:'sawtooth',filter:'lowpass',ff0:2600,ff1:400});
-      osc({f0:R(1500,1750),f1:400,dur:.14,vol:.018,type:'sine'});
+      if(!ok('d',.09))return;
+      nz({dur:.20,vol:.075,f0:1400,f1:350,q:.6,atk:.012});
+      osc({f0:340,f1:150,dur:.18,vol:.075,type:'sine',atk:.012});
     },
     hurt(){
-      if(!ok('u',0.18))return;
-      osc({f0:R(230,270),f1:52,dur:.36,vol:.20,type:'sawtooth',filter:'lowpass',ff0:1400,ff1:220});
-      osc({f0:R(115,135),f1:40,dur:.40,vol:.12,type:'square',filter:'lowpass',ff0:700,ff1:160});
-      nz({dur:.24,vol:.11,f0:600,f1:180,q:.7});
+      if(!ok('u',.18))return;
+      osc({f0:220,f1:75,dur:.30,vol:.22,type:'triangle',atk:.009,
+           filter:'lowpass',ff0:950,ff1:240,q:.6});
+      osc({f0:160,f1:65,dur:.32,vol:.10,type:'sine',atk:.014,delay:.07});
+      nz({dur:.14,vol:.065,f0:700,f1:200,q:.6,atk:.008});
     },
     heal(){
       if(!ok('hl',0.18))return;
