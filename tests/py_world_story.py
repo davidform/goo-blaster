@@ -62,10 +62,10 @@ with sync_playwright() as pw:
  assert q.evaluate('()=>{for(let i=0;i<10;i++)loop(lastT+50);return __blasts;}')==1
  frames=[]
  for age in [0,.20,.40,.60,1.20]:
-  q.evaluate('age=>{G.nukeLaunch.age=age;G.nukeFlash=Math.max(0,1.5-Math.max(0,age-.48)*2.2);G.cam.shake=0;draw();}',age)
+  q.evaluate('age=>{G.nukeLaunch.age=age;G.nukeFlash=age<.9?1.5:Math.max(0,1.5*(1-(age-.9)/.9));G.cam.shake=0;draw();}',age)
   shot=q.screenshot(path=str(ARTIFACTS/f'nuke-launch-{age:.2f}.png'));frames.append(hashlib.sha256(shot).hexdigest())
  assert len(set(frames))==5
- q.evaluate('G.nukeLaunch.age=1.34;loop(lastT+50)')
+ q.evaluate('G.nukeLaunch.age=NUKE_FX_END-.01;loop(lastT+50)')
  assert q.evaluate('G.nukeLaunch===null')
  assert q.evaluate('__blasts')==1
  assert not errors,errors

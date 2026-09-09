@@ -436,7 +436,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.56';
+const BUILD='v0.9.57';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -3054,14 +3054,26 @@ function drawNuke(){
   ctx.fillText('☢️',x,y+s*0.36);
 }
 //====================== 更新 ======================
+const NUKE_FX_END=2.1;
+function nukeTimeScale(){
+  if(!G.nukeLaunch)return 1;
+  const t=G.nukeLaunch.age;
+  if(t<.9)return .16;
+  const k=clamp((t-.9)/(NUKE_FX_END-.9),0,1);
+  return .16+.84*k*k*(3-2*k);
+}
 let lastT=performance.now();
 function loop(now){
   requestAnimationFrame(loop);
   // A queued frame may predate start()'s new timestamp; never run time backwards.
   let dt=Math.min(Math.max((now-lastT)/1000,0),.05); lastT=Math.max(lastT,now);
   if(G&&G.hurt>0) G.hurt=Math.max(0,G.hurt-dt*6.5);   // 受擊紅閃：約 0.15 秒衰減完，用真實時間不受慢動作影響
-  if(G&&G.nukeLaunch){const fx=G.nukeLaunch;fx.age+=dt;if(fx.age>=.48&&!fx.blast){fx.blast=true;SFX.nukeBlast();}if(fx.age>=1.35)G.nukeLaunch=null;}
-  if(G&&G.nukeFlash>0&&(!G.nukeLaunch||G.nukeLaunch.age>=.48)) G.nukeFlash=Math.max(0,G.nukeFlash-dt*2.2);  // v0.9.38：從 3.3 放慢到 2.2，配合 1.5 的起始值＝全白 0.23s + 淡出 0.45s
+  if(G&&G.running&&!G.paused&&G.nukeLaunch){
+    const fx=G.nukeLaunch;fx.age+=dt;
+    if(fx.age>=.48&&!fx.blast){fx.blast=true;SFX.nukeBlast();}
+    G.nukeFlash=fx.age<.9?1.5:Math.max(0,1.5*(1-(fx.age-.9)/.9));
+    if(fx.age>=NUKE_FX_END){G.nukeLaunch=null;G.nukeFlash=0;}
+  }
   // v0.9.37：復活演出。跟上面兩行一樣用**真實時間**衰減，不受 hitstop／慢動作影響——
   // 否則復活當下的 .28 秒頓幀會把光環也一起凍住，看起來像卡住而不是演出。
   if(G&&G.reviveFlash>0) G.reviveFlash=Math.max(0,G.reviveFlash-dt*2.2);  // 金色全螢幕閃光：約 0.45 秒
@@ -3071,7 +3083,7 @@ function loop(now){
   if(G&&G.running&&!G.paused){
     if(G.hitstop>0){ G.hitstop-=dt; }
     else{
-      const scale = G.slowmo>0 ? .32 : 1;
+      const scale = Math.min(G.slowmo>0 ? .32 : 1,nukeTimeScale());
       if(G.slowmo>0) G.slowmo-=dt;
       update(dt*scale, dt);
     }
@@ -4026,12 +4038,12 @@ function drawHUD(){
   // v0.9.38：使用者回報「白屏不夠」。原本峰值只有 0.55 的半透明，隔著它還看得見
   // 場景，所以讀起來像「畫面變亮」而不是「炸了」。改成幾乎純白的全屏 + 淡出時
   // 補一層暖橘餘燼，讓白 → 橘 → 場景這個順序自己說出「剛剛爆了一顆」。
+  drawNukeLaunch();
   if(G.nukeFlash>0&&(!G.nukeLaunch||G.nukeLaunch.age>=.48)){
     const a=Math.min(1,G.nukeFlash);
-    ctx.fillStyle='rgba(255,253,245,'+(a*0.88)+')'; ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='rgba(255,186,104,'+(a*a*0.30)+')'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,253,245,'+(a*0.96)+')'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,186,104,'+(a*(1-a)*0.12)+')'; ctx.fillRect(0,0,W,H);
   }
-  drawNukeLaunch();
   // v0.9.37：復活的全螢幕金色閃光 + 由外向內收攏的暖色暈。
   // 受擊是紅、核彈是白橘、復活是金——三種「畫面整片變色」的事件各有各的顏色，
   // 玩家用餘光就分得出剛剛發生的是哪一件，不必回頭看愛心。
@@ -4978,6 +4990,7 @@ const doNuke=()=>{
   const n=targets.length;
   for(const e of targets) killEnemy(e);
   G.EB.length=0;                          // 順便清空敵方彈幕，畫面乾淨清爽
+  G.TXT=G.TXT.filter(t=>!t.big);
   toast(T('tNuke',n),'#ff9a4f');
   // v0.9.12：畫面效果加強——原本只有一層粒子噴發，現在疊三層擴散衝擊波
   // （由內而外：白核心 → 橘中層 → 暗紅外環，時間差 0.05 秒讓層次感更明顯）

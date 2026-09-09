@@ -1,16 +1,12 @@
-# GOO BLASTER — 目前交接
-更新：2026-09-09；詳細歷史 docs-14-history.md，玩法設計 docs-15-upgrade-design.md。
+# GOO BLASTER 精簡交接
 
-## 目前進行中（手機回饋新一輪，尚未交付）
-- 使用者：第9關小怪包圍／子彈密；核彈需慢動作與白屏停留；地面殘影太深；故事需一目了然；詢問商店衝刺等級與上限。
-- v56普通敵人射擊節奏功能已驗，效能尚未過（7–19關，20關回原速），其餘數值不變。SHA c5ceb7ee28fc7b685ce8dc2a7ad4d70cd46a61e09f69cbf611927febc201b263。
-- 完整63/64，效能待驗：_private/test-runs/20260909-223040-368026-ordinary-shot-full/results.json；有同伴未達標（首輪25.7、補跑24.7；同批舊v55 23.75／新v56 23.65）FPS。CPU4／離線shot56-cpu4.log與shot56-offline.log已過。
-- stage9-shot2-ab.json：16完成對照，Pixel強化無復活／250ms操作，第9關1/8→4/8；相鄰第8關0/2→1/2、第10關0/2→0/2、第一關2/2不變。出怪減量與較小射擊調整候選未採用。
-- v57候選_private/nuke57-preview；_private/prepare57.py與py_nuke_cinematic.py實作2.1秒慢動作白屏、暫停凍結、提示互斥；nuke57-preview-reviewed.log已過。
-- v58候選_private/readability58-preview；prepare58.py＋build_v0958.py。單層20%果凍、可見目標卡＋章節小景、翻滾大師改名衝刺訓練並顯示冷卻／0.42無敵，不改數值。
-- py_readability.py：550目標、11語言、三級冷卻3→2.65→2.30→1.95，局內疊加下限1.2秒；readability58-preview-reviewed.log已過，圖片已檢視；小螢幕滑動context也過。
-- 先完成v56並提交，再依序v57完整65項／CPU／離線／提交，v58完整66項／CPU／離線／獨立效能／提交；最後APK與itch同步、若Pixel仍連線可覆蓋更新保留存檔。
-- 公開／手機仍v55；以下v55證據保留作基準，不能當v56–58已交付。
+## 目前任務（進行中）
+- 使用者五項：第9關小怪／彈幕、核彈慢動作白屏、死亡殘影、故事一目了然、商店衝刺說明。
+- v56 887a6c9功能63項過，效能失敗；首輪＋補跑與舊版ABBA保留，電池供電下舊v55也約24FPS。尚未发布。
+- root v57核彈演出，64/65；獨立效能未過，禁止據此發布；_private/test-runs/20260909-230337-065023-nuke-cinematic-full/results.json。CPU4／離線已過。
+- v58私人候選readability58-preview已完成；prepare58.py＋build_v0958.py，py_readability.py涵蓋550目標／11語言與既有衝刺冷卻。
+- 下一步v58整合完整66項、CPU4／離線／獨立地面ABBA；效能全過才建APK與同步itch，Pixel若連線覆蓋更新保留存檔。
+- 公開與Pixel仍v55，下列v55證據是基準，不代表新版已交付。
 
 ## 接手與授權
 - 完整讀 AGENTS.md／本檔，先核對 Git 差異與 BUILD；安全同步，不 reset 覆蓋。
