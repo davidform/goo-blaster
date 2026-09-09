@@ -910,3 +910,16 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - `native/backup_android.py` 建置來源備份android-source-20260909-154414.zip，80檔／433560bytes，排除私鑰；`native/publish_test_apk.py --publish` 更新既有Prerelease，不刪除舊APK。
 - 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；資產ID 552265091。公開下載重新核對SHA256一致，public_download_verified=true；公開頁HTTP200及v52下載連結另驗。沙盒git網路與web讀取工具曾連線／快取失敗，經核准的公開唯讀網路驗證成功；沒有當成發布失敗或跳過核對。
 - 證據：_private/mobile-test/latest.json、published.json、page-v52.json、build-v52.log、publish-v52.log。Pixel覆蓋更新／真機FPS／PNG儲存仍未執行；全平行未執行，下載頁明示限制。AAB仍v40未簽。
+
+## v0.9.53：連續升級獎勵佇列（2026-09-09）
+
+- 使用者回報有時連升三級。實際34顆×2XP＝68XP，應由Lv.1升至Lv.4、剩17XP、選3張；v52先顯示Lv.2，接著改成Lv.4的1/2、2/2。XP沒有重複加，錯的是首顆晶核開啟選卡後，後續逐顆收集未刷新標題與總數。
+- v53用queueCards集中XP與Boss獎勵入列，已顯示的選項不重抽，只刷新正確等級、總數與剩餘選擇。實測改為Lv.4，1/3→2/3→3/3；選到2/3再加入Boss獎勵變2/4，已选次數保留。
+- 增加11語言cardQueueHint，說明經驗與Boss獎勵可累積；不改XP門檻、晶核價值、卡池／權重、Boss數值或商店。忽略非有限／非正XP輸入；同一舊卡事件只接受一次。
+- Boss延遲420ms的獎勵回呼綁定原本那局，重開後不會把上一局獎勵送進新局。
+- 根本測試缺口：舊測試只呼叫gainXP(120)一次，沒有實際逐顆拾取。新增tests/py_upgrade_queue.py，走真實晶核更新＋觸控選卡，涵蓋遲到獎勵、舊卡事件、跨局回呼、卡池全滿與11語言。新測試套回v52確實失敗，queue53-negative-v52.log保留反證。
+- 完整61/61：`_private/test-runs/20260909-192602-386494-upgrade-queue-final/results.json`；SHA `12e085900b78e800e44a765545ebe0e12ae1324a0855045eeb8d19440c33052e`；單局有同伴45.0FPS。CPU4 queue53-cpu4.log、CPU4／離線／零永久強化／冷啟動queue53-offline.log通過。
+- 第一個完整批次20260909-192515-753182-upgrade-queue-full因註冊檔讀取cp950錯誤未加新測試而主動終止；修正UTF-8後重跑完整61項，不將中止批次算通過。早期提示排成第四張窄卡，截圖後改成獨立說明區；正式測試對應最終SHA。
+- 已檢視upgrade-queue-v53.png。全平行與Pixel尚未執行；本次APK在火焰糖獨立版本整合後提供。
+- 另完成docs-15-upgrade-design.md：三種打法、十種現有寶箱定位、火焰糖試作與三個未實作候選。第50關Boss取消小怪推擠候選4/4仍敗，不採用；實際血量523002与可見時間另留boss-windows53.json供下個平衡版。
+- 教訓：每一顆資源各呼叫一次與一次加總不是同一個UI事件流程；正常多級收益必須顯示清楚，不可少給升級掩蓋問題。
