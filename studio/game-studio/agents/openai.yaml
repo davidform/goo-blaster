@@ -1,0 +1,6 @@
+interface:
+  display_name: "遊戲工作室"
+  short_description: "共用付費遊戲開發流程、專案初始化、測試證據、手機測試交付與精簡交接"
+  default_prompt: "使用 $game-studio，接手目前遊戲或把我的新遊戲想法建立成可測試的專案。"
+policy:
+  allow_implicit_invocation: true

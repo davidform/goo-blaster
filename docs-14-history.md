@@ -810,3 +810,16 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 未完成：全平行壓測、新APK在Pixel覆蓋更新／進度保留、手機音訊／效能、末章真人難度、母語潤稿。下載頁已明示；簽章相同只證明更新相容条件，不等於手機實測完成。
 - 教訓：遠端控制電腦不應等於透過串流測手遊；固定下載APK可讓手機直接執行，也避免把遠端延遲誤認為遊戲卡頓。
 - Commit Summary：build: add a permanent Android test download channel
+
+## 可重用遊戲工作室流程 v1（2026-09-09，非遊戲版本改動）
+
+- 使用者要求往後付費遊戲有統一架構，減少反覆下指令，並評估多agents。建立studio/game-studio可重用skill、架構／構想簡報、初始化與設定檢查工具，以及本作studio.project.json。
+- 採單一代理預設；只有可獨立的測試／翻譯／上架素材等工作才考慮追加，仍依使用者授權。此次沒有啟用額外agents或付費服務。
+- 共用規則與遊戲設定分離；本作保持單檔與11語言。新作不複製本作App身分／簽章／存檔／售價／發布授權，不把流程架構說成已完成通用遊戲引擎。
+- 8項tests/test_studio.py通過：真實CLI初始化、已有目錄保留、舊App身分與不合法身分拒絕、商業授權不繼承、路徑不可逸出、命令陣列檢查、本作設定讀取。證據studio-system-tests.log。
+- _private/studio-smoke/garden-game為本機初始化驗證資料，未建立新遠端或新Codex任務；輸出明列artifact_exists=false、tests_executed=false、尚未設定5項驗證，不冒稱已完成新遊戲。
+- 官方skill驗證器第一次缺PyYAML而未執行，於開發虛擬環境補安裝後，原始及安裝副本均Skill is valid；未增加遊戲執行期相依。
+- 依當前官方文件的USER位置安裝至C:/Users/Surface/.agents/skills/game-studio；檔案已核對。skill-creator內舊預設.codex/skills已修正為官方現行位置，沒有修改其他技能或全域AGENTS。跨對話自動選用尚待後續實際使用，不保證必定觸發。
+- ChatGPT構想整理為可選流程，idea-brief.md提供完整可貼上的簡報指令；本對話也可直接接收自然語言想法，不必先搬到另一處。
+- 教訓：統一的是可驗證的開發與交付流程，不能把上一款遊戲的商業決定與身分也當成共用設定。
+- Commit Summary：build: establish a reusable paid-game studio workflow

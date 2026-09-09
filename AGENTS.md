@@ -381,3 +381,10 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
 - 固定 applicationId 與測試簽章、增加 Android versionCode；實際核對 APK 內容、簽章及公開下載 SHA256。不可用卸載／清除資料處理更新問題，不得把私鑰放入 Git 或 Release。
 - 此授權僅涵蓋測試 APK 分發；全平行或真機尚未完成時必須明示，不能宣稱正式驗收。正式 Pages／itch.io、商店送審、定價及更換簽章仍不在此授權內。
 - 不讓 Android 建置與效能測試同時執行。每次回報附固定入口、實際版本、驗證證據與仍需使用者在手機確認的項目。
+
+## 9. 工作室共用流程（2026-09-09）
+
+- 使用者要求未來多款付費遊戲沿用一致的開發方式；共用來源為 [studio/README.md](studio/README.md) 與 game-studio skill，本作設定為 [studio.project.json](studio.project.json)。
+- 新遊戲可由自然語言想法開始；沿用工作流程，不複製本作 App 身分、簽章、售價、存檔或發布授權。
+- 本作仍遵守單檔、11語言及既有驗證要求；共用架構不構成重構 index.html 的授權。
+- 多 agents 仍為按需且先確認，預設單一代理；不用為了流程一致而常駐多個代理。
