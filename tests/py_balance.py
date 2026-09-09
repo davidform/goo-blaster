@@ -81,6 +81,10 @@ async def run_one(browser, lv, mode, max_wall_s):
                                      hearts:G.P.hearts,plv:G.P.lv,kills:G.kills,
                                      e:G.E.length,paused:G.paused})""")
             if r["over"]: break
+        if not r or not r['over']:
+            raise RuntimeError(f'Level {lv} unfinished at wall-clock deadline: {r}')
+        if errs:
+            raise RuntimeError(f'Level {lv} JavaScript errors: {errs}')
         r["lv"] = lv; r["errs"] = errs
         r["pct"] = round(r["t"]/r["dur"]*100, 1)
         return r
@@ -107,9 +111,11 @@ def main():
     for a in args[1:]:
         if a.startswith("-n"): reps = int(a[2:])
         else: rest.append(int(a))
-    levels = rest or [1,5,10,20,50,100]
+    levels = rest or [1,5,10,20,30,50]
+    if any(lv<1 or lv>50 for lv in levels):
+        raise ValueError('This game has 50 levels; requested level is out of range')
     levels = [lv for lv in levels for _ in range(reps)]
-    max_wall = 360 if mode == "god" else 130
+    max_wall = 800
 
     socketserver.TCPServer.allow_reuse_address = True
     srv = socketserver.TCPServer(("127.0.0.1", PORT),
@@ -121,7 +127,9 @@ def main():
 
     ok = [r for r in results if isinstance(r, dict)]
     for r in results:
-        if not isinstance(r, dict): print("  例外:", r)
+        if not isinstance(r, dict): print("  FAIL  incomplete or broken simulation:", r)
+    if len(ok)!=len(results):
+        raise SystemExit(1)
     ok.sort(key=lambda r: r["lv"])
 
     label = "笨bot（一般玩家基準）" if mode=="bot" else "滿等滿裝（理論最強build）"

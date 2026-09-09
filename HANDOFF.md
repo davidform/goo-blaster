@@ -20,7 +20,7 @@
 - 不得因v49完成就停止整個八項任務；仍須序列完成後續版本與最終APK。
 
 ## 當前來源與驗證
-- BUILD v0.9.49；SHA d27fb9af56213d453c2b5b99e65247da9ef0720c2d4e22e555255130588d6fb6。
+- BUILD v0.9.50；SHA 4e84f759de441ac33d0e538a1e2b166177f86b8e108eba37cb8193bef810476b。
 - v49：右上兩個44px DOM按鈕共用flex橫列、12px間距；遠方箱八方向分組＋箱型＋數量。
 - `_private/test-runs/20260909-135759-427624-field-ui-final/results.json` 57/57 PASS；單局有同伴46.1FPS，同批相對-0.6%。
 - 邊角 tests/py_field_ui.py 四視窗×兩安全區真實點擊；24箱→8標×3。
@@ -30,11 +30,14 @@
 - 環境：.venv/Scripts/python.exe、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules、PYTHONUTF8=1。
 - run_tests.py --jobs 2；node test9連續闖關會跑數分鐘，v49花447.2秒並通過，勿把無stdout當掛死。
 
-## 已備妥但未套用的後續草稿（_private，不是完成品）
-- edit50.py／py_enemy_weight.py／build_v0950.py：速度公式、112個固定輸入與實際移動測試、11語言規則文字。
+## v50本次完成與後續草稿
+- v50已完成：新強度／移速規則，第一關保留43.83；末關各敵型30.68／61.37／38.60／47.51。
+- v50完整初輪57/58；舊基準表引用失敗，另發現py_balance吞100關例外。修工具後2/2補驗證，合併58項通過；CPU4／離線通過。
+- v50完整20260909-142237-869825-enemy-weight-full，補測20260909-144428-666138-enemy-weight-recheck；單局48.0FPS。
+- 16個固定完成bot A/B：第9關zero：0/2→0/2；第9關max：2/2→2/2；第50關zero：0/2→0/2；第50關max：0/2→0/2；有限樣本不等於真人勝率，詳late-speed-ab.json。
 - edit51.py／py_shop_pacing.py：前兩級原價、高階倍率[1,1,2,2.5,3]，保留舊MAX存檔與收入。
 - world-presentation.js／edit52.py／story_builder.py／py_world_story.py：十章插畫、50組章節／推進短篇×11語言、Boss護盾尖牙與核彈演出。
-- 草稿只做語法檢查，尚未套用或遊戲執行；使用前必須實際測試與視覺驗收。
+- v51價格草稿未套用；v52曾在_private/world-preview執行視覺草稿檢查（550故事／十Boss／發射），但最新草稿仍須正式套用後完整驗證。
 - 後續i18n builder要移至i18n，測試移至tests並註冊run_tests.sh；各版各跑完整套件。
 
 ## 前版與未解問題

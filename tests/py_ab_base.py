@@ -51,7 +51,8 @@ PROBE = """()=>{
             !!e.kite, e.cdMin, e.cdMax, e.shootRange, !!e.boom];
   });
   // 3) tier 倍率表
-  out.tiers=[TIER_HP, TIER_CD, TIER_SPD].map(a=>a?Array.from(a):null);
+  out.tiers=[TIER_HP, TIER_CD].map(a=>Array.from(a));
+  out.legacyTierSpeed=typeof TIER_SPD==='undefined'?null:Array.from(TIER_SPD);
   // 4) 起始武器表
   out.startWep = (typeof START_WEP!=='undefined') ? START_WEP : null;
   // 5) 抽樣關卡的實際開局狀態（含永久強化買滿 / 完全沒買 兩種）
@@ -98,6 +99,11 @@ assert old['build']=='v0.9.20', old['build']
 assert new['build']>'v0.9.20', new['build']
 
 fails=[]
+assert old['legacyTierSpeed']==[1,1.06,1.12,1.18,1.24]
+if int(new['build'].split('.')[-1])>=50:
+    assert new['legacyTierSpeed'] is None, 'v50 replaces the obsolete speed-growth table; actual movement is covered by py_enemy_weight'
+else:
+    assert new['legacyTierSpeed']==old['legacyTierSpeed']
 # 第 5 關（index 4）刻意改了兩個欄位：dur 120→140、nboss 2→1（升格為章節 Boss 關）
 for side in (old,new):
     pass
@@ -136,5 +142,5 @@ if not same_et:
 print()
 if fails:
     print("❌ 兩版數值有差異："+", ".join(fails)); sys.exit(1)
-print(f"=== 結論：{new['build']} 與 v0.9.20 的所有難度輸入 byte-identical ===")
-print("    → 笨 bot 的成績差異必定是隨機雜訊，不存在造成迴歸的機制。")
+print(f"=== {new['build']}：上述未授權變動的基準項目全部相同；第5關既定例外已逐項驗證 ===")
+print("    v50移速規則為刻意變更，另以實際spawn／update對照驗證；此表不能推論整體玩法或bot勝率相同。")
