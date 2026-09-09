@@ -419,7 +419,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.45';
+const BUILD='v0.9.46';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1376,7 +1376,7 @@ function nearest(x,y,maxd){
   let best=null,bd=maxd*maxd;
   const SCREEN_MARGIN=44;              // 讓貼在邊緣、還露出一部分的敵人也能被鎖定，不要卡在像素邊界
   for(const e of G.E){
-    if(!onScreen(e.x,e.y,SCREEN_MARGIN)) continue;
+    if(!onScreen(e.x,e.y,Math.max(SCREEN_MARGIN,e.r||0))) continue;
     let d=dist2(x,y,e.x,e.y);
     if(e.boss) d*=0.16;                 // 距離平方 → 0.4² = 0.16
     if(d<bd){bd=d;best=e;}

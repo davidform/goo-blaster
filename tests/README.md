@@ -133,3 +133,7 @@ Omit `--label` to use a timestamp and preserve earlier samples.
 ## 翻滾保護（v0.9.45）
 
 `py_dash_protection.py`驗各來源保護及真實雙指逃生後的敵彈；`GOO_DASH_CPU=4`做節流驗證。
+
+## 大型目標（v0.9.46）
+
+`py_visible_target.py`驗橫豎畫面四邊的實際鎖定／開火，以及完全離屏、小怪與距離排除；`GOO_TARGET_CPU=4`可節流。

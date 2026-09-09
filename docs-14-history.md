@@ -757,3 +757,13 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 同批固定種子第50關診斷，修前約220～236秒陣亡，修後約276～282秒陣亡；沒有將存活延長說成通關率改善。機器操作仍不能代表真人。
 - 教訓：增加保護秒數的實驗完全沒有差異時，應追查後續覆寫，不能繼續加碼數值。全平行、Pixel與發布未執行，沿用既有開發分支限制。
 - Commit Summary：v0.9.45: preserve existing invincibility when dashing
+
+## v0.9.46：大型Boss露出身體即可鎖定（2026-09-09）
+
+- 根因：nearest以固定44px中心邊界排除目標，但末章Boss半徑106px。390px畫面內已露53px身體時，中心仍被判在外，武器不開火。
+- 只把可視邊界改成max(44,e.r)，小怪原44px寬容及Boss距離加權0.16不變；未改敵人、傷害、強化或射程數值。
+- 同幾何實測：目標null／0發→Jelly Dragon／1發，boss-visibility-before與boss-visibility-v0946.json/png；截圖已目視。新增py_visible_target：橫豎兩視窗×四邊×可見／不可見、正常小怪邊界與距離排除。舊版在四邊可見案例皆明確失敗，沒有降低測試門檻。
+- 全套首輪52/53，僅效能28.8FPS未達30；唯讀確認無殘留測試後獨立重跑35.6→35.2FPS通過（target-perf-retry.log）。原失敗保留。完整命令：run_tests.py --jobs 2 --label target-full，20260909-103706-761985-target-full/results.json，source unchanged，SHA eb8d9e671e0f81913aa4034092c7e0941f43893e6a2fef7677d96f5a0c277cd0。效能最後單獨執行，原始數字見py_v0927_perf.log。
+- GOO_TARGET_CPU=4與py_release_smoke通過（target-cpu4.log、target-offline.log）；target-scope.json證明僅BUILD與可視邊界變更。全平行／Pixel／发布仍未執行。
+- 教訓：可見性應使用實際碰撞身體尺寸；固定padding只能描述小怪，不能套到所有大型Boss。
+- Commit Summary：v0.9.46: target large bosses while their bodies are visible

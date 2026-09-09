@@ -35,7 +35,7 @@
 - 環境：.venv Python Playwright、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
 - run_tests.py讀run_tests.sh清單，主效能最後單獨。勿讓診斷與其同時吃CPU。
 
-## 下一步：大型Boss可視鎖定，再處理射程收益
+## 下一步：v47射程收益
 - v44原始證據revive-collision-before.json、negative-frame-before.json；tests/py_revive_collision.py已加入套件。
 - v44 Commit Summary：v0.9.44: prevent revival crashes from stale bullets and frames。
 - 已直接重現tryDash把各來源保護覆蓋成0.42：一般受傷1.45、panic2.1、護盾0.9、復活3.2都縮短（dash-iframe-before.json）。
@@ -43,10 +43,10 @@
 - v45正式52/52通過：20260909-102121-309160-dash-full；CPU4／離線皆過，僅BUILD與iframe最大值改動，提交核對git log。
 - 遠視糖鏡確定只加鎖定數字：390×844的860個可視樣本各等級都860；噴槍300px靶都0傷害；yoyo前進149.77px不變。
 - 後續射程候選：永久射程每級投射物速度+10%，局內射程每級+15%，合計封頂+60%；壽命／數量不變，零強化不變。
-- _private/prepare_range_candidate.py產生range-fixed候選；_private/build_v0945.py有3鍵×11語言文案，尚未套至正式檔。
+- _private/apply47.py已準備正式套用；final-candidate含射程／11語言／加速彈整段碰撞候選，仍須全套。
 - 候選實測噴槍第2級能打中300px靶，第3級yoyo前進206.55px；range-hit-before／candidate.json。
-- _private/py_range_reach.py已驗36組實際命中／混合上限／同伴／敵彈；正式版仍須全語言文案排版與整套。
-- 已重現大型Boss露出53px身體卻不鎖定／不開火；boss-visibility-before.json/png。候選以max(44,e.r)做可視邊界，兩方向尺寸與四邊測試通過，正式版尚未套用。
+- 候選36組射程、12組最大dt命中、11語言320px商店／卡片已過；單純加速曾讓子彈跨過小怪，候選以sweep修好，不修改未強化彈。
+- 已重現大型Boss露出53px身體卻不鎖定／不開火；boss-visibility-before.json/png。v46正式max(44,e.r)，功能52/52＋效能獨立重跑通過：20260909-103706-761985-target-full；CPU4／離線通過，實際53px可見時0→1發，提交核對git log。
 
 ## 難度與道具診斷（尚不能宣稱完成）
 - _private/balance_probe.py：真實loop／TouchEvent／選卡、虛擬60Hz計時器，停用畫圖；不是FPS或真人勝率。
