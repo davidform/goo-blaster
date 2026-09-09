@@ -949,3 +949,13 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 完整63/63：`_private/test-runs/20260909-201434-055020-chapter-health-full/results.json`；SHA `2cb6787d111a950c14ae1bae78d24fa6294dcda278c0fd31d14d04e49a4da9ef`；單局有同伴56.5FPS。CPU4 health55-cpu4.log／health55-queue-cpu4.log／health55-fire-cpu4.log；CPU4／離線／新存檔／冷啟動health55-offline.log。
 - 三個版本已分開：v53只修獎勵流程，v54只改火焰糖，v55只改後段章節BossHP。仍未做全平行與新Pixel真機；最終APK需核對實際內容、同簽章、公開下載再回報。
 - 教訓：0/N不是可忽略背景訊號；先拒絕無效候選，再用額外種子驗證可用候選。輸出已封頂時，敵人血量的乘法成長未必等同有趣的挑戰。
+
+### v0.9.55 手機測試交付（2026-09-09）
+
+- 三個遊戲提交已分開並push：5f65558 `v0.9.53: keep stacked upgrade rewards accurate and bound to their run`；e14d846 `v0.9.54: turn fire candy into a bounded movement trail`；3244ce3 `v0.9.55: scale late chapter boss health to capped player growth`。
+- 最終完整命令 `.venv/Scripts/python.exe run_tests.py --jobs 2 --label chapter-health-full`，63/63，來源未變；上述四份CPU／離線報告通過。效能全部結束後執行 `native/build_test_apk.py --tests _private/test-runs/20260909-201434-055020-chapter-health-full/results.json`。
+- APK `goo-blaster-v0.9.55-95500.apk`，versionCode95500、versionName0.9.55-test.0、4288528bytes；App com.demjastudio.gooblaster，來源 `3244ce3eeaf1a4dcc10fbb117444b1e49ffd3c4e`。
+- APK SHA256 `9f2229ac26d43dfeee79d7622d48c729efac8a59d0d76d328f41e17e0122cab9`；APK內HTML SHA256 `2cb6787d111a950c14ae1bae78d24fa6294dcda278c0fd31d14d04e49a4da9ef`，與測試原始碼一致。簽章 `fa00189cc20d1c630da9c5ad9d3b1c54ddd230f61b84ecf1ba1531914fa14513` 與舊APK一致；DEX戰報外掛與CREATE_DOCUMENT存在。
+- `native/backup_android.py`備份80檔至android-source-20260909-203116.zip；核對notes後`native/publish_test_apk.py --publish`更新既有Prerelease，舊APK保留。
+- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；公開APK https://github.com/davidform/goo-blaster/releases/download/android-test/goo-blaster-v0.9.55-95500.apk。published.json確認無授權標頭公開下載SHA一致；page-v55.json頁面HTTP200／新版連結過。遠端開發分支與android-test標籤均核對3244ce3。
+- 仍未執行：新Pixel實際覆蓋更新／進度保留、火焰手感、後段真人難度、戰報PNG儲存與取消重試、音效／卡頓；全平行與母語者潤稿未做。正式Pages／itch／商店／AAB未更新。不可由原始碼或APK稽核推論上述真機通過。

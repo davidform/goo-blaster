@@ -46,10 +46,12 @@
 
 ## 手機交付與下一步
 - 固定入口：https://github.com/davidform/goo-blaster/releases/tag/android-test
-- 最終v55 APK待建置與公開核對；公開通道目前仍v52／95200，不能宣稱已提供v55。
+- 已公開v0.9.55／95500／0.9.55-test.0；4288528bytes，遊戲來源與android-test標籤為3244ce3。
+- APK SHA 9f2229ac26d43dfeee79d7622d48c729efac8a59d0d76d328f41e17e0122cab9；同舊簽章、APK內HTML同完整測試SHA、DEX戰報外掛過。
+- latest.json／published.json／page-v55.json：公開下載SHA一致、頁面HTTP200及新版連結過；來源備份android-source-20260909-203116.zip，80檔。
 - 流程native/MOBILE-TESTING.md：遊戲提交→build_test_apk.py --tests <v55報告>→backup_android.py→notes.md→publish_test_apk.py --publish。
 - latest.json／published.json需確認版本、APK內HTML同SHA、同簽章、公開下載hash；來源正確不等於APK／真機正確。
 - appId com.demjastudio.gooblaster，簽章固定native/test-channel.json；不更換。
 - Pixel待驗：覆蓋更新保留進度、連續選卡、火焰走位、後段難度、音效／卡頓、戰報PNG與取消重試。
 - 全平行／母語者與兒童理解度未執行；AAB仍v40未簽，正式Pages／itch／商店未更新。
-- 先交付本次最終APK並收手機回饋，再選下一個單一槓桿；不直接把誘餌／糖環／回力標一起塞進池子。
+- 本次範圍已交付；下一步收Pixel回饋，再選下一個單一槓桿；不直接把誘餌／糖環／回力標一起塞進池子。
