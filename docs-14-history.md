@@ -1015,3 +1015,15 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 公開網址：https://davidform.itch.io/goo-blaster/devlog/1657882/v0955-clearer-upgrades-fire-trails-and-late-game-balance；Published標示、完整中英正文及唯一v55附件實際核對，store/devlogs/v0.9.55/post.json與私人devlog-v55-receipt.json有證據。
 - 首次HTML模式fill可視內容完整但post[body]仍空，Save回body長度錯誤；在可視編輯器末尾用真按鍵空格／Backspace觸發同步後，欄位1469字元，Save草稿成功，再發布。語言先選English後Optional欄位名消失，重新查看DOM後選Chinese (Traditional)。保留原因與恢復方式在流程，避免盲目重試及重複文章。
 - 驗證：python tests/test_devlog_workflow.py 9/9；prepare／record實際執行並重試不覆寫已發紀錄；studio check僅設定驗證。遊戲HTML SHA保持3865448b235b1ee0d11f63ca4b2fc14770a72201e6c628c8b9ceb23d2a538da6，未重跑遊戲三輪，v58效能與APK／itch交付待辦仍在。
+
+## GitHub Pages 同步流程（2026-09-10，非遊戲版本）
+
+根因：Pages workflow只接受main push，main與公開頁實際仍v0.9.40；近期commit均在codex/soft-world-ui。使用者同意先補已驗證v55、往後納入APK／itch／Devlog同批發版。
+
+新增native/publish_pages.py：核對來源commit的完整套件清單、同SHA全過報告（可保留失敗加補跑）、itch公開啟動收據與產物；隔離Git index以main為父提交只更新網站白名單。Windows測試檔為混合CRLF／LF，Git source為LF；逐位元組驗證除CRLF正規化外完全相同，部署保留測試原始bytes，公開SHA不打折。不上傳私人資料，不合併v58。更新授權、跨平台流程及設定。
+
+驗證：python tests/test_pages_workflow.py 8/8；包含未公開、錯版本、不同SHA、缺套件、perf失敗與補跑。首輪空JS清單解析有5項error，將regex允許空清單後全過；第一次發布遇選用.nojekyll不存在，在push前停止，改為空標記後成功。studio.py check設定通過，非遊戲測試。
+
+main發布commit 16c9eaa5852e9b47b83027d260387d953bddf91e，Summary `build: publish verified v0.9.55 to GitHub Pages`。Actions https://github.com/davidform/goo-blaster/actions/runs/34413850846 completed/success。公開v40→v55，完整HTML SHA `2cb6787d111a950c14ae1bae78d24fa6294dcda278c0fd31d14d04e49a4da9ef` 與itch／63項既有全過報告相同。獨立Edge行動視窗390×844實際按開始、遊戲3.039秒、暫停成功，pageerrors=[]；截圖已檢視，證據_private/mobile-test/pages-v55.json。
+
+未執行／未完成：沒有重跑未改動v55的遊戲三輪；v58仍65/66、效能未過，未更新APK／itch／Pages至v58；本次沒有手機真機測試。教訓：Git推送不等於所有通道發布；不同平台的換行過濾也可能改SHA，須核對最終公開位元組。

@@ -401,3 +401,9 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
 - 使用者要求自動處理New devlog：完成本作itch.io公開遊戲驗證後，直接產生、核對並發布對應的中英更新日誌，不需逐次再問。
 - 遵守[native/DEVLOG-PUBLISHING.md](native/DEVLOG-PUBLISHING.md)：只報已公開版本、同批交付一篇、先查既有文章與草稿、發布後核對Published與完整正文，記錄版本／網址防止重複。
 - 本地工具native/devlog.py負責產文及收據；代理透過已登入瀏覽器執行發文。這是發版流程，不是背景排程；不擴及其他遊戲、其他社群或電子郵件。
+
+## 12. GitHub Pages 同步（2026-09-10 使用者新增授權）
+
+- 使用者同意先同步已驗證的v0.9.55，往後Pages納入測試通過後的跨平台同步，不必再次詢問。此條更新第8／10節對Pages的舊限制；商店、定價、簽章仍另行授權。
+- 按[native/PAGES-PUBLISHING.md](native/PAGES-PUBLISHING.md)核對指定commit、完整測試與itch公開收據，使用native/publish_pages.py將已驗證位元組提交至main觸發Actions，不能直接推未驗收的開發HEAD。
+- Actions成功後仍須核對公開完整HTML SHA、BUILD與實際開始／暫停，才回報已更新。

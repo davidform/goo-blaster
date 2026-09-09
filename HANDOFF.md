@@ -35,7 +35,7 @@
 - 詳細根因／所有失敗與v58記錄已寫docs-14-history.md。完整壓力場景單局25.5FPS，低於30；未交付新APK／itch。
 
 ## 交付授權與下一步（等待效能驗證）
-- Git commit/push開發分支、固定Prerelease APK與itch同步已授權；不用重複問。正式Pages／商店／AAB／定價／簽章更換未授權。
+- Git commit/push開發分支、固定Prerelease APK與itch同步已授權；不用重複問。Pages同步亦已授權；商店／AAB／定價／簽章更換未授權。
 - 接穩定電源後，先核對同SHA，再跑run_tests.py --only py_v0927_perf --jobs 1 --label readability-perf-ac；不因上次失敗而重跑全部功能，也不調低門檻。若仍失敗繼續量測根因。
 - 全部門檻過才能建置／同步：native/MOBILE-TESTING.md、native/ITCH-PUBLISHING.md；build_test_apk.py會強制核對同SHA完整報告，可保留原失敗加--retry。
 - 本次Summary：v0.9.58: clarify terrain, stage goals and dash upgrades。
@@ -54,3 +54,10 @@
 - python tests/test_devlog_workflow.py：9/9；版本不符、未公開、草稿誤認、缺正文、不同網址重複及已發內容覆寫都擋住。遊戲HTML未變，未重跑遊戲三輪。
 - 編輯器HTML fill後可能未同步送出textarea；須可視編輯器末尾真按鍵空格／Backspace觸發同步再查。第一次Save因空body失敗，修同步後成功；不得直接腳本提交。
 - v58仍卡效能／未發版，因此沒有v58已上線Devlog。上述遊戲待辦不變。
+
+## Pages同步（2026-09-10）
+- 使用者同意先補v55，往後同已驗證APK／itch批次更新Pages；native/PAGES-PUBLISHING.md與publish_pages.py記錄流程。
+- 原因：main仍v40，開發push不觸發main限定的Pages workflow。main作網站交付分支，只提交白名單檔案；不合併未驗證開發HEAD。
+- 發布commit 16c9eaa5852e9b47b83027d260387d953bddf91e，v55測試63/63；保留已測混合換行原始bytes與SHA 2cb6787d111a950c14ae1bae78d24fa6294dcda278c0fd31d14d04e49a4da9ef。
+- 工具測試8/8；source差異、錯版本、缺完整報告、perf失敗、不同SHA、無公開啟動證据均擋下。v58未發，原效能卡點不變。
+- Actions 34413850846 success；公開HTML SHA完全相同，Edge mobile 390×844實際開始至3.039秒／暫停，無pageerror。證據_private/mobile-test/pages-v55.json、pages-v55-menu.png／paused.png。

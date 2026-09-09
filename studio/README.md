@@ -29,3 +29,5 @@ python studio/game-studio/scripts/studio.py check --root <專案目錄>
 本目錄是可版本管理的 skill 原始來源；本機已安裝至 `C:/Users/Surface/.agents/skills/game-studio`，其他專案也能探索使用。後續修改先在本專案驗證，再同步安裝副本；不改使用者其他技能或全域 AGENTS。官方文件說明技能會自動被偵測；若介面未出現，重啟 Codex 後再確認。安裝檔案驗證不等於每次自動選用都已被實測。
 
 官方參考：[Skills](https://learn.chatgpt.com/docs/build-skills)、[Capacitor 原生功能](https://capacitorjs.com/docs/v7/android/custom-code)、[Android 檔案選擇與儲存](https://developer.android.com/training/data-storage/shared/documents-files)。
+
+本作Pages同步已於2026-09-10獲授權：依[native/PAGES-PUBLISHING.md](../native/PAGES-PUBLISHING.md)，同批完成APK、itch、Devlog與Pages；主站只接收已驗證產物。新遊戲不繼承此授權。

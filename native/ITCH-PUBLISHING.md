@@ -24,6 +24,8 @@
 6. 記錄upload/build ID、版本、payload SHA、公開資產網址、啟動結果至私人證據與歷史／HANDOFF，commit/push本次文件。
 7. 依[DEVLOG-PUBLISHING.md](DEVLOG-PUBLISHING.md)自動產生、核對並發布該公開版本的中英更新日誌，記錄文章網址避免重複。這是2026-09-10新增授權，不必另問；尚未發版的改動不列為已上線。
 
+8. 依[PAGES-PUBLISHING.md](PAGES-PUBLISHING.md)同步同一已驗證版本至GitHub Pages，核對Actions、公開SHA與啟動。
+
 ## 已完成的一次性設定
 
 2026-09-09 v55首次建立html5通道；在編輯頁讓新版index.html勾選「This file will be played in the browser」。舊goo-blaster-v0.9.31.html取消網頁遊玩並勾「Hide this file and prevent it from being downloaded」，保留未刪除。之後只推同一通道，不能每版新增不同通道。
