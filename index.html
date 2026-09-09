@@ -436,7 +436,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.55';
+const BUILD='v0.9.56';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1285,6 +1285,8 @@ const TIER_HP =[1.00,1.18,1.38,1.62,1.90];
 // Stronger bodies trade a little movement speed for their existing health/firepower.
 const TIER_CD =[1.00,0.90,0.82,0.75,0.68];   // 越小＝攻速越快
 function enemyTier(){ return Math.min(4, Math.floor((G.lvIdx||0)/2)); }
+// New ordinary shooters enter with readable gaps, then regain full pace by stage 20.
+function ordinaryShotPace(i){return i>=6&&i<19?1+2*(19-i)/13:1;}
 function spawnEnemy(type,mult){
   // ⚠ v0.9.19：這個區域變數原本叫 T，但多語系新增了全域翻譯函式 T()，同名會把
   // 全域的 T 在整個函式內遮蔽掉。目前剛好沒壞（這個函式沒有要翻譯的字串），
@@ -1300,7 +1302,8 @@ function spawnEnemy(type,mult){
   const weight=Math.max(.70,1/(1+.06*Math.max(0,mult*hpT-1)));
   const rawSpd=ET.spd*rnd(.9,1.12)*LEVELS[0].espd*weight;
   const spd=Math.min(rawSpd, P.spd*0.6);      // 移速上限：主角速度的 60%
-  const cdMin=ET.cdMin*cdT, cdMax=ET.cdMax*cdT;
+  const shotPace=ordinaryShotPace(G.lvIdx);
+  const cdMin=ET.cdMin*cdT*shotPace, cdMax=ET.cdMax*cdT*shotPace;
   const ranged = !!ET.ranged && tier>=(ET.rangedFromTier||0);
   G.E.push({x:P.x+Math.cos(a)*d, y:P.y+Math.sin(a)*d, vx:0,vy:0,
     r:ET.r, hp:ET.hp*mult*hpT, maxhp:ET.hp*mult*hpT, spd,
