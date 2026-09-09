@@ -992,3 +992,17 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 64/65；獨立效能未過，禁止據此發布：_private/test-runs/20260909-230337-065023-nuke-cinematic-full/results.json；HTML SHA d41f6645639c19e0c65c7c7c0fbb817ef7c72f52c5cefe92a243396365d2fed3。nuke57-cpu4.log與nuke57-offline.log均PASS，離線／零強化／持久存檔冷啟動已實跑；全平行未執行。
 - 保留私人候選失敗：最初測試以age||END把0當成結束，修量測；第二次實際畫素[245,219,183]揭露橘波蓋白屏，修產品繪製順序；最後發現Boss與核彈文字重疊，補單一大提示驗收。最終nuke57-preview-reviewed.log過，nuke57-0.85.png已檢視。
 - v56普通射擊數值完整保留；下一版只處理地面／故事／衝刺說明。APK與itch仍待最終全項驗證，不以本次提交冒稱已交付。
+
+## v0.9.58：淡色地面、可見關卡目標與衝刺說明（2026-09-09）
+
+- 使用者反映死亡殘影太暗密、故事不容易一目了然，並提出糖果屋衝刺升級。本版只改呈現，沒有改敵人／掉落／商店成本或衝刺數值。
+- 根因：原果凍每塊各自以34%深色畫上主畫面，重疊就累積暗色；改為CSS解析度的單一可重用離屏canvas，以柔和淡色繪製後一次20%合成。仍畫全部果凍，life／burn／半徑及實際作用不變；沒有增加每幀canvas分配。
+- 實際畫素：底色[207,216,192]，1塊與64塊重疊都[201,213,191]，資料繪製前後相同；resize也驗證尺寸同步。goo58-dense.png已檢視。
+- 故事資訊排在地圖之前，顯示本關目標及現有章節小景，長故事仍可展開；小螢幕縮地圖。採用NNG漸進揭露原則：主要任務直接可見、次要細節按需展開（https://www.nngroup.com/articles/progressive-disclosure/）。這是設計推論，尚未做真人理解度研究。
+- 商店原本已有dash三級，只是舊名翻滾大師不夠直覺。改名衝刺訓練，顯示升級後冷卻／總減少與固定0.42秒無敵。0–3級仍3.00／2.65／2.30／1.95秒，成本／上限不變，不重複新增第二套衝刺強化。
+- 滿商店與兩張局內冷卻卡仍下限1.2秒；實際tryDash＋1800幀update，30秒25次衝刺、無敵34.72%，不是無限無敵。此比例是沒有其他無敵來源或核彈慢動作的隔離測試。
+- 透過i18n/build_v0958.py同時完成11語言：新增storyGoalTitle，更新m_dash_n／m_dash_d；266keys×11，預設仍英文。550關卡目標、320×568展開故事／開始鈕、11語言320×480觸控滑動都實跑；尚未母語者潤稿。
+- 65/66；獨立效能門檻未過，暫不發布APK／itch：_private/test-runs/20260909-233021-174242-readability-full/results.json；HTML SHA 3865448b235b1ee0d11f63ca4b2fc14770a72201e6c628c8b9ceb23d2a538da6。CPU4／離線新存檔與重啟：readability58-cpu4.log、readability58-offline.log，visual-cpu-offline-receipt.json核對同SHA。全平行仍未執行。
+- 額外獨立ABBA實際RAF：DPR2手機尺寸、每樣本8秒、150敵人＋64果凍，舊v57 21.3FPS，新v58 24.4FPS，比率1.143；goo58-perf.json。這不是Pixel效能，不取代完整套件的絕對門檻。
+- 保留候選測試失敗：誤呼doDash，改走真實tryDash；最初凍結RAF後拍選單，故事第9關但地圖仍第50關，改UI用真RAF且輪詢地圖捲動到選取關，物理測試才凍結RAF。readability58-preview-reviewed.log與context.log最終過，story58-stage9／stage50與dash-shop58圖片已檢視。
+- 難度與核彈各保留v56／v57獨立提交與測試記錄；此版僅呈現層。最終交付狀態另記，不將本地正確等同APK／公開itch／手機已更新。
