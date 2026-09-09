@@ -1006,3 +1006,12 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 額外獨立ABBA實際RAF：DPR2手機尺寸、每樣本8秒、150敵人＋64果凍，舊v57 21.3FPS，新v58 24.4FPS，比率1.143；goo58-perf.json。這不是Pixel效能，不取代完整套件的絕對門檻。
 - 保留候選測試失敗：誤呼doDash，改走真實tryDash；最初凍結RAF後拍選單，故事第9關但地圖仍第50關，改UI用真RAF且輪詢地圖捲動到選取關，物理測試才凍結RAF。readability58-preview-reviewed.log與context.log最終過，story58-stage9／stage50與dash-shop58圖片已檢視。
 - 難度與核彈各保留v56／v57獨立提交與測試記錄；此版僅呈現層。最終交付狀態另記，不將本地正確等同APK／公開itch／手機已更新。
+
+## build: 納入發版後 Devlog（2026-09-10，不改BUILD）
+
+- 使用者要求自動處理itch頁面的New devlog，新增本作發版後公開更新日誌授權；不擴及其他作品／社群／email，也不是定時排程。
+- native/devlog.py依已驗證公開遊戲收據產生中英post.json／body.html；阻擋未公開版本、同版不同payload，記錄公開狀態／每一段正文／正確專案網址，重跑不建立新文章。發文由已登入CUA瀏覽器操作，工具不含憑證或隱藏API。
+- 本次公開遊戲仍v55。管理頁原本只有v27文章，無v55草稿；已建立一篇一般更新，內容聚焦升級佇列、火焰糖走位與15關後章節Boss血量，不混入未發布v58。
+- 公開網址：https://davidform.itch.io/goo-blaster/devlog/1657882/v0955-clearer-upgrades-fire-trails-and-late-game-balance；Published標示、完整中英正文及唯一v55附件實際核對，store/devlogs/v0.9.55/post.json與私人devlog-v55-receipt.json有證據。
+- 首次HTML模式fill可視內容完整但post[body]仍空，Save回body長度錯誤；在可視編輯器末尾用真按鍵空格／Backspace觸發同步後，欄位1469字元，Save草稿成功，再發布。語言先選English後Optional欄位名消失，重新查看DOM後選Chinese (Traditional)。保留原因與恢復方式在流程，避免盲目重試及重複文章。
+- 驗證：python tests/test_devlog_workflow.py 9/9；prepare／record實際執行並重試不覆寫已發紀錄；studio check僅設定驗證。遊戲HTML SHA保持3865448b235b1ee0d11f63ca4b2fc14770a72201e6c628c8b9ceb23d2a538da6，未重跑遊戲三輪，v58效能與APK／itch交付待辦仍在。

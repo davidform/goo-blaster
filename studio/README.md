@@ -8,6 +8,7 @@
 - [架構與分工原則](game-studio/references/architecture.md)：玩法與平台服務分界、何時用多 agents。
 - 專案初始化工具：建立身分、語言、驗證欄位、交接與原始想法，不複製前作存檔或簽章。
 - [現有遊戲設定](../studio.project.json)：保留 GOO BLASTER 的實際技術與授權。
+- [發版後更新日誌](../native/DEVLOG-PUBLISHING.md)：已授權的GOO專案自動整理中英文案、核對公開版本、發布及防重複；其他新遊戲仍需自己的授權。
 - [可選的 ChatGPT 簡報](game-studio/references/idea-brief.md)：可以先討論構想再帶回來，但不必多跑一趟。
 
 這是開發流程與專案架構的第一版，不是已完成所有玩法的通用引擎，也不是無人確認就會自動上架的服務。

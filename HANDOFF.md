@@ -45,3 +45,12 @@
 - itch固定davidform/goo-blaster:html5，目前v55 upload19167726/build1962179；只上傳單一index，保留價格／公開狀態。實際Run game並核對iframe完整payload，CDN追加腳本差異需明示。
 - USB若Pixel仍連線，_private/update_pixel58.py＋pixel58.cjs已備但未執行；先備份當前存檔，install -r保留原生bytes、核對版本與WebView，不卸載清資料。
 - 全平行／母語潤稿／Pixel難度、白屏舒適度、殘影可讀性及FPS未驗；第10關診斷仍0/2。不得宣稱本次正式驗收完成。
+
+## Devlog自動流程（2026-09-10）
+- 使用者新增授權：itch公開遊戲驗證完成後自動發中英Devlog；同批一篇，按公開版本而非root BUILD，先查文章與草稿避免重複。
+- native/DEVLOG-PUBLISHING.md＋native/devlog.py；準備／收據工具不直接登入，代理用CUA發文，非背景排程。
+- v55已補發：https://davidform.itch.io/goo-blaster/devlog/1657882/v0955-clearer-upgrades-fire-trails-and-late-game-balance；Published、全部正文與v55附件已核對。
+- store/devlogs/v0.9.55/post.json有公開網址／內容hash／版本證據；私人devlog-v55-receipt.json保存實際DOM正文。
+- python tests/test_devlog_workflow.py：9/9；版本不符、未公開、草稿誤認、缺正文、不同網址重複及已發內容覆寫都擋住。遊戲HTML未變，未重跑遊戲三輪。
+- 編輯器HTML fill後可能未同步送出textarea；須可視編輯器末尾真按鍵空格／Backspace觸發同步再查。第一次Save因空body失敗，修同步後成功；不得直接腳本提交。
+- v58仍卡效能／未發版，因此沒有v58已上線Devlog。上述遊戲待辦不變。

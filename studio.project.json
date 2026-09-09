@@ -60,7 +60,8 @@
     "test_distribution": true,
     "official_release": false,
     "pricing_changes": false,
-    "itch_distribution": true
+    "itch_distribution": true,
+    "itch_devlog": true
   },
   "limitations": [
     "Surface曾因全平行測試無回應，不在本機重試；CPU4不取代全平行",
@@ -68,5 +69,6 @@
   ],
   "native_procedure": "native/MOBILE-TESTING.md",
   "itch_channel": "davidform/goo-blaster:html5",
-  "itch_procedure": "native/ITCH-PUBLISHING.md"
+  "itch_procedure": "native/ITCH-PUBLISHING.md",
+  "devlog_procedure": "native/DEVLOG-PUBLISHING.md"
 }

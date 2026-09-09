@@ -22,6 +22,7 @@
 4. 等通道處理完成，開公開頁按Run game，核對版本並實際開始一關／暫停。從實際iframe取得資產網址，下載核對完整遊戲payload與測試SHA。
 5. itch CDN可能在結尾追加 `https://static.itch.io/htmlgame.js`。保留原始差異與公開整檔SHA，只能在確定「原始完整payload未變，差異僅平台腳本」後通過，不能任意忽略差異。
 6. 記錄upload/build ID、版本、payload SHA、公開資產網址、啟動結果至私人證據與歷史／HANDOFF，commit/push本次文件。
+7. 依[DEVLOG-PUBLISHING.md](DEVLOG-PUBLISHING.md)自動產生、核對並發布該公開版本的中英更新日誌，記錄文章網址避免重複。這是2026-09-10新增授權，不必另問；尚未發版的改動不列為已上線。
 
 ## 已完成的一次性設定
 

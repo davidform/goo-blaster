@@ -395,3 +395,9 @@ bash run_tests.sh          # 全部平行跑，最後印出失敗清單
 - 使用固定 Butler 通道 `davidform/goo-blaster:html5`，流程見 [native/ITCH-PUBLISHING.md](native/ITCH-PUBLISHING.md)。只發布已驗證的 index.html，不上傳 repo、存檔或憑證；核對公開遊戲內容與實際啟動，不把上傳成功等同網頁已更新。
 - 保留現有價格、公開狀態與專案身分；此授權不擴及其他遊戲、正式 Pages、Google Play／App Store 送審、定價或更換簽章。
 - 本次使用者授權直接透過 USB 更新 Pixel；使用 `adb install -r`，核對既有App與簽章、版本及進度，不卸載／清資料。未連線時仍提供固定APK入口，不把USB當成發版前提。
+
+## 11. 發版後 Devlog（2026-09-10 使用者新增授權）
+
+- 使用者要求自動處理New devlog：完成本作itch.io公開遊戲驗證後，直接產生、核對並發布對應的中英更新日誌，不需逐次再問。
+- 遵守[native/DEVLOG-PUBLISHING.md](native/DEVLOG-PUBLISHING.md)：只報已公開版本、同批交付一篇、先查既有文章與草稿、發布後核對Published與完整正文，記錄版本／網址防止重複。
+- 本地工具native/devlog.py負責產文及收據；代理透過已登入瀏覽器執行發文。這是發版流程，不是背景排程；不擴及其他遊戲、其他社群或電子郵件。
