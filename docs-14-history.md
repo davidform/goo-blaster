@@ -747,3 +747,13 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 最終完整51/51：run_tests.py --jobs 2 --label revive-final，20260909-100123-816241-revive-final/results.json；source unchanged，SHA a14d97a6f383d95026d1ffda0108fe6bf0333f3e4505ab180dfa8b905a87fc63。
 - 最終CPU4 py_revive_collision及離線冷重啟py_release_smoke皆過（revive-cpu4-final.log／revive-offline-final.log），pageerror0。效能單獨39.6→39.4FPS，損失0.6%。
 - 全平行、Pixel與發布仍未執行；只同步開發分支。後续另已重現翻滾把較長無敵覆蓋為0.42秒，留下一版單獨修復，不混改本版。
+
+## v0.9.45：翻滾保留既有無敵保護（2026-09-09）
+
+- 根因：tryDash把P.iframe直接覆蓋為0.42，危險時翻滾反而縮短既有保護。實際受傷／急救／護盾／復活的1.45／2.1／0.9／3.2秒全部變成0.42，見dash-iframe-before.json。
+- 只改max(既有保護,0.42)與BUILD；翻滾0.32秒、冷卻及各來源原有秒數不變。dash-scope.json與前一提交逐字核對。
+- py_dash_protection加入預設套件：無保護／短保護／四種受傷來源、真實雙指翻滾、翻滾結束後敵彈仍不得提早扣心。GOO_DASH_CPU=4通過（dash-cpu4.log）；py_release_smoke離線／零強化／CPU4／冷重啟通過（dash-offline.log）。
+- 完整52/52，run_tests.py --jobs 2 --label dash-full；20260909-102121-309160-dash-full/results.json，source unchanged，SHA 94e1b9868c106c6f48d8141254c193f19265a709832613ab64b2110b414a75e5。效能依套件最後單獨執行；完整原始輸出見該目錄py_v0927_perf.log。
+- 同批固定種子第50關診斷，修前約220～236秒陣亡，修後約276～282秒陣亡；沒有將存活延長說成通關率改善。機器操作仍不能代表真人。
+- 教訓：增加保護秒數的實驗完全沒有差異時，應追查後續覆寫，不能繼續加碼數值。全平行、Pixel與發布未執行，沿用既有開發分支限制。
+- Commit Summary：v0.9.45: preserve existing invincibility when dashing

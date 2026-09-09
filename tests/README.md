@@ -129,3 +129,7 @@ Omit `--label` to use a timestamp and preserve earlier samples.
 `py_l10n_context.py` 已加入預設套件：11 語言的實際 Boss 名稱、每五關章節規則、日韓地面膠體術語，以及 320×480 從說明文字開始的真實觸控捲動。可設 `GOO_L10N_CPU=4` 做 CPU 節流。截圖／JSON 在 `_private/test-artifacts/l10n-*`。鍵完整與排版通過不代表母語潤稿完成。
 
 `python tests/check_runner_checkpoint.py` 單獨驗證 Windows 報告檔被讀取鎖定時的原子替換重試：使用真實 Windows handle，並非只模擬例外。其他平台明確 SKIP；這是測試工具的診斷，不計入遊戲瀏覽器套件數。
+
+## 翻滾保護（v0.9.45）
+
+`py_dash_protection.py`驗各來源保護及真實雙指逃生後的敵彈；`GOO_DASH_CPU=4`做節流驗證。

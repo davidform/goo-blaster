@@ -419,7 +419,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.44';
+const BUILD='v0.9.45';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1526,7 +1526,7 @@ function tryDash(dx,dy){
   if(P.dashCD>0||P.dashT>0||!G.running||G.paused) return;
   const m=Math.hypot(dx,dy)||1;
   P.dashDX=dx/m; P.dashDY=dy/m;
-  P.dashT=.32; P.iframe=.42; P.dashCD=P.dashCDmax;
+  P.dashT=.32; P.iframe=Math.max(P.iframe,.42); P.dashCD=P.dashCDmax;
   burst(P.x,P.y,16,180,1.4); SFX.dash();
   IN.hist.length=0;
 }
