@@ -1064,3 +1064,9 @@ Pages部署commit5854993c58d35c759243d820042520e9f9ee7168，Actions34420337266 s
 使用者另問是否再立體一些：建議後续以角色厚度、柔和明暗為主，維持地面低對比與彈幕辨識；本版只修核彈標示，沒有擅自加入第二次微3D改動。USB無裝置；Surface接電100%。
 
 補驗證：以v59原始公開payload跑新像素測試，在320×568量到向下3.5 CSS px偏移、測試如預期失敗；v60同尺寸垂直0px，五尺寸各軸≤1px。nuke60-baseline59.log保留對照失敗。CPU4版py_nuke_icon與py_release_smoke（離線、新存檔、瀏覽器冷啟動）皆PASS，nuke60-verification.json記同SHA及log hashes。第1關新手bot滿血通關，前3關均通過；Node test9持續闖關553.6秒後正常結束，沒有略過或延長上限。獨立py_v0927_perf三次56.7／55.1／53.5，平均55.1FPS；同批同伴51.1→50.9（-0.4%），非Pixel量測。全平行未執行，手機未連線。封裝／公開交付待後續收據。
+
+交付完成：遊戲commit293437122c2df48f6632b3e1aa360d1bf216f4bf，Summary `v0.9.60: center and enlarge the nuke button symbol`。APK96000／0.9.60-test.0，4290992 bytes，SHA `8b4c2837340bc2fe4440cac142132112e71f19ef6d27f6f56497147751e09096`，公開下載SHA一致；固定appId／簽章延續、DEX戰報外掛確認。備份android-source-20260910-091848.zip（80檔），USB未連線，未安裝Pixel。
+
+itch upload19167726/build1963926；公開原始payload與測試SHA一致，整檔SHA a1da5f379aa8baf961ddcbc1bd4d64982b7d723f0b3b74b12e1c1a176a1467f0，差異僅既知平台script。CUA確認v60、實際開始第5關／暫停；首次導航未穩定導致Run game selector no_matches，重讀DOM後再按成功。Pages部署8f26191380c45d3ebc89a2b3f144217e9e0d0a8e，Actions34425141870 completed/success；公開完整HTML SHA相同，獨立Edge開始3.038秒後暫停、無JS錯誤，pages-v60.json。
+
+Devlog https://davidform.itch.io/goo-blaster/devlog/1658406/v0960-a-clearer-nuke-button 已Published，中英全文及單一v60附件核對，store/devlogs/v0.9.60/post.json已記網址。HTML編輯模式回可視後，僅press仍未同步隱藏正文；先click編輯區取得焦點再End／Space／Backspace才同步，送出前已核對全文。遊戲三輪與實際公開渠道均完成；全平行、Pixel真機／11語言母語潤稿仍未執行。

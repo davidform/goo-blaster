@@ -1,0 +1,43 @@
+{
+  "build": "v0.9.60",
+  "title": "v0.9.60 — A clearer nuke button",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "The nuke symbol is now centered and slightly larger. Its new built-in artwork stays consistent across phone fonts, making the button easier to recognize."
+    },
+    {
+      "kind": "p",
+      "text": "The button keeps its existing position and touch area. Nuke effects and gameplay balance are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "核彈標示已置中並稍微放大。改用遊戲內建圖示，避免不同手機字型造成偏移，讓按鈕更容易辨識。"
+    },
+    {
+      "kind": "p",
+      "text": "按鈕的位置與觸控範圍維持原樣，核彈特效與遊戲平衡沒有變更。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "32892a6cf804c46dd1e03605e511d30ad385105d982acf5305018c859acb14ff",
+  "public_game_sha256": "4d7e83f6ffcf33818625fc92a13f42ea4715a54a83c3b774254a6de361c248ed",
+  "public_build_id": 1963926,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>The nuke symbol is now centered and slightly larger. Its new built-in artwork stays consistent across phone fonts, making the button easier to recognize.</p>\n<p>The button keeps its existing position and touch area. Nuke effects and gameplay balance are unchanged.</p>\n<h2>繁體中文</h2>\n<p>核彈標示已置中並稍微放大。改用遊戲內建圖示，避免不同手機字型造成偏移，讓按鈕更容易辨識。</p>\n<p>按鈕的位置與觸控範圍維持原樣，核彈特效與遊戲平衡沒有變更。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1658406/v0960-a-clearer-nuke-button",
+  "verified_at": "2026-09-10T01:26:47.224173+00:00"
+}
