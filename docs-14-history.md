@@ -1043,3 +1043,9 @@ main發布commit 16c9eaa5852e9b47b83027d260387d953bddf91e，Summary `build: publ
 修正版完整67/67通過、source_unchanged=true；獨立第50關高負載三次單局60.0／60.0／53.1FPS，平均57.7≥30，同批同伴對照52.7→52.6（-0.1%）。CPU4繪圖邊角與離線新存檔／冷啟動均PASS；clay59-verification.json保存同SHA證據。全平行未重跑，Pixel尚未驗證。Surface此時接電、電量78%，不能把與前一晚電池狀態的差距全歸因為新美術。
 
 同環境獨立ABBA（v58→v59，DPR2／390×844、150敵＋64果凍、每次8秒、單分頁）：53.83→56.72FPS，比例1.054、約+5.4%，無pageerror，clay59-perf.json。這是瀏覽器比較，不推論Pixel真機FPS；兩輪供電不同的25.5→57.7不能當成單一改動收益。
+
+交付完成：遊戲commit fd85af8c439da213b77e085a9d249b1c7dc67954（`v0.9.59: add soft rounded depth without changing gameplay`）。APK v59/95900/0.9.59-test.0、4290766 bytes，SHA `14bee140755dbc2880ee4c6c41fa2102f8b3fcdac4925ef3b896a0ac4a223e44`，沿用原appId／簽章，DEX含原生戰報外掛；固定Prerelease公開下載SHA一致。備份android-source-20260910-080955.zip，80檔。ADB devices為空，未聲稱Pixel已更新。
+
+itch upload19167726/build1963772，公開完整遊戲payload SHA與測試相同，僅附加平台htmlgame.js；公開整檔SHA e6420bf424287926bfa4254364d732cb332a5183f64085becf254c5a43d7e8b4。CUA實按Run game、第5關與暫停，v59與遊戲已暫停皆確認。第一次全頁getByRole找不到iframe內按鈕，改用已觀察iframe的enter-frame selector成功，未改遊戲。
+
+Pages部署commit5854993c58d35c759243d820042520e9f9ee7168，Actions34420337266 success；公開HTML SHA與測試原始bytes相同，Edge行動視窗實際開始3.0418秒、暫停，零pageerror。Devlog1658361已Published，中英全文與v59附件核對： https://davidform.itch.io/goo-blaster/devlog/1658361/v0959-rounded-visuals-and-a-calmer-midgame 。store/devlogs/v0.9.59/post.json記公開網址，未逐版重複公告v56–58。尚待Pixel新版安裝／存檔與長時間效能、白屏舒適度、難度回饋；全平行及母語潤稿未執行。

@@ -2,7 +2,7 @@
 
 使用者於 2026-09-09 要求：手機經常遠端操作電腦，不會一直用 USB 連線；往後都透過固定方式取得測試版。
 
-固定入口：[Android 手機測試版](https://github.com/davidform/goo-blaster/releases/tag/android-test)。這是 **Prerelease 測試通道**，不更新正式 Pages 或商店版本。itch.io 已另獲同步授權，依 [ITCH-PUBLISHING.md](ITCH-PUBLISHING.md) 同步。入口不依賴這台電腦開機。
+固定入口：[Android 手機測試版](https://github.com/davidform/goo-blaster/releases/tag/android-test)。這是 **Prerelease 測試通道**，不送審商店。itch.io 與 Pages 已另獲同步授權，依 [ITCH-PUBLISHING.md](ITCH-PUBLISHING.md) 與 [PAGES-PUBLISHING.md](PAGES-PUBLISHING.md) 同步。入口不依賴這台電腦開機。
 
 ## 手機怎麼測
 

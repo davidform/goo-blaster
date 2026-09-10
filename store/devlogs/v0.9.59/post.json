@@ -1,0 +1,75 @@
+{
+  "build": "v0.9.59",
+  "title": "v0.9.59 — Rounded visuals and a calmer midgame",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "v0.9.59 brings soft, rounded depth to GOO BLASTER while keeping its top-down controls and collision rules."
+    },
+    {
+      "kind": "li",
+      "text": "Characters and enemies have gentle shading and ground shadows. Small, low-contrast terrain details add depth; enemy bodies reuse cached artwork."
+    },
+    {
+      "kind": "li",
+      "text": "Ordinary enemies shoot less frequently in Stages 7–19 to reduce midgame bullet pressure. Boss attacks and enemy counts are unchanged."
+    },
+    {
+      "kind": "li",
+      "text": "Nukes now trigger slow motion, a delayed blast and a lingering white flash. Goo puddles stay pale even when they overlap."
+    },
+    {
+      "kind": "li",
+      "text": "The stage goal is visible on the menu. Dash Training now explains the next cooldown and fixed invulnerability duration; its three upgrade levels keep their existing values."
+    },
+    {
+      "kind": "p",
+      "text": "Please tell me how Stage 9 feels, whether the nuke flash is comfortable, and whether the rounded visuals stay smooth on your phone. Desktop browser results do not establish phone performance."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "v0.9.59 加入柔和圓潤的微 3D 光影，保留原本俯視操作與碰撞規則。"
+    },
+    {
+      "kind": "li",
+      "text": "角色與敵人有柔和明暗和腳下陰影，地面加入低對比的小浮雕；敵人共用預先繪製的光影圖。"
+    },
+    {
+      "kind": "li",
+      "text": "第 7–19 關普通小怪的射擊間隔放慢，減少中段彈幕壓力；Boss 攻擊與敵人數量不變。"
+    },
+    {
+      "kind": "li",
+      "text": "核彈加入慢動作、延遲爆炸與白屏停留；地面果凍重疊時也保持淡色。"
+    },
+    {
+      "kind": "li",
+      "text": "主畫面直接顯示關卡目標。衝刺訓練說明下一級冷卻與固定無敵時間，原有三級強化數值不變。"
+    },
+    {
+      "kind": "p",
+      "text": "歡迎回報第 9 關難度、核彈白屏是否舒適，以及微 3D 在手機上是否順暢。桌機瀏覽器結果不能代替手機效能實測。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "718d7baccd131deadcb7d902a661aa1dff17a170fd583580d5b70d8107a5a883",
+  "public_game_sha256": "d6a623ac167c987a60ec8922ad1db58f6f944ed8a90d3af034cd4569e0f23efc",
+  "public_build_id": 1963772,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>v0.9.59 brings soft, rounded depth to GOO BLASTER while keeping its top-down controls and collision rules.</p>\n<ul>\n<li>Characters and enemies have gentle shading and ground shadows. Small, low-contrast terrain details add depth; enemy bodies reuse cached artwork.</li>\n<li>Ordinary enemies shoot less frequently in Stages 7–19 to reduce midgame bullet pressure. Boss attacks and enemy counts are unchanged.</li>\n<li>Nukes now trigger slow motion, a delayed blast and a lingering white flash. Goo puddles stay pale even when they overlap.</li>\n<li>The stage goal is visible on the menu. Dash Training now explains the next cooldown and fixed invulnerability duration; its three upgrade levels keep their existing values.</li>\n</ul>\n<p>Please tell me how Stage 9 feels, whether the nuke flash is comfortable, and whether the rounded visuals stay smooth on your phone. Desktop browser results do not establish phone performance.</p>\n<h2>繁體中文</h2>\n<p>v0.9.59 加入柔和圓潤的微 3D 光影，保留原本俯視操作與碰撞規則。</p>\n<ul>\n<li>角色與敵人有柔和明暗和腳下陰影，地面加入低對比的小浮雕；敵人共用預先繪製的光影圖。</li>\n<li>第 7–19 關普通小怪的射擊間隔放慢，減少中段彈幕壓力；Boss 攻擊與敵人數量不變。</li>\n<li>核彈加入慢動作、延遲爆炸與白屏停留；地面果凍重疊時也保持淡色。</li>\n<li>主畫面直接顯示關卡目標。衝刺訓練說明下一級冷卻與固定無敵時間，原有三級強化數值不變。</li>\n</ul>\n<p>歡迎回報第 9 關難度、核彈白屏是否舒適，以及微 3D 在手機上是否順暢。桌機瀏覽器結果不能代替手機效能實測。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1658361/v0959-rounded-visuals-and-a-calmer-midgame",
+  "verified_at": "2026-09-10T00:19:07.224936+00:00"
+}

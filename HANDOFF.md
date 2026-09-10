@@ -1,74 +1,60 @@
 # GOO BLASTER 精簡交接
 
-## 目前任務與實際狀態
-- 使用者五項：第9關小怪包圍／子彈密集、核彈慢動作白屏、死亡殘影、故事一目了然、糖果屋衝刺。
-- 分支codex/soft-world-ui；v56 887a6c9、v57 f8a9106已提交推送。root目前v0.9.59（微3D已驗證，準備提交／交付），本次提交以git log核對，勿reset覆蓋。
-- 先前v58 HTML SHA 3865448b235b1ee0d11f63ca4b2fc14770a72201e6c628c8b9ceb23d2a538da6；当前v59见下。
-- 公開APK、itch與Pixel仍v55，不能把本地v58當作已交付。
-- 遵守AGENTS.md、game-studio；單HTML、零相依、離線、預設英文、11語言、每版單一平衡變數。
-- 預設單代理；未獲多代理授權。Surface曾因48工無回應，不重試全平行。
+## 目前狀態（2026-09-10）
+- 本次兩項已完成：指定itch討論串新留言回覆、保留俯視玩法的圓潤微3D v0.9.59。
+- 開發分支codex/soft-world-ui；遊戲commit fd85af8c439da213b77e085a9d249b1c7dc67954。接手先git status／log核對，不reset。
+- root BUILD v0.9.59；HTML SHA d6a623ac167c987a60ec8922ad1db58f6f944ed8a90d3af034cd4569e0f23efc。
+- APK測試下載、itch.io、GitHub Pages與Devlog皆已更新v59。USB未連線，Pixel已知仍v55，不能宣稱已安裝v59。
+- 單代理；單檔零相依、預設英文、11語言、每版單一平衡變數。Surface曾因48工無回應，不重試全平行。
 
-## 本次實作
-- v56只調7–19關普通敵人射擊間隔：第7關×3，逐關回復，20關×1；第9關×35/13。首次及後續CD一致。
-- 出怪量、HP、速度、XP、Boss、商店、卡池不變。第1–6及20–50關普通射擊也不變。
-- 無復活、Pixel實際強化、250ms決策，同種子第9關1/8→4/8；不是人類勝率。第8關0/2→1/2、第10關0/2→0/2，第一關2/2不變。
-- v57核彈2.1秒：初期世界16%速度，0.48秒爆炸、白屏停留至約1.2秒、1.8秒退白，漸進恢復速度。
-- 暫停凍結、單次爆炸音、新局重置、消除Boss／核彈大提示重疊；清敵／BossHP保留。
-- 慢動作也會放慢淨空、冷卻與無敵的世界計時，關卡倒數用rawdt；不宣稱毫無玩法時間影響。
-- v58地面單一20%淡色層，64塊重疊不再加深；實際果凍效果、生命期與資料不變。
-- 故事目標＋章節小景直接顯示、地圖在下，長故事可展開；550目標與小螢幕滑動已驗。
-- 商店原有三級dash改名衝刺訓練，顯示下一級冷卻／固定0.42秒無敵。不是新增第二套技能。
-- 冷卻仍3→2.65→2.30→1.95；局內疊卡下限1.2秒。30秒連按25次、無敵34.72%，非連續無敵。
-- i18n/build_v0958.py新增1key更新2keys×11；共266keys，尚未母語者潤稿。
+## 這批 v56–59 改動
+- v56 887a6c9：只放慢7–19關普通敵人射擊間隔，第7關×3、第9關×35/13、第20關回原值；初始CD與後续CD一致。
+- 出怪量、HP、速度、XP、Boss與卡池不變。同種子／無復活Pixel強化／250ms bot，第9關1/8→4/8；不是人類勝率。第10關診斷仍0/2。
+- v57 f8a9106：核彈2.1秒演出，世界先16%速度；0.48秒爆炸、白屏停留到約1.2秒、1.8秒退白；暫停凍結、單次音效、新局重置。
+- 世界慢動作也放慢無敵／冷卻／淨空，關卡倒數仍用rawdt；不宣稱完全沒有時間玩法影響。
+- v58 9b05522：果凍地面单一20%淡色層，64塊重疊不加深；資料與效果保留。主畫面直接顯示故事目標與章節小景，長故事可展開。
+- 原有三級dash改名衝刺訓練，顯示下級冷卻／固定0.42秒無敵；仍3→2.65→2.30→1.95秒，局內卡下限1.2秒。沒有新增第四級或改價格。
+- v58字典266keys×11；未做母語者潤稿。
+- v59：快取角色光影圖、柔和落地陰影、低對比地面浮雕、地圖節點厚度；Canvas 2.5D，非WebGL模型或斜視角。
+- 光影圖144px、快取上限96；章節地面圖最多10份。受擊閃白／無敵彩虹保留；不改碰撞或其他玩法。
 
-## 測試證據與當前卡點
-- 命令：PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules；.venv/Scripts/python.exe run_tests.py --jobs 2。
-- v56完整63/64：_private/test-runs/20260909-223040-368026-ordinary-shot-full/results.json；only py_v0927_perf補跑20260909-225736-013931-shot56-perf-retry仍失敗。
-- v57完整64/65：_private/test-runs/20260909-230337-065023-nuke-cinematic-full/results.json；亦只有py_v0927_perf失敗，單局24.5FPS。
-- v58完整65/66，只有獨立效能未過：_private/test-runs/20260909-233021-174242-readability-full/results.json；SHA不變，所有程序已結束。
-- 所有首輪失敗保留。v56同批ABBA舊v55 23.75FPS／新v56 23.65FPS；shot56-perf-diagnostic.json，未見測試殘留程序。
-- Surface首測電池42%、CPU1073MHz；23:44仍電池26%、1035MHz（system-power58.json）。已詢問接電，尚無回答；環境影響尚非確定根因，不得當PASS。
-- CPU4與離線新存檔／冷啟動：shot56-*、nuke57-*、readability58-* logs均過；visual-cpu-offline-receipt.json記錄v57／v58同SHA。
-- v56新回歸普通射擊20秒：第9關40→12，第6關13→13、第20關49→49；v55負對照有抓到，200生成欄位比對過。
-- 已檢視_private/test-artifacts/nuke57-0.85.png、story58-stage9.png／stage50.png、dash-shop58.png、goo58-dense.png。
-- v58獨立DPR2／8秒／150敵＋64果凍ABBA：v57 21.3→v58 24.4FPS、比率1.143通過；goo58-perf.json，不是PixelFPS也不取代絕對門檻。
-- 詳細根因／所有失敗與v58記錄已寫docs-14-history.md。完整壓力場景單局25.5FPS，低於30；未交付新APK／itch。
+## 測試與失敗證據
+- 命令環境：PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
+- 最終完整67/67：.venv/Scripts/python.exe run_tests.py --jobs 2 --label clay-depth-final。
+- 報告_private/test-runs/20260910-074742-582529-clay-depth-final/results.json；同SHA、source_unchanged=true，程序全部結束。
+- 單獨高負載py_v0927_perf：三次單局60.0／60.0／53.1，平均57.7FPS≥30；同伴同批52.7→52.6，-0.1%。不是PixelFPS。
+- 邊角py_clay_depth：實際光照像素、cache重用／96上限、10Boss／狀態／resize／真實輸入；繪圖不改玩法狀態或消耗RNG。
+- CPU4：GOO_UI_CPU=4 python tests/py_clay_depth.py；離線／新存檔／持久重啟：python tests/py_release_smoke.py。均PASS。
+- _private/test-artifacts/clay59-verification.json記錄SHA與clay59-cpu4.log／clay59-offline.log hashes。
+- 獨立ABBA：_private/clay59_perf.py，v58→v59、150敵＋64果凍、DPR2／390×844、每次8秒單分頁，53.83→56.72FPS（1.054）；clay59-perf.json。
+- 首輪clay-depth-full（20260910-073659-892403）py_polaroid抓到戰報人物外框漏畫，45／16像素低於500；已停止首輪、保留失敗，補回外框3395／3367後重跑全套。
+- 停runner時Windows對部分已結束子程序報錯；CIM再查確認無殘留，未帶進下一輪。
+- 先前v56／57／58的63/64、64/65、65/66效能失敗仍保留在docs-14-history與私人reports，不能改寫為PASS。
+- 此次Surface接電、78%；上一晚v58曾電池26%／CPU1035MHz。不得把跨供電批次差距全歸因微3D。
+- 已檢視clay59-game.png／clay59-boss50.png；測試清除多Boss佈景堆疊toast並同步G.L，沒有改遊戲toast。
 
-## 交付授權與下一步（等待效能驗證）
-- Git commit/push開發分支、固定Prerelease APK與itch同步已授權；不用重複問。Pages同步亦已授權；商店／AAB／定價／簽章更換未授權。
-- 接穩定電源後，先核對同SHA，再跑run_tests.py --only py_v0927_perf --jobs 1 --label readability-perf-ac；不因上次失敗而重跑全部功能，也不調低門檻。若仍失敗繼續量測根因。
-- 全部門檻過才能建置／同步：native/MOBILE-TESTING.md、native/ITCH-PUBLISHING.md；build_test_apk.py會強制核對同SHA完整報告，可保留原失敗加--retry。
-- 本次Summary：v0.9.58: clarify terrain, stage goals and dash upgrades。
-- APK入口：https://github.com/davidform/goo-blaster/releases/tag/android-test；目前v55／95500，APK SHA 9f2229ac26d43dfeee79d7622d48c729efac8a59d0d76d328f41e17e0122cab9。
-- appId com.demjastudio.gooblaster；簽章native/test-channel.json固定。build→backup_android.py→notes→publish_test_apk.py --publish→公開下載SHA核對。
-- _private/mobile-test/notes-v58-draft.md已備；只有全過與實際APK稽核後才轉正式notes.md。
-- itch固定davidform/goo-blaster:html5，目前v55 upload19167726/build1962179；只上傳單一index，保留價格／公開狀態。實際Run game並核對iframe完整payload，CDN追加腳本差異需明示。
-- USB若Pixel仍連線，_private/update_pixel58.py＋pixel58.cjs已備但未執行；先備份當前存檔，install -r保留原生bytes、核對版本與WebView，不卸載清資料。
-- 全平行／母語潤稿／Pixel難度、白屏舒適度、殘影可讀性及FPS未驗；第10關診斷仍0/2。不得宣稱本次正式驗收完成。
+## 交付證據
+- APK固定：https://github.com/davidform/goo-blaster/releases/tag/android-test。
+- v59／95900／0.9.59-test.0；appId com.demjastudio.gooblaster；既有簽章fa00189cc20d1c630da9c5ad9d3b1c54ddd230f61b84ecf1ba1531914fa14513未改。
+- APK SHA 14bee140755dbc2880ee4c6c41fa2102f8b3fcdac4925ef3b896a0ac4a223e44，4290766 bytes；公開下載核對相同，含原生戰報外掛。
+- _private/mobile-test/latest.json／published.json；來源備份android-source-20260910-080955.zip（80檔）。
+- itch固定davidform/goo-blaster:html5，upload19167726/build1963772；itch-v59.json核對原完整payload，CDN只追加既知平台script。
+- itch公開Run game→第5關→暫停已實按，畫面顯示v59／遊戲已暫停；iframe selector可用 `iframe#game_drop >> internal:control=enter-frame >> #btnPlay`。
+- Pages https://davidform.github.io/goo-blaster/；部署commit5854993c58d35c759243d820042520e9f9ee7168；Actions34420337266 success。
+- pages-v59.json：公開HTML SHA完全相同，獨立Edge開始3.0418秒／暫停，page_errors=[]。
+- Devlog已Published：https://davidform.itch.io/goo-blaster/devlog/1658361/v0959-rounded-visuals-and-a-calmer-midgame。
+- 中英全文／v59單一附件核對；store/devlogs/v0.9.59/post.json已記網址與hash，devlog-v59-receipt.json保存公開正文；不要重複發。
 
-## Devlog自動流程（2026-09-10）
-- 使用者新增授權：itch公開遊戲驗證完成後自動發中英Devlog；同批一篇，按公開版本而非root BUILD，先查文章與草稿避免重複。
-- native/DEVLOG-PUBLISHING.md＋native/devlog.py；準備／收據工具不直接登入，代理用CUA發文，非背景排程。
-- v55已補發：https://davidform.itch.io/goo-blaster/devlog/1657882/v0955-clearer-upgrades-fire-trails-and-late-game-balance；Published、全部正文與v55附件已核對。
-- store/devlogs/v0.9.55/post.json有公開網址／內容hash／版本證據；私人devlog-v55-receipt.json保存實際DOM正文。
-- python tests/test_devlog_workflow.py：9/9；版本不符、未公開、草稿誤認、缺正文、不同網址重複及已發內容覆寫都擋住。遊戲HTML未變，未重跑遊戲三輪。
-- 編輯器HTML fill後可能未同步送出textarea；須可視編輯器末尾真按鍵空格／Backspace觸發同步再查。第一次Save因空body失敗，修同步後成功；不得直接腳本提交。
-- v58仍卡效能／未發版，因此沒有v58已上線Devlog。上述遊戲待辦不變。
+## 留言處理與授權
+- 本次使用者授權已登入itch來源，核對整串所有新留言。其他回饋已有答覆；新增翻譯致謝17308395、Dualspace更新致謝17308411，兩篇公開正文已核對。
+- store/community/topic-6826201.json保存父留言與回覆編號以防重複。沒有開背景排程。
+- 未實玩Dualspace／Blade Baes Brawl、未提交他人遊戲評價表；沒有虛構體驗。
+- Git同步、固定APK、itch、Devlog與Pages都已獲本作授權；按native對應流程執行，不必逐次問。
+- 商店送審／AAB正式發布／定價／更換簽章仍未授權；新遊戲不繼承本作授權。
+- main是網站交付分支：publish_pages.py只提交已測原始bytes與網站白名單，不直接合併未驗收開發HEAD。
 
-## Pages同步（2026-09-10）
-- 使用者同意先補v55，往後同已驗證APK／itch批次更新Pages；native/PAGES-PUBLISHING.md與publish_pages.py記錄流程。
-- 原因：main仍v40，開發push不觸發main限定的Pages workflow。main作網站交付分支，只提交白名單檔案；不合併未驗證開發HEAD。
-- 發布commit 16c9eaa5852e9b47b83027d260387d953bddf91e，v55測試63/63；保留已測混合換行原始bytes與SHA 2cb6787d111a950c14ae1bae78d24fa6294dcda278c0fd31d14d04e49a4da9ef。
-- 工具測試8/8；source差異、錯版本、缺完整報告、perf失敗、不同SHA、無公開啟動證据均擋下。v58未發，原效能卡點不變。
-- Actions 34413850846 success；公開HTML SHA完全相同，Edge mobile 390×844實際開始至3.039秒／暫停，無pageerror。證據_private/mobile-test/pages-v55.json、pages-v55-menu.png／paused.png。
-
-## 目前進行：留言與微3D v59（2026-09-10）
-- 使用者授權讀取／回覆指定itch討論串所有新留言，已發17308395（翻譯致謝）、17308411（Dualspace更新致謝），兩篇公開正文已核對；store/community/topic-6826201.json防重複。未建立背景排程、未實玩他人遊戲／代填表單。
-- 使用者選擇「保留俯視玩法，角色與場景變得圓潤立體」。已實作有限快取光影、落地陰影、淡色地面浮雕與節點厚度；保留玩法、碰撞與11語言。
-- v59第一次SHA397460...全測試中py_polaroid抓到肖像缺少深色外框，已補回，不降門檻。首輪20260910-073659-892403-clay-depth-full為停止的失敗紀錄，不可當完整驗收。
-- 停止首輪runner樹，Windows部分已結束子程序回報錯誤，CIM再查確認無殘留。新版本SHA d6a623ac167c987a60ec8922ad1db58f6f944ed8a90d3af034cd4569e0f23efc。
-- 完整67/67已過：20260910-074742-582529-clay-depth-final/results.json，jobs2，最後效能獨跑57.7FPS。供電已接電、78%；先前v58未通過效能仍保留。
-- py_clay_depth實跑像素／cache96上限／繪圖不改狀態或RNG／10Boss狀態／resize；py_polaroid修後單獨PASS，外框win3395／lose3367。
-- py_clay_depth CPU4、py_release_smoke離線／新存檔／重啟均PASS；clay59-verification.json含SHA／logs。ABBA已完成53.83→56.72FPS（1.054），clay59-perf.json；可進入交付。
-- 已檢視clay59-game.png與boss50；測試Boss快照堆疊toast是假場景造成，測試已清G.TXT並同步G.L，待新快照。_private/baselines/v58/index.html保存比較基準。
-- 全門檻過才能commit v59→APK建置稽核／備份／固定下載→itch公開核對→Devlog→Pages。notes-v59-draft.md、devlog-v59-notes-draft.json已備，未发布。USB未核對，需先查device；未連線則僅下載。
+## 下一步與未執行
+- 等Pixel自行下載v59後的實測：第9關包圍／彈幕、長時間FPS與發熱、白屏舒適度、微3D可讀性及覆蓋更新存檔。
+- USB未連線，不卸載／清資料；下次連線更新先備份原生存檔、核對簽章／版本，install -r後核對WebView。
+- 全平行壓測、11語言母語潤稿、Pixel v59真機驗證未執行；不宣稱正式商店驗收。
+- 詳細根因／版本與數字見docs-14-history.md；不要追加凍結的docs-04-append.md。
