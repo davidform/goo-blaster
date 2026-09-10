@@ -20,7 +20,7 @@
 - CPU4 py_nuke_icon與py_release_smoke離線／新存檔／冷啟動皆PASS。
 - _private/test-artifacts/nuke60-verification.json保存SHA及log hashes；nuke60-game.png／nuke60-button.png已檢視。
 - 測試開發先遇Pillow缺少，改用既有Canvas解碼；量測曾納入按鈕角落遊戲子彈，已修量測中央範圍；詳見docs-14-history。
-- 全平行未執行（Surface過去凍結，不重試）；USB devices空，未做Pixel新版驗證。
+- 全平行未執行（Surface過去凍結，不重試）；本次已透過USB完成Pixel v55→v60覆蓋更新與WebView冷啟動驗證；未做長時間遊玩。
 
 ## 交付證據
 - 遊戲Summary：v0.9.60: center and enlarge the nuke button symbol。
@@ -46,6 +46,7 @@
 - 單代理；不自行增加agents。未來遊戲沿用studio流程但不繼承身分／簽章／發布授權。
 
 ## 未執行與待回饋
-- Pixel已知最後安裝v55；需下載新版驗證覆蓋更新存檔、長時間FPS／發熱、核彈白屏舒適度及第9關難度。
+- Pixel已安裝v60／96000；既有簽章核對、原生存檔備份、install -r前後存檔bytes一致；WebView v60且進度／金幣／強化／語言與備份相同。
+- 證據_private/mobile-test/pixel-update-v60.json與pixel-runtime-v60.json；仍需長時間FPS／發熱、核彈白屏舒適度及第9關難度實玩。
 - 全平行壓測、11語言母語潤稿、正式AAB／商店送審未執行。
 - 不把桌機FPS當Pixel效能，不把上傳當公開頁驗證。

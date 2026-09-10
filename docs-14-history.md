@@ -1070,3 +1070,7 @@ Pages部署commit5854993c58d35c759243d820042520e9f9ee7168，Actions34420337266 s
 itch upload19167726/build1963926；公開原始payload與測試SHA一致，整檔SHA a1da5f379aa8baf961ddcbc1bd4d64982b7d723f0b3b74b12e1c1a176a1467f0，差異僅既知平台script。CUA確認v60、實際開始第5關／暫停；首次導航未穩定導致Run game selector no_matches，重讀DOM後再按成功。Pages部署8f26191380c45d3ebc89a2b3f144217e9e0d0a8e，Actions34425141870 completed/success；公開完整HTML SHA相同，獨立Edge開始3.038秒後暫停、無JS錯誤，pages-v60.json。
 
 Devlog https://davidform.itch.io/goo-blaster/devlog/1658406/v0960-a-clearer-nuke-button 已Published，中英全文及單一v60附件核對，store/devlogs/v0.9.60/post.json已記網址。HTML編輯模式回可視後，僅press仍未同步隱藏正文；先click編輯區取得焦點再End／Space／Backspace才同步，送出前已核對全文。遊戲三輪與實際公開渠道均完成；全平行、Pixel真機／11語言母語潤稿仍未執行。
+
+
+### v60 Pixel USB同步（2026-09-10，未改遊戲）
+使用者要求同步手機，ADB確認Pixel已連線。先核對手機原安裝APK簽章與既有測試簽章相同、備份原生CapacitorStorage.xml，再install -r從95500更新96000；沒有卸載或清資料。安裝前後原生存檔bytes完全相同，啟動成功。實際Android WebView確認BUILD v0.9.60、NATIVE_READY；進度／金幣／永久強化／語言與更新前備份逐欄相同。私人證據pixel-update-v60.json／pixel-runtime-v60.json。不宣稱已做關卡遊玩、長時間FPS或核彈按鈕真機視覺驗收。index.html未改，未重跑遊戲全套。
