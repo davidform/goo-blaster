@@ -51,3 +51,8 @@ GitHub 使用現有 Git 登入，憑證只留在程序記憶體，不寫入報�
 ## 已連線手機
 
 使用者要求直接更新且 ADB 顯示該手機為 device 時，可對指定裝置使用 `adb install -r <已稽核APK>`。先核對既有 package/version、備份本遊戲存檔；更新後核對版本、存檔與實際 WebView。不得卸載或清資料；連線未授權時請使用者在手機允許，未連線時維持固定下載入口。
+
+
+## 更新後清理
+
+2026-09-10使用者確認：保留遊戲進度，清理不必要舊檔。各平台同步／公開驗證結束後，執行 `pwsh -NoProfile -File native/cleanup_local.ps1` 核對清單，再以 `-Apply` 執行。保留最新與上一版回退APK，清除更舊本機APK及已結束測試的臨時瀏覽器profile。保留存檔備份、簽章、測試證據／基準、原生備份與必要工具。公開歷史附件不在此本機清理白名單。權限拒絕的目錄留存並回報，不自行改ACL；收據寫入_private/mobile-test/cleanup-local-*.json。詳見AGENTS.md第13節。

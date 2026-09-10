@@ -50,3 +50,9 @@
 - 證據_private/mobile-test/pixel-update-v60.json與pixel-runtime-v60.json；仍需長時間FPS／發熱、核彈白屏舒適度及第9關難度實玩。
 - 全平行壓測、11語言母語潤稿、正式AAB／商店送審未執行。
 - 不把桌機FPS當Pixel效能，不把上傳當公開頁驗證。
+
+## 更新後清理規則
+- 使用者確認保留遊戲進度，清除不必要舊檔；規則已寫AGENTS第13節，後續發版完成執行native/cleanup_local.ps1盤點／-Apply。
+- 本次清除4份本機旧APK與2個測試profile，28,328,313 bytes；保留v60/v59、全部存檔備份與測試證據／A/B基準／簽章。
+- 21個profile遭Windows拒絕存取，未清除、未改ACL；收據_private/mobile-test/cleanup-last-output.json。
+- 公開歷史附件／其他App／手機資料不屬本機白名單；不宣稱全部舊檔已清除。BUILD仍v60。

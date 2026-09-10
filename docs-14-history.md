@@ -1074,3 +1074,10 @@ Devlog https://davidform.itch.io/goo-blaster/devlog/1658406/v0960-a-clearer-nuke
 
 ### v60 Pixel USB同步（2026-09-10，未改遊戲）
 使用者要求同步手機，ADB確認Pixel已連線。先核對手機原安裝APK簽章與既有測試簽章相同、備份原生CapacitorStorage.xml，再install -r從95500更新96000；沒有卸載或清資料。安裝前後原生存檔bytes完全相同，啟動成功。實際Android WebView確認BUILD v0.9.60、NATIVE_READY；進度／金幣／永久強化／語言與更新前備份逐欄相同。私人證據pixel-update-v60.json／pixel-runtime-v60.json。不宣稱已做關卡遊玩、長時間FPS或核彈按鈕真機視覺驗收。index.html未改，未重跑遊戲全套。
+
+
+## 更新後清理流程（2026-09-10，非遊戲改動）
+
+使用者澄清「不清除遊戲進度，刪除不必要留著的」。新增native/cleanup_local.ps1：唯讀盤點預設、-Apply執行，限本機舊APK與測試瀏覽器profile白名單；保留最新v60／上一版v59、存檔／簽章／證據／基準／工具。先驗已公開收據與APK SHA，拒絕執行中測試／Gradle、外部路徑和reparse point，全部目標先檢查再刪除。不刪公開歷史附件、其他App或手機資料。
+
+第一次盤點遭Windows PermissionDenied，在任何刪除前停止；改為明列拒絕存取的目錄為skipped，未修改ACL。再次盤點後實際-Apply清掉v47/v48/v52/v55四份APK與2份測試profile，共28,328,313 bytes（約27.0MiB），21個profile仍因拒絕存取未清。收據_private/mobile-test/cleanup-last-output.json及帶時間戳的cleanup-local報告。遊戲HTML未變、未重跑遊戲三輪；本次驗證為路徑盤點、實際刪除、保留檔SHA与再次盤點。
