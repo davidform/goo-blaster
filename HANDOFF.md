@@ -2,8 +2,8 @@
 
 ## 目前任務與實際狀態
 - 使用者五項：第9關小怪包圍／子彈密集、核彈慢動作白屏、死亡殘影、故事一目了然、糖果屋衝刺。
-- 分支codex/soft-world-ui；v56 887a6c9、v57 f8a9106已提交推送。root目前v0.9.58，本次提交以git log核對，勿reset覆蓋。
-- v58 HTML SHA 3865448b235b1ee0d11f63ca4b2fc14770a72201e6c628c8b9ceb23d2a538da6。
+- 分支codex/soft-world-ui；v56 887a6c9、v57 f8a9106已提交推送。root目前v0.9.59（微3D已驗證，準備提交／交付），本次提交以git log核對，勿reset覆蓋。
+- 先前v58 HTML SHA 3865448b235b1ee0d11f63ca4b2fc14770a72201e6c628c8b9ceb23d2a538da6；当前v59见下。
 - 公開APK、itch與Pixel仍v55，不能把本地v58當作已交付。
 - 遵守AGENTS.md、game-studio；單HTML、零相依、離線、預設英文、11語言、每版單一平衡變數。
 - 預設單代理；未獲多代理授權。Surface曾因48工無回應，不重試全平行。
@@ -61,3 +61,14 @@
 - 發布commit 16c9eaa5852e9b47b83027d260387d953bddf91e，v55測試63/63；保留已測混合換行原始bytes與SHA 2cb6787d111a950c14ae1bae78d24fa6294dcda278c0fd31d14d04e49a4da9ef。
 - 工具測試8/8；source差異、錯版本、缺完整報告、perf失敗、不同SHA、無公開啟動證据均擋下。v58未發，原效能卡點不變。
 - Actions 34413850846 success；公開HTML SHA完全相同，Edge mobile 390×844實際開始至3.039秒／暫停，無pageerror。證據_private/mobile-test/pages-v55.json、pages-v55-menu.png／paused.png。
+
+## 目前進行：留言與微3D v59（2026-09-10）
+- 使用者授權讀取／回覆指定itch討論串所有新留言，已發17308395（翻譯致謝）、17308411（Dualspace更新致謝），兩篇公開正文已核對；store/community/topic-6826201.json防重複。未建立背景排程、未實玩他人遊戲／代填表單。
+- 使用者選擇「保留俯視玩法，角色與場景變得圓潤立體」。已實作有限快取光影、落地陰影、淡色地面浮雕與節點厚度；保留玩法、碰撞與11語言。
+- v59第一次SHA397460...全測試中py_polaroid抓到肖像缺少深色外框，已補回，不降門檻。首輪20260910-073659-892403-clay-depth-full為停止的失敗紀錄，不可當完整驗收。
+- 停止首輪runner樹，Windows部分已結束子程序回報錯誤，CIM再查確認無殘留。新版本SHA d6a623ac167c987a60ec8922ad1db58f6f944ed8a90d3af034cd4569e0f23efc。
+- 完整67/67已過：20260910-074742-582529-clay-depth-final/results.json，jobs2，最後效能獨跑57.7FPS。供電已接電、78%；先前v58未通過效能仍保留。
+- py_clay_depth實跑像素／cache96上限／繪圖不改狀態或RNG／10Boss狀態／resize；py_polaroid修後單獨PASS，外框win3395／lose3367。
+- py_clay_depth CPU4、py_release_smoke離線／新存檔／重啟均PASS；clay59-verification.json含SHA／logs。ABBA已完成53.83→56.72FPS（1.054），clay59-perf.json；可進入交付。
+- 已檢視clay59-game.png與boss50；測試Boss快照堆疊toast是假場景造成，測試已清G.TXT並同步G.L，待新快照。_private/baselines/v58/index.html保存比較基準。
+- 全門檻過才能commit v59→APK建置稽核／備份／固定下載→itch公開核對→Devlog→Pages。notes-v59-draft.md、devlog-v59-notes-draft.json已備，未发布。USB未核對，需先查device；未連線則僅下載。

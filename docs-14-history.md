@@ -1027,3 +1027,19 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 main發布commit 16c9eaa5852e9b47b83027d260387d953bddf91e，Summary `build: publish verified v0.9.55 to GitHub Pages`。Actions https://github.com/davidform/goo-blaster/actions/runs/34413850846 completed/success。公開v40→v55，完整HTML SHA `2cb6787d111a950c14ae1bae78d24fa6294dcda278c0fd31d14d04e49a4da9ef` 與itch／63項既有全過報告相同。獨立Edge行動視窗390×844實際按開始、遊戲3.039秒、暫停成功，pageerrors=[]；截圖已檢視，證據_private/mobile-test/pages-v55.json。
 
 未執行／未完成：沒有重跑未改動v55的遊戲三輪；v58仍65/66、效能未過，未更新APK／itch／Pages至v58；本次沒有手機真機測試。教訓：Git推送不等於所有通道發布；不同平台的換行過濾也可能改SHA，須核對最終公開位元組。
+
+## v0.9.59：俯視微3D光影（2026-09-10）
+
+使用者選擇保留俯視玩法，讓角色與場景更圓潤立體。此次只改繪圖：共用144px離屏角色光影圖（FIFO快取上限96）、淡色橢圓落地陰影、按章節快取的低對比地面浮雕、地圖節點厚度。普通敵人原本每幀填色／描邊改為快取貼圖，Boss本體不再即時shadowBlur。狀態閃白與主角無敵彩虹保留，碰撞半徑、移動、敵人數量、Boss／卡池／商店數值及字典未改。這是Canvas 2.5D視覺，不是新增WebGL模型或斜視角。來源：[MDN Canvas optimization](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas)建議快取重複繪圖、避免shadowBlur；實際是否更快仍以本次同環境A/B量測為準。
+
+邊角實跑py_clay_depth：光照上側RGB 200/222/207、下側140/175/159；300種測試顏色後快取仍96張上限；重複顏色重用同張圖。真實開始／方向鍵／暫停、10隻章節Boss、受擊／冰凍／減速、無敵及橫直向resize均無pageerror。繪圖前後G.P／E／GEM／GOO／EB與永久進度相同，禁止Math.random的繪圖檢查亦過。排除版本及繪圖區塊後，原始碼與v58相同。
+
+首輪完整測試20260910-073659-892403-clay-depth-full未完成：py_polaroid失敗，戰報人物改用微3D後漏畫原有品牌外框，win／lose外框僅45／16像素（門檻500）；勝負表情與本體均仍存在。補回原深綠外框後單獨實跑win3395／lose3367，兩種表情差異280／780像素，全過。停止舊runner與子程序，Windows對部分已退出程序回報錯誤，之後CIM確認無殘留；不保留競爭CPU的孤兒測試。修正後HTML SHA d6a623ac167c987a60ec8922ad1db58f6f944ed8a90d3af034cd4569e0f23efc，重新跑整套67項20260910-074742-582529-clay-depth-final，不以舊SHA報告補驗。
+
+另完成itch討論串本次新留言處理：翻譯致謝https://itch.io/post/17308395、Dualspace更新致謝https://itch.io/post/17308411，登入帳號davidform、兩篇公開正文均核對；store/community/topic-6826201.json保存來源及回覆編號。使用者授權本串全部新留言；沒有建立背景排程，也沒有聲稱已玩過對方作品或代填未做的遊戲評價。之前瀏覽器來源授權被自動審查擋下，使用者明確允許後才執行。
+
+教訓：立體光影可共用快取，但替換共用肖像時仍須保留品牌輪廓；既有真實像素測試在此抓到退步，不能以新美術為由降門檻。測試畫面一次生成10Boss會堆疊入場toast，已在測試佈景清除toast並同步關卡資料，未修改遊戲toast行為。
+
+修正版完整67/67通過、source_unchanged=true；獨立第50關高負載三次單局60.0／60.0／53.1FPS，平均57.7≥30，同批同伴對照52.7→52.6（-0.1%）。CPU4繪圖邊角與離線新存檔／冷啟動均PASS；clay59-verification.json保存同SHA證據。全平行未重跑，Pixel尚未驗證。Surface此時接電、電量78%，不能把與前一晚電池狀態的差距全歸因為新美術。
+
+同環境獨立ABBA（v58→v59，DPR2／390×844、150敵＋64果凍、每次8秒、單分頁）：53.83→56.72FPS，比例1.054、約+5.4%，無pageerror，clay59-perf.json。這是瀏覽器比較，不推論Pixel真機FPS；兩輪供電不同的25.5→57.7不能當成單一改動收益。

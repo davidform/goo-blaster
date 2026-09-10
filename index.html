@@ -325,6 +325,9 @@
   #storyGoalLabel{font-size:11px;color:#526b60;}
   #stageInfo .storyGoal{font-size:12px;line-height:1.5;margin:3px 0 0;color:#455343;overflow-wrap:anywhere;}
   @media(max-height:640px){#galaxyWrap{height:124px;}.storyScene{width:48px;height:58px;}.storyBrief{gap:8px;padding:7px;}}
+
+  /* v0.9.59: rounded board-game markers, same hit targets. */
+  .gnode{box-shadow:inset 0 3px 3px #ffffff75,inset 0 -5px 3px #263c4430,0 5px 0 #63776c45,0 7px 7px #253e4318;}
 </style>
 </head>
 <body>
@@ -446,7 +449,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.58';
+const BUILD='v0.9.59';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -3587,6 +3590,7 @@ function draw(){
   ctx.stroke();
 
   ctx.globalAlpha=1;
+  clayGround(world,L,T,W,H);
   drawFireCandy();
   // One translucent ground layer prevents dense puddles accumulating dark ink.
   drawGooGround(cx,cy);
@@ -3842,30 +3846,71 @@ function drawBossFront(e,R){
   }
 }
 // 不使用 save()/restore()：那兩個呼叫在 80+ 敵人時是實測最大的單一開銷
+// v0.9.59: pre-render rounded bodies; bounded cache, no physics or random calls.
+const CLAY_CACHE=new Map(), CLAY_CACHE_MAX=96;
+function clayBody(color,hero=false){
+  const key=(hero?'h:':'e:')+color;
+  if(CLAY_CACHE.has(key))return CLAY_CACHE.get(key);
+  const c=document.createElement('canvas');c.width=c.height=144;
+  const x=c.getContext('2d');x.translate(72,72);
+  if(hero)softGooPath(x,48);else{x.beginPath();x.arc(0,0,48,0,Math.PI*2);}
+  x.fillStyle=color;x.fill();
+  x.save();x.clip();
+  const shade=x.createLinearGradient(-30,-46,24,50);
+  shade.addColorStop(0,'rgba(255,255,244,.56)');
+  shade.addColorStop(.40,'rgba(255,255,244,.06)');
+  shade.addColorStop(.74,'rgba(32,42,50,.04)');
+  shade.addColorStop(1,'rgba(32,42,50,.38)');
+  x.fillStyle=shade;x.fillRect(-52,-52,104,104);
+  const sheen=x.createRadialGradient(-17,-24,1,-12,-17,42);
+  sheen.addColorStop(0,'rgba(255,255,247,.34)');sheen.addColorStop(1,'rgba(255,255,247,0)');
+  x.fillStyle=sheen;x.fillRect(-52,-52,104,104);x.restore();
+  x.strokeStyle='rgba(47,57,55,.60)';x.lineWidth=2;x.stroke();
+  if(CLAY_CACHE.size>=CLAY_CACHE_MAX)CLAY_CACHE.delete(CLAY_CACHE.keys().next().value);
+  CLAY_CACHE.set(key,c);return c;
+}
+function clayShadow(x,y,R){
+  ctx.fillStyle='rgba(42,53,48,.10)';ctx.beginPath();ctx.ellipse(x+R*.12,y+R*.70,R*.92,R*.28,0,0,6.283);ctx.fill();
+}
+function paintClay(x,cx,cy,R,color,hero=false,sx=1,sy=1){
+  x.drawImage(clayBody(color,hero),cx-R*1.5*sx,cy-R*1.5*sy,R*3*sx,R*3*sy);
+}
+const CLAY_GROUND=new Map();
+function clayGround(world,L,T,width,height){
+  let pattern=CLAY_GROUND.get(world);
+  if(!pattern){
+    const c=document.createElement('canvas');c.width=c.height=176;
+    const x=c.getContext('2d');
+    // Shallow relief, deliberately too small and faint to imply collision scenery.
+    for(const [px,py,r] of [[22,38,9],[108,123,7],[142,52,5]]){
+      x.fillStyle='rgba(42,53,48,.09)';x.beginPath();x.ellipse(px+2,py+3,r+2,r*.52,0,0,6.283);x.fill();
+      const g=x.createLinearGradient(0,py-r,0,py+r);g.addColorStop(0,world.field);g.addColorStop(1,world.fieldEdge);
+      x.fillStyle=g;x.beginPath();x.ellipse(px,py,r,r*.65,0,0,6.283);x.fill();
+      x.strokeStyle='rgba(255,255,240,.23)';x.lineWidth=1;x.beginPath();x.ellipse(px,py,r,r*.65,0,Math.PI,Math.PI*1.8);x.stroke();
+    }
+    pattern=ctx.createPattern(c,'repeat');CLAY_GROUND.set(world,pattern);
+  }
+  ctx.fillStyle=pattern;ctx.fillRect(L,T,width,height);
+}
+
 function drawBlob(e,detail){
   const hue=e.boss?e.hue:({slime:282,bunny:327,drone:218,bomber:28}[e.type]??282);
   const R=e.r*(1+Math.sin(e.wob)*.07);
   // 便宜的光暈（取代 shadowBlur）
-  ctx.fillStyle='hsla('+hue+',20%,35%,.12)';
-  ctx.beginPath(); ctx.arc(e.x,e.y,R*1.42,0,6.283); ctx.fill();
+  clayShadow(e.x,e.y,R);
   if(e.boss) drawBossBack(e,R);                 // v0.9.22：翼／光環／尖刺畫在身體之後
-  if(e.boss){ ctx.shadowColor='hsl('+hue+',90%,55%)'; ctx.shadowBlur=26; }
+
   // 超級大 Boss：多一圈脈動的警戒圈，跟一般 Boss 拉開視覺辨識度
   if(e.superBoss){
     ctx.strokeStyle='rgba(255,40,100,'+(0.45+0.35*Math.sin(G.t*6))+')';
     ctx.lineWidth=4;
     ctx.beginPath(); ctx.arc(e.x,e.y,R*1.28,0,6.283); ctx.stroke();
   }
-  ctx.fillStyle= e.flash>0 ? '#fff'
-               : e.frozen>0 ? '#9fe4ff'
-               : e.slowT>0  ? 'hsl('+hue+',45%,42%)'      // 被黏住：明顯變暗沉
-               : 'hsl('+hue+','+(e.boss?48:27)+'%,'+(e.superBoss?Math.max(34,46-2*Math.max(0,e.chIdx-3)):e.boss?46:53)+'%)';
-  ctx.beginPath();
-  // 果凍變形：橢圓 + 波動
-  ctx.ellipse(e.x,e.y,R*(1+Math.sin(e.wob)*.09),R*(1-Math.sin(e.wob)*.09),0,0,6.283);
-  ctx.fill();
-  if(e.boss) ctx.shadowBlur=0;
-  ctx.strokeStyle='hsla('+hue+',25%,29%,.95)'; ctx.lineWidth=2; ctx.stroke();
+  const bodyColor=e.frozen>0?'#9fe4ff':e.slowT>0?'hsl('+hue+',45%,42%)'
+    :'hsl('+hue+','+(e.boss?48:27)+'%,'+(e.superBoss?Math.max(34,46-2*Math.max(0,e.chIdx-3)):e.boss?46:53)+'%)';
+  const sx=1+Math.sin(e.wob)*.09,sy=1-Math.sin(e.wob)*.09;
+  if(e.flash>0){ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(e.x,e.y,R*sx,R*sy,0,0,6.283);ctx.fill();}
+  else paintClay(ctx,e.x,e.y,R,bodyColor,false,sx,sy);
   if(detail){                       // 場上敵人太多時省略細節，肉眼看不出來
     ctx.fillStyle='rgba(255,255,255,.5)';
     ctx.beginPath(); ctx.arc(e.x-R*.3,e.y-R*.34,R*.2,0,6.283); ctx.fill();
@@ -3980,7 +4025,8 @@ function softGooFace(x,R,win){
 }
 function drawSoftHero(x,cx,cy,R,win){
   x.save();x.translate(cx,cy);x.fillStyle='#52695825';x.beginPath();x.ellipse(0,R*.88,R,R*.18,0,0,6.283);x.fill();
-  softGooPath(x,R);x.fillStyle='#9dc5b1';x.fill();x.strokeStyle='#405f57';x.lineWidth=R*.11;x.stroke();
+  paintClay(x,0,0,R,'#9dc5b1',true);
+  softGooPath(x,R);x.strokeStyle='#405f57';x.lineWidth=R*.11;x.stroke();
   softGooFace(x,R,win);x.restore();
 }
 
@@ -4014,9 +4060,12 @@ function drawPlayer(P){
   // 依移動方向拉伸（果凍該有的擠壓感，也讓「正在移動」一眼可辨）
   const mv=P.moving||0, ang=Math.atan2(P.mvy||0,P.mvx||0);
   const st=1+mv*0.28, sq=1-mv*0.18;
+  clayShadow(P.x,P.y,R);
   ctx.translate(P.x,P.y); ctx.rotate(ang);
   ctx.fillStyle= P.flash>0 ? '#fff' : inv ? 'hsl('+invHue()+',100%,'+(68+Math.sin(G.t*34)*13)+'%)' : '#9dc5b1';
-  softGooPath(ctx,R,st,sq);ctx.fill();
+  if(inv||P.flash>0){softGooPath(ctx,R,st,sq);ctx.fill();}
+  else paintClay(ctx,0,0,R,'#9dc5b1',true,st,sq);
+  softGooPath(ctx,R,st,sq);
   ctx.strokeStyle=inv?'hsl('+invHue(180)+',100%,88%)':'#405f57';ctx.lineWidth=2.5;ctx.stroke();
   ctx.rotate(-ang);softGooFace(ctx,R,null);
   ctx.restore();
