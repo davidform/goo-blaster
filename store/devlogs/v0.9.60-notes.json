@@ -1,0 +1,34 @@
+{
+  "build": "v0.9.60",
+  "title": "v0.9.60 — A clearer nuke button",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "The nuke symbol is now centered and slightly larger. Its new built-in artwork stays consistent across phone fonts, making the button easier to recognize."
+    },
+    {
+      "kind": "p",
+      "text": "The button keeps its existing position and touch area. Nuke effects and gameplay balance are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "核彈標示已置中並稍微放大。改用遊戲內建圖示，避免不同手機字型造成偏移，讓按鈕更容易辨識。"
+    },
+    {
+      "kind": "p",
+      "text": "按鈕的位置與觸控範圍維持原樣，核彈特效與遊戲平衡沒有變更。"
+    }
+  ]
+}

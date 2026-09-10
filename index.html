@@ -102,6 +102,7 @@
      box-shadow:0 0 0 4px rgba(255,150,50,.25),0 4px 14px rgba(255,120,30,.55);
      animation:nukePulse 1.4s ease-in-out infinite;z-index:4;}
   #btnNuke:active{transform:scale(.9);}
+  #btnNuke svg{display:block;width:54%;height:54%;flex:none;pointer-events:none;}
   @keyframes nukePulse{0%,100%{box-shadow:0 0 0 4px rgba(255,150,50,.25),0 4px 14px rgba(255,120,30,.55);}
      50%{box-shadow:0 0 0 9px rgba(255,150,50,.12),0 4px 22px rgba(255,120,30,.75);}}
   /* 銀河挑戰路線：關卡選擇畫面（v0.9.5 取代原本的一排小圓點） */
@@ -434,7 +435,7 @@
     </div>
 
 <div id="playControls"><button id="btnPause" class="hide" title="Pause">⏸</button><button id="playMute" class="hide">♪</button></div>
-    <button id="btnNuke" class="hide" title="Nuke">☢️</button>
+  <button id="btnNuke" class="hide" title="Nuke"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><circle cx="32" cy="32" r="31" fill="#f2c763" stroke="#fff0ac" stroke-width="2"/><g fill="#43504f"><circle cx="32" cy="32" r="5"/><path d="M42 32H57A25 25 0 0 0 44.5 10.35L37 23.34A10 10 0 0 1 42 32Z"/><path transform="rotate(120 32 32)" d="M42 32H57A25 25 0 0 0 44.5 10.35L37 23.34A10 10 0 0 1 42 32Z"/><path transform="rotate(240 32 32)" d="M42 32H57A25 25 0 0 0 44.5 10.35L37 23.34A10 10 0 0 1 42 32Z"/></g></svg></button>
     <div id="pauseOverlay" class="overlayBox hide">
       <div class="box">
         <div class="ic">⏸️</div>
@@ -449,7 +450,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.59';
+const BUILD='v0.9.60';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：

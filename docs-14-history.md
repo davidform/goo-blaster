@@ -1049,3 +1049,18 @@ main發布commit 16c9eaa5852e9b47b83027d260387d953bddf91e，Summary `build: publ
 itch upload19167726/build1963772，公開完整遊戲payload SHA與測試相同，僅附加平台htmlgame.js；公開整檔SHA e6420bf424287926bfa4254364d732cb332a5183f64085becf254c5a43d7e8b4。CUA實按Run game、第5關與暫停，v59與遊戲已暫停皆確認。第一次全頁getByRole找不到iframe內按鈕，改用已觀察iframe的enter-frame selector成功，未改遊戲。
 
 Pages部署commit5854993c58d35c759243d820042520e9f9ee7168，Actions34420337266 success；公開HTML SHA與測試原始bytes相同，Edge行動視窗實際開始3.0418秒、暫停，零pageerror。Devlog1658361已Published，中英全文與v59附件核對： https://davidform.itch.io/goo-blaster/devlog/1658361/v0959-rounded-visuals-and-a-calmer-midgame 。store/devlogs/v0.9.59/post.json記公開網址，未逐版重複公告v56–58。尚待Pixel新版安裝／存檔與長時間效能、白屏舒適度、難度回饋；全平行及母語潤稿未執行。
+
+
+## v0.9.60：核彈標示置中與放大（2026-09-10）
+
+根因：核彈按鈕雖使用flex置中，但內容為系統emoji，其實際墨跡受字型留白／基線影響，CSS文字框置中不保證符號置中。改為單檔內嵌SVG，圓盤／中心點共用32,32中心，寬高為按鈕內容區54%，比原0.46倍直徑字級稍大；不增加外部資產或相依。既有11語言aria-label保留，SVG對輔助技術隱藏且不攔截觸控。按鈕位置、外框大小、命中區、核彈演出及玩法程式完全不變。
+
+新增py_nuke_icon，實際擷取按鈕PNG後用瀏覽器Canvas解碼量測黃色圓盤；320×568/DPR1、390×844/DPR2、412×915/DPR3、844×390/DPR2、834×1194/DPR2中心誤差各軸≤1 CSS px，五組真實touchscreen.tap皆發射成功，與衝刺鍵不重疊。圓盤內部墨跡約佔外框47.4–48.3%，54%是含圓盤邊線的內容區SVG寬度，兩個數字分母不同。已檢視nuke60-game.png與按鈕近照。
+
+測試開發時先遇未安裝Pillow，改用既有瀏覽器Canvas解碼，不新增測試相依。第一次全框像素量測錯把圓形按鈕外角露出的黃色子彈納入，得到9/7.5px假偏移；改測中央70%範圍，仍能抓偏心且排除框外遊戲像素。初設48%墨跡門檻混淆內容區與邊框，依实际邊框定義修正為46–56%；沒有調整遊戲來迎合錯誤量測。教訓：排版框與實際墨跡須分開驗證，截圖裡的背景不是圖示。
+
+針對性四項py_nuke_icon／py_field_ui／py_v0930／py_nuke_cinematic通過，報告20260910-085341-557988-nuke60-focused。正式完整批次20260910-085409-241472-nuke60-full為68/68通過，source_unchanged=true；測試來源SHA 4d7e83f6ffcf33818625fc92a13f42ea4715a54a83c3b774254a6de361c248ed。
+
+使用者另問是否再立體一些：建議後续以角色厚度、柔和明暗為主，維持地面低對比與彈幕辨識；本版只修核彈標示，沒有擅自加入第二次微3D改動。USB無裝置；Surface接電100%。
+
+補驗證：以v59原始公開payload跑新像素測試，在320×568量到向下3.5 CSS px偏移、測試如預期失敗；v60同尺寸垂直0px，五尺寸各軸≤1px。nuke60-baseline59.log保留對照失敗。CPU4版py_nuke_icon與py_release_smoke（離線、新存檔、瀏覽器冷啟動）皆PASS，nuke60-verification.json記同SHA及log hashes。第1關新手bot滿血通關，前3關均通過；Node test9持續闖關553.6秒後正常結束，沒有略過或延長上限。獨立py_v0927_perf三次56.7／55.1／53.5，平均55.1FPS；同批同伴51.1→50.9（-0.4%），非Pixel量測。全平行未執行，手機未連線。封裝／公開交付待後續收據。
