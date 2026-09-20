@@ -2,62 +2,56 @@
 
 ## 目前任務（2026-09-20）
 - 使用者要求：衝刺不可與Boss重疊；後期成長過強；衝刺冷卻過短；新增與闖關相連的種植／建設玩法。
-- 單代理、序列修改index.html；分版驗證後同批公開交付，不改存檔進度。
-- 分支codex/soft-world-ui；原基準a406fad，公開版本仍v0.9.60。
-- 已安全git pull --ff-only；沒有reset。新接手仍先核對未提交變更。
-- Windows一般命令曾遇1909鎖定；22:25恢復後於22:47再鎖定，exec/view_image/CUA皆受影響；提升權限檔案操作可用。
-- 效能以一般環境執行；提升權限環境曾8–9FPS、旧版亦低，恢復一般環境50.7FPS；未證明確切根因。
+- 單代理，序列修改／驗證／commit+push；最後同批交付，保留進度與購買紀錄。
+- 分支codex/soft-world-ui；原基準a406fad，公開仍v0.9.60。
+- 已安全pull --ff-only，未reset。新接手仍先核對工作區與BUILD。
 
-## v61 Boss碰撞修正
-- v61已commit/push dcf470f；新增掃掠圓碰撞與初始重疊分離，Boss移動亦不能壓進玩家。
-- 僅此單一機制；無敵、傷害、冷卻、卡池等不變。
-- SHA dc5f516f6967cc1d17df961778c7c25654c965dc84dd637b9cf2ad8099da87ed。
-- 完整.venv/Scripts/python.exe run_tests.py --jobs 2 --label boss-solid61-full：69/69、source_unchanged=true。
-- 報告_private/test-runs/20260920-212704-286175-boss-solid61-full/results.json。
-- 新py_boss_solid實跑60掃掠案例＋同中心恢復／普通接觸傷害／逃離。
-- 舊v60對照預期exit1；v61 CPU4通過。boss61-verification.json確認離線／冷啟動通過，boss61-contact.png已檢視。
-- 新手bot第1–3關通過，第1關滿心。效能獨立同批42.0→41.8FPS，單局有同伴47.5FPS；不是Pixel量測。
-- 全平行未執行（Surface曾凍結），真機遊玩未執行。
-
-## 接續順序
-- v61/v62已完成驗證與commit/push。現在根目錄BUILD v0.9.63，尚未commit／公開。
-- v62已commit/push 19317f0，SHA 293e4a1b662fc2654b2d5a2459c87b4f50c52197300875ac42e1ea016554e6fd。
-- v62完整69功能PASS／效能FAIL；一般命令環境恢復後補跑效能PASS，合併70項皆過。
-- 完整20260920-215416-831180-dash62-full，補跑20260920-222510-276434-dash62-perf-standard-session。
-- dash62-verification.json含CPU4／離線／A-B：滿強化Lv25間隔0.77→2.22秒，無敵比32.8→11.7%；單局效能50.7FPS。
-- v62：商店dash已買等級保留、改4/8/12%距離；只讓局內cd卡縮短冷卻3.0→2.6→2.2秒。
-- 冷卻不再隨玩家等級speedScale加快；保留原.42秒遊戲時間無敵。
-- v62程式／翻譯／測試已完成；私人patch腳本不可重複套用。
-- tests/py_dash_cadence.py已登記／通過，24組shop/cards/level比較。
-- v63：每局2武器／4能力槽，已選能力可升滿，永久攻擊強化保留。第11關起可於主畫面選副武器。
-- 已抓到第21關起原始開局3武器會繞過上限，補startingWeapons與100組開局／真實select測試。
-- 第一輪build63-full主動中止，aborted.json保留原因；不可用該報告驗收。
-- v63正式完整20260920-224239-905698-build63-full-final：70PASS／舊audit斷言1FAIL；補跑20260920-230249-160822-build63-audit-retry PASS，合併71/71。
+## 已完成的獨立版本
+- v61 commit dcf470f已push：玩家掃掠碰撞與Boss位移分離，不能衝刺穿過或重疊Boss。
+- 完整69/69：_private/test-runs/20260920-212704-286175-boss-solid61-full/results.json。
+- 60組碰撞／CPU4／離線／冷啟動皆過；舊v60新測試預期失敗，boss61-verification.json與截圖。
+- v62 commit19317f0已push：商店dash等級改4/8/12%距離；局內cd卡才減冷卻3→2.6→2.2秒。
+- 不讓speedScale加快冷卻，原.42秒遊戲時間無敵保留。
+- 完整20260920-215416-831180-dash62-full為69PASS/效能FAIL；20260920-222510-276434-dash62-perf-standard-session補跑PASS，合併70項全過。
+- dash62-verification.json：滿商店滿卡Lv25間隔.7667→2.2167秒，保護比32.83→11.67%；CPU4／離線皆過。
+- v63 commit9d25416已push：每局2武器/4能力；第11關起主畫面選副武器，保留永久主武器+3。
+- 搭配全滿後每張待選卡給2糖果幣，不再送經驗或回血。40搭配、50關×2副武器、11語言皆驗。
+- 完整20260920-224239-905698-build63-full-final：70PASS/舊audit斷言FAIL；20260920-230249-160822-build63-audit-retry補跑PASS，合併71/71。
 - SHA acc155252e017fd0b0e01614821fdb7a090bfbf91074e0fd8003b95fd787358a。
-- build63-verification.json確認CPU4／離線／冷啟動；靶場攻擊配裝DPS約-20.2%，防禦配裝約-63.5%，不是通關率。
-- 新手第1、2關bot通過，第3關本次失敗；獨立效能45.0FPS。全平行、真機未執行。
-- 全卡滿後改少量糖果幣，不再送經驗／回血；避免回饋循環。
-- v63專項與11語言／50關資料／主畫面回歸已通過；py_build_slots加入全50關兩種副武器及保留商店主武器等級。
-- build63-power-ab.json為固定seed滿商店bot；第9關新3/3通過，後期bot兩版均失敗，不代表真人勝率／曲線完成。
-- initial.json保留初稿量測（第21關起仍3武器），不是最終證據。
-- v64庭院檔案不可混入v63 commit。
-- 附加模式暫採糖果庭院：種子→種植→通關成長→收成→修復小屋，不以現實時間倒數，不加永久DPS。
-- 庭院／城堡偏好已用async詢問，尚無答覆；已說明先按建議庭院規劃。
-- 庭院已在_private/candidate64私人候選整合，尚未套用根目錄或發布。
-- _private/implement64.py＋garden64.js及i18n/build_v0964.py可在v63通過後套用；docs-16-garden-design.md同步設計。
-- 三花圃、3植物、通關推進、建材修復12/45/120花瓣；不增加戰鬥屬性。
-- tests/py_garden.py候選實跑通過：種植／收成／防重複／舊存檔／原生／備份碼／33語言尺寸；最後空花圃與disabled樣式微調待根目錄實驗收。
+- build63-verification.json：CPU4/離線/冷啟動；固定靶場攻擊型DPS約-20.2%、防禦型-63.5%，不是通關率。
+- 新手bot第1、2關過，第3關本次失敗；獨立效能45FPS。
+- build63-power-ab.json：第9關bot舊1/3、新3/3；後期兩版bot都0/3，不代表真人難度曲線已完成。
+- 第一輪v63因發現後期開局3武器繞過限制而主動中止，aborted.json及修前失敗保留，不用它驗收。
 
-## 測試與交付
-- 環境PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
-- HTML每版完整套件，邊角、CPU4／离線；效能solo，不與Android建置並跑。
-- 最終遊戲commit／完整同SHA報告後：build_test_apk.py、publish_test_apk.py、itch Butler、Pages、Devlog。
-- CUA getState在22:55因1909失敗、kernel退出；恢復後重新初始化，不假設舊releaseTab變數存在。
-- 現有授權涵蓋Git／測試APK／itch／Devlog／Pages；正式商店、定價、換簽章不包含。
-- Pixel若連線，先備份進度及核對簽章，再install -r；禁止卸載／清資料。
-- 固定APK入口：https://github.com/davidform/goo-blaster/releases/tag/android-test。
-- 公開基準v60／96000、SHA及各通道收據見_private/mobile-test/*v60.json及docs-14-history。
-- v60 Pixel原生存檔與WebView已核對；當時進度保留，不代表目前新版本已同步。
-- 每次最終交付後native/cleanup_local.ps1盤點再-Apply；保留最新／前版APK、進度備份、測試證據、A/B基準與簽章。
-- 前次21個舊測試profile因Windows拒絕存取未刪，不改ACL。
+## 正在處理 v0.9.64 糖果庭院
+- 根目錄v64已套用，尚未commit/push/公開。SHA b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db。
+- 三花圃、3植物（1/2/3次通關成熟，1/3/6花瓣）、小屋升級12/45/120花瓣。
+- 初始3種子，種植花1、收成回1、每次通關+1；重玩可成長，失敗不倒退，無現實時間倒數，不加戰鬥屬性。
+- 11語言19新key由i18n/build_v0964.py；docs-16-garden-design.md記範圍，後續章節收藏未實作。
+- GARDEN存於既有存檔／備份碼／原生Preferences，按rev合併，舊存檔安全初始化。
+- tests/py_garden.py已登記；種植/收成/重複結算/原生/備份碼/33語言尺寸專項通過，garden64.png已檢視。
+- focused 20260920-231018-764692-garden64-focused：8/8通過。
+- 完整72項20260920-231308-237941-garden64-full全部PASS、source_unchanged=true，獨立效能55.3FPS。
+- garden64-verification.json：5項CPU4／離線／新存檔／冷啟動全部通過，截圖已檢視。
+- 完整與專項已完成，接續commit `v0.9.64: add an offline Candy Garden linked to stage clears`，push。
+- store/devlogs/v0.9.64-notes.json已備中英文案，未產生post/未发布，等itch公開驗證後prepare。
 
+## 執行環境與限制
+- PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
+- 全套jobs2，效能solo；全平行因Surface凍結紀錄未執行，CPU4不冒充全平行／Pixel測試。
+- Windows一般命令曾1909鎖定，提升權限可用；23:08一般命令與CUA恢復。
+- 鎖定期間elevated測試8–9FPS且舊版亦低，恢復普通環境45–50FPS；未證明確切原因，未改Windows安全設定。
+- Git寫入與網路、ADB執行需要工具權限核准；先前拒絕是沙箱存取，不是自動審查拒絕。
+- 23:15 ADB devices空，沒有安裝新版本至Pixel；保留固定APK入口。
+
+## 待交付與驗證
+- 遊戲提交／同SHA完整驗證後：native/build_test_apk.py --tests <v64完整>，先backup_android.py，再publish_test_apk.py --publish。
+- Gradle不與效能測試並行。APK沿用appId／簽章，核對內部HTML／DEX／公開SHA，預期96400但以產物為準。
+- Butler只傳_private/itch-builds/v0.9.64/index.html至davidform/goo-blaster:html5。
+- CUA目前releaseBrowser選1/iab、releaseTab3，已登入davidform，公開頁仍v60、尚未按Run game。
+- itch驗公開payload＋Run game/start/pause；native/publish_pages.py指定已驗commit與itch收據，驗Actions＋publicSHA＋啟動。
+- _private/verify_pages64.py已準備；Devlog依native/DEVLOG-PUBLISHING.md，同批61–64一篇，查重／草稿／正文／Published。
+- 手機未連線就提供 https://github.com/davidform/goo-blaster/releases/tag/android-test，不卸載／清資料。
+- 發版後native/cleanup_local.ps1先盤點再-Apply，保留最新+前版APK、存檔、簽章、A/B、證據；不改ACL。
+- 公開v60/96000基準與收據見_private/mobile-test/*v60.json，前次21個舊profile拒絕存取未清。
+- 最終回報各渠道實際版本、測試證據、未執行真機/全平行/母語潤稿、UI截圖、4個commit Summary。

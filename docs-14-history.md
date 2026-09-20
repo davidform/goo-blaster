@@ -1112,3 +1112,15 @@ py_dash_cadence實跑24組商店／卡片／角色等級；滿商店滿卡Lv25�
 完整命令run_tests.py --jobs 2 --label build63-full-final：70PASS、上述舊audit斷言1FAIL；補跑--only py_audit_fixes --label build63-audit-retry通過。完整報告20260920-224239-905698-build63-full-final、補跑20260920-230249-160822-build63-audit-retry，validate_reports確認同SHA合併71/71。來源acc155252e017fd0b0e01614821fdb7a090bfbf91074e0fd8003b95fd787358a。CPU4及離線新存檔／冷啟動通過，build63-verification.json保留證據。新手bot第1、2關通過，第3關本次失敗；第1關硬門檻通過。獨立效能43.0／45.9／46.2平均45.0FPS，同批33.0→33.5（+1.6%）。
 
 同批固定20秒35靶、3seed、滿商店、Lv25的真實update傷害量測：舊版3武器13能力平均54229.4 DPS；新版攻擊搭配2武器4能力43290.2（約-20.2%）；防禦搭配19775.6（約-63.5%）。數字是固定靶場相對比較，不是玩家通關率。build63-power-ab.json的第9關bot舊1/3、新3/3，後期Boss關兩版bot都0/3；集中升級有時反而更有效，不能宣稱每關都更難或整條曲線已完成。教訓：成長上限要同時守住選卡與開局入口，舊全能力GOD測試只是合成極值，不代表可取得的搭配。已檢視build63-cards.png、build63-loadout.png。全平行及Pixel實玩未執行；公開通道仍v60，庭院完成後同批交付。
+
+
+## v0.9.64 — 闖關相連的糖果庭院（2026-09-20）
+
+使用者覺得逐關推進單調，希望種植／家園玩法與闖關相連。新增第四個主畫面分頁糖果庭院，三塊花圃、薄荷嫩芽／莓果花／月光花三植物；初始3種子，每次种植消耗1、收成返還1，每次通關另得1並讓作物成長一次。植物需1／2／3次通關、產1／3／6花瓣，小屋三次修復花12／45／120花瓣，解鎖植物與景觀。失敗不倒退，重玩可成長，不用現實時間或連線，不加攻擊／攻速／無敵。理想全種全收約4、再10、再21次通關完成三階，這是設計計算，非人類耐玩性驗證。
+
+garden欄位加入既有SAVE_VER、localStorage、原生Preferences及備份碼；cleanGarden防無效數字／植物／索引，garden revision獨立合併，保留原本進度／金幣／購買。舊存檔取得空庭院及初始種子。通關結算先經G.over防重複才推進成長，結果頁顯示種子與進入庭院按鈕。19個新增key由i18n/build_v0964.py產生11語言；圖像為內嵌SVG，維持單檔離線。首版非無限建設內容，後續章節收藏尚未實作，見docs-16-garden-design.md。
+
+新py_garden涵蓋真實種植／結果頁返回、未成熟與重複收成、雙重endGame、防無效輸入、三種作物產量、三次小屋修復、戰鬥屬性不變、舊存檔／重啟／備份碼／原生合併、11語言×3尺寸離線。專項8/8通過：20260920-231018-764692-garden64-focused。garden64.png已檢視；關閉中的收成／升級鍵降低對比，空花圃畫土壤加號。完整及CPU4驗證待收據補錄；目前不可宣稱公開交付。
+
+
+v64最終驗證：run_tests.py --jobs 2 --label garden64-full，_private/test-runs/20260920-231308-237941-garden64-full/results.json，72/72、source_unchanged=true，SHA b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db，沒有首輪失敗。CPU4專項py_garden／py_boss_solid／py_dash_cadence／py_build_slots／py_release_smoke皆PASS，含離線／新存檔／冷啟動，garden64-verification.json記log hashes。庭院另驗0種子及種子／花瓣上限。新手bot第1、2關滿心通過，第3關陣亡；第1關硬門檻通過。長時間Node test9實跑455.8秒正常完成。獨立效能三次53.8／56.1／56.1平均55.3FPS，同批無同伴41.2→有同伴41.7（+1.2%），不是Pixel數據。Surface全平行、Pixel實玩與母語潤稿仍未執行。Android來源備份android-source-20260920-232738.zip（80檔），USB無裝置。教訓：第二玩法用独立資源與純外觀成長，才不會再次放大已回報的戰力問題；仍需真人評估長期趣味與後期難度。
