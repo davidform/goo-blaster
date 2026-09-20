@@ -1124,3 +1124,14 @@ garden欄位加入既有SAVE_VER、localStorage、原生Preferences及備份碼�
 
 
 v64最終驗證：run_tests.py --jobs 2 --label garden64-full，_private/test-runs/20260920-231308-237941-garden64-full/results.json，72/72、source_unchanged=true，SHA b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db，沒有首輪失敗。CPU4專項py_garden／py_boss_solid／py_dash_cadence／py_build_slots／py_release_smoke皆PASS，含離線／新存檔／冷啟動，garden64-verification.json記log hashes。庭院另驗0種子及種子／花瓣上限。新手bot第1、2關滿心通過，第3關陣亡；第1關硬門檻通過。長時間Node test9實跑455.8秒正常完成。獨立效能三次53.8／56.1／56.1平均55.3FPS，同批無同伴41.2→有同伴41.7（+1.2%），不是Pixel數據。Surface全平行、Pixel實玩與母語潤稿仍未執行。Android來源備份android-source-20260920-232738.zip（80檔），USB無裝置。教訓：第二玩法用独立資源與純外觀成長，才不會再次放大已回報的戰力問題；仍需真人評估長期趣味與後期難度。
+
+
+v61–64同批交付完成（2026-09-20）：四個遊戲commit依序dcf470f、19317f0、9d25416、0f1f17a624937e81c19bad2fbe6c66abc37041c8，最終v64。APK96400／0.9.64-test.0，4300800 bytes，SHA c557d7f97251af3890a4ec682e8d83431ce0ecf0436ab1a7a1d1437859497226，固定appId與原簽章一致，內部HTML同測試SHA、DEX戰報外掛存在，Prerelease公開下載SHA一致；USB devices空，未對Pixel安裝。
+
+itch upload19167726/build1997627，https://html-classic.itch.zone/html/19167726-1997627/index.html?v=1789918742 的原始payload完整相同，只追加既知htmlgame.js；公開整檔SHA 227fcf3cb2ea273d61206663e315ba063798256b637401131e58a0cdbd5ee209。CUA實際Run game、看到v0.9.64與Garden、開始第1關、Pause顯示Paused，itch-v64.json保存收據。
+
+Pages部署9b59ad7ee52485bb680369f173b13688bb119fbc，Actions35520352539成功。首次公開HTML下載TimeoutError，第二次同網址下載及完整SHA比對通過；實際遊戲3.0359秒後暫停、0 JS errors，pages-v64.json。沒有因下載逾時重推或改遊戲。
+
+Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v0964-a-candy-garden-and-more-meaningful-builds 。先查無同版文章／草稿，單一v64附件，English＋Chinese(Traditional)，先存草稿核對全文再公開。編輯器同步有延遲：真實按鍵後首次textarea仍空，語言欄位失焦後正文同步；送出前逐字忽略空白比對為true。公開DOM全文／Published核對，native/devlog.py record及9項工作流程測試PASS。未發其他社群訊息。
+
+清理先dry-run再-Apply，刪除本機v59 APK及3份測試profile，共32,321,374 bytes（約30.8MiB），保留v64／v60、存檔／簽章／證據／基準。22個舊profile拒絕存取略過，沒有改ACL，cleanup-v64-output.json留存。遊戲最終72項無失敗；v62效能環境失败、v63舊斷言與中止批次、Pages下載逾時均保留紀錄。未執行Pixel新版安裝與長時間實玩／全平行壓測／11語言母語潤稿；後期難度及庭院耐玩性仍需真人回饋。

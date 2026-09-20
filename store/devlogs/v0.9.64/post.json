@@ -1,0 +1,59 @@
+{
+  "build": "v0.9.64",
+  "title": "v0.9.64 — A Candy Garden and more meaningful builds",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "A Candy Garden now connects your runs: plant three plots, clear stages to grow them, harvest petals, and restore your cottage to unlock new plants. Replayed stages count too. There are no real-time timers, and the garden adds no permanent combat stats."
+    },
+    {
+      "kind": "p",
+      "text": "Dashes now stop at Boss bodies. Dash cooldown starts at 3 seconds and can fall to 2.2 seconds through upgrade cards. Candy Shop Dash Training now improves dash distance instead; your purchased ranks are kept."
+    },
+    {
+      "kind": "p",
+      "text": "Each run now holds two weapons and four skills. You can keep upgrading and evolving your chosen build. From Stage 11, choose your starting secondary weapon in the menu. Completed builds earn a little Candy Coin compensation instead of extra XP or healing."
+    },
+    {
+      "kind": "p",
+      "text": "Your stage progress and purchases are preserved. Please tell us how later stages feel with an offensive or defensive build, and whether the garden gives you a reason to return between adventures."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "新增與冒險相連的糖果庭院：在三塊花圃種植，通關推進成長，收成花瓣後修復小屋、解鎖新植物。重玩關卡也能成長，不用等待現實時間，庭院不增加永久戰鬥能力。"
+    },
+    {
+      "kind": "p",
+      "text": "衝刺現在會停在 Boss 身體外緣。冷卻從 3 秒開始，只能透過局內升級卡縮短至 2.2 秒；糖果屋的衝刺訓練改為增加距離，已購買的等級會保留。"
+    },
+    {
+      "kind": "p",
+      "text": "每局可搭配兩種武器與四種能力，已選項目仍可升級及進化。第 11 關起可在主畫面選擇起始副武器；搭配全滿後改給少量糖果幣，不再追加經驗或回血。"
+    },
+    {
+      "kind": "p",
+      "text": "關卡進度與購買紀錄會保留。歡迎回報攻擊型、防禦型搭配在後期關卡的感受，以及庭院是否讓你更想在冒險之間回來看看。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "d8402ab6e2e219445db17ba3ae37d94aea85ebea4b08edc95a2b736da91f7e90",
+  "public_game_sha256": "b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db",
+  "public_build_id": 1997627,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>A Candy Garden now connects your runs: plant three plots, clear stages to grow them, harvest petals, and restore your cottage to unlock new plants. Replayed stages count too. There are no real-time timers, and the garden adds no permanent combat stats.</p>\n<p>Dashes now stop at Boss bodies. Dash cooldown starts at 3 seconds and can fall to 2.2 seconds through upgrade cards. Candy Shop Dash Training now improves dash distance instead; your purchased ranks are kept.</p>\n<p>Each run now holds two weapons and four skills. You can keep upgrading and evolving your chosen build. From Stage 11, choose your starting secondary weapon in the menu. Completed builds earn a little Candy Coin compensation instead of extra XP or healing.</p>\n<p>Your stage progress and purchases are preserved. Please tell us how later stages feel with an offensive or defensive build, and whether the garden gives you a reason to return between adventures.</p>\n<h2>繁體中文</h2>\n<p>新增與冒險相連的糖果庭院：在三塊花圃種植，通關推進成長，收成花瓣後修復小屋、解鎖新植物。重玩關卡也能成長，不用等待現實時間，庭院不增加永久戰鬥能力。</p>\n<p>衝刺現在會停在 Boss 身體外緣。冷卻從 3 秒開始，只能透過局內升級卡縮短至 2.2 秒；糖果屋的衝刺訓練改為增加距離，已購買的等級會保留。</p>\n<p>每局可搭配兩種武器與四種能力，已選項目仍可升級及進化。第 11 關起可在主畫面選擇起始副武器；搭配全滿後改給少量糖果幣，不再追加經驗或回血。</p>\n<p>關卡進度與購買紀錄會保留。歡迎回報攻擊型、防禦型搭配在後期關卡的感受，以及庭院是否讓你更想在冒險之間回來看看。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1670920/v0964-a-candy-garden-and-more-meaningful-builds",
+  "verified_at": "2026-09-20T15:48:19.905511+00:00"
+}
