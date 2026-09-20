@@ -50,6 +50,8 @@ DUMB = r"""
     if(cs.length) cs[Math.floor(Math.random()*cs.length)].click();},80);
 """
 
+# Legacy overload fixture: intentionally exceeds v63 build slots. It is a stress
+# diagnostic, not proof that a reachable player build can clear a stage.
 GOD = """
   const P=G.P;
   P.wep={bubble:5,graffiti:5,yoyo:5};

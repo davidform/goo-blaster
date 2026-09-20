@@ -49,19 +49,20 @@ with sync_playwright() as pw:
     for x in r:
         ck(f"第{x['關卡']:>3}關 愛用武器 +3 完整生效",
            x["實際獲得"]==3, f"{x['無強化']}→{x['買滿後']} (+{x['實際獲得']})")
-    # 起始總戰力不能因為這個修正而暴增或暴跌
+    # v63：主武器商店額度仍完整保留；起始只攜帶主武器及玩家選定的副武器。
     r2=pg.evaluate("""()=>{
         const out=[];
         for(const lv of [10,24,49]){
             META={}; LV_IDX=lv; start();
-            out.push({關卡:lv+1, 總等級:G.P.wep.bubble+G.P.wep.graffiti+G.P.wep.yoyo});
+            out.push({關卡:lv+1, 總等級:G.P.wep.bubble+G.P.wep.graffiti+G.P.wep.yoyo,種類:Object.values(G.P.wep).filter(v=>v>0).length});
         }
         return out;
     }""")
-    exp={11:3, 25:6, 50:12}   # v0.9.23：每章 5 關後，關卡→章節的對應改變
+    exp={11:3, 25:4, 50:7}   # v63：2+1、2+2、2+5；不再自動携帶第三把武器
     for x in r2:
         ck(f"第{x['關卡']}關 起始武器總等級 = {exp[x['關卡']]}",
            x["總等級"]==exp[x["關卡"]], str(x["總等級"]))
+        ck(f"第{x['關卡']}關 只攜帶兩種武器", x["種類"]==2, str(x["種類"]))
     ck("無 JS 錯誤", not errs, str(errs[:2]))
     pg.close(); c.close()
 
