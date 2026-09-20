@@ -450,7 +450,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.60';
+const BUILD='v0.9.61';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -3111,6 +3111,28 @@ function speedScale(){ return 1+Math.min(.60,(G.P.lv-1)*.035); }
 function gooPct(){ return Math.round(clamp(G.gooArea/(W*H),0,1)*100); }
 function gooBonus(){ return 1+gooPct()/100*0.30; }
 
+// Boss bodies remain solid during invulnerability. Sweep the whole movement
+// segment so a fast dash cannot jump from one side of a Boss to the other.
+function blockBossMovement(fromX,fromY){
+  const P=G.P,dx=P.x-fromX,dy=P.y-fromY,a=dx*dx+dy*dy;
+  let first=1,blocked=false;
+  for(const e of G.E){
+    if(!e.boss||e.hp<=0)continue;
+    const r=P.r+e.r,ox=fromX-e.x,oy=fromY-e.y,c=ox*ox+oy*oy-r*r;
+    if(c < -0.001){
+      const d=Math.hypot(ox,oy),m=Math.hypot(dx,dy);
+      const nx=d>0.001?ox/d:(m>0.001?-dx/m:1),ny=d>0.001?oy/d:(m>0.001?-dy/m:0);
+      P.x=e.x+nx*(r+0.01);P.y=e.y+ny*(r+0.01);return true;
+    }
+    if(a<0.000001)continue;
+    const b=ox*dx+oy*dy,disc=b*b-a*c;
+    if(b>=0||disc<0)continue;
+    const t=(-b-Math.sqrt(disc))/a;
+    if(t>=-0.000001&&t<=first){first=Math.max(0,t-0.01/Math.sqrt(a));blocked=true;}
+  }
+  if(blocked){P.x=fromX+dx*first;P.y=fromY+dy*first;}
+  return blocked;
+}
 function update(dt,rawdt){
   const P=G.P;
   G.t+=rawdt;                       // 關卡時鐘 = 真實時間
@@ -3121,6 +3143,7 @@ function update(dt,rawdt){
   if(P.chestDmgT>0) P.chestDmgT-=dt;
 
   //--- 玩家移動
+  const beforeMoveX=P.x,beforeMoveY=P.y;
   if(P.dashT>0){
     const wasDashing=true;
     P.dashT-=dt;
@@ -3148,6 +3171,10 @@ function update(dt,rawdt){
         G.PT.push({x:P.x-mx*12,y:P.y-my*12,vx:-mx*70,vy:-my*70,
                    r:rnd(3,P.onGoo!==0?7:5),hue:P.onGoo!==0?P.onGoo:175,life:.3,max:.3});
     }
+  }
+  if(blockBossMovement(beforeMoveX,beforeMoveY)){
+    hurtPlayer(); // Existing dash/hit/revival invulnerability still protects health.
+    if(!G.running)return;
   }
   const pd=Math.hypot(P.x,P.y);
   if(pd>ARENA){ P.x=P.x/pd*ARENA; P.y=P.y/pd*ARENA; }
@@ -3355,6 +3382,12 @@ function update(dt,rawdt){
       const dead=hurtPlayer();
       if(e.boom) killEnemy(e);
       if(dead) return;
+    }
+    // A moving/spawning Boss must not enter the player either. Keep small
+    // enemies unchanged; only Boss bodies are solid.
+    if(e.boss){
+      const dx=e.x-P.x,dy=e.y-P.y,d=Math.hypot(dx,dy),r=e.r+P.r;
+      if(d<r){e.x=P.x+(d>0.001?dx/d:1)*(r+0.01);e.y=P.y+(d>0.001?dy/d:0)*(r+0.01);}
     }
   }
 

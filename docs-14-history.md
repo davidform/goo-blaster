@@ -1081,3 +1081,13 @@ Devlog https://davidform.itch.io/goo-blaster/devlog/1658406/v0960-a-clearer-nuke
 使用者澄清「不清除遊戲進度，刪除不必要留著的」。新增native/cleanup_local.ps1：唯讀盤點預設、-Apply執行，限本機舊APK與測試瀏覽器profile白名單；保留最新v60／上一版v59、存檔／簽章／證據／基準／工具。先驗已公開收據與APK SHA，拒絕執行中測試／Gradle、外部路徑和reparse point，全部目標先檢查再刪除。不刪公開歷史附件、其他App或手機資料。
 
 第一次盤點遭Windows PermissionDenied，在任何刪除前停止；改為明列拒絕存取的目錄為skipped，未修改ACL。再次盤點後實際-Apply清掉v47/v48/v52/v55四份APK與2份測試profile，共28,328,313 bytes（約27.0MiB），21個profile仍因拒絕存取未清。收據_private/mobile-test/cleanup-last-output.json及帶時間戳的cleanup-local報告。遊戲HTML未變、未重跑遊戲三輪；本次驗證為路徑盤點、實際刪除、保留檔SHA与再次盤點。
+
+## v0.9.61 — Boss 身體阻擋移動（2026-09-20）
+
+使用者回報衝刺能進入 Boss 身體。根因是原本碰撞只呼叫 hurtPlayer；衝刺無敵使傷害被忽略，卻沒有任何位移阻擋。新增玩家移動線段對 Boss 圓形碰撞範圍的掃掠檢查，接觸時停在外緣，避免低幀率大步長穿越；初始重疊會分離，Boss 自己移動也不能壓進玩家。不改冷卻、無敵時間、Boss HP、卡池或永久強化。
+
+新增 py_boss_solid 並登記完整套件：第1／5／25／50關、5方向、3步長共60案例，驗證無敵時停止於邊界且不扣心、普通接觸仍扣心、同中心可恢復且可向外逃離。舊v60跑此測試 exit1（預期失敗），v61 CPU4通過。完整 run_tests.py --jobs 2 --label boss-solid61-full，69/69通過、source_unchanged=true，報告_private/test-runs/20260920-212704-286175-boss-solid61-full/results.json；SHA dc5f516f6967cc1d17df961778c7c25654c965dc84dd637b9cf2ad8099da87ed。新手bot第1–3關皆通過，第1關3/3心；獨立效能同批42.0→41.8FPS（同伴影響-0.6%），單局有同伴平均47.5FPS，非手機量測。
+
+教訓：無敵狀態與實體碰撞是兩個規則，不能靠傷害處理兼任阻擋。另有v62衝刺節奏、v63搭配上限、庭院模式待辦；未完成前不宣稱交付。完整平行壓測未執行（Surface凍結紀錄，沿用jobs2），Pixel實玩未執行。
+
+補驗：_private/test-artifacts/boss61-verification.json確認舊版預期失敗、v61 CPU4碰撞、CPU4離線／新存檔／冷啟動皆通過，boss61-contact.png已視覺檢查。舊版最小中心距1.667px（應≥67px），並穿至Boss另一側；新版60組皆保持半徑和外緣。公開通道仍v60，待後續獨立版本完成同批交付。
