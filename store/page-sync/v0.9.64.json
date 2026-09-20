@@ -9,10 +9,10 @@
   "topic_description_public_verified": true,
   "profile_current_version_verified": true,
   "old_opening_post_images_removed": true,
-  "new_screenshots_uploaded": false,
+  "new_screenshots_uploaded": true,
   "game_gallery_still_old": true,
   "prepared_assets": "store/screenshots/v0.9.64/manifest.json",
-  "remaining": "Chrome fileChooser.setFiles returned Not allowed twice. User must enable Allow access to file URLs for the ChatGPT extension. Then upload current screenshots to the game gallery and opening post, and verify both plus the profile. No duplicate devlog is needed.",
+  "remaining": "New images published and verified on game page, topic and profile. Five legacy gallery images remain after the three new images: 29349610/29349612/29349614/29349615/29349622. Chrome delete confirmation/accept timed out twice; did not verify deletion. User was asked to confirm any visible deletion dialog. No game code/APK/devlog changes.",
   "phone": {
     "version_code": 96400,
     "build": "v0.9.64",
@@ -22,5 +22,18 @@
     "runtime_progress_coins_meta_language_preserved": true,
     "launched": true,
     "gameplay_performance_tested": false
-  }
+  },
+  "game_gallery_new_images_first": true,
+  "topic_images_public_verified": true,
+  "profile_images_loaded_verified": true,
+  "new_image_ids": {
+    "adventure": 30140438,
+    "garden": 30140437,
+    "gameplay": 30140436
+  },
+  "public_image_urls": [
+    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MDQzOC5wbmc=/original/ziRRFl.png",
+    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MDQzNi5wbmc=/original/vgFSfk.png",
+    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MDQzNy5wbmc=/original/h3Ozk7.png"
+  ]
 }

@@ -1150,3 +1150,9 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 未完成：Chrome檔案上傳兩次Not allowed，已告知使用者需開啟ChatGPT擴充功能Allow access to file URLs。新三圖已備妥，尚未上傳，遊戲相簿仍5張舊圖；store/page-sync/v0.9.64.json明列partial狀態。等待權限後補圖，不重複Devlog。純流程／頁面改動，沒有重跑遊戲三輪，沿用未變HTML的既有72/72證據。
 
 教訓：編輯操作成功不等於表單已同步或已保存；逐步核對編輯器、提交及公開正文，頁面圖片與遊戲檔分開驗收。
+
+
+### 2026-09-21 圖片權限完成後續同步
+使用者開啟Chrome檔案網址權限後，三圖上傳成功，image IDs30140438（主畫面）、30140437（庭院）、30140436（遊戲）。原貼文透過Choose image重用已上傳圖片，未新增回覆；公開貼文與個人頁三圖naturalWidth>0、舊原文三圖為0。遊戲相簿三張新圖排最前並保存，公開URL順序與載入確認。
+
+未完成清理：5張舊相簿圖仍在後方；Delete觸發Chrome confirm後，accept在Emulation.setFocusEmulationEnabled逾時，重試一次仍失敗。重新讀頁證明沒有刪除成功；已請使用者確認可見提示，不用逾時當成功。兩個舊編輯分頁不要再保存過期排序。沒有修改HTML，沒有重建APK、重發Devlog或重跑遊戲三輪。
