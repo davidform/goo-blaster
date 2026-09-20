@@ -26,6 +26,20 @@
 
 8. 依[PAGES-PUBLISHING.md](PAGES-PUBLISHING.md)同步同一已驗證版本至GitHub Pages，核對Actions、公開SHA與啟動。
 
+9. 同步頁面介紹與截圖，依下節執行。Butler只更新遊戲檔，不能將上傳成功當成介紹／圖片更新成功。
+
+## 介紹與截圖同步（2026-09-21）
+
+使用者要求 itch.io 遊戲頁自動更新，並指出個人頁仍顯示舊圖。每次已授權發版也須完成下列步驟；這是發版流程，不建立背景排程。
+
+- 範圍：遊戲4906809的介紹／截圖，以及[既有討論串](https://itch.io/t/6826201/50-stages-no-ads-no-gacha-works-offline-my-browser-roguelite-needs-breaking)的開頭貼文17090045。個人頁會引用該貼文，須另外檢查。保留歷史回覆，不每版另發留言洗版。
+- 執行 `.venv/Scripts/python.exe native/prepare_itch_screenshots.py`，從目前HTML的全新離線存檔截取主畫面、實際遊戲與庭院；產物在 `store/screenshots/<BUILD>/`，manifest記HTML SHA、圖片SHA、實際遊戲時間及瀏覽器錯誤。使用已有Playwright開發環境，遊戲本身不增加相依。
+- 先確認公開版本與manifest來源一致，人工檢視每張圖片，再透過已登入瀏覽器上傳。不得以舊圖片改檔名冒充新版，不把測試作弊畫面當玩家成績。
+- 介紹只列已公開功能；更新版本、玩法與固定Android測試入口，避免維護易過時的卡牌／寶箱總數。不更改價格、專案身分或公開狀態。
+- 開頭貼文原地編輯並註明舊回覆對應舊版本；同步目前圖片。截圖上傳若被瀏覽器權限阻擋，明確記錄未完成，不能宣稱整個頁面同步完成。
+- 儲存後重新開啟公開遊戲頁、討論串與個人頁，驗證正文、版本、圖片URL及圖片實際載入。收據放 `store/page-sync/<BUILD>.json`，分別記錄文字／圖片狀態及未完成原因。
+- 無HTML改動的補同步不提高BUILD、不重發APK或重複Devlog；仍需核對來源SHA，並實際驗證頁面。
+
 ## 已完成的一次性設定
 
 2026-09-09 v55首次建立html5通道；在編輯頁讓新版index.html勾選「This file will be played in the browser」。舊goo-blaster-v0.9.31.html取消網頁遊玩並勾「Hide this file and prevent it from being downloaded」，保留未刪除。之後只推同一通道，不能每版新增不同通道。

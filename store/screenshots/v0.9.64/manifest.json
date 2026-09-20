@@ -1,0 +1,16 @@
+{
+  "build": "v0.9.64",
+  "source_sha256": "b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db",
+  "capture": "Fresh offline save; planted first crop via UI; stage 1 real-time gameplay without stat changes.",
+  "gameplay": {
+    "time": 20.229599999976084,
+    "hearts": 3,
+    "stage": 1
+  },
+  "page_errors": [],
+  "files": {
+    "adventure.png": "bf9ebc69b4dc258ed60e1f74fb0825785347cfecf84d868d2c4839a6d5351df5",
+    "gameplay.png": "f2c68e6aba8d1c30592f1de452a87ff5d8469ac47e6cf1cfda26fcabeb094e5a",
+    "garden.png": "a143cf88ff7d1a9707a37038a1722de78b097c7459e2ef82faf5f1fa2f6c9c7b"
+  }
+}

@@ -1,6 +1,6 @@
 # GOO BLASTER 精簡交接
 
-## 目前狀態（2026-09-20）
+## 目前狀態（2026-09-21）
 - 使用者本次四項需求已實作並交付v0.9.64：Boss阻擋、衝刺節奏、搭配上限、糖果庭院。
 - 分支codex/soft-world-ui，遊戲commit0f1f17a624937e81c19bad2fbe6c66abc37041c8；新接手仍先核對工作區／遠端／BUILD。
 - 最終HTML SHA b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db。
@@ -37,7 +37,7 @@
 ## 公開渠道
 - APK固定 https://github.com/davidform/goo-blaster/releases/tag/android-test ，v64/96400/0.9.64-test.0。
 - APK4300800bytes，SHA c557d7f97251af3890a4ec682e8d83431ce0ecf0436ab1a7a1d1437859497226，原appId／簽章一致，HTML／DEX／公開SHA均核對。
-- USB無裝置，未安裝Pixel；不要卸載／清資料，下載新版選更新。
+- Pixel已覆蓋安裝v64/96400並啟動；簽章、原生存檔逐位元一致及runtime進度／糖果幣／商店等級／語言一致；證據pixel-update-v64.json。
 - itch upload19167726/build1997627；公開payload同SHA、實際Run game/start/pause通過，收據itch-v64.json。
 - Pages部署9b59ad7ee52485bb680369f173b13688bb119fbc，Actions35520352539 success；完整SHA／開始3.0359秒／暫停／0errors通過。
 - Pages首次下載逾時，第二次成功，未重推或改內容；pages-v64.json記最終證據。
@@ -48,8 +48,12 @@
 - 22個舊profile拒絕存取未清，不改ACL。
 
 ## 下一步／未完成
+- itch介紹、原討論串17090045與個人頁引用已更新v64；個人頁舊三張圖已移除。遊戲相簿5張舊圖仍待替換。
+- 新圖在store/screenshots/v0.9.64；prepare_itch_screenshots.py實跑離線／新存檔／20.23秒遊戲／0errors／HTML SHA未變。
+- Chrome setFiles兩次Not allowed，已請使用者開啟ChatGPT擴充功能「允許存取檔案網址」，尚未收到回覆；勿宣稱圖片已更新。
+- 權限就緒後上傳3新圖至遊戲頁及原貼文，核對公開頁／個人頁；收據store/page-sync/v0.9.64.json仍標未完成。無需重發Devlog或APK。
 - 收集Pixel上第9關以後攻擊／防禦搭配、Boss邊緣衝刺、庭院成長循環的實玩回饋，再單一變數調整。
-- Pixel新版覆蓋更新與長時間FPS未測；Surface全平行因凍結紀錄未跑，CPU4不是替代證據；11語言母語潤稿未做。
+- Pixel長時間FPS未測；Surface全平行因凍結紀錄未跑，CPU4不是替代證據；11語言母語潤稿未做。
 - Windows一般工具帳戶反覆1909鎖定；提升權限檔案／Git工具可用，已啟動一般環境測試照常完成。
 - 鎖定期間elevated效能8–9FPS、舊版亦低；普通環境恢復45–55FPS，未證明原因、未改Windows安全設定。
 - PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules；jobs2，效能solo，不與Gradle同時跑。

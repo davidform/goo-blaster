@@ -1135,3 +1135,18 @@ Pages部署9b59ad7ee52485bb680369f173b13688bb119fbc，Actions35520352539成功�
 Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v0964-a-candy-garden-and-more-meaningful-builds 。先查無同版文章／草稿，單一v64附件，English＋Chinese(Traditional)，先存草稿核對全文再公開。編輯器同步有延遲：真實按鍵後首次textarea仍空，語言欄位失焦後正文同步；送出前逐字忽略空白比對為true。公開DOM全文／Published核對，native/devlog.py record及9項工作流程測試PASS。未發其他社群訊息。
 
 清理先dry-run再-Apply，刪除本機v59 APK及3份測試profile，共32,321,374 bytes（約30.8MiB），保留v64／v60、存檔／簽章／證據／基準。22個舊profile拒絕存取略過，沒有改ACL，cleanup-v64-output.json留存。遊戲最終72項無失敗；v62效能環境失败、v63舊斷言與中止批次、Pages下載逾時均保留紀錄。未執行Pixel新版安裝與長時間實玩／全平行壓測／11語言母語潤稿；後期難度及庭院耐玩性仍需真人回饋。
+
+
+## 2026-09-21 — v0.9.64手機覆蓋更新與itch頁面同步補漏（無遊戲改動）
+
+根因：Butler只同步HTML，不會更新遊戲頁文案、截圖或個人頁引用的社群開頭貼文。使用者截圖是原貼文的舊霓虹宣傳圖，不能將遊戲payload已更新等同所有頁面已更新。
+
+改動：新增native/prepare_itch_screenshots.py，從全新離線存檔透過UI截取主畫面、庭院及第一關實際運行畫面；manifest記來源／圖片SHA及實際遊戲時間。AGENTS與ITCH-PUBLISHING加入每版文案、圖片、原貼文及個人頁核對。遊戲頁及原貼文文字更新v64，原貼文舊三圖移除，公開頁／個人頁讀回確認。
+
+證據：截圖工具實跑20.23秒、3心、0pageerrors，HTML SHA仍b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db。第一張遊戲截圖有未觸控提示，檢視後補真實觸控／鍵盤移動並重新產生。富文字第一次輸入殘留舊文，實際公開核對抓到，清空編輯器後重填並再次核對。
+
+手機：開始unauthorized，重連後ADB沒有裝置；Windows仍看到介面，重啟ADB後再次要求手機授權，最後device。核對已安裝簽章及新APK SHA後install -r成功，原生存檔更新前後逐位元一致；實際WebView BUILD=v0.9.64，progress/coins/meta/lang與更新前備份相同。未清資料／卸載。私人證據pixel-update-v64.json；未測Pixel長時間FPS。
+
+未完成：Chrome檔案上傳兩次Not allowed，已告知使用者需開啟ChatGPT擴充功能Allow access to file URLs。新三圖已備妥，尚未上傳，遊戲相簿仍5張舊圖；store/page-sync/v0.9.64.json明列partial狀態。等待權限後補圖，不重複Devlog。純流程／頁面改動，沒有重跑遊戲三輪，沿用未變HTML的既有72/72證據。
+
+教訓：編輯操作成功不等於表單已同步或已保存；逐步核對編輯器、提交及公開正文，頁面圖片與遊戲檔分開驗收。
