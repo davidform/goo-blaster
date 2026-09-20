@@ -86,7 +86,7 @@ with sync_playwright() as pw:
         start(); update(0.001,0.001);
         const a={hearts:G.P.hearts,dmg:+G.P.dmg.toFixed(2),atkSpd:+G.P.atkSpd.toFixed(2),
                  pickup:G.P.pickup,dashCDmax:+G.P.dashCDmax.toFixed(2),wep:G.P.wep.bubble,
-                 revives:G.revives,atkRange:G.P.atkRange,metaXP:+G.P.metaXP.toFixed(2)};
+                 dashReach:G.P.dashReach,revives:G.revives,atkRange:G.P.atkRange,metaXP:+G.P.metaXP.toFixed(2)};
         return {無:b, 滿:a};
     }""")
     print(f"  無強化: {r['無']}")
@@ -97,7 +97,7 @@ with sync_playwright() as pw:
         "FAIL: 沒買強化時的起始數值被改動了——第1關基準線會失效"
     a=r['滿']
     assert a['hearts']==5 and a['dmg']>n['dmg'] and a['atkSpd']>n['atkSpd'] \
-       and a['wep']>n['wep'] and a['revives']==2 and a['dashCDmax']<n['dashCDmax'], \
+       and a['wep']>n['wep'] and a['revives']==2 and a['dashCDmax']==n['dashCDmax'] and abs(a['dashReach']-1.12)<1e-6, \
         "FAIL: 永久強化沒有正確套用"
     print("  PASS\n")
 

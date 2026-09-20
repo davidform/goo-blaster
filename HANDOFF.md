@@ -5,10 +5,10 @@
 - 單代理、序列修改index.html；分版驗證後同批公開交付，不改存檔進度。
 - 分支codex/soft-world-ui；原基準a406fad，公開版本仍v0.9.60。
 - 已安全git pull --ff-only；沒有reset。新接手仍先核對未提交變更。
-- Windows一般命令遇CreateProcessWithLogonW 1909（帳戶鎖定）；經工具核准的require_escalated可正常執行。
+- Windows一般命令曾遇1909鎖定；22:25恢復，優先正常權限。提升權限環境效能偏低，舊v61對照也低；失敗紀錄保留。
 
 ## v61 Boss碰撞修正
-- BUILD v0.9.61；新增掃掠圓碰撞與初始重疊分離，Boss移動亦不能壓進玩家。
+- v61已commit/push dcf470f；新增掃掠圓碰撞與初始重疊分離，Boss移動亦不能壓進玩家。
 - 僅此單一機制；無敵、傷害、冷卻、卡池等不變。
 - SHA dc5f516f6967cc1d17df961778c7c25654c965dc84dd637b9cf2ad8099da87ed。
 - 完整.venv/Scripts/python.exe run_tests.py --jobs 2 --label boss-solid61-full：69/69、source_unchanged=true。
@@ -19,11 +19,15 @@
 - 全平行未執行（Surface曾凍結），真機遊玩未執行。
 
 ## 接續順序
-- v61完成三輪證據／docs後單獨commit+push，再改v62。
+- v61已完成三輪與commit/push。現在v62已驗證，待commit/push後改v63。
+- BUILD v0.9.62，SHA 293e4a1b662fc2654b2d5a2459c87b4f50c52197300875ac42e1ea016554e6fd。
+- v62完整69功能PASS／效能FAIL；一般命令環境恢復後補跑效能PASS，合併70項皆過。
+- 完整20260920-215416-831180-dash62-full，補跑20260920-222510-276434-dash62-perf-standard-session。
+- dash62-verification.json含CPU4／離線／A-B：滿強化Lv25間隔0.77→2.22秒，無敵比32.8→11.7%；單局效能50.7FPS。
 - v62：商店dash已買等級保留、改4/8/12%距離；只讓局內cd卡縮短冷卻3.0→2.6→2.2秒。
 - 冷卻不再隨玩家等級speedScale加快；保留原.42秒遊戲時間無敵。
-- _private/implement62.py／update62tests.py為待執行腳本，需核對確切替換；i18n/build_v0962.py未套用。
-- tests/py_dash_cadence.py已準備、未登記／未執行，24組shop/cards/level比較。
+- _private/implement62.py／update62tests.py為待執行腳本，需核對確切替換；i18n/build_v0962.py已套用。
+- tests/py_dash_cadence.py已登記／通過，24組shop/cards/level比較。
 - v63：每局2武器／4能力槽，已選能力仍可升滿。永久攻擊強化先保留。
 - 全卡滿後改少量糖果幣，不再送經驗／回血；避免回饋循環。
 - _private/implement63.py、i18n/build_v0963.py、tests/py_build_slots.py待套用／驗證。

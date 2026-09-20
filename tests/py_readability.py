@@ -26,11 +26,11 @@ with sync_playwright() as pw:
  c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_READ_CPU','1'))})
  p.goto((Path(GAME_ROOT)/'index.html').as_uri())
  ranks=p.evaluate('''()=>{applyLanguage('en');const u=META_UPGRADES.find(x=>x.id==='dash');return [0,1,2,3].map(n=>{META={dash:n};LV_IDX=8;start();const before=G.P.dashCDmax;tryDash(1,0);return {n,cooldown:before,iframe:G.P.iframe,description:n?u.d(n-1):'',max:u.max};});}''')
- assert [round(x['cooldown'],2) for x in ranks]==[3,2.65,2.3,1.95],ranks
+ assert [round(x['cooldown'],2) for x in ranks]==[3,3,3,3],ranks
  assert all(x['iframe']==.42 and x['max']==3 for x in ranks),ranks
- assert all(format(x['cooldown'],'.2f') in x['description'] and '0.42' in x['description'] for x in ranks[1:]),ranks
+ assert all(str(x['n']*4)+'%' in x['description'] for x in ranks[1:]),ranks
  repeat=p.evaluate('''()=>{META={dash:3};start();G.bosses=[];G.nukeCalm=999;G.P.wep={};const u=UPGRADES.find(x=>x.id==='cd');u.f(G.P);u.f(G.P);let protectedFrames=0,dashes=0;for(let i=0;i<1800;i++){const before=G.P.dashCD;tryDash(1,0);if(before<=0&&G.P.dashCD>0)dashes++;update(1/60,1/60);if(G.P.iframe>0)protectedFrames++;}return {cooldown:G.P.dashCDmax,ratio:protectedFrames/1800,dashes};}''')
- assert repeat['cooldown']==1.2 and repeat['ratio']<=.36 and 20<=repeat['dashes']<=26,repeat
+ assert abs(repeat['cooldown']-2.2)<1e-6 and repeat['ratio']<=.21 and 13<=repeat['dashes']<=14,repeat
  p.evaluate('''()=>{showMenu();applyLanguage('zh-Hant');COINS=200;META={dash:1};showShop();}''')
  p.locator('.mrow').filter(has_text='衝刺訓練').scroll_into_view_if_needed()
  p.screenshot(path=str(ARTIFACTS/'dash-shop58.png'))
@@ -43,4 +43,4 @@ with sync_playwright() as pw:
  p.set_viewport_size({'width':640,'height':360});p.evaluate('resize();draw()');assert p.evaluate('gooSurface.width===W&&gooSurface.height===H')
  assert not errors,errors
  (ARTIFACTS/'readability58.json').write_text(json.dumps({'locales':goals,'dash_ranks':ranks,'repeated_dash':repeat,'ink':ink,'errors':errors},indent=2));b.close()
-print('PASS 550 visible objectives/11 locales, exact existing dash ranks and 1.2s floor, bounded 64-puddle ink and resize')
+print('PASS 550 visible objectives/11 locales, distance-only shop ranks and 2.2s cooldown floor, bounded 64-puddle ink and resize')

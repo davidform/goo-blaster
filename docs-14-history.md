@@ -1091,3 +1091,13 @@ Devlog https://davidform.itch.io/goo-blaster/devlog/1658406/v0960-a-clearer-nuke
 教訓：無敵狀態與實體碰撞是兩個規則，不能靠傷害處理兼任阻擋。另有v62衝刺節奏、v63搭配上限、庭院模式待辦；未完成前不宣稱交付。完整平行壓測未執行（Surface凍結紀錄，沿用jobs2），Pixel實玩未執行。
 
 補驗：_private/test-artifacts/boss61-verification.json確認舊版預期失敗、v61 CPU4碰撞、CPU4離線／新存檔／冷啟動皆通過，boss61-contact.png已視覺檢查。舊版最小中心距1.667px（應≥67px），並穿至Boss另一側；新版60組皆保持半徑和外緣。公開通道仍v60，待後續獨立版本完成同批交付。
+
+## v0.9.62 — 衝刺冷卻改為局內選擇（2026-09-20）
+
+使用者回報連按衝刺像持續無敵。根因有兩層：商店dash等級與局內cd卡都扣冷卻，且update先乘speedScale，導致高等角色的冷卻再加速。保留商店購買等級／價格／存檔，效果改4／8／12%衝刺距離；冷卻只由局內卡片3.0→2.6→2.2秒。以speedScale之前的dt計時，仍遵守暫停與核彈慢動作，不增加.42秒遊戲時間無敵。11語言描述由i18n/build_v0962.py更新。
+
+py_dash_cadence實跑24組商店／卡片／角色等級；滿商店滿卡Lv25，舊版間隔0.7667秒、保護佔比32.83%，新版2.2167秒、11.67%。新手初始3秒保持；全部組合保護佔比≤21%。CPU4與離線新存檔／冷啟動通過。證據_private/test-artifacts/dash62-verification.json；商店畫面dash-shop58.png由此次測試產生（沿用舊檔名）。
+
+完整命令run_tests.py --jobs 2 --label dash62-full，報告20260920-215416-831180-dash62-full：69項功能PASS、效能環境門檻FAIL，SHA 293e4a1b662fc2654b2d5a2459c87b4f50c52197300875ac42e1ea016554e6fd、source_unchanged=true。保留首輪8.4FPS、獨立補跑9.3FPS、v61舊版對照9.0FPS的低幀紀錄；沒有殘留測試，系統有.NET最佳化程序，但未證明因果，未停止Windows服務。
+
+當時一般命令帳戶1909鎖定，測試透過工具核准權限執行；22:25一般環境恢復後重跑同一門檻，報告20260920-222510-276434-dash62-perf-standard-session通過。同批23.5→22.8FPS（-3.1%），單局46.5／52.4／53.3、平均50.7FPS。使用既有validate_reports核對同SHA完整＋補跑，全部70項通過；不把環境切換視為已證明的根因，也不把桌機數字当成Pixel FPS。全平行、真機實玩未執行，尚未公開交付。
