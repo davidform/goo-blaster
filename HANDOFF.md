@@ -1,10 +1,10 @@
 # GOO BLASTER 精簡交接
 
 ## 目前任務（2026-09-21）
-- 使用者看不懂庭院，要求研究市場玩法並套用；v67已實作修復任務板，完整75/75與CPU4通過，正準備公開同步。
-- 分支codex/soft-world-ui；上一個提交c208db9，本次改動未提交。BUILD v0.9.67，544276bytes。
+- 使用者看不懂庭院，要求研究市場玩法並套用；v67已實作修復任務板，完整75/75、CPU4與跨平台同步完成。
+- 分支codex/soft-world-ui；遊戲commit e3a282d5e598d196ebe36dbc642e36cd9661a833已push。BUILD v0.9.67，549871bytes。
 - SHA d585a2b305fa4a981b4c941e43d0213c69c8c87af47b9c7944c436a8ba4b5467。
-- 預定Summary：`v0.9.67: guide garden play through restoration goals`。
+- Summary：`v0.9.67: guide garden play through restoration goals`。
 - 單代理，單檔離線；附件.codex-remote-attachments不提交。
 
 ## 研究與實作
@@ -29,16 +29,23 @@
 - _private/garden67/verification.json彙整。git確認LEVELS到COINS及META到檔尾沒變。
 - py_test9第1/2關過53/79秒、2/3及3/3心；第3關90秒陣亡，非硬門檻但明列。第1關驗收過。
 - 截圖store/screenshots/v0.9.67由native/capture_garden_quest.py可重現，通關是結算模擬，不是真人／真機。
-- Surface全平行依凍結限制未跑，ADB無裝置；效能已独跑完成，現在可建Android。
+- Surface全平行依凍結限制未跑，ADB無裝置；效能已獨跑完成，平均56.8FPS；同伴50.7→50.5（-0.4%），非Pixel。
 - PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
 
-## 發版現況與下一步
-- 公開仍v66：APK96600、itch1999525、Pages ca14d886、Devlog1671600。
-- v67 notes與description已準備；_private/itch-builds/v0.9.67只含核對SHA的index，尚未上傳。
-- Chrome tab1912753820遊戲編輯頁已填v67文案、7條清單核對但未Save；等全套過再發版／上傳quest-harvest-zh第四位，前三Boss圖保留。
-- 完整測試完成後commit本版→build_test_apk→publish_test_apk→Butler→公開UI與SHA→Pages→Devlog→頁面說明／新圖。
-- 原討論串首文仍待v65自動核准拒絕後的明確授權，不重試或繞過。
-- 固定手機入口 https://github.com/davidform/goo-blaster/releases/tag/android-test 。不卸載、不清資料。
-- 後續按cleanup_local.ps1白名單清理，保留最新版＋上版、所有存檔／簽章／證據。
-- 舊相簿歷史圖片不擅刪，先前Chrome原生確認逾時；23舊profile拒絕存取不改ACL。
-- Pixel長時間FPS、母語潤稿、付費市場品質尚未驗收。
+## 已公開交付
+- APK96700／0.9.67-test.0同簽章，內含HTML與DEX核對，公開SHA ba356090fd369696fc125b64ef26c1eec64ced48a64a10c9b1d0c012c3214ef6。
+- 固定手機入口 https://github.com/davidform/goo-blaster/releases/tag/android-test 。手機未連線，沒有安裝本版；不卸載／不清資料。
+- itch html5 build2000470／upload19167726公開完整payload一致；CUA舊存檔種子2→0、引導回冒險、開始／暫停過。itch-v67.json。
+- Pages部署44635ccacd42507811d0380c6fb8030b03691e6f，Actions35593022389 success；完整HTML SHA及開始／Paused驗證。pages-v67.json。
+- Devlog1671866 Published，中英完整正文／v67附件／新圖核對，workflow9/9；store/devlogs/v0.9.67/post.json。
+- https://davidform.itch.io/goo-blaster/devlog/1671866/v0967-a-clear-path-from-planting-to-restoration 。
+- 遊戲頁v67說明已保存，新圖30151941第四，前三Boss戰不變；store/page-sync/v0.9.67.json，公開四圖載入核對。
+- 初次itch tail檢查漏defer屬性，完整讀差異後核對僅已知平台script；初次Pages收據欄位名不符被預檢擋住，映射既有證據後75項全過才push，未放寬驗證。
+- HTML原始bytes549871；先前544276是read_text換行正規化後大小，已更正；原SHA從頭到尾是原始位元組，測試與三平台均一致。
+- cleanup白名單刪v65 APK4311673bytes，保留v67/v66及存檔簽章證據；24舊profile拒絕存取未動，不改ACL。
+
+## 未完成／後續
+- 原討論串首文仍待v65自動核准拒絕後的明確授權，本次未重試／繞過。相簿後方10張歷史圖保留，原生刪除確認先前逾時。
+- 下一步以玩家能否不看外部教學完成第一修復評估引導；再單獨設計居民委託／建築選擇，避免只增加材料和等待。
+- Pixel長時間FPS、全平行壓測、母語潤稿、付費市場品質仍未驗收。
+- 本版技術與交付完成，不宣稱完整農場經營或耐玩性已解決；不自行換新對話。

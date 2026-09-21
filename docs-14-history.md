@@ -1215,4 +1215,9 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 教訓：先讓玩家知道目的、成本、動作與回報，再加新系統。有限三次修復不等於完整經營深度；居民生產／加工／新建築尚未實作。
 
 - 最終完整75/75通過、source_unchanged，20260921-184815-132826-garden67-full；CPU4三項3/3過20260921-184839-375860-garden67-cpu4；離線／新存檔／CPU4／冷重啟通過。新手py_test9第1/2關53/79秒過、第3關90秒陣亡；第1關硬門檻過但不隱藏第三關結果。Node test9跑345.9秒，第1–3關過、第4關敗，沒有JS錯誤。兩個bot不是同條件勝率研究。全平行未跑，Pixel無連線。
-- 獨立最壞場景56.8/56.6/56.9FPS，平均56.8；同批同伴50.7→50.5（-0.4%），非Pixel。最終HTML544276bytes，SHA d585a2b305fa4a981b4c941e43d0213c69c8c87af47b9c7944c436a8ba4b5467。
+- 獨立最壞場景56.8/56.6/56.9FPS，平均56.8；同批同伴50.7→50.5（-0.4%），非Pixel。最終HTML549871bytes，SHA d585a2b305fa4a981b4c941e43d0213c69c8c87af47b9c7944c436a8ba4b5467。
+
+### v67公開交付
+遊戲e3a282d已push；APK96700同簽章與內含HTML／DEX核對、公開SHA ba356090fd369696fc125b64ef26c1eec64ced48a64a10c9b1d0c012c3214ef6。itch2000470公開payload逐位元組一致，CUA既有進度種子2→0、任務切回冒險、實際開始／暫停過。Pages部署44635ccacd42507811d0380c6fb8030b03691e6f，Actions35593022389 success，公開完整SHA與實際開始／Paused核對。Devlog1671866 Published，六段中英全文與v67附件／新圖核對，workflow9/9。遊戲頁v67文字和前三戰鬥＋第四任務圖30151941載入核對。
+驗證工具修正：第一次比對itch附加腳本漏寫defer，讀到完整差異後僅允許實際平台script，不忽略其他差異。Pages初次收據欄位public_payload_verified不是工具要求的game_payload_identical，被安全擋住；將既有證據映射正確欄位，重新預檢75項通過才推送。Devlog準備前補既有規格languages欄位。HTML大小更正549871原始bytes，544276是換行正規化後文字編碼量；測試／封裝／公開SHA一直一致，未改遊戲或重用異版證據。
+白名單清理刪v65 APK4311673bytes，保留v67/v66；24個權限拒絕profile未動。手機無裝置，未安裝本版；原首篇編輯前次核准限制仍在，本次未重試。相簿後方10歷史圖留存，未擅自刪Devlog素材。

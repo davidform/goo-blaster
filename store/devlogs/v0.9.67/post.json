@@ -1,0 +1,43 @@
+{
+  "build": "v0.9.67",
+  "title": "v0.9.67 — A clear path from planting to restoration",
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "Not sure what to do in the Candy Garden? The new restoration board shows your next cottage upgrade, its permanent visual change, the crop it unlocks, and the petals you need."
+    },
+    {
+      "kind": "p",
+      "text": "Follow Plant → Adventure → Harvest → Restore. The main button changes with your garden: plant available fields, head to Adventure, harvest ripe crops, or restore the cottage. Before planting, compare seeds, stage clears and petal rewards. Crops grow when you clear stages, including replays; waiting does not grow them. Farming costs and combat strength are unchanged, and your existing garden is preserved."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "不知道糖果庭院該做什麼？新的修復任務板會顯示下一級小屋外觀、解鎖作物，以及還需要多少花瓣。"
+    },
+    {
+      "kind": "p",
+      "text": "依照「種植 → 冒險 → 收成 → 修復」前進。主要按鈕會依庭院狀態切換，可一次播種空田、前往冒險、收成成熟作物或修復小屋。播種前能比較種子花費、通關次數和花瓣收益。作物靠通關成長，重玩已過關的關卡也算，放著等待不會成長。農作成本、戰鬥能力與既有庭院進度均保留。"
+    }
+  ],
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "status": "published",
+  "content_sha256": "6deba8c51fc535db23f222be7cc768bd30480aec556a695857459ec16116cd00",
+  "public_game_sha256": "d585a2b305fa4a981b4c941e43d0213c69c8c87af47b9c7944c436a8ba4b5467",
+  "public_build_id": 2000470,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>Not sure what to do in the Candy Garden? The new restoration board shows your next cottage upgrade, its permanent visual change, the crop it unlocks, and the petals you need.</p>\n<p>Follow Plant → Adventure → Harvest → Restore. The main button changes with your garden: plant available fields, head to Adventure, harvest ripe crops, or restore the cottage. Before planting, compare seeds, stage clears and petal rewards. Crops grow when you clear stages, including replays; waiting does not grow them. Farming costs and combat strength are unchanged, and your existing garden is preserved.</p>\n<h2>繁體中文</h2>\n<p>不知道糖果庭院該做什麼？新的修復任務板會顯示下一級小屋外觀、解鎖作物，以及還需要多少花瓣。</p>\n<p>依照「種植 → 冒險 → 收成 → 修復」前進。主要按鈕會依庭院狀態切換，可一次播種空田、前往冒險、收成成熟作物或修復小屋。播種前能比較種子花費、通關次數和花瓣收益。作物靠通關成長，重玩已過關的關卡也算，放著等待不會成長。農作成本、戰鬥能力與既有庭院進度均保留。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1671866/v0967-a-clear-path-from-planting-to-restoration",
+  "verified_at": "2026-09-21T11:20:22.410712+00:00"
+}
