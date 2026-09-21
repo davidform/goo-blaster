@@ -2,10 +2,10 @@
 
 ## 目前任務（2026-09-21）
 - 使用者認為庭院單調，要求繼續發揮並讓不同主題顯示不同且相關的動態圖示。
-- v0.9.70已實作三主題挑戰／成就／場景與動態入口；完整78/78、CPU4、offline與獨立效能已過，正在發布。
+- v0.9.70已實作三主題挑戰／成就／場景與動態入口；完整78/78、CPU4、offline與獨立效能已過；Android／itch／Pages／Devlog皆已交付。
 - 分支codex/soft-world-ui，接手eeb28a0，pull已最新；附件.codex-remote-attachments不可提交。
 - 來源SHA c4f376c1544f42c955e10ee334f5b4e8ba34c04ce2bcdf8333f0b72257df2aa1。
-- 預定Summary：`v0.9.70: add themed village challenges and animated icons`。
+- 已提交e1e2de9，Summary：`v0.9.70: add themed village challenges and animated icons`。
 
 ## 已實作／固定決策
 - 村莊小冒險：野餐記憶3/4/5道料理；池塘5×5三珍珠到旗幟，步數最短路＋4/2/0；星光3×3相鄰翻轉、無步數限制。
@@ -28,13 +28,18 @@
 - 截圖native/capture_garden_festival.py與store/screenshots/v0.9.70。明示可達成fixture，真實操作後畫面，非真人紀錄／Pixel測試。
 - 全平行未跑（Surface限制），ADB空，Pixel未安裝／效能未驗證。彙整_private/festival70/verification.json。
 
-## 待交付
-- 完整78/78與獨立perf66.6s通過：單局58.5FPS、同伴-1.0%；非Pixel。已可commit/push與封裝。
-- Android固定測試通道同簽章；itch html5公開完整payload/啟動；Pages指定commit/Actions/公開SHA/啟動。
-- store/page-sync/v0.9.70-description.html與store/devlogs/v0.9.70-notes.json已備妥。
-- Chrome編輯tab1912753951已填v70介紹且未Save；勿操作使用者舊編輯tab1912753587。完整驗證後才發布。
-- 新pond-play-en.png放第4張，保留前三戰鬥與历史相簿；尚未上傳。Devlog查文章/草稿再發布。
-- 最後依白名單清理、更新收據、交接與文件commit。
+## 已交付與收據
+- 遊戲commit e1e2de920a1ca35a81a3ac912fa404d11320f5ba已push；Pages部署commit a1f652cd8b5643be79479347858815d1695f80e7。
+- Android 97000 / 0.9.70-test.0，同原簽章；公開下載SHA 417035e56504081e81cf03e10a159e6cee3d4ab7c7971d8ea147dc2b57ba7db8，asset579270925。
+- 固定手機入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；ADB未連線，未安裝Pixel，保留進度。
+- itch build2001061/upload19167726；完整636006byte payload一致、實際開始與暫停通過；_private/mobile-test/itch-v70.json。
+- Chrome首次載入曾截斷於字典，重新取得後完整；公開下載逐byte相同，非程式碼錯誤，不能掩蓋初次失敗。
+- Pages Actions35618312729成功；完整SHA與公開開始／暫停通過，_private/mobile-test/pages-v70.json。
+- itch頁v70介紹與首四圖已驗證；前三戦鬥保留、新池塘實玩30157101第四、13歷史圖保留；store/page-sync/v0.9.70.json。
+- Devlog1672102 Published，中英正文／v70附件／新截圖已核對；store/devlogs/v0.9.70/post.json，流程unit9/9。
+- https://davidform.itch.io/goo-blaster/devlog/1672102/v0970-three-new-ways-to-play-in-the-village
+- 清理先遭審查因未列完整路徑拒絕；補核對後獲准移除v68APK與本輪release-profile-wpn5b_g7，共13716306bytes；保留v70/v69，25舊profile未動，0失敗。
+- 獨立perf66.6s通過：單局58.5FPS、同伴-1.0%；非Pixel。最終只補文件收據，不再改遊戲。
 
 ## 其他未完成
 - 原論壇首文v65自動核准拒絕仍待明確授權，未重試。

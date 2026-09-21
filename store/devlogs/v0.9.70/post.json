@@ -1,0 +1,43 @@
+{
+  "build": "v0.9.70",
+  "title": "v0.9.70 — Three new ways to play in the village",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "The village now has three free challenges: remember picnic orders, guide a fish through a pearl maze, and light a grove of stars. Each has three difficulty levels and replay variations. Mistakes cost no supplies, and there are no daily limits."
+    },
+    {
+      "kind": "p",
+      "text": "Earn medals to unlock picnic decorations, a swimming fish pond and a starlit village. Switch between earned themes whenever you like. Garden buttons now have distinct animated artwork for planting, cooking, building and neighbours. Reduced-motion settings are respected; existing progress, crop countdowns and combat balance are preserved."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "村莊新增三種免費挑戰：記住野餐料理順序、帶小魚收集珍珠並走到終點、解開星光點燈謎題。各有三階難度，重玩時題目會變化；失誤不扣材料，也沒有每日次數限制。"
+    },
+    {
+      "kind": "p",
+      "text": "取得徽章可解鎖野餐裝飾、游魚池與星燈夜景，已解鎖主題可隨時切換。種植、料理、建設與居民入口改用各自相關的動態圖示，並支援減少動態設定。既有進度、作物倒數與戰鬥平衡皆保留。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "8d59af2c5af201129739ea079f825917ca0a696c2ba6ac23cfd34d7921fe1b03",
+  "public_game_sha256": "c4f376c1544f42c955e10ee334f5b4e8ba34c04ce2bcdf8333f0b72257df2aa1",
+  "public_build_id": 2001061,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>The village now has three free challenges: remember picnic orders, guide a fish through a pearl maze, and light a grove of stars. Each has three difficulty levels and replay variations. Mistakes cost no supplies, and there are no daily limits.</p>\n<p>Earn medals to unlock picnic decorations, a swimming fish pond and a starlit village. Switch between earned themes whenever you like. Garden buttons now have distinct animated artwork for planting, cooking, building and neighbours. Reduced-motion settings are respected; existing progress, crop countdowns and combat balance are preserved.</p>\n<h2>繁體中文</h2>\n<p>村莊新增三種免費挑戰：記住野餐料理順序、帶小魚收集珍珠並走到終點、解開星光點燈謎題。各有三階難度，重玩時題目會變化；失誤不扣材料，也沒有每日次數限制。</p>\n<p>取得徽章可解鎖野餐裝飾、游魚池與星燈夜景，已解鎖主題可隨時切換。種植、料理、建設與居民入口改用各自相關的動態圖示，並支援減少動態設定。既有進度、作物倒數與戰鬥平衡皆保留。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1672102/v0970-three-new-ways-to-play-in-the-village",
+  "verified_at": "2026-09-21T15:30:54.411505+00:00"
+}

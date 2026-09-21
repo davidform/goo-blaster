@@ -1286,3 +1286,13 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 最終SHA c4f376c1544f42c955e10ee334f5b4e8ba34c04ce2bcdf8333f0b72257df2aa1，festival70-final完整78/78 PASS無補跑。Node test9 329.2秒；新手第1關58秒2/3心、第2關58秒滿心、第3關102秒陣亡（非硬門檻），0JS錯誤。
 - CPU4獨立報告三項全過：world124.2/timer26.0/festival431.0秒（壓力驗證，非效能數字）。offline smoke 0錯誤/0外部請求，progress9/coins456/dmg2/selection8重開保留。
 - 所有其他測試結束後獨立perf66.6秒：同伴40.6→40.2FPS（-1.0%），單局58.5FPS，門檻通過，非Pixel；不跨版本批次推論效能提升。
+
+
+### v0.9.70 交付紀錄（2026-09-21）
+- 遊戲commit `e1e2de920a1ca35a81a3ac912fa404d11320f5ba`，Summary `v0.9.70: add themed village challenges and animated icons`，已push。
+- Android 97000 / 0.9.70-test.0、APK4359687bytes，SHA `417035e56504081e81cf03e10a159e6cee3d4ab7c7971d8ea147dc2b57ba7db8`，同原簽章，固定Prerelease下載逐byte驗證，asset579270925。Pixel未連線，不宣稱真機安裝或效能驗收。
+- itch html5 build2001061，公開payload636006bytes等於本地；平台附加87bytes，publicSHA `283d8e53a895b5a53a3e2447574cdac190c54700329d6342ab422ca99f55f999`。Chrome初次傳輸截斷，cache-busted重取完整後實際Start/Pause成功，未改原始碼。
+- Pages deployment `a1f652cd8b5643be79479347858815d1695f80e7`，Actions35618312729成功；公開完整SHA `c4f376c1544f42c955e10ee334f5b4e8ba34c04ce2bcdf8333f0b72257df2aa1` 與遊戲啟動/暫停通過。
+- 商店頁v70介紹已公開；前三張戰鬥保留，第四張30157101為真實池塘操作後畫面（測試可達成fixture），13張歷史圖保留。Devlog1672102中英全文及v70附件經草稿→Published核對；devlog workflow單元9/9通過。
+- 清理13716306bytes：僅舊v68APK及本輪隔離release-profile-wpn5b_g7。第一次清理因未完整列出目標被自動審查拒絕；先列出完整絕對路徑證據，再核准同一白名單腳本。保留v70/v69、玩家進度及憑證；25個既有AccessDenied profile不改ACL，0刪除失敗。
+- 交付彙整 `_private/festival70/verification.json`；全平行、Pixel長時效能、長期耐玩性、母語潤稿仍未驗證。這是三種可重玩小冒險，並非已完成農場動物／多區域／居民生活AI。
