@@ -1,0 +1,51 @@
+{
+  "build": "v0.9.65",
+  "title": "v0.9.65 — A garden to arrange, and neighbours to welcome",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "The Candy Garden now has a hands-on decorating puzzle. Place mint, flowers, ponds, benches and lanterns on a 4 by 4 garden. Decorations are free to move or return, so you can experiment without spending your seeds or petals."
+    },
+    {
+      "kind": "p",
+      "text": "Six visitors have different wishes: a flower-lined picnic seat, a cool mint pond, a lantern walk and more. The first visitor is available immediately; the others arrive as you clear Stages 2, 5, 10, 15 and 20. Fulfil a wish and welcome its resident home. They stay even when you redesign the garden."
+    },
+    {
+      "kind": "p",
+      "text": "Your crops, cottage, stage progress and purchases are preserved. Gardening still adds no combat stats and has no real-time countdown. This is a small set of six layout challenges, not an endless farming mode. Tell us which wish was enjoyable and which felt like a chore."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "糖果庭院加入可以動手玩的佈置解謎：在4×4庭院放置薄荷、花叢、池塘、長椅與提燈。擺飾可以免費移動或收回，不消耗種子與花瓣，可以放心嘗試不同布局。"
+    },
+    {
+      "kind": "p",
+      "text": "六位訪客各有願望，例如花叢旁的野餐座位、薄荷池塘與提燈小徑。第一位立即出現，後續隨通過第2、5、10、15、20關開放。完成願望就能迎接居民入住，之後重新佈置也不會讓他們離開。"
+    },
+    {
+      "kind": "p",
+      "text": "原有作物、小屋、關卡進度與購買等級都保留。不增加戰鬥數值，也沒有現實時間倒數。這次是六個小型空間任務，並非無限農場模式；歡迎告訴我們哪個願望有趣、哪個像在做功課。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "f514a149518d2491c01785e41c5fed9860fc6cb700a573f7044a68ef6ac0d940",
+  "public_game_sha256": "659113668783665bd22dd598d99a08605146cc334ea78d6330101bf22dc763eb",
+  "public_build_id": 1999423,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>The Candy Garden now has a hands-on decorating puzzle. Place mint, flowers, ponds, benches and lanterns on a 4 by 4 garden. Decorations are free to move or return, so you can experiment without spending your seeds or petals.</p>\n<p>Six visitors have different wishes: a flower-lined picnic seat, a cool mint pond, a lantern walk and more. The first visitor is available immediately; the others arrive as you clear Stages 2, 5, 10, 15 and 20. Fulfil a wish and welcome its resident home. They stay even when you redesign the garden.</p>\n<p>Your crops, cottage, stage progress and purchases are preserved. Gardening still adds no combat stats and has no real-time countdown. This is a small set of six layout challenges, not an endless farming mode. Tell us which wish was enjoyable and which felt like a chore.</p>\n<h2>繁體中文</h2>\n<p>糖果庭院加入可以動手玩的佈置解謎：在4×4庭院放置薄荷、花叢、池塘、長椅與提燈。擺飾可以免費移動或收回，不消耗種子與花瓣，可以放心嘗試不同布局。</p>\n<p>六位訪客各有願望，例如花叢旁的野餐座位、薄荷池塘與提燈小徑。第一位立即出現，後續隨通過第2、5、10、15、20關開放。完成願望就能迎接居民入住，之後重新佈置也不會讓他們離開。</p>\n<p>原有作物、小屋、關卡進度與購買等級都保留。不增加戰鬥數值，也沒有現實時間倒數。這次是六個小型空間任務，並非無限農場模式；歡迎告訴我們哪個願望有趣、哪個像在做功課。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1671547/v0965-a-garden-to-arrange-and-neighbours-to-welcome",
+  "verified_at": "2026-09-21T02:47:31.809766+00:00"
+}

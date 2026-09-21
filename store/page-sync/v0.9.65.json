@@ -1,0 +1,18 @@
+{
+  "build": "v0.9.65",
+  "checked_on": "2026-09-21",
+  "game_description_public_verified": true,
+  "gallery_first_four_loaded_verified": true,
+  "gallery_first_four_ids": [
+    30141028,
+    30141027,
+    30141026,
+    30143572
+  ],
+  "combat_provenance": "store/screenshots/v0.9.64/combat/manifest.json; combat unchanged in v65",
+  "garden_provenance": "store/screenshots/v0.9.65/manifest.json",
+  "topic_version": "v0.9.64",
+  "topic_v65_edit": "Prepared; Save rejected by automatic approval review, explicit user approval pending.",
+  "remaining_gallery": "3 superseded v64 UI + 5 legacy images remain after current four.",
+  "phone_v65_installed": false
+}

@@ -1,54 +1,13 @@
 # GOO BLASTER 精簡交接
 
 ## 目前狀態（2026-09-21）
-- 當前任務：使用者認為庭院無趣；v0.9.65已在工作區加入16格自由佈置＋六位訪客願望，尚未發版。戰鬥／種植數值未改。
+- 當前任務：使用者認為庭院無趣；v0.9.65已在工作區加入16格自由佈置＋六位訪客願望，已完成APK／itch／Pages／Devlog公開交付。戰鬥／種植數值未改。
 - 完整測試73/73通過：_private/test-runs/20260921-100707-600303-garden65-final/results.json，SHA 659113668783665bd22dd598d99a08605146cc334ea78d6330101bf22dc763eb；source_unchanged。
-- 專項py_garden／py_garden_design＋CPU4／離線冷啟動／最終UI均通過；完整回歸73/73，APK／itch／Pages／Devlog尚待完成。首輪因工具列可達性改版而中止，音效測試絕對時鐘問題已重現並修正；_private/garden65/verification.json。
-- 使用者本次四項需求已實作並交付v0.9.64：Boss阻擋、衝刺節奏、搭配上限、糖果庭院。
-- 分支codex/soft-world-ui，遊戲commit0f1f17a624937e81c19bad2fbe6c66abc37041c8；新接手仍先核對工作區／遠端／BUILD。
-- 最終HTML SHA b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db。
+- 專項py_garden／py_garden_design＋CPU4／離線冷啟動／最終UI均通過；完整回歸73/73，跨平台已完成；收據見下方。首輪因工具列可達性改版而中止，音效測試絕對時鐘問題已重現並修正；_private/garden65/verification.json。
+- 前批四項需求已實作並交付v0.9.64：Boss阻擋、衝刺節奏、搭配上限、糖果庭院。
+- 分支codex/soft-world-ui，遊戲commit3528764d61f1747473f0b14b88e8523d1eead2f6；新接手仍先核對工作區／遠端／BUILD。
+- 最終HTML SHA 659113668783665bd22dd598d99a08605146cc334ea78d6330101bf22dc763eb。
 - 單代理，保留進度與購買等級。未建立背景排程，未更改價格或正式商店。
-
-## 已交付機制與commit Summary
-- dcf470f `v0.9.61: prevent movement through Boss bodies`：掃掠碰撞及Boss位移分離，避免重疊／穿越。
-- 19317f0 `v0.9.62: bound dash recovery to in-run upgrade choices`：冷卻3→2.6→2.2秒，不再隨角色等級加快。
-- 商店dash保留已買等級／價格，改4/8/12%距離；原.42秒遊戲時間無敵不加長。
-- 9d25416 `v0.9.63: limit each run to two weapons and four skills`：2武器／4能力，已選可升級進化。
-- 第11關起可選本局副武器；所有50關開局也受2武器限制，永久主武器+3保留。
-- 搭配滿後每張待選卡給2糖果幣，不再回送經驗或回血。
-- 0f1f17a `v0.9.64: add an offline Candy Garden linked to stage clears`。
-- 三花圃／三植物：通關1/2/3次成熟、產1/3/6花瓣；小屋修復12/45/120花瓣。
-- 初始3種子，種植花1／收成回1／通關+1；重玩可成長，失敗不倒退，不以真實時間倒數、不加戰力。
-- 庭院存於既有存檔／備份碼／原生Preferences，rev獨立合併；舊存檔安全初始化。
-- 首版有3次小屋升級，章節收藏／後續家園區域未實作，設計見docs-16-garden-design.md。
-
-## 驗證證據
-- v61完整69/69：20260920-212704-286175-boss-solid61-full；boss61-verification.json含CPU4／離線／舊版預期失敗。
-- v62完整20260920-215416-831180-dash62-full：69PASS/效能FAIL；20260920-222510-276434-dash62-perf-standard-session補跑PASS，合併70/70。
-- dash62-verification.json：滿強化Lv25間隔.7667→2.2167秒，保護比32.83→11.67%。
-- v63完整20260920-224239-905698-build63-full-final：70PASS/舊audit斷言FAIL；20260920-230249-160822-build63-audit-retry PASS，合併71/71。
-- build63-verification.json：固定靶場攻擊型DPS約-20.2%、防禦型-63.5%，不是通關率。
-- build63-power-ab.json：第9關bot舊1/3、新3/3，後期兩版0/3；集中升級可能更有效，不宣稱整條難度曲線已完成。
-- v63第一次完整批因發現後期開局3武器而中止，aborted.json保留，不用該批驗收。
-- v64命令 `.venv/Scripts/python.exe run_tests.py --jobs 2 --label garden64-full`。
-- _private/test-runs/20260920-231308-237941-garden64-full/results.json：72/72、source_unchanged=true，無失敗。
-- garden64-verification.json：py_garden／boss_solid／dash_cadence／build_slots／release_smoke CPU4全過，含離線／新存檔／冷啟動。
-- 庭院驗11語言×3尺寸、0／上限／重複領取／原生／備份碼；garden64.png已檢視。
-- v64新手bot第1、2關滿心過，第3關陣亡；第1關硬門檻過。Node test9實跑455.8秒完成。
-- 獨立效能三次53.8/56.1/56.1平均55.3FPS，同批41.2→41.7；不是Pixel量測。
-
-## 公開渠道
-- APK固定 https://github.com/davidform/goo-blaster/releases/tag/android-test ，v64/96400/0.9.64-test.0。
-- APK4300800bytes，SHA c557d7f97251af3890a4ec682e8d83431ce0ecf0436ab1a7a1d1437859497226，原appId／簽章一致，HTML／DEX／公開SHA均核對。
-- Pixel已覆蓋安裝v64/96400並啟動；簽章、原生存檔逐位元一致及runtime進度／糖果幣／商店等級／語言一致；證據pixel-update-v64.json。
-- itch upload19167726/build1997627；公開payload同SHA、實際Run game/start/pause通過，收據itch-v64.json。
-- Pages部署9b59ad7ee52485bb680369f173b13688bb119fbc，Actions35520352539 success；完整SHA／開始3.0359秒／暫停／0errors通過。
-- Pages首次下載逾時，第二次成功，未重推或改內容；pages-v64.json記最終證據。
-- Devlog Published https://davidform.itch.io/goo-blaster/devlog/1670920/v0964-a-candy-garden-and-more-meaningful-builds。
-- 中英全文及單一v64附件確認，store/devlogs/v0.9.64/post.json；9項devlog工作流程測試通過。
-- 原生來源備份android-source-20260920-232738.zip，80檔。
-- cleanup-v64-output.json：刪舊v59 APK＋3profile共32,321,374bytes；留v64/v60與所有存檔／簽章／測試證據。
-- 22個舊profile拒絕存取未清，不改ACL。
 
 ## 下一步／未完成
 - 宣傳改為3張真實Boss交戰：大型Boss／裝甲Boss／怪群包圍；遊戲相簿前三張、原貼文17090045與profile均已公開核對載入，原正文保留。
@@ -62,3 +21,24 @@
 - 鎖定期間elevated效能8–9FPS、舊版亦低；普通環境恢復45–55FPS，未證明原因、未改Windows安全設定。
 - PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules；jobs2，效能solo，不與Gradle同時跑。
 - Git／測試APK／itch／Pages／Devlog／白名單清理授權沿用；正式商店／定價／簽章更換仍須另行授權。
+
+## v65交付證據與限制
+- Summary：`v0.9.65: add garden layout puzzles and resident wishes`（3528764）。音效測試修正7bd0b42，未改遊戲音效。
+- 六個有限空間願望：立即／通過2、5、10、15、20關開放；16格五物件免費佈置，已入住居民不因重排消失。
+- layout／guests走garden.rev、備份碼、原生合併；原農作／戰力數值保持。是否有趣仍需真人試玩。
+- 最終bot第1/2/3關過，3/3、2/3、1/3心，僅本批樣本。獨立平均54.2FPS，有無同伴36.2→36.0，非Pixel。
+- CPU4專項20260921-101118-406875-garden65-cpu4-offline；離線／新存檔／冷啟動release-smoke.log，0errors／0外部請求。
+- 新增測試涵蓋六題、斜角／斷路／環形、庫存、重複入住、重排、舊資源、原生／備份、11語言×3尺寸。
+- APK v65/96500/0.9.65-test.0，4311673bytes，簽章與appId一致，HTML／DEX／公開下載SHA核對。
+- APK SHA db6b77467e46bd7e928eaaab84ce5c1a9b2fa9f00a2ad84c9aec6345f771c7c3；固定android-test入口。
+- 本次ADB沒有裝置，未安裝v65到Pixel；上次v64才有真機安裝與存檔一致證據。
+- itch upload19167726/build1999423，公開payload同SHA；實際布置／入住0→1／開始暫停，itch-v65.json。
+- Pages ca1fde0fb13895a530e35c2989acc173a4aca5bd，Actions35554519239 success；公開SHA一致，CUA開始／Paused通過。
+- Devlog Published https://davidform.itch.io/goo-blaster/devlog/1671547/v0965-a-garden-to-arrange-and-neighbours-to-welcome。
+- 雙語全文、v65附件、庭院圖核對；devlog workflow 9/9；store/devlogs/v0.9.65/post.json。
+- 遊戲頁v65介紹已公開核對；相簿前三張戰鬥、第四張新庭院30143572，四圖均載入。
+- 原討論串首文v65已編妥未保存：自動核准審查拒絕公開改寫，已詢問明確授權。不要走API繞過；Chrome編輯頁保留。
+- 討論串／profile目前仍v64三張戰鬥圖；新庭院圖僅遊戲頁與Devlog。
+- 白名單清理刪舊v60 APK4290992bytes，保留v65/v64及全部存檔／簽章／測試證據。22舊profile拒絕存取留存。
+- 圖片store/screenshots/v0.9.65為實際UI、可達成測試存檔，非真人遊玩；manifest保留來源。
+- 玩家若擺完六題便不回來，下一步考慮有個性的居民互動／取捨，不堆重複收成門檻。
