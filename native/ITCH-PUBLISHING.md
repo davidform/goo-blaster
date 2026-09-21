@@ -33,7 +33,7 @@
 使用者要求 itch.io 遊戲頁自動更新，並指出個人頁仍顯示舊圖。每次已授權發版也須完成下列步驟；這是發版流程，不建立背景排程。
 
 - 範圍：遊戲4906809的介紹／截圖，以及[既有討論串](https://itch.io/t/6826201/50-stages-no-ads-no-gacha-works-offline-my-browser-roguelite-needs-breaking)的開頭貼文17090045。個人頁會引用該貼文，須另外檢查。保留歷史回覆，不每版另發留言洗版。
-- 執行 `.venv/Scripts/python.exe native/prepare_itch_screenshots.py`，從目前HTML的全新離線存檔截取主畫面、實際遊戲與庭院；產物在 `store/screenshots/<BUILD>/`，manifest記HTML SHA、圖片SHA、實際遊戲時間及瀏覽器錯誤。使用已有Playwright開發環境，遊戲本身不增加相依。
+- `native/prepare_itch_screenshots.py` 只提供介面紀錄，不作為商店主打圖驗收。宣傳圖以 `native/capture_combat_candidates.py` 擷取真實模擬的Boss戰候選，再依AGENTS第15節人工選圖；候選分數不代表圖片已合格。記錄可達成的商店升級設定、來源SHA、局內狀態；不是人類通關或真機FPS證據。遊戲本身不增加相依。
 - 先確認公開版本與manifest來源一致，人工檢視每張圖片，再透過已登入瀏覽器上傳。不得以舊圖片改檔名冒充新版，不把測試作弊畫面當玩家成績。
 - 介紹只列已公開功能；更新版本、玩法與固定Android測試入口，避免維護易過時的卡牌／寶箱總數。不更改價格、專案身分或公開狀態。
 - 開頭貼文原地編輯並註明舊回覆對應舊版本；同步目前圖片。截圖上傳若被瀏覽器權限阻擋，明確記錄未完成，不能宣稱整個頁面同步完成。

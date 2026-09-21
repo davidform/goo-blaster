@@ -6,6 +6,7 @@
 
 - [共用開發流程](game-studio/SKILL.md)：接手、實作、驗證、手機測試與交接。
 - [架構與分工原則](game-studio/references/architecture.md)：玩法與平台服務分界、何時用多 agents。
+- [付費遊戲品質驗收](game-studio/references/market-quality.md)：技術、玩家體驗、商店呈現分開驗收；宣傳圖以真實核心玩法為主，不以測試成功代替吸引力判斷。
 - 專案初始化工具：建立身分、語言、驗證欄位、交接與原始想法，不複製前作存檔或簽章。
 - [現有遊戲設定](../studio.project.json)：保留 GOO BLASTER 的實際技術與授權。
 - [發版後更新日誌](../native/DEVLOG-PUBLISHING.md)：已授權的GOO專案自動整理中英文案、核對公開版本、發布及防重複；其他新遊戲仍需自己的授權。

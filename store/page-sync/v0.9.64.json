@@ -11,8 +11,8 @@
   "old_opening_post_images_removed": true,
   "new_screenshots_uploaded": true,
   "game_gallery_still_old": true,
-  "prepared_assets": "store/screenshots/v0.9.64/manifest.json",
-  "remaining": "New images published and verified on game page, topic and profile. Five legacy gallery images remain after the three new images: 29349610/29349612/29349614/29349615/29349622. Chrome delete confirmation/accept timed out twice; did not verify deletion. User was asked to confirm any visible deletion dialog. No game code/APK/devlog changes.",
+  "prepared_assets": "store/screenshots/v0.9.64/combat/manifest.json",
+  "remaining": "Combat images verified first on game gallery and all three loaded on original topic and profile, with original text restored and verified. Gallery still has 3 superseded v64 UI images and 5 legacy images after combat images. Native Chrome delete confirmation previously timed out twice; deletion remains unverified. No gameplay/APK/devlog changes.",
   "phone": {
     "version_code": 96400,
     "build": "v0.9.64",
@@ -27,13 +27,38 @@
   "topic_images_public_verified": true,
   "profile_images_loaded_verified": true,
   "new_image_ids": {
+    "boss_battle": 30141028,
+    "armored_boss": 30141027,
+    "surrounded": 30141026
+  },
+  "public_image_urls": [
+    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MTAyOC5wbmc=/original/TWUFMV.png",
+    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MTAyNy5wbmc=/original/n03pAb.png",
+    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MTAyNi5wbmc=/original/gKtqaM.png"
+  ],
+  "superseded_ui_image_ids": {
     "adventure": 30140438,
     "garden": 30140437,
     "gameplay": 30140436
   },
-  "public_image_urls": [
-    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MDQzOC5wbmc=/original/ziRRFl.png",
-    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MDQzNi5wbmc=/original/vgFSfk.png",
-    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MDQzNy5wbmc=/original/h3Ozk7.png"
-  ]
+  "combat_refresh": {
+    "gallery_order": [
+      30141028,
+      30141027,
+      30141026,
+      30140438,
+      30140437,
+      30140436,
+      29349610,
+      29349612,
+      29349614,
+      29349615,
+      29349622
+    ],
+    "topic_and_profile_loaded": true,
+    "original_post_text_restored_verified": true,
+    "capture_runtime_errors": 0,
+    "human_playtest": false,
+    "fps_benchmark": false
+  }
 }

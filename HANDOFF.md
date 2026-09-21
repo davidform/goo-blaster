@@ -48,10 +48,11 @@
 - 22個舊profile拒絕存取未清，不改ACL。
 
 ## 下一步／未完成
-- itch介紹、原討論串17090045與個人頁引用已更新v64；個人頁舊三張圖已移除。原貼文及個人頁已顯示3張新版截圖；遊戲相簿新版3張已排最前面。
-- 新圖在store/screenshots/v0.9.64；prepare_itch_screenshots.py實跑離線／新存檔／20.23秒遊戲／0errors／HTML SHA未變。
-- 使用者已開啟Chrome檔案權限；三張新圖上傳成功，公開遊戲頁／貼文／個人頁均核對載入（個人頁要捲到圖片才觸發lazy load）。
-- 剩餘：遊戲相簿5張舊圖仍在新版後方；Delete的Chrome confirm/accept兩次逾時，已請使用者確認可見提示。收據列舊ID，勿重傳新圖。無需重發Devlog或APK。
+- 宣傳改為3張真實Boss交戰：大型Boss／裝甲Boss／怪群包圍；遊戲相簿前三張、原貼文17090045與profile均已公開核對載入，原正文保留。
+- 素材store/screenshots/v0.9.64/combat/manifest.json；實際完整loop加速擷取、隔離可達成存檔，0errors、HTML SHA未變；不是真人／FPS測試。
+- 相簿後方仍有3張已被取代的v64 UI圖＋5張legacy圖；Chrome Delete confirm/accept逾時未刪。勿重傳戰鬥圖；收據store/page-sync/v0.9.64.json。
+- game-studio已新增市場品質標準並同步已安裝skill：技術／玩家體驗／商業呈現分別驗收，動作遊戲主圖必須實戰，檢查原圖與縮圖。
+- 下一個視覺候選：Boss連續受擊變純白遮掉造型、特效遮角色、背景層次少；尚未修改，不宣称圖片更新代表已達付費品質。
 - 收集Pixel上第9關以後攻擊／防禦搭配、Boss邊緣衝刺、庭院成長循環的實玩回饋，再單一變數調整。
 - Pixel長時間FPS未測；Surface全平行因凍結紀錄未跑，CPU4不是替代證據；11語言母語潤稿未做。
 - Windows一般工具帳戶反覆1909鎖定；提升權限檔案／Git工具可用，已啟動一般環境測試照常完成。

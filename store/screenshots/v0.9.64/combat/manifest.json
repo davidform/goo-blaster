@@ -1,0 +1,151 @@
+{
+  "build": "v0.9.64",
+  "source_sha256": "b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db",
+  "unretouched": true,
+  "method": "Actual full-loop combat from isolated attainable upgrade profiles; accelerated clock, not human playtest or FPS evidence; non-captured render calls skipped. No stat resets, placed enemies or altered combat rules.",
+  "selected": [
+    {
+      "file": "01-boss-battle.png",
+      "sha256": "3a3474100ae481b96e6205c02cf9cc8f779c7cfd5a93f05d30ebe9b72737705e",
+      "source_run": "full-loop",
+      "source_file": "stage-10-t183.png",
+      "selection_reason": "Large Boss, incoming projectiles, player attack and visible health bar; no full-screen flash.",
+      "state": {
+        "time": 183.1666666665999,
+        "over": false,
+        "hearts": 3,
+        "level": 27,
+        "kills": 2122,
+        "enemies": 16,
+        "bullets": 27,
+        "shots": 15,
+        "bosses": [
+          {
+            "name": "Candy King",
+            "superBoss": false,
+            "hp": 34153.65580800012,
+            "flash": -0.01666666666660458,
+            "above": true
+          }
+        ],
+        "overlay": false,
+        "flash": 0,
+        "toast": 0,
+        "weapon": {
+          "bubble": 5,
+          "graffiti": 0,
+          "yoyo": 5
+        },
+        "meta": {
+          "hearts": 2,
+          "revive": 2,
+          "pickup": 2,
+          "xp": 2,
+          "wep": 2,
+          "dmg": 2,
+          "aspd": 2
+        },
+        "file": "stage-10-t183.png",
+        "stage": 10,
+        "score": 86
+      }
+    },
+    {
+      "file": "02-armored-boss.png",
+      "sha256": "dd6d45d2467958bd2d9c6ef299fa0e347f0a1a4e0bd1a705b9388b05dcbba8d8",
+      "source_run": "defensive-build",
+      "source_file": "stage-20-t047.png",
+      "selection_reason": "Readable protagonist and armoured Boss; bullets leave visible escape space.",
+      "state": {
+        "time": 47.133333333333056,
+        "over": false,
+        "hearts": 4,
+        "level": 15,
+        "kills": 421,
+        "enemies": 2,
+        "bullets": 19,
+        "shots": 8,
+        "bosses": [
+          {
+            "name": "Jelly Giant",
+            "superBoss": false,
+            "hp": 8390.680399999996,
+            "flash": -0.009333333333318893,
+            "above": true
+          }
+        ],
+        "overlay": false,
+        "flash": 0,
+        "toast": 0,
+        "weapon": {
+          "bubble": 5,
+          "graffiti": 5,
+          "yoyo": 0
+        },
+        "meta": {
+          "hearts": 2,
+          "revive": 2,
+          "pickup": 1,
+          "xp": 0,
+          "wep": 0,
+          "dmg": 1,
+          "aspd": 0
+        },
+        "file": "stage-20-t047.png",
+        "stage": 20,
+        "score": 111
+      }
+    },
+    {
+      "file": "03-surrounded.png",
+      "sha256": "3129232fcf35c2a53d937531892cb86dfa40c054bbce77c0c25832b19b7b7cef",
+      "source_run": "defensive-build",
+      "source_file": "stage-10-t056.png",
+      "selection_reason": "Horde pressure with visible player, Boss and attacks; shows actual defensive play.",
+      "state": {
+        "time": 56.4833333333339,
+        "over": false,
+        "hearts": 4,
+        "level": 6,
+        "kills": 151,
+        "enemies": 55,
+        "bullets": 40,
+        "shots": 3,
+        "bosses": [
+          {
+            "name": "Jelly Giant",
+            "superBoss": false,
+            "hp": 6134.308500000002,
+            "flash": -0.007916666666652417,
+            "above": true
+          }
+        ],
+        "overlay": false,
+        "flash": 0,
+        "toast": 0,
+        "weapon": {
+          "bubble": 1,
+          "graffiti": 0,
+          "yoyo": 1
+        },
+        "meta": {
+          "hearts": 2,
+          "revive": 2,
+          "pickup": 1,
+          "xp": 0,
+          "wep": 0,
+          "dmg": 1,
+          "aspd": 0
+        },
+        "file": "stage-10-t056.png",
+        "stage": 10,
+        "score": 228
+      }
+    }
+  ],
+  "limitations": [
+    "Boss hurt flash often obscures body detail.",
+    "Background hierarchy and effects over the player still need product work.",
+    "Selection is editorial judgment, not conversion testing."
+  ]
+}
