@@ -1,6 +1,9 @@
 # GOO BLASTER 精簡交接
 
 ## 目前狀態（2026-09-21）
+- 當前任務：使用者認為庭院無趣；v0.9.65已在工作區加入16格自由佈置＋六位訪客願望，尚未發版。戰鬥／種植數值未改。
+- 完整測試73/73通過：_private/test-runs/20260921-100707-600303-garden65-final/results.json，SHA 659113668783665bd22dd598d99a08605146cc334ea78d6330101bf22dc763eb；source_unchanged。
+- 專項py_garden／py_garden_design＋CPU4／離線冷啟動／最終UI均通過；完整回歸73/73，APK／itch／Pages／Devlog尚待完成。首輪因工具列可達性改版而中止，音效測試絕對時鐘問題已重現並修正；_private/garden65/verification.json。
 - 使用者本次四項需求已實作並交付v0.9.64：Boss阻擋、衝刺節奏、搭配上限、糖果庭院。
 - 分支codex/soft-world-ui，遊戲commit0f1f17a624937e81c19bad2fbe6c66abc37041c8；新接手仍先核對工作區／遠端／BUILD。
 - 最終HTML SHA b1d866d1b14d9698caf94fd448f6c10d70c4e4dcc4118a964a4b35128e66c0db。

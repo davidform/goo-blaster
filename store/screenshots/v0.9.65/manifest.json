@@ -1,0 +1,57 @@
+{
+  "build": "v0.9.65",
+  "source_sha256": "659113668783665bd22dd598d99a08605146cc334ea78d6330101bf22dc763eb",
+  "method": "Unretouched actual UI, isolated attainable Stage 21 / cottage level 2 profile; all six wishes earned with gardenWelcome and all decorations placed through inventory-validated gardenPlace. Not human playtesting.",
+  "errors": [],
+  "state": {
+    "layout": [
+      1,
+      2,
+      5,
+      1,
+      5,
+      3,
+      4,
+      2,
+      2,
+      4,
+      3,
+      5,
+      1,
+      5,
+      2,
+      1
+    ],
+    "guests": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "rev": 85,
+    "seeds": 3,
+    "petals": 31,
+    "house": 2,
+    "plots": [
+      {
+        "crop": 0,
+        "growth": 1
+      },
+      {
+        "crop": 1,
+        "growth": 2
+      },
+      {
+        "crop": 2,
+        "growth": 3
+      }
+    ]
+  },
+  "files": {
+    "garden-designed-en.png": "4c96b899bdf0968cee1e21d4a324f3ef6b4c48f8ec6f172667abf44046223d8d",
+    "garden-designed-zh.png": "04b3130bc759622b85cff84c235fc12c8aef085d22101852c1b67ca803fede90",
+    "garden-start-zh.png": "bfafe168affd7f18383c28ffaf0a7d609e35bd2464e0a38d068fa1bd138ed484"
+  }
+}

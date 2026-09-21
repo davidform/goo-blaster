@@ -103,7 +103,7 @@ store/                  ← 上架素材（封面、截圖、itch.io 用的 zip�
 | **免費/付費切點** | `const EDITION=` / `DEMO_LEVELS` / `isLocked` / `showLockBox` |
 | **同伴（糖果援軍）** | `const ALLY_N=` / `spawnAllies` / `updateAllies` / `drawAllies` |
 | **本局搭配上限／副武器** | `BUILD_SLOTS` / `cardFitsBuild` / `startingWeapons` / `SECONDARY_WEAPON`（2武器、4能力；後期開局同樣受限） |
-| **糖果庭院** | `GARDEN_CROPS` / `cleanGarden` / `gardenClear` / `renderGarden`（通關成長、存檔garden欄位，不增加戰鬥屬性） |
+| **糖果庭院** | `GARDEN_CROPS` / `cleanGarden` / `gardenClear` / `renderGarden` / `GARDEN_ITEMS` / `gardenWishMet` / `gardenWelcome`（農作＋16格佈置／居民願望，存檔garden欄位，不增加戰鬥屬性） |
 | 寶箱 | `const CHEST_TYPES=` / `const CHEST_W=`（整數權重表） / `buildChestPool` |
 | **寶箱的關卡門檻** | `t.minLv` 欄位 / `CHEST_POOL`（第1~8關）vs `CHEST_POOL_LATE`（第9關起）/ `chestPool()`　⚠ `chestPool()` 讀的是 **`G.lvIdx`**，標題畫面就已經有一個 G 存在，只改 `LV_IDX` 沒有用 |
 | **綠殼護盾** | `const SHELL_N=` / `SHELL_MIN_LV` / `spawnShells` / `updateShells` / `shellBlock` / `drawShells` |
