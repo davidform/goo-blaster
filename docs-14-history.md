@@ -1263,3 +1263,9 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - itch介紹更新v69；前三戰鬥圖保留、第四張30155292為本版可達成場景，四圖皆載入。Devlog1672032先查9篇無草稿，保存草稿核對後發布，中英六段、版本附件/新圖及Published通過；test_devlog_workflow 9/9。
 - 清理dry-run核對範圍後Apply：3項23083151bytes（v67APK＋兩測試profile），保留v69/v68APK、存檔與簽章。25個拒絕存取profiles未動，0刪除失敗，不改ACL。收據_private/village69/verification.json。
 - 未執行全平行、Pixel安裝/長時FPS；母語潤稿與玩家耐玩性驗收未完成。既有論壇首文核准阻擋未重試。本次僅已授權跨平台測試交付，非付費商店上架驗收。
+
+## 等待時間顯示規範（2026-09-21，文件更新）
+- 使用者要求任何建設／種植等等待都顯示時間，已寫入AGENTS第20節，涵蓋開始前時長、進行中剩餘時間、完成狀態與重開持久性。
+- 現況核對：v69建設／修屋／料理即時完成；作物60/180/360秒已有任務板、物件與詳情倒數。未新增人為等待，未改index.html／BUILD，不重發APK或Devlog。
+- 實跑：`run_tests.py --jobs 1 --only py_garden_timer --label wait-display-audit`，8.0秒PASS、無失敗；報告_private/test-runs/20260921-222120-485936-wait-display-audit/results.json，SHA仍b79b3cb1442f75d58975c3f2c733aa5a816d9a87d151e506d5b26e584c505838。
+- 此輪僅文件與既有功能稽核，未重跑全套／CPU壓力／真機；不冒稱新增遊戲功能或三輪驗收。

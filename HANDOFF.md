@@ -7,6 +7,8 @@
 - 遊戲commit c0f944f（已push），Summary：`v0.9.69: complete the garden production and village loop`。
 - 單代理；單檔離線，47新增key×11語言；不使用付費工具或外部執行相依。
 
+- 新固定要求：所有需要等待的建設／種植／製作都須顯示持續倒數（AGENTS第20節）；v69建設／修屋／料理即時，作物倒數既有。
+
 ## 已實作
 - 每株另給1食材，三食材＋三成品pantry各9999，旧進度保留。
 - 薄荷茶1薄荷、果醬2莓果、月光派各1作物；立即製作，小屋0/1/2級解鎖。
@@ -19,6 +21,7 @@
 - 設計與研究docs-17-garden-loop.md；原創Canvas新增三建築sprites。
 
 ## 測試與證據
+- 追加倒數稽核：wait-display-audit，py_garden_timer 8.0秒PASS、來源未變；即時倒數／離線／重開deadline／成熟收成皆過。
 - 新py_garden_village全新UI循環：12輪種植、兩次修屋、料理各6、三居民各3交付、102聲望、六建設。
 - 等待用明示加速時鐘；原數值作物等待34分鐘，非真人時間實測。
 - 初輪village69-first六項PASS，village69-loop一項PASS，scene兩項PASS（早期SHA）。
