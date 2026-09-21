@@ -1221,3 +1221,20 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 遊戲e3a282d已push；APK96700同簽章與內含HTML／DEX核對、公開SHA ba356090fd369696fc125b64ef26c1eec64ced48a64a10c9b1d0c012c3214ef6。itch2000470公開payload逐位元組一致，CUA既有進度種子2→0、任務切回冒險、實際開始／暫停過。Pages部署44635ccacd42507811d0380c6fb8030b03691e6f，Actions35593022389 success，公開完整SHA與實際開始／Paused核對。Devlog1671866 Published，六段中英全文與v67附件／新圖核對，workflow9/9。遊戲頁v67文字和前三戰鬥＋第四任務圖30151941載入核對。
 驗證工具修正：第一次比對itch附加腳本漏寫defer，讀到完整差異後僅允許實際平台script，不忽略其他差異。Pages初次收據欄位public_payload_verified不是工具要求的game_payload_identical，被安全擋住；將既有證據映射正確欄位，重新預檢75項通過才推送。Devlog準備前補既有規格languages欄位。HTML大小更正549871原始bytes，544276是換行正規化後文字編碼量；測試／封裝／公開SHA一直一致，未改遊戲或重用異版證據。
 白名單清理刪v65 APK4311673bytes，保留v67/v66；24個權限拒絕profile未動。手機無裝置，未安裝本版；原首篇編輯前次核准限制仍在，本次未重試。相簿後方10歷史圖留存，未擅自刪Devlog素材。
+
+
+## v0.9.68 — 收成倒數與收成後才完成種植任務（2026-09-21）
+- 根因：v67作物靠通關數成長，種下就引導冒險；玩家預期農場式時間成長，看到0/1和disabled收成以為沒有反應。不是倒數不更新，而是原機制根本沒有時間。
+- 改動：單一玩法變數從通關成長改成60/180/360秒。readyAt存檔、離線成熟、不枯萎；通關仍給種子。種植與收成同一步，成熟未領取仍不跳到修屋；任務板、田地、詳情倒數每秒更新，植物依時間分階段長大。
+- 保留：戰鬥數值、12/45/120修屋成本、1/3/6花瓣產量、每株1種子/收成返種；既有關卡/商店/居民/布置進度。所有7個變動字串同步11語言，預設英文。
+- 遷移：舊growth/days換成剩餘秒比例，已成熟保留；首次applySaveObject寫入deadline避免重開重置。非法日期回退合法時長，損壞非陣列plots被清理，時鐘倒退最多顯示一個完整作物週期。離線單機無伺服器時間，手動快轉裝置時鐘仍可能提前成熟，不宣稱防作弊。
+- 額外查到同一路徑問題：觸控拖曳後某次tap只有pointerdown/up、touchstart/end，沒有compatibility click；沒有DOM替換、沒有preventDefault、點中正確button、GV.drag.moved=false，probe留_private/garden68-touch-probe.py及garden68-touch-probe.png。觸控pointerup直接觸發，阻擋後續trusted touch click避免重複；鼠標/鍵盤保留。
+- 前後：舊畫面0/1且等候無效，現在1:00實際遞減；舊半熟莓果growth1/2轉成90秒。新task直到領取作物才切換。三田最佳作物/零操作延遲三段修屋下界約4/15/42分鐘，僅推算非真人體驗，舊35次通關模型失效。
+- 測試：新增py_garden_timer並納入完整套件；live一秒倒數、離線deadline/reload、已熟保留、舊部分成長、損壞save、時鐘上下界、通關不跳倒數、task gating、重複收成。quest四輪真實UI到首次修屋，長時間以明示測試時鐘加速；不是等了全部現實時間。
+- 保留初敗：garden68-first world觸控逾時；instrument確認原生未送click後修復，garden68-edges 3/3。garden68-full因最後新增save型別防護主動停止，不能算完整驗收。garden68-cpu4 3/3為舊SHA454d，最終必須另跑。
+- 教訓：不能把自己選的「通關才能種菜」規則當成玩家已接受；種植需要可見時間及真實完成條件。技術測試不代表經營深度或樂趣已完成。
+- 最終SHA d548aa28ba8e6c720158291b4fa31371698e327dae8f8fcd64d5341e9358b79b，553103bytes。garden68-final完整76項主批75過、py_boss_skin在第六語系Page.goto逾時，garden68-boss-retry同SHA27.3秒補跑過；不刪原失敗。全部涵蓋通過。
+- 最終CPU4 garden68-final-cpu4 3/3（world141.8s、quest165.1s、timer33.4s）；離線smoke exit0、0JS錯誤/0外部請求、重開progress9 coins456 dmg2。獨立perf66.1s、單局56.7FPS、同伴50.5→50.3（-0.3%），不與建置/其他測試並跑，非Pixel。
+- py_test9新手第1/2/3關47/69/85秒通關、3/3/2/3/1/3心；Node test9第1–4關通關、第5關73秒陣亡（此bot非全關硬門檻），0JS錯誤。
+- native/capture_garden_timer.py真實新存檔、實際等待61.24秒才成熟、實際收成3花瓣，無時鐘override或注入save；兩張圖與manifest在store/screenshots/v0.9.68。補實際touchscreen收成只結算一次，seeds4/petals1/rev1。證據_private/garden68/verification.json。
+- 未執行全平行（Surface限制）與Pixel（adb devices空）。CUA重連環境Windows1909失敗，公開同步/頁面編輯狀態待後續收據補記。

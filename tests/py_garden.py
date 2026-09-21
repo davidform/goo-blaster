@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 from test_paths import GAME_ROOT,ARTIFACTS,BROWSER_CHANNEL
 with sync_playwright() as pw:
  b=pw.chromium.launch(channel=BROWSER_CHANNEL);c=b.new_context(viewport={'width':390,'height':844},has_touch=True)
- c.add_init_script('window.requestAnimationFrame=()=>0');c.set_offline(True);p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)))
+ c.add_init_script('window.requestAnimationFrame=()=>0;window.__gardenNow=Date.now();Date.now=()=>window.__gardenNow');c.set_offline(True);p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)))
  c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_UI_CPU','1'))});p.goto((Path(GAME_ROOT)/'index.html').as_uri())
  assert p.evaluate('GARDEN.seeds===3&&GARDEN.house===0&&GARDEN.plots.every(x=>x===null)')
  p.locator('#navGarden').click();p.locator('.gardenSpot[data-kind=plot]').first.click();p.locator('.gardenPlot button').first.click()
@@ -17,11 +17,11 @@ with sync_playwright() as pw:
   const stats=combat();gardenPlant(0,0);const blocked= !gardenPlant(0,0)&&!gardenPlant(1,2)&&!gardenPlant(-1,0)&&!gardenHarvest(8)&&!gardenUpgrade();
   LV_IDX=0;start();endGame(false);const failKeeps=GARDEN.plots[0].growth===0;
   start();endGame(true);const once=JSON.stringify(GARDEN);endGame(true);const onceOnly=JSON.stringify(GARDEN)===once;
-  const first= gardenHarvest(0),twice=!gardenHarvest(0),firstPetals=GARDEN.petals;
+  window.__gardenNow+=60000;const first= gardenHarvest(0),twice=!gardenHarvest(0),firstPetals=GARDEN.petals;
   GARDEN.petals=200;const upgrades=[gardenUpgrade(),gardenUpgrade(),gardenUpgrade(),!gardenUpgrade()];
   gardenPlant(0,0);gardenPlant(1,1);gardenPlant(2,2);
   for(let k=0;k<3;k++){start();endGame(true);}
-  const allReady=GARDEN.plots.every(x=>x.growth===GARDEN_CROPS[x.crop].days);
+  window.__gardenNow+=360000;const allReady=GARDEN.plots.every(gardenReady);
   const petals=GARDEN.petals;for(let i=0;i<3;i++)gardenHarvest(i);const harvestYield=GARDEN.petals-petals;
   const stableStats=stats===combat();const garden=JSON.stringify(GARDEN),code=saveCodeEncode();
   GARDEN=cleanGarden();importSaveCode(code);const backup=JSON.stringify(GARDEN)===garden;

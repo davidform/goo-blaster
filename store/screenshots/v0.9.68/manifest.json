@@ -1,0 +1,17 @@
+{
+  "build": "v0.9.68",
+  "source_sha256": "d548aa28ba8e6c720158291b4fa31371698e327dae8f8fcd64d5341e9358b79b",
+  "method": "Unretouched live Canvas/DOM. Isolated fresh save; real Plant/Harvest buttons; real elapsed minute, no time override or save injection. Not a phone performance test.",
+  "elapsed_seconds": 61.24,
+  "viewport": [
+    390,
+    844
+  ],
+  "device_scale_factor": 2,
+  "errors": [],
+  "files": [
+    "garden-countdown-zh.png",
+    "garden-ready-zh.png"
+  ],
+  "selection": "Countdown image after three unchanged combat images; shows planting activity and clear timer."
+}

@@ -1,0 +1,34 @@
+{
+  "build": "v0.9.68",
+  "title": "v0.9.68 — Watch your garden grow",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "Planting now starts a visible harvest countdown: Mint Sprout takes 1 minute, Berry Bloom 3 minutes, and Moon Blossom 6 minutes. Fields and the restoration board show the remaining time. Crops continue growing while you are away or offline, and never wither."
+    },
+    {
+      "kind": "p",
+      "text": "The planting task stays active until you collect the harvest. Stage clears still give extra seeds, but no longer grow crops directly. Existing mature crops stay ready; partially grown crops keep their growth proportion as remaining time. We also fixed field taps that could stop responding after dragging the village. Combat stats and cottage costs are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "種下作物後會顯示收成倒數：薄荷嫩芽 1 分鐘、莓果花 3 分鐘、月光花 6 分鐘。田地與修復任務板都能看到剩餘時間；離開或離線仍會成長，成熟後不會枯萎。"
+    },
+    {
+      "kind": "p",
+      "text": "領取收成後才完成種植任務。通關仍可獲得額外種子，但不再直接推進作物成長。舊版成熟作物保持可收成，半熟作物依原成長比例換算剩餘時間。另外修正拖動村莊後田地偶爾按了沒反應的觸控問題。戰鬥數值與修屋成本不變。"
+    }
+  ]
+}
