@@ -1,10 +1,10 @@
 # GOO BLASTER 精簡交接
 
 ## 目前任務（2026-09-21）
-- 使用者要求種植任務收成後才完成，並看得到倒數；v68已實作，完整76項含補跑、CPU4與離線已過，尚未發布。
-- 分支codex/soft-world-ui，基底5ca8627；本次遊戲改動準備commit。BUILD v0.9.68。
+- 使用者要求種植任務收成後才完成，並看得到倒數；v68已實作，完整76項含補跑、CPU4與離線已過，跨平台已發布。
+- 分支codex/soft-world-ui，遊戲commit b369be10b2b1d94f1a346f136897e8c768604339，已push。BUILD v0.9.68。
 - SHA d548aa28ba8e6c720158291b4fa31371698e327dae8f8fcd64d5341e9358b79b。
-- 預定Summary：`v0.9.68: grow garden crops with harvest countdowns`。
+- 遊戲Summary：`v0.9.68: grow garden crops with harvest countdowns`。
 - 單代理、單檔離線、11語言；.codex-remote-attachments不提交。
 
 ## 實作與決策
@@ -30,13 +30,16 @@
 - _private/garden68/verification.json彙整。全平行依Surface限制不跑；Pixel無ADB裝置，未安裝。
 - PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
 
-## 待完成交付
-- 完整回歸/獨立效能已完畢。平均56.7FPS，同伴50.5→50.3（-0.3%），非Pixel。commit/push本次檔案。
-- Android固定同簽章測試通道、itch html5實際payload/啟動、Pages指定commit工具與公開SHA/啟動、中英Devlog。
-- 頁面文案store/page-sync/v0.9.68-description.html；Devlog notes已備妥。未驗證公開前不可宣稱v68已上線。
-- Devlog管理頁確認目前8篇、無v68或草稿；CUA在遊戲編輯頁；重連後kernel無法啟動Windows1909，兩次失敗，不改安全設定。匿名公開遊戲可用獨立瀏覽器實際驗證，介紹/Devlog需CUA恢復。
-- 既有公開v67：APK96700、itch build2000470、Pages44635cca、Devlog1671866。
-- 同步後白名單cleanup，保留新版與上一版APK／存檔／簽章／測試證據；拒絕存取不改ACL。
+## 已完成交付
+- Android96800 / 0.9.68-test.0，同簽章；公開APK SHA e20a72c29362e3ecb328ebf8050b3dbe03b6b696b50e94b13dd421906f62a7e4。
+- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；published.json verified，Pixel未連線未安裝。
+- itch build2000616/upload19167726，公開payload同源；種植倒數、啟動/暫停已驗證；_private/mobile-test/itch-v68.json。
+- Pages141e176b1b64ba46249ede275d940fd51d55c030，Actions35600120863成功；公開完整SHA與CUA啟動/暫停過；pages-v68.json。
+- itch介紹v68及前四張圖30141028/30141027/30141026/30153616公開載入核對；store/page-sync/v0.9.68.json。
+- Devlog1671947中英完整正文與PUBLISHED已核對；store/devlogs/v0.9.68/post.json。
+- 先前CUA Windows1909/Debugger unattached已恢復；新Chrome tab完成公開驗證，不改ACL。
+- 獨立效能56.7FPS，同伴50.5→50.3（-0.3%），非Pixel。
+- 白名單清理保留v68/v67、存檔、簽章與證據；拒絕存取測試profiles保留。
 
 ## 其他未完成
 - 原討論串首文仍待v65自動核准拒絕後明確授權，不重試／繞過。相簿歷史圖保留。

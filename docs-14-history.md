@@ -1238,3 +1238,7 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - py_test9新手第1/2/3關47/69/85秒通關、3/3/2/3/1/3心；Node test9第1–4關通關、第5關73秒陣亡（此bot非全關硬門檻），0JS錯誤。
 - native/capture_garden_timer.py真實新存檔、實際等待61.24秒才成熟、實際收成3花瓣，無時鐘override或注入save；兩張圖與manifest在store/screenshots/v0.9.68。補實際touchscreen收成只結算一次，seeds4/petals1/rev1。證據_private/garden68/verification.json。
 - 未執行全平行（Surface限制）與Pixel（adb devices空）。CUA重連環境Windows1909失敗，公開同步/頁面編輯狀態待後續收據補記。
+
+- v68交付補記：遊戲b369be1已push；Android96800同簽章公開SHA核對；itch build2000616公開payload同源及種植/啟動/暫停通過；Pages141e176b/Actions35600120863成功，公開完整SHA及CUA啟動/暫停通過。
+- itch文案與第四張倒數圖30153616已公開，前三張保留戰鬥；Devlog1671947中英正文及PUBLISHED核對。先前CUA環境錯誤已恢復，不重複上傳或發文。
+- 全平行與Pixel未執行；論壇首文既有核准阻擋未重試。清理保留新舊兩版與玩家進度，拒絕存取profiles不改ACL。
