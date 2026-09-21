@@ -1,0 +1,43 @@
+{
+  "build": "v0.9.69",
+  "title": "v0.9.69 — A village worth coming home to",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "Your harvest now has a purpose beyond cottage repairs. Collect ingredients, make mint tea, berry jam and moon tarts instantly, and deliver them to three neighbours. Missing ingredients link back to planting, and locked recipes explain which cottage upgrade you need."
+    },
+    {
+      "kind": "p",
+      "text": "Build and improve a sweet shop, picnic pavilion and fountain through six visible village projects. Reputation is never spent; later projects also need deliveries to different neighbours. Neighbours you help appear in the village. Orders never expire. Offline crop countdowns, existing progress and combat stats are preserved."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "收成有了修屋以外的新用途：食材入庫後，可立即製作薄荷茶、莓果果醬與月光派，交付三位居民的委託。缺料可直接前往種植，未解鎖食譜會說明需要的小屋等級。"
+    },
+    {
+      "kind": "p",
+      "text": "六項村莊建設讓甜點店、野餐涼亭與噴泉逐步改變外觀。聲望只累積不扣除，後期建設也需要不同居民的交付紀錄；幫助過的居民會出現在村莊。委託不會過期，離線作物倒數、既有進度與戰鬥數值皆保留。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "67f1b81f59154c69069bd22e8ab0a7c7c4bea08ebcbf48580c4cf5e670c9971c",
+  "public_game_sha256": "b79b3cb1442f75d58975c3f2c733aa5a816d9a87d151e506d5b26e584c505838",
+  "public_build_id": 2000834,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>Your harvest now has a purpose beyond cottage repairs. Collect ingredients, make mint tea, berry jam and moon tarts instantly, and deliver them to three neighbours. Missing ingredients link back to planting, and locked recipes explain which cottage upgrade you need.</p>\n<p>Build and improve a sweet shop, picnic pavilion and fountain through six visible village projects. Reputation is never spent; later projects also need deliveries to different neighbours. Neighbours you help appear in the village. Orders never expire. Offline crop countdowns, existing progress and combat stats are preserved.</p>\n<h2>繁體中文</h2>\n<p>收成有了修屋以外的新用途：食材入庫後，可立即製作薄荷茶、莓果果醬與月光派，交付三位居民的委託。缺料可直接前往種植，未解鎖食譜會說明需要的小屋等級。</p>\n<p>六項村莊建設讓甜點店、野餐涼亭與噴泉逐步改變外觀。聲望只累積不扣除，後期建設也需要不同居民的交付紀錄；幫助過的居民會出現在村莊。委託不會過期，離線作物倒數、既有進度與戰鬥數值皆保留。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1672032/v0969-a-village-worth-coming-home-to",
+  "verified_at": "2026-09-21T14:10:01.252709+00:00"
+}

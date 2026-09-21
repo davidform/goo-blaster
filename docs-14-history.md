@@ -1257,3 +1257,9 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 
 - 最終SHA b79b3cb1442f75d58975c3f2c733aa5a816d9a87d151e506d5b26e584c505838，597252 bytes。village69-final2完整77/77 PASS無補跑；final-cpu4三項PASS（world59.1s/timer16.4s/village189.9s）；offline 0errors/0external、progress9/coins456/dmg2重開保留。
 - 獨立效能69.3秒：同批同伴相對0.0%，單局38.9/30.7/32.8，平均34.1FPS通過≥30；非Pixel，不跨批與舊版FPS作效能因果比較。py_test9第1/2/3關53/66/86秒通關，0JS錯誤。
+
+- v69交付：遊戲c0f944f已push；APK96900同簽章，公開下載SHA e62ad4dc743eeb504b23e8d208c9959661606aefd0f91ed876230cbb3cbef4d9核對。無ADB装置，未安裝手機。
+- itch build2000834公開原始597252bytes一致，僅平台htmlgame.js後綴；CUA實際第5關開始/暫停通過。Pages5a0281e9565411239ea354c93f3aeab63251cd9d、Actions35609306148成功，完整公開SHA與實際開始/暫停通過。
+- itch介紹更新v69；前三戰鬥圖保留、第四張30155292為本版可達成場景，四圖皆載入。Devlog1672032先查9篇無草稿，保存草稿核對後發布，中英六段、版本附件/新圖及Published通過；test_devlog_workflow 9/9。
+- 清理dry-run核對範圍後Apply：3項23083151bytes（v67APK＋兩測試profile），保留v69/v68APK、存檔與簽章。25個拒絕存取profiles未動，0刪除失敗，不改ACL。收據_private/village69/verification.json。
+- 未執行全平行、Pixel安裝/長時FPS；母語潤稿與玩家耐玩性驗收未完成。既有論壇首文核准阻擋未重試。本次僅已授權跨平台測試交付，非付費商店上架驗收。
