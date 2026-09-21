@@ -1,0 +1,17 @@
+{
+  "build": "v0.9.70",
+  "source_sha256": "c4f376c1544f42c955e10ee334f5b4e8ba34c04ce2bcdf8333f0b72257df2aa1",
+  "method": "Unretouched offline game Canvas/DOM. Explicit reachable fixture: village 6/6 and medals 3/3/3 separately proven by UI tests. Not a player save or Pixel test. Challenges opened using actual UI; four legal pond moves collect the first pearl, one picnic answer and one star move show active play.",
+  "files": [
+    "picnic-study-zh.png",
+    "play-0-zh.png",
+    "play-1-zh.png",
+    "play-2-zh.png",
+    "pond-play-en.png",
+    "themes-zh.png",
+    "world-0-zh.png",
+    "world-1-zh.png",
+    "world-2-zh.png"
+  ],
+  "errors": []
+}

@@ -1269,3 +1269,20 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 現況核對：v69建設／修屋／料理即時完成；作物60/180/360秒已有任務板、物件與詳情倒數。未新增人為等待，未改index.html／BUILD，不重發APK或Devlog。
 - 實跑：`run_tests.py --jobs 1 --only py_garden_timer --label wait-display-audit`，8.0秒PASS、無失敗；報告_private/test-runs/20260921-222120-485936-wait-display-audit/results.json，SHA仍b79b3cb1442f75d58975c3f2c733aa5a816d9a87d151e506d5b26e584c505838。
 - 此輪僅文件與既有功能稽核，未重跑全套／CPU壓力／真機；不冒稱新增遊戲功能或三輪驗收。
+
+
+## v0.9.70 — 三種村莊挑戰與相關動態圖示（2026-09-21）
+- 根因：六項建設完成後只剩相同訂單循環，入口也只有純文字。使用者要求耐玩、不同主題有相關動態圖示。
+- 單一範圍：新增村莊小冒險，三種操作不同的挑戰，各三難度；徽章改變村莊裝飾。原戰鬥、種植倒數、花瓣/材料/料理/建設成本不改。
+- 野餐記憶3/4/5道料理；池塘5×5收3珍珠到旗幟，步數為BFS最短距離＋4/2/0；星光3×3相鄰翻轉由可解盤面反推。成功後改變序列/旋轉/打散，不扣材料、不限每日次數。
+- 存檔medals[3]/outings[3]/theme，清理非法值，主題需有徽章；只持久化成就，未完成挑戰重開後可重試。完成phase guard防重複加紀錄。原備份/合併保留。
+- 原創SVG對應用途：搖葉、蒸氣、小槌、居民、游魚、星光；新主題有野餐旗幟/游魚池/星燈夜色，支援prefers-reduced-motion，不加資產相依。
+- 第一輪timer/i18n 2/2；festival70-loop九挑戰21.1秒PASS。視覺檢視發現頁首太長，遊玩時收起主題列表，縮短header後重跑edges五项PASS；不沿用舊SHA。
+- edges：cjk12.6s/world12.2s/layout27.1s/village25.8s/festival24.2s，全過。99語系尺寸版面、離線、重開/備份/合併、免費重試/錯誤輸入/重複領取驗證。
+- 工具小錯保留：最初呼叫不存在check_syntax.py；改用既有runner語法檢查通過。添加suite腳本首次cp950讀取失敗，設PYTHONUTF8後成功，未更改遊戲內容。
+- 截圖native/capture_garden_festival.py，明示可達成fixture、原始Canvas/DOM；完整村莊及九徽章分別由UI測試驗證，非真人存檔／Pixel效能。
+- 教訓：多一種資源不等於多一種玩法；新目標需要不同決策與可見回饋。九挑戰可通過不代表已證明市場耐玩性。
+
+- 最終SHA c4f376c1544f42c955e10ee334f5b4e8ba34c04ce2bcdf8333f0b72257df2aa1，festival70-final完整78/78 PASS無補跑。Node test9 329.2秒；新手第1關58秒2/3心、第2關58秒滿心、第3關102秒陣亡（非硬門檻），0JS錯誤。
+- CPU4獨立報告三項全過：world124.2/timer26.0/festival431.0秒（壓力驗證，非效能數字）。offline smoke 0錯誤/0外部請求，progress9/coins456/dmg2/selection8重開保留。
+- 所有其他測試結束後獨立perf66.6秒：同伴40.6→40.2FPS（-1.0%），單局58.5FPS，門檻通過，非Pixel；不跨版本批次推論效能提升。
