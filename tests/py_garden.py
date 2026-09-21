@@ -47,7 +47,7 @@ with sync_playwright() as pw:
    p.evaluate('lang=>{applyLanguage(lang);showMenu();setHubPage("garden");}',lang)
    assert p.locator('#garden').evaluate('e=>e.scrollWidth<=e.clientWidth+1'),(w,lang)
    assert p.locator('#hubNav [aria-current="page"]').count()==1
-   assert p.locator('#garden select').count()==3
+   assert p.locator('#gardenPlots select').count()==3
    p.locator('.gardenSpot[data-kind=plot]').last.click();p.locator('.gardenPlot button').last.scroll_into_view_if_needed();assert p.locator('.gardenPlot button').last.is_visible()
  p.set_viewport_size({'width':390,'height':844});p.evaluate('applyLanguage("zh-Hant");gardenPlant(0,0);gardenPlant(1,1);setHubPage("garden");document.querySelector("#garden").scrollTop=0')
  p.screenshot(path=str(ARTIFACTS/'garden64.png'))

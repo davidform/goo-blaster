@@ -27,7 +27,7 @@ with sync_playwright() as pw:
  touch.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':a-50,'y':d+30}]})
  touch.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
  assert p.evaluate('GV.panX<-35&&GARDEN.seeds===3&&GV.selected===null')
- p.locator('#gardenHome').click();box=p.locator('.gardenSpot[data-kind=plot]').first.bounding_box();p.touchscreen.tap(box['x']+box['width']/2,box['y']+box['height']/2);assert p.locator('.gardenPlot').first.is_visible();assert p.locator('.gardenPlot').nth(1).is_hidden()
+ p.locator('#gardenHome').click();box=p.locator('.gardenSpot[data-kind=plot]').first.bounding_box();p.touchscreen.tap(box['x']+box['width']/2,box['y']+box['height']/2);p.wait_for_function('GV.selected?.kind==="plot"&&GV.selected.i===0');assert p.locator('.gardenPlot').first.is_visible();assert p.locator('.gardenPlot').nth(1).is_hidden()
  p.locator('.gardenPlot button').first.click();assert p.evaluate('GARDEN.seeds===2&&GARDEN.plots[0].growth===0')
  # Existing real settlement route, no new wall-clock growth or resource shortcut.
  p.evaluate('LV_IDX=0;start();endGame(true)');p.locator('#btnGarden').click()

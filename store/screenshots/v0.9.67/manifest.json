@@ -1,0 +1,19 @@
+{
+  "build": "v0.9.67",
+  "source_sha256": "d585a2b305fa4a981b4c941e43d0213c69c8c87af47b9c7944c436a8ba4b5467",
+  "method": "Unretouched real Canvas/DOM; isolated new save; four successful settlements simulated via endGame(true); no human win or phone performance claim",
+  "viewport": [
+    390,
+    844
+  ],
+  "device_scale_factor": 2,
+  "errors": [],
+  "files": [
+    "quest-grow-zh.png",
+    "quest-harvest-zh.png",
+    "quest-repair-zh.png",
+    "quest-restored-en.png",
+    "quest-restored-zh.png",
+    "quest-start-zh.png"
+  ]
+}
