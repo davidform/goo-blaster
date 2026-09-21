@@ -1,47 +1,43 @@
 # GOO BLASTER 精簡交接
 
 ## 目前任務（2026-09-21）
-- 使用者要求種植任務收成後才完成，並看得到倒數；v68已實作，完整76項含補跑、CPU4與離線已過，跨平台已發布。
-- 分支codex/soft-world-ui，遊戲commit b369be10b2b1d94f1a346f136897e8c768604339，已push。BUILD v0.9.68。
-- SHA d548aa28ba8e6c720158291b4fa31371698e327dae8f8fcd64d5341e9358b79b。
-- 遊戲Summary：`v0.9.68: grow garden crops with harvest countdowns`。
-- 單代理、單檔離線、11語言；.codex-remote-attachments不提交。
+- 使用者要求盡力完善糖果庭院；v69已實作生產／委託／建設循環，最終完整77項、CPU4與離線已過，發布準備中。
+- 分支codex/soft-world-ui，接手7279223，pull已最新。未追蹤附件不可提交。
+- BUILD v0.9.69，SHA b79b3cb1442f75d58975c3f2c733aa5a816d9a87d151e506d5b26e584c505838。
+- 預定Summary：`v0.9.69: complete the garden production and village loop`。
+- 單代理；單檔離線，47新增key×11語言；不使用付費工具或外部執行相依。
 
-## 實作與決策
-- 薄荷60秒／莓果180秒／月光360秒，readyAt持久化，離線成長、成熟不枯萎。
-- 種植與收成同一步，領取前不進修屋；主要任務按鈕等已種作物收完；戰鬥可自由玩，通關仍給種子。
-- 任務板、田地hotspot與詳情每秒倒數；每秒只更新文字/進度，不重建焦點；狀態跨界才render。
-- 舊growth比例換為剩餘時間並保存，已熟不倒退；錯誤plots型別防護、無效日期與時鐘倒退有界。
-- 同場景觸控拖曳後tap缺compatibility click，probe確認pointerup到達但沒有click；touch pointerup直接處理並忽略trusted touch click避免重複。
-- 12/45/120修屋成本、1/3/6產量、每株種子1/收成返種、戰鬥數值不變。
-- i18n/build_v0968.py同步7key×11語言。舊v67通關成長規則被使用者新要求取代。
-- 真實新存檔種植，實際等待61.24秒才收成3花瓣；native/capture_garden_timer.py，可重現，不改時鐘。
-- 截圖store/screenshots/v0.9.68；宣傳第4張用倒數，前三保留v64戰鬥（戰鬥未改）。
+## 已實作
+- 每株另給1食材，三食材＋三成品pantry各9999，旧進度保留。
+- 薄荷茶1薄荷、果醬2莓果、月光派各1作物；立即製作，小屋0/1/2級解鎖。
+- 三居民訂單每次1/2/3份輪替，每份1/6/10累積聲望。永不過期；同序號只可交付一次。
+- 每3交付升友誼，最高3。幫助過的居民出現場景；既有六訪客布置保留。
+- 六建設3/8/16/28/44/64：甜點店／涼亭／噴泉各兩階；後期需莓果/月光及三居民各3交付。
+- 聲望不扣除，不給戰鬥屬性；戰鬥source段比對相同，既有作物倒數／花瓣／修屋成本皆不變。
+- 缺料可前往種植；明列配方／庫存／解鎖與建設條件，收成告知食材用途。
+- 新提示以key保存料理／人名，切語系時重新翻譯，避免混語。
+- 設計與研究docs-17-garden-loop.md；原創Canvas新增三建築sprites。
 
-## 測試證據
-- 完整最終批完成：_private/test-runs/20260921-200120-052686-garden68-final/results.json，76項主批75過+1載入逾時補跑過。
-- 同SHA重試：20260921-200904-579195-garden68-boss-retry/results.json，py_boss_skin PASS；原批載入30秒逾時保留。
-- 最終CPU4：20260921-200145-107706-garden68-final-cpu4/results.json，world/quest/timer 3/3 PASS。
-- py_release_smoke exit0：新進度、CPU4、離線0外部請求、0JS錯誤、重開progress9/coins456/meta dmg2。
-- 新增py_garden_timer：live countdown、migration90秒、offline/reload、壞save、clock bounds、收成前不跳任務、通關不跳倒數。
-- py_garden_quest四輪UI收成到首修屋（長等待用測試時鐘）、132locale/size/state；舊生命週期和world已更新時間模型。
-- 初敗garden68-first觸控逾時；probe和兩次重現後修產品事件路徑，garden68-edges 3/3。
-- 舊SHA454d批garden68-full主動停止，因最終save型別防護；不可當通過。舊CPU4亦留存但最終報告才有效。
-- _private/garden68/verification.json彙整。全平行依Surface限制不跑；Pixel無ADB裝置，未安裝。
-- PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
+## 測試與證據
+- 新py_garden_village全新UI循環：12輪種植、兩次修屋、料理各6、三居民各3交付、102聲望、六建設。
+- 等待用明示加速時鐘；原數值作物等待34分鐘，非真人時間實測。
+- 初輪village69-first六項PASS，village69-loop一項PASS，scene兩項PASS（早期SHA）。
+- CPU4舊SHA3454三項PASS；舊offline 0errors/0external，progress9/coins456/dmg2重開保留。
+- village69-final因提示切語言修正主動停止，非完整驗收，原報告保留。
+- 最終完整：_private/test-runs/20260921-212620-354209-village69-final2/results.json（77/77 PASS，無補跑）。
+- 最終截圖、offline與CPU4三項已過（20260921-212730-432280-village69-final-cpu4）；_private/village69/verification.json彙整。
+- store/screenshots/v0.9.69可達成fixture與來源manifest；不是玩家戰績／手機效能證據。
+- 全平行不跑（Surface限制）；Pixel真機未驗證。效能必須独立，不與建置並跑。
 
-## 已完成交付
-- Android96800 / 0.9.68-test.0，同簽章；公開APK SHA e20a72c29362e3ecb328ebf8050b3dbe03b6b696b50e94b13dd421906f62a7e4。
-- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；published.json verified，Pixel未連線未安裝。
-- itch build2000616/upload19167726，公開payload同源；種植倒數、啟動/暫停已驗證；_private/mobile-test/itch-v68.json。
-- Pages141e176b1b64ba46249ede275d940fd51d55c030，Actions35600120863成功；公開完整SHA與CUA啟動/暫停過；pages-v68.json。
-- itch介紹v68及前四張圖30141028/30141027/30141026/30153616公開載入核對；store/page-sync/v0.9.68.json。
-- Devlog1671947中英完整正文與PUBLISHED已核對；store/devlogs/v0.9.68/post.json。
-- 先前CUA Windows1909/Debugger unattached已恢復；新Chrome tab完成公開驗證，不改ACL。
-- 獨立效能56.7FPS，同伴50.5→50.3（-0.3%），非Pixel。
-- 白名單清理保留v68/v67、存檔、簽章與證據；拒絕存取測試profiles保留。
+## 待交付
+- 最終同SHA完整77項／CPU4三項／offline已過；獨立效能單局34.1FPS、同伴相對0.0%，非Pixel。準備commit/push。
+- Android同簽章固定測試通道、itch html5公開payload/啟動、Pages指定commit/Actions/公開SHA/啟動。
+- store/page-sync/v0.9.69-description.html與store/devlogs/v0.9.69-notes.json已準備。
+- Chrome CUA編輯頁tab1912753873已開，未修改；不要寫到舊使用者編輯tab。完整驗證後才發布頁面/Devlog。
+- 同步新村莊截圖第4張，保留前三戰鬥。Devlog先查文章與草稿，防重複。
+- 最後白名單清理保留最新/前版APK、存檔、簽章、證據；權限拒絕profiles不改ACL。
 
 ## 其他未完成
-- 原討論串首文仍待v65自動核准拒絕後明確授權，不重試／繞過。相簿歷史圖保留。
-- 居民訂單、加工、更多建築未實作；離線時間可受裝置改時影響，不宣稱防作弊。
-- Pixel長時間FPS、母語潤稿、付費市場體驗未驗收；技術通過不代表耐玩性完成。
+- 原論壇首文v65自動核准拒絕仍待明確授權，未重試；保留歷史相簿。
+- 養動物／更多食譜／多區域／居民生活AI未做；單機可改裝置時鐘，不宣稱防作弊。
+- 真機長時FPS、母語潤稿、玩家樂趣與市場付費驗收未完成。
