@@ -1197,3 +1197,9 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 
 - 最終全套74/74通過，20260921-111641-240067-garden66-full，source_unchanged。新手bot1/2/3關過（50/59/101秒；3/2/1心）；Node test9實跑475.5秒，非卡住。獨立最壞場景50.1/48.0/50.8平均49.6FPS，同批同伴35.2→35.2（+0.2%）；不是Pixel。
 - 真正touch拖移／點擊＋CPU4補測20260921-113002-454297-garden66-touch-cpu4通過。獨立村莊80次正常繪製：中位0.5ms／p95 0.8ms／最大1ms，17種快取sprite，桌面Edge而非手機。Surface全平行依既有凍結限制未跑，Pixel本次無連線。
+
+
+### v66公開交付
+遊戲3947d1d已push；APK96600同簽章、實際封裝HTML及DEX稽核，公開SHA2535ac88f4775e61e5157475ce273d34cf30fd321650b21e46d4cabf1f8ffff7。itch build1999525公開payload一致，真實UI種植種子3→2、開始與暫停通過。Pages部署ca14d8869534b64158e57cd21483420541b9be15，Actions35558741597 success，公開完整SHA一致，實際開始／Paused通過。Devlog1671600 Published，中英全文／v66附件／新庭院圖確認，workflow9/9；沒有另建重複文章。遊戲頁說明v66及前三戰鬥＋第四村莊30144894確認載入。手機本次ADB無裝置，沒有真機安裝或FPS證據。
+清理白名單刪v64 APK及一個測試profile，共13668045bytes，保留v66/v65及存檔簽章證據；23個拒絕存取profile未動，未改ACL。相簿後方9張歷史圖仍留存。原討論串首文更新仍受前次自動核准拒絕限制，未繞過或重試。
+瀏覽器上傳等待曾逾時造成session reset，原分頁Debugger unattached；改開新的代理分頁，成功上傳一次，未要求使用者重開檔案權限。Devlog語言選擇器fill不觸發篩選，Enter誤選Afar；草稿保存前移除並明確點English與Chinese (Traditional)，送出值en,zh_Hant核對。教訓：UI填值與選中結果必須分開驗證。

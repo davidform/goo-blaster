@@ -1,0 +1,19 @@
+{
+  "build": "v0.9.66",
+  "checked_on": "2026-09-21",
+  "game_description_public_verified": true,
+  "gallery_first_four_loaded_verified": true,
+  "gallery_first_four_ids": [
+    30141028,
+    30141027,
+    30141026,
+    30144894
+  ],
+  "combat_provenance": "store/screenshots/v0.9.64/combat/manifest.json; combat unchanged in v65/v66",
+  "garden_provenance": "store/screenshots/v0.9.66/manifest.json",
+  "garden_public_image": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0NDg5NC5wbmc=/original/HSw5eq.png",
+  "topic_version": "v0.9.64",
+  "topic_edit": "Previous automatic approval review rejected original forum post Save; explicit approval still pending. Not retried in v66.",
+  "remaining_gallery": "1 v65 garden + 3 v64 UI + 5 legacy images remain behind current four.",
+  "phone_v66_installed": false
+}

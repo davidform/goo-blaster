@@ -1,8 +1,8 @@
 # GOO BLASTER 精簡交接
 
 ## 目前任務（2026-09-21）
-- 使用者以FarmVille 3澄清庭院應是立體農場世界，確認開始；v0.9.66已實作可操作的2.5D村莊，測試通過，正準備跨平台同步。
-- 分支codex/soft-world-ui；BUILD v0.9.66，527762bytes。
+- 使用者以FarmVille 3澄清庭院應是立體農場世界，確認開始；v0.9.66已實作可操作的2.5D村莊，測試與跨平台同步已完成。
+- 分支codex/soft-world-ui；遊戲commit3947d1d83f78812744e0245d60ee9328001c3c43已push；BUILD v0.9.66，527762bytes。
 - SHA0055b2c47875fc07ebe8b4d8090734a23ebbe0422eb273efe1314f9d0a468c11。
 - Summary：`v0.9.66: turn the garden into an interactive isometric village`。
 - 單代理，原創Canvas／单檔離線，沒有新增runtime相依。使用者附件未追蹤，不提交。
@@ -34,17 +34,20 @@
 ## 素材與发布
 - native/capture_garden_world.py擷取實際遊戲；store/screenshots/v0.9.66含初始繁中、成長繁中／英文、manifest。
 - 成長圖使用可達成隔離存檔（進度21、屋2、花瓣60），前三願望透過gardenWelcome完成；不是真人或真機證據。
-- store/devlogs/v0.9.66-notes.json及store/page-sync/v0.9.66-description.html已備好；公開前只算草稿。
-- Chrome村莊編輯頁已填v66說明但未Save；待遊戲同步／驗證後上傳新庭院圖第四位，前三Boss圖保留。
+- APK96600同簽章，公開SHA2535ac88f4775e61e5157475ce273d34cf30fd321650b21e46d4cabf1f8ffff7核對。
+- itch build1999525公開payload一致，真實UI種植種子3→2、開始／暫停通過；_private/mobile-test/itch-v66.json。
+- Pages部署ca14d8869534b64158e57cd21483420541b9be15，Actions35558741597 success；完整SHA及實際開始／Paused核對，pages-v66.json。
+- Devlog1671600 Published，中英全文＋v66附件／新圖核對，workflow9/9；store/devlogs/v0.9.66/post.json。
+- 遊戲頁v66說明已公開，新圖30144894第四，前三戰鬥圖保留；store/page-sync/v0.9.66.json。
 - 原討論串首篇改寫仍待前次明確授權：v65時自動核准拒絕Save，不能繞過；本次不另送首篇修改。
-- 目前公開渠道仍v65，APK96500；需本次完成建置／公開SHA核對／itch啟動／Pages／Devlog後更新這一節。
+- https://davidform.itch.io/goo-blaster/devlog/1671600/v0966-step-into-your-candy-village 。手機未連線，未安裝v66。
 - 固定手機入口 https://github.com/davidform/goo-blaster/releases/tag/android-test 。不卸載、不清資料。
 
 ## 待辦與限制
-- 提交遊戲後建置v66 APK、發固定通道，Butler html5，同版Pages／雙語Devlog與遊戲頁介紹／圖片。
-- 保留上版APK、存檔、簽章與證據；完成公開驗證後用cleanup_local.ps1白名單清理。
+- 本版交付完成；下一步以手機實際拖曳／種植／收成體感評估，再單獨設計居民生活與村莊成長玩法，不同時調戰鬥平衡。
+- cleanup_local.ps1白名單清除v64 APK＋一個測試profile，共13668045bytes；保留v66/v65、存檔、簽章與證據。
 - 先前相簿3張v64 UI＋5張legacy未刪，Chrome確認逾時；v65圖將列舊圖但保留Devlog用途，不擅自刪歷史素材。
-- 22個舊profile拒絕存取留存，不改ACL。一般工具1909間歇鎖定，提升權限可用；不改Windows安全設定。
+- 23個舊profile拒絕存取留存，不改ACL。一般工具1909間歇鎖定，提升權限可用；不改Windows安全設定。
 - Pixel長時間FPS、11語言母語潤稿、付費市場品質仍未驗收。
 - 使用者要求主圖真實Boss戰；不能以測試通過替代好玩與商業呈現。後續另處理Boss受擊純白／特效遮角色等。
 - Git／測試APK／itch／Pages／Devlog／白名單清理授权沿用；正式商店／定價／簽章另授權。
