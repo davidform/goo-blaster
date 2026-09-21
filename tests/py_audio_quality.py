@@ -31,12 +31,15 @@ with sync_playwright() as pw:
       window.requestAnimationFrame=()=>0;
     })();''')
     page.goto((Path(GAME_ROOT)/'index.html').as_uri())
+    # Start with an already-running context: absolute clock >= .3 is not a cooldown.
+    page.evaluate('SFX.unlock()')
+    page.wait_for_function('__ac.currentTime>=.45',polling=50)
     rng=page.evaluate('''()=>{const original=Math.random;let calls=0;
       Math.random=()=>{calls++;return original();};
       try{SFX.unlock();SFX.shoot('bubble');SFX.hit();SFX.crit();SFX.kill();SFX.pickup();SFX.dash();SFX.hurt();}
-      finally{Math.random=original;}return calls;}''')
+      finally{Math.random=original;}window.__shotProbeAt=__ac.currentTime;return calls;}''')
     assert rng==0, f'Audio consumed gameplay RNG {rng} times'
-    page.wait_for_function('__ac.currentTime>=.3',polling=50)
+    page.wait_for_function('__ac.currentTime>=__shotProbeAt+.3',polling=50)
     weapons=page.evaluate('''()=>{const result={};for(const w of ['bubble','graffiti','yoyo']){
       const before=__audio.created;SFX.shoot(w);result[w]=__audio.created-before;}return result;}''')
     assert all(n>0 for n in weapons.values()),weapons
