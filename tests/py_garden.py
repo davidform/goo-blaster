@@ -8,7 +8,7 @@ with sync_playwright() as pw:
  c.add_init_script('window.requestAnimationFrame=()=>0');c.set_offline(True);p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)))
  c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_UI_CPU','1'))});p.goto((Path(GAME_ROOT)/'index.html').as_uri())
  assert p.evaluate('GARDEN.seeds===3&&GARDEN.house===0&&GARDEN.plots.every(x=>x===null)')
- p.locator('#navGarden').click();p.locator('.gardenPlot button').first.click()
+ p.locator('#navGarden').click();p.locator('.gardenSpot[data-kind=plot]').first.click();p.locator('.gardenPlot button').first.click()
  assert p.evaluate('GARDEN.seeds===2&&GARDEN.plots[0].crop===0')
  result=p.evaluate('''()=>{
   const old={progress:3,coins:99,meta:{dmg:2},lang:'en',v:2};applySaveObject(old);
@@ -48,7 +48,7 @@ with sync_playwright() as pw:
    assert p.locator('#garden').evaluate('e=>e.scrollWidth<=e.clientWidth+1'),(w,lang)
    assert p.locator('#hubNav [aria-current="page"]').count()==1
    assert p.locator('#garden select').count()==3
-   p.locator('.gardenPlot button').last.scroll_into_view_if_needed();assert p.locator('.gardenPlot button').last.is_visible()
+   p.locator('.gardenSpot[data-kind=plot]').last.click();p.locator('.gardenPlot button').last.scroll_into_view_if_needed();assert p.locator('.gardenPlot button').last.is_visible()
  p.set_viewport_size({'width':390,'height':844});p.evaluate('applyLanguage("zh-Hant");gardenPlant(0,0);gardenPlant(1,1);setHubPage("garden");document.querySelector("#garden").scrollTop=0')
  p.screenshot(path=str(ARTIFACTS/'garden64.png'))
  p.locator('#navAdventure').click();p.locator('#btnPlay').click();assert p.locator('#garden').is_hidden()

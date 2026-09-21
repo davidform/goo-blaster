@@ -1,0 +1,23 @@
+{
+  "build": "v0.9.66",
+  "source_sha256": "0055b2c47875fc07ebe8b4d8090734a23ebbe0422eb273efe1314f9d0a468c11",
+  "method": "Unretouched browser screenshots; isolated reachable progression fixture, not human gameplay",
+  "fixture": {
+    "progress": 21,
+    "house": 2,
+    "petals": 60,
+    "guests": "first three wishes completed via gardenWelcome",
+    "plots": "mint ready, berry 1/2, moonflower ready"
+  },
+  "viewport": [
+    390,
+    844
+  ],
+  "device_scale_factor": 2,
+  "errors": [],
+  "files": [
+    "village-grown-en.png",
+    "village-grown-zh.png",
+    "village-start-zh.png"
+  ]
+}

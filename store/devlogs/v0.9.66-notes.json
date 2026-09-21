@@ -1,0 +1,13 @@
+{
+  "build": "v0.9.66",
+  "title": "v0.9.66 — Step into your Candy Village",
+  "languages": ["en", "zh-Hant"],
+  "blocks": [
+    {"kind":"h2","text":"English"},
+    {"kind":"p","text":"The Candy Garden is now an isometric village with a cottage, fields, pond, trees and walking jelly residents. Drag to explore, zoom in, tap a field to plant, and tap its check mark to harvest. Tap the cottage to see its restoration cost."},
+    {"kind":"p","text":"Your crops still grow when you clear stages. Seeds, petals, cottage levels and completed visitor wishes are preserved. Decorations and wishes are in the workshop below the village. This update changes the view and controls, not farming costs or combat strength. The village is a small offline scene, not a full farming simulator."},
+    {"kind":"h2","text":"繁體中文"},
+    {"kind":"p","text":"糖果庭院變成斜俯視小村莊：小屋、田地、池塘、樹木與散步中的軟糖居民。拖曳探索、放大觀看，點田地種植，成熟後點勾號收成；點小屋查看修復所需花瓣。"},
+    {"kind":"p","text":"作物仍隨通關成長，種子、花瓣、小屋等級與已完成的訪客願望都保留。布置與願望收進村莊下方的工具面板。本次改動場景與操作，不改農作成本或戰鬥能力。這是小型離線村莊，尚非完整農場模擬遊戲。"}
+  ]
+}

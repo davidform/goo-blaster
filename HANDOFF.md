@@ -1,44 +1,50 @@
 # GOO BLASTER 精簡交接
 
-## 目前狀態（2026-09-21）
-- 當前任務：使用者認為庭院無趣；v0.9.65已在工作區加入16格自由佈置＋六位訪客願望，已完成APK／itch／Pages／Devlog公開交付。戰鬥／種植數值未改。
-- 完整測試73/73通過：_private/test-runs/20260921-100707-600303-garden65-final/results.json，SHA 659113668783665bd22dd598d99a08605146cc334ea78d6330101bf22dc763eb；source_unchanged。
-- 專項py_garden／py_garden_design＋CPU4／離線冷啟動／最終UI均通過；完整回歸73/73，跨平台已完成；收據見下方。首輪因工具列可達性改版而中止，音效測試絕對時鐘問題已重現並修正；_private/garden65/verification.json。
-- 前批四項需求已實作並交付v0.9.64：Boss阻擋、衝刺節奏、搭配上限、糖果庭院。
-- 分支codex/soft-world-ui，遊戲commit3528764d61f1747473f0b14b88e8523d1eead2f6；新接手仍先核對工作區／遠端／BUILD。
-- 最終HTML SHA 659113668783665bd22dd598d99a08605146cc334ea78d6330101bf22dc763eb。
-- 單代理，保留進度與購買等級。未建立背景排程，未更改價格或正式商店。
+## 目前任務（2026-09-21）
+- 使用者以FarmVille 3澄清庭院應是立體農場世界，確認開始；v0.9.66已實作可操作的2.5D村莊，測試通過，正準備跨平台同步。
+- 分支codex/soft-world-ui；BUILD v0.9.66，527762bytes。
+- SHA0055b2c47875fc07ebe8b4d8090734a23ebbe0422eb273efe1314f9d0a468c11。
+- Summary：`v0.9.66: turn the garden into an interactive isometric village`。
+- 單代理，原創Canvas／单檔離線，沒有新增runtime相依。使用者附件未追蹤，不提交。
 
-## 下一步／未完成
-- 宣傳改為3張真實Boss交戰：大型Boss／裝甲Boss／怪群包圍；遊戲相簿前三張、原貼文17090045與profile均已公開核對載入，原正文保留。
-- 素材store/screenshots/v0.9.64/combat/manifest.json；實際完整loop加速擷取、隔離可達成存檔，0errors、HTML SHA未變；不是真人／FPS測試。
-- 相簿後方仍有3張已被取代的v64 UI圖＋5張legacy圖；Chrome Delete confirm/accept逾時未刪。勿重傳戰鬥圖；收據store/page-sync/v0.9.64.json。
-- game-studio已新增市場品質標準並同步已安裝skill：技術／玩家體驗／商業呈現分別驗收，動作遊戲主圖必須實戰，檢查原圖與縮圖。
-- 下一個視覺候選：Boss連續受擊變純白遮掉造型、特效遮角色、背景層次少；尚未修改，不宣称圖片更新代表已達付費品質。
-- 收集Pixel上第9關以後攻擊／防禦搭配、Boss邊緣衝刺、庭院成長循環的實玩回饋，再單一變數調整。
-- Pixel長時間FPS未測；Surface全平行因凍結紀錄未跑，CPU4不是替代證據；11語言母語潤稿未做。
-- Windows一般工具帳戶反覆1909鎖定；提升權限檔案／Git工具可用，已啟動一般環境測試照常完成。
-- 鎖定期間elevated效能8–9FPS、舊版亦低；普通環境恢復45–55FPS，未證明原因、未改Windows安全設定。
-- PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules；jobs2，效能solo，不與Gradle同時跑。
-- Git／測試APK／itch／Pages／Devlog／白名單清理授權沿用；正式商店／定價／簽章更換仍須另行授權。
+## 本版內容
+- 斜俯視小屋、樹、池塘、圍籬、三塊田、已布置物件與步行居民；sprite快取、深度排序、20Hz庭院可見時更新。
+- 拖曳平移、0.8–1.8倍縮放、回中；點田地種植或收成、點屋修復。標記在作物旁，44px以上點擊區。
+- 原布置／六位願望收進details工具面板。未改農作成本、成長、戰力、商店或存檔schema。
+- 第一位園丁是環境角色，並不代表已領願望。居民點擊有愛心／開啟願望；沒有生活AI、獨立生產或對話樹。
+- 手機像素場景是初版，不宣稱達到FarmVille內容量／美術精細度。後續以真機體驗確認方向。
+- 11語言新增六個導航鍵，i18n/build_v0966.py。預設仍英文。
 
-## v65交付證據與限制
-- Summary：`v0.9.65: add garden layout puzzles and resident wishes`（3528764）。音效測試修正7bd0b42，未改遊戲音效。
-- 六個有限空間願望：立即／通過2、5、10、15、20關開放；16格五物件免費佈置，已入住居民不因重排消失。
-- layout／guests走garden.rev、備份碼、原生合併；原農作／戰力數值保持。是否有趣仍需真人試玩。
-- 最終bot第1/2/3關過，3/3、2/3、1/3心，僅本批樣本。獨立平均54.2FPS，有無同伴36.2→36.0，非Pixel。
-- CPU4專項20260921-101118-406875-garden65-cpu4-offline；離線／新存檔／冷啟動release-smoke.log，0errors／0外部請求。
-- 新增測試涵蓋六題、斜角／斷路／環形、庫存、重複入住、重排、舊資源、原生／備份、11語言×3尺寸。
-- APK v65/96500/0.9.65-test.0，4311673bytes，簽章與appId一致，HTML／DEX／公開下載SHA核對。
-- APK SHA db6b77467e46bd7e928eaaab84ce5c1a9b2fa9f00a2ad84c9aec6345f771c7c3；固定android-test入口。
-- 本次ADB沒有裝置，未安裝v65到Pixel；上次v64才有真機安裝與存檔一致證據。
-- itch upload19167726/build1999423，公開payload同SHA；實際布置／入住0→1／開始暫停，itch-v65.json。
-- Pages ca1fde0fb13895a530e35c2989acc173a4aca5bd，Actions35554519239 success；公開SHA一致，CUA開始／Paused通過。
-- Devlog Published https://davidform.itch.io/goo-blaster/devlog/1671547/v0965-a-garden-to-arrange-and-neighbours-to-welcome。
-- 雙語全文、v65附件、庭院圖核對；devlog workflow 9/9；store/devlogs/v0.9.65/post.json。
-- 遊戲頁v65介紹已公開核對；相簿前三張戰鬥、第四張新庭院30143572，四圖均載入。
-- 原討論串首文v65已編妥未保存：自動核准審查拒絕公開改寫，已詢問明確授權。不要走API繞過；Chrome編輯頁保留。
-- 討論串／profile目前仍v64三張戰鬥圖；新庭院圖僅遊戲頁與Devlog。
-- 白名單清理刪舊v60 APK4290992bytes，保留v65/v64及全部存檔／簽章／測試證據。22舊profile拒絕存取留存。
-- 圖片store/screenshots/v0.9.65為實際UI、可達成測試存檔，非真人遊玩；manifest保留來源。
-- 玩家若擺完六題便不回來，下一步考慮有個性的居民互動／取捨，不堆重複收成門檻。
+## 驗證
+- `.venv/Scripts/python.exe run_tests.py --jobs 2 --label garden66-full`：74/74、source_unchanged。
+- _private/test-runs/20260921-111641-240067-garden66-full/results.json。
+- 新增py_garden_world：真實mouse／touch拖移不誤種、放手不漂、縮放界限、通關成長收成、修屋、重啟、33語言尺寸、離線、reduce-motion、離開庭院停動畫。
+- 既有py_garden／py_garden_design仍驗資源、六題、上限、備份與原生合併；只改走新UI入口，沒有放寬斷言。
+- 首批開發途中source_changed不作驗收；設計測試重啟後未打開工具面板，補真實操作後過。
+- CPU4原批20260921-112025-184789-garden66-cpu4：garden/design過、world結算導航失敗。
+- 根因新測試直接setHubPage跳過玩家btnGarden，延遲CLEAR層攔截；改點真實btnGarden，不改產品。
+- 重跑20260921-112510-799996-garden66-cpu4-real-navigation過；補真正touch事件20260921-113002-454297-garden66-touch-cpu4也過。
+- py_release_smoke.py離線／新存檔／CPU4／冷啟動過；_private/garden66/release-smoke.log。
+- 新手bot1/2/3关過（50/59/101秒，3/2/1心）；Node test9 475.5秒完成。非真人勝率。
+- 獨立效能50.1/48.0/50.8平均49.6FPS；同伴35.2→35.2（+0.2%），非Pixel。
+- 單獨村莊繪製80次中位0.5ms、p95 0.8ms、最大1ms、17sprite；_private/garden66/scene-cost.json。
+- Surface全平行因既有凍結限制未跑；CPU4不能替代真機／全平行。手機ADB沒有裝置。
+- PYTHONUTF8=1，GOO_BROWSER_CHANNEL=msedge，NODE_PATH=_private/test-node/node_modules。效能不與Gradle同跑。
+
+## 素材與发布
+- native/capture_garden_world.py擷取實際遊戲；store/screenshots/v0.9.66含初始繁中、成長繁中／英文、manifest。
+- 成長圖使用可達成隔離存檔（進度21、屋2、花瓣60），前三願望透過gardenWelcome完成；不是真人或真機證據。
+- store/devlogs/v0.9.66-notes.json及store/page-sync/v0.9.66-description.html已備好；公開前只算草稿。
+- Chrome村莊編輯頁已填v66說明但未Save；待遊戲同步／驗證後上傳新庭院圖第四位，前三Boss圖保留。
+- 原討論串首篇改寫仍待前次明確授權：v65時自動核准拒絕Save，不能繞過；本次不另送首篇修改。
+- 目前公開渠道仍v65，APK96500；需本次完成建置／公開SHA核對／itch啟動／Pages／Devlog後更新這一節。
+- 固定手機入口 https://github.com/davidform/goo-blaster/releases/tag/android-test 。不卸載、不清資料。
+
+## 待辦與限制
+- 提交遊戲後建置v66 APK、發固定通道，Butler html5，同版Pages／雙語Devlog與遊戲頁介紹／圖片。
+- 保留上版APK、存檔、簽章與證據；完成公開驗證後用cleanup_local.ps1白名單清理。
+- 先前相簿3張v64 UI＋5張legacy未刪，Chrome確認逾時；v65圖將列舊圖但保留Devlog用途，不擅自刪歷史素材。
+- 22個舊profile拒絕存取留存，不改ACL。一般工具1909間歇鎖定，提升權限可用；不改Windows安全設定。
+- Pixel長時間FPS、11語言母語潤稿、付費市場品質仍未驗收。
+- 使用者要求主圖真實Boss戰；不能以測試通過替代好玩與商業呈現。後續另處理Boss受擊純白／特效遮角色等。
+- Git／測試APK／itch／Pages／Devlog／白名單清理授权沿用；正式商店／定價／簽章另授權。

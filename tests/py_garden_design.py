@@ -6,7 +6,7 @@ from test_paths import GAME_ROOT, ARTIFACTS, BROWSER_CHANNEL
 with sync_playwright() as pw:
  b=pw.chromium.launch(channel=BROWSER_CHANNEL);c=b.new_context(viewport={'width':390,'height':844},has_touch=True);c.set_offline(True);c.add_init_script('window.requestAnimationFrame=()=>0')
  p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)));c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_UI_CPU','1'))});p.goto((Path(GAME_ROOT)/'index.html').as_uri())
- p.locator('#navGarden').click();p.locator('.gardenTool').nth(4).click();p.locator('.gardenTile').nth(9).click()
+ p.locator('#navGarden').click();p.locator('#gardenArrange').click();p.locator('.gardenTool').nth(4).click();p.locator('.gardenTile').nth(9).click()
  assert p.locator('#gardenWelcome').is_enabled();p.locator('#gardenWelcome').click();assert p.locator('#gardenWelcome').is_disabled();assert p.locator('.resident.home').count()==1
  result=p.evaluate('''()=>{
  const a=(pairs)=>{const x=Array(16).fill(0);for(const [i,t] of pairs)x[i]=t;return x;};
@@ -29,9 +29,10 @@ with sync_playwright() as pw:
   p.set_viewport_size({'width':w,'height':h})
   for lang in p.evaluate('Object.keys(L10N)'):
    p.evaluate('lang=>{applyLanguage(lang);setHubPage("garden");}',lang)
+   if not p.locator('.gardenTile').first.is_visible():p.locator('#gardenArrange').click()
    assert p.locator('#garden').evaluate('e=>e.scrollWidth<=e.clientWidth+1'),(w,lang)
    assert p.locator('.gardenTile').count()==16 and p.locator('.gardenTool').count()==6
-   assert p.locator('.gardenTile').first.bounding_box()['width']>=44
+   assert p.locator('.gardenTile').first.bounding_box()['width']>=44,(w,h,lang,p.locator('.gardenTile').first.bounding_box(),p.locator('#gardenWorkshop').get_attribute('open'))
    p.locator('.gardenTile').last.scroll_into_view_if_needed()
   toolbar=p.locator('.gardenTools').bounding_box()
   assert toolbar['y']>=0 and toolbar['y']+toolbar['height']<=h-60,(w,h,toolbar)
