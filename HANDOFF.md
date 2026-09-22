@@ -1,14 +1,20 @@
 # GOO BLASTER 精簡交接
 
 ## 目前任務（2026-09-22）
-- 2026-09-22使用者要求評估換對話以節省上下文；已核對v0.9.70與HEAD 4cdac9b，僅附件未追蹤，無遊戲未提交變更。
-- 建議新對話接手；前輪v70已交付，不重做發布／完整測試。後續聚焦庭院耐玩性與相關主題動態呈現，先實玩評估再選單一改動。
-- v0.9.70已實作三主題挑戰／成就／場景與動態入口；完整78/78、CPU4、offline與獨立效能已過；Android／itch／Pages／Devlog皆已交付。
-- 分支codex/soft-world-ui，接手eeb28a0，pull已最新；附件.codex-remote-attachments不可提交。
-- 來源SHA c4f376c1544f42c955e10ee334f5b4e8ba34c04ce2bcdf8333f0b72257df2aa1。
-- 已提交e1e2de9，Summary：`v0.9.70: add themed village challenges and animated icons`。
+- 使用者要求先實玩v70再選單一改善，不重做v70發布／完整驗證。接手HEAD20d19b8、分支codex/soft-world-ui，pull已最新；附件.codex-remote-attachments不提交。
+- 已實玩種植收成／野餐／池塘拾珠／星光，取捨見docs-18-garden-feedback.md；v0.9.71只改善操作因果與主題回饋。
+- 野餐保留已送料理與落盤／錯誤動態；池塘可走箭頭、漣漪、貝殼珍珠收集槽；星光連動虛線與亮燈數；終局保留棋盤並停止輸入。
+- 900ms動態不鎖輸入、支援減少動態；4key×11語言；feedback不存檔，不改資源／難度／戰鬥。三階後內容深度仍待後續改善。
+- SHA `51dae94f04efa369f6e85a8dee6b0a66c1f5fd625aea5898b98091c94dc47921`；待提交Summary：`v0.9.71: clarify themed garden challenge feedback`。
+- 完整79/79 PASS無補跑：_private/test-runs/20260922-131921-531042-feedback71-full/results.json；初輪3/3在20260922-131658-124382-feedback71-initial。
+- CPU4三項全過：_private/test-runs/20260922-134912-526237-feedback71-cpu4/results.json；timer10.8s/feedback39.2s/festival145.6s。
+- offline smoke 0錯誤/0外部請求，重開progress9/coins456/dmg2/selection8保留；_private/feedback71/offline.log。新測試對v70在已送料理斷言預期失敗，baseline-test.log。
+- 新手三關59/59/90秒通關、3/3、3/3、2/3心；獨立perf單局46.4FPS、同伴+1.3%，非Pixel。
+- 三主題真實UI截圖store/screenshots/v0.9.71已檢視，fresh save無資源／徽章注入。新增tests/py_garden_feedback.py，99語言尺寸、免費／終局／重開／減少動態。
+- 下一步：本版commit/push、APK／itch／Pages／Devlog／介紹截圖同步及清理；沿用native各發布流程，不重做v70。文案store/devlogs/v0.9.71-notes.json已備，尚未發布。
+- Windows沙箱啟動1909失敗；既有測試程序正常完成，後續命令走require_escalated核准。全平行、Pixel與長期耐玩性未驗證。
 
-## 已實作／固定決策
+## v70既有玩法／固定決策
 - 村莊小冒險：野餐記憶3/4/5道料理；池塘5×5三珍珠到旗幟，步數最短路＋4/2/0；星光3×3相鄰翻轉、無步數限制。
 - 三種玩法各三階，成功後重玩改序列／旋轉／打散；免費、失敗不扣材料、不加戰力、不限每日次數。
 - medals/outings/theme存檔，舊存檔零／原庭院；徽章解鎖主題，更多徽章增加裝飾，完成防重複領取。
@@ -18,7 +24,7 @@
 - 既有v69生產／訂單／六建設不改，全部等待顯示时间規範見AGENTS第20節。
 - 不是農場動物／地圖擴張，不能宣稱已證明長期留存或付費吸引力。
 
-## 測試證據
+## v70歷史測試（不當作v71證據）
 - 初輪timer/i18n 2/2，festival-loop九挑戰21.1s；舊SHA，僅歷史。
 - 最終SHA edges5/5：cjk12.6/world12.2/layout27.1/village25.8/festival24.2秒。
 - 完整回歸_private/test-runs/20260921-224139-214971-festival70-final/results.json，78/78 PASS無補跑。
@@ -29,7 +35,7 @@
 - 截圖native/capture_garden_festival.py與store/screenshots/v0.9.70。明示可達成fixture，真實操作後畫面，非真人紀錄／Pixel測試。
 - 全平行未跑（Surface限制），ADB空，Pixel未安裝／效能未驗證。彙整_private/festival70/verification.json。
 
-## 已交付與收據
+## v70已交付收據（不重做）
 - 遊戲commit e1e2de920a1ca35a81a3ac912fa404d11320f5ba已push；Pages部署commit a1f652cd8b5643be79479347858815d1695f80e7。
 - Android 97000 / 0.9.70-test.0，同原簽章；公開下載SHA 417035e56504081e81cf03e10a159e6cee3d4ab7c7971d8ea147dc2b57ba7db8，asset579270925。
 - 固定手機入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；ADB未連線，未安裝Pixel，保留進度。

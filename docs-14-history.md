@@ -1296,3 +1296,17 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 商店頁v70介紹已公開；前三張戰鬥保留，第四張30157101為真實池塘操作後畫面（測試可達成fixture），13張歷史圖保留。Devlog1672102中英全文及v70附件經草稿→Published核對；devlog workflow單元9/9通過。
 - 清理13716306bytes：僅舊v68APK及本輪隔離release-profile-wpn5b_g7。第一次清理因未完整列出目標被自動審查拒絕；先列出完整絕對路徑證據，再核准同一白名單腳本。保留v70/v69、玩家進度及憑證；25個既有AccessDenied profile不改ACL，0刪除失敗。
 - 交付彙整 `_private/festival70/verification.json`；全平行、Pixel長時效能、長期耐玩性、母語潤稿仍未驗證。這是三種可重玩小冒險，並非已完成農場動物／多區域／居民生活AI。
+
+## v0.9.71 — 村莊小冒險操作因果與主題回饋（2026-09-22）
+- 接手HEAD20d19b8、v70，只有未追蹤附件，安全pull已最新。未重做v70發布與完整測試；先用CUA實玩新存檔種植、野餐第一階、池塘拾珠、星光第一階，詳見docs-18-garden-feedback.md。
+- 根因：已有主題入口動態，但實際操作結果仍是通用勾號／數字，池塘可走與不可走格外觀一致、星光連動範圍沒有保留，成功後盤面直接消失。
+- 單一改動：操作因果與主題回饋。野餐料理落盤與錯誤提示、魚移動漣漪／可走箭頭／貝殼珍珠收集槽、星光連動虛線／亮燈數，終局保留盤面且停用輸入。900ms動態不鎖輸入、減少動態保留靜態資訊；不改難度、題目、資源、存檔與戰鬥。
+- 前後可觀察數字：第一道野餐正確後可見已送料理0→1；池塘起點可辨識的合法方向0→2；點中心後保留的星光因果標記0→5；池塘／星光完成後可見棋盤0→25／9格。
+- 新增4key×11語言，由i18n/build_v0971.py產生。暫態feedback不存檔、不參與移動合法性及獎勵判定。gardenScene至檔尾與v70逐字相同（僅正規化換行）。
+- 初輪feedback71-initial 3/3 PASS（i18n56.1s/festival77.0s/feedback26.6s）；新測試含隱藏未送答案、錯誤菜、珍珠／方向、連動、終局禁止輸入、重複領取、保存／離線、99語言尺寸版面與減少動態。
+- 截圖store/screenshots/v0.9.71，由native/capture_garden_feedback.py自全新存檔真實操作，僅切語言，無資源／徽章／答案注入。已檢視三種完整面板；非Pixel測試。
+- 教訓：入口動態不等於操作回饋；玩家需要看得見自己剛造成什麼。此版改善可理解性，不宣稱新增內容或證明長期耐玩性；三階後經營選擇仍待後續單獨改善。
+- 最終SHA `51dae94f04efa369f6e85a8dee6b0a66c1f5fd625aea5898b98091c94dc47921`。feedback71-full完整79/79 PASS無補跑，報告`_private/test-runs/20260922-131921-531042-feedback71-full/results.json`。
+- CPU4三項PASS，timer10.8s/feedback39.2s/festival145.6s；報告`_private/test-runs/20260922-134912-526237-feedback71-cpu4/results.json`。offline smoke 0JS錯誤/0外部請求，重開progress9/coins456/dmg2/selection8保留。新測試對v70於「已送料理應保留」斷言預期失敗，log在_private/feedback71。
+- 新手第1/2/3關59/59/90秒通關，3/3、3/3、2/3心，0JS錯誤；獨立效能單局46.4FPS，同批同伴41.1→41.7（+1.3%），非Pixel、不跨版本作效能推論。
+- 工具限制：Windows沙箱帳戶程序啟動1909失敗；既有完整测试程序正常完成，後續測試經工具核准於沙箱外執行。全平行與真機尚未執行；新版平台同步待交付補記。
