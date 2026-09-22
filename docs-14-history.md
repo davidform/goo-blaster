@@ -1365,3 +1365,11 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 完整81項最終80PASS／1FAIL；來源未變。py_v0927_perf初輪對照18.1FPS，單局31.3／39.0／39.6FPS；失敗為「環境足夠安靜、量得到效能」。確認無殘留測試後独立補跑20260922-193527-534085-music73-perf-retry仍失敗，對照18.2FPS、單局42.8／44.6／42.2FPS。測試無JS錯誤；不能把單局數值通過當整支通過，也不能確定是其他程式造成，未調低門檻。
 - 額外py_release_smoke實跑PASS：全新progress1／coins0／meta{}，CPU4／離線／瀏覽器重啟，還原progress9／coins456／meta.dmg2／selection8，0JS錯誤與0外部請求。新手py_test9第1/2關59/68秒通關，第3關87秒陣亡，符合第1關門檻；不是全關通關。
 - 結果：v73保留於開發分支，APK／Pixel／itch／Pages／Devlog與清理未執行，公開與手機仍v71。依使用者要求停止新增功能，不自行延伸效能重構或市場提案實作。後續需釐清效能量測環境與判準適用性，再以通過的同SHA報告交付。
+
+## v0.9.73交付續作 — 修正效能測量互相競爭（2026-09-22）
+- 使用者要求處理失敗並執行可完成的未執行項目；恢復驗證與既有交付，不新增遊戲功能。
+- 量測發現原perf同時啟動兩個高DPI最壞場景，兩者18.6FPS；同一診斷輪單局無同伴44.3／有同伴41.5FPS。原測試以雙局FPS<20直接推斷外部負載，沒有排除自己製造的繪圖競爭。_private/perf73/diagnostic.json；這是測試條件診斷，不是版本效能比較。
+- tests/py_v0927_perf.py改為同批次AB/BA/BA/AB交错單局，assert無競爭context、固定初始RNG種子、保存可見狀態／實際幀數／牆鐘與原碼及測試SHA。保留原控制20FPS、損失<20%、單局30FPS門檻；單局絕對門檻不再因控制失敗而略過。
+- 補驗20260922-194512-979185-music73-perf-isolated PASS：無同伴43.325、有同伴41.675FPS（-3.81%）。遊戲index.html未改，沿用同SHA完整81項原始80PASS報告＋此補驗，合併81/81。
+- 研究可執行準備已完成：store/research/player-study-kit.md、observations.csv、outcomes.csv。未招募、發訊息、投放或生成假訪談。
+- 反向驗證GOO_PERF_CPU=4：對照24.1、有同伴23.2FPS，預期以exit1拒絕「單局FPS≥30」；_private/perf73/negative-cpu4.log與test-artifacts/perf-isolated-cpu4.json。證明修正未移除效能失敗能力。

@@ -1,11 +1,13 @@
 """Capture real planting choices after earning the first cottage upgrade via UI."""
 import hashlib
 import json
+import re
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 root = Path(__file__).resolve().parents[1]
-out = root / 'store/screenshots/v0.9.72'
+build = re.search(r"const BUILD='([^']+)'", (root / 'index.html').read_text(encoding='utf8'))[1]
+out = root / 'store/screenshots' / build
 out.mkdir(parents=True, exist_ok=True)
 with sync_playwright() as pw:
     b = pw.chromium.launch(channel='msedge')
