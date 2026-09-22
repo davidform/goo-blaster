@@ -46,9 +46,9 @@ with sync_playwright() as pw:
     transition=page.evaluate('''()=>{start();const normal=SFX.musicDebug();
       spawnBoss(buildBosses(CUR())[0]);const boss=SFX.musicDebug();
       G.P.crit=0;hurtEnemy(G.boss,1e9);return {normal,boss,after:SFX.musicDebug()};}''')
-    assert transition['normal']['theme']=='cute',transition
+    assert transition['normal']['theme']=='battle',transition
     assert transition['boss']['theme']=='boss',transition
-    assert transition['after']['theme']=='cute',transition
+    assert transition['after']['theme']=='battle',transition
     assert transition['boss']['bpm']>transition['normal']['bpm'],transition
     # A pending fade-out must never stop music started by a subsequent screen/run.
     page.evaluate('SFX.musicStop(true);SFX.musicStart();window.__restartAt=__ac.currentTime')

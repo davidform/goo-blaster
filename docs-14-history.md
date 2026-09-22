@@ -1349,3 +1349,19 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 未改動HEAD v71另於同一環境獨立跑py_v0927_perf也未過環境門檻；_private/level72/baseline-v71-perf.log。只能證明旧版也受影響，不用跨批次数字宣稱v72效能相同或通過。
 - 新手py_test9第1/2/3關54／72／90秒通關、愛心2／1／1，0JS錯誤；未變基準py_ab_base通過。
 - 截至此紀錄：v72尚未建置APK／發布／安裝Pixel，公開版及Pixel維持v71；遵守整套全綠後發布，不繞過效能門檻。程式與本地證據保存待環境恢复，待單獨perf通過後續交付。既有v71不重發。
+
+## v0.9.73 — 依戰鬥與庭院主題切換配樂（2026-09-22）
+- 使用者要求戰鬥刺激、農場愉快放鬆；完成後停止功能開發並研究市場與AI團隊流程。
+- 根因：原本只有cute／boss兩種音樂，一般戰鬥共用選單旋律，庭院及三個挑戰沒有各自情緒。先前測試只驗cute與boss切換，未覆蓋庭院入口。
+- 本版單一改動為情境配樂：一般戰鬥132BPM、Boss148、庭院84、野餐112、池塘76、星光68，選單104。各自旋律／和聲／配器／密度不同，不只調速；全部原創程序合成，無外部音檔／執行期依賴／新增字串。
+- 切場景將舊音樂bus淡出並斷線，換新bus避免排程音符疊積。Boss結束回到battle；庭院與挑戰進退即切換，靜音／背景暫停沿用。關卡移調保留；不改戰鬥、存檔、小屋計時倍率。
+- 新py_music_scenes以真實WebAudio與UI驗證三個挑戰、庭院、選單、戰鬥、Boss、回切、30次快速切換、關閉後source歸零、靜音、背景與離線；音樂切換消耗戰鬥Math.random次數為0。已納入完整run_tests.sh。
+- focused：20260922-191326-238846-music73-initial，audio_quality／range_music／music_scenes三項PASS。
+- CPU4離線：20260922-192109-001379-music73-cpu4-offline，audio_quality20.5s、music_scenes45.0s PASS。
+- render_audio_samples.py實際OfflineAudioContext輸出七個場景音檔：戰鬥峰值0.227、Boss0.222、庭院0.134、野餐0.189、池塘0.135、星光0.113。全部clipped=0、nonfinite=0、JS errors=[]；_private/test-artifacts/music73-preview/results.json。此為訊號與播放驗證，非真人聽感驗收。
+- 遊戲SHA bcf79c3942ee5f7dae29d64dff63b7460940ca5b3a34547bbae204b26225c10d。
+- 教訓：情境音樂需要驗證真實頁面轉場與已排程聲音的生命週期；只有theme欄位變更無法證明實際發聲與清理正確。音樂改善也不能當作玩法深度或市場需求的證據。
+- 市場研究見docs-19-market-review.md：檢查官方競品頁與自身itch後台；需求尚未驗證，提出兩週觀察及按角色審查流程。後台精確數字僅保存_private，無公開洩漏。沒有招募、發訊息、投廣告、改價或啟用多代理。
+- 完整81項最終80PASS／1FAIL；來源未變。py_v0927_perf初輪對照18.1FPS，單局31.3／39.0／39.6FPS；失敗為「環境足夠安靜、量得到效能」。確認無殘留測試後独立補跑20260922-193527-534085-music73-perf-retry仍失敗，對照18.2FPS、單局42.8／44.6／42.2FPS。測試無JS錯誤；不能把單局數值通過當整支通過，也不能確定是其他程式造成，未調低門檻。
+- 額外py_release_smoke實跑PASS：全新progress1／coins0／meta{}，CPU4／離線／瀏覽器重啟，還原progress9／coins456／meta.dmg2／selection8，0JS錯誤與0外部請求。新手py_test9第1/2關59/68秒通關，第3關87秒陣亡，符合第1關門檻；不是全關通關。
+- 結果：v73保留於開發分支，APK／Pixel／itch／Pages／Devlog與清理未執行，公開與手機仍v71。依使用者要求停止新增功能，不自行延伸效能重構或市場提案實作。後續需釐清效能量測環境與判準適用性，再以通過的同SHA報告交付。

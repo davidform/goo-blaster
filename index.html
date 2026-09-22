@@ -545,7 +545,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.72';
+const BUILD='v0.9.73';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -780,34 +780,61 @@ const SFX=(()=>{
     [0,-1,1,-1,2,-1,-1,-1,3,-1,2,-1,1,-1,-1,-1],
     [1,-1,-1,-1,2,-1,1,-1,0,-1,-1,-1,0,-1,-1,-1]
   ];
+  // Original scene arrangements: harmony, phrasing and instrumentation differ, not just tempo.
+  const PROG_BATTLE=[{root:38,tones:[62,65,69,74]},{root:34,tones:[58,62,65,70]},{root:36,tones:[60,64,67,72]},{root:33,tones:[61,64,69,73]}];
+  const PROG_GARDEN=[{root:36,tones:[60,64,67,69]},{root:41,tones:[60,65,69,72]},{root:38,tones:[62,65,69,72]},{root:31,tones:[59,62,67,74]}];
+  const PROG_POND=[{root:41,tones:[60,65,69,76]},{root:36,tones:[60,64,67,74]},{root:38,tones:[62,65,69,76]},{root:43,tones:[62,67,71,76]}];
+  const PROG_STARS=[{root:33,tones:[69,72,76,83]},{root:41,tones:[69,72,77,84]},{root:36,tones:[67,72,76,83]},{root:43,tones:[67,71,74,81]}];
+  const MUSIC_SCENES={
+    cute:{bpm:104,prog:PROG_CUTE,motif:MELODY_CUTE},
+    battle:{bpm:132,prog:PROG_BATTLE,motif:[[0,-1,0,2,-1,1,2,-1,3,-1,2,1,-1,0,2,-1],[0,-1,2,-1,3,2,-1,1,0,-1,1,2,3,-1,2,-1],[0,1,-1,2,0,-1,3,-1,2,1,-1,0,1,-1,2,-1],[2,-1,1,0,2,-1,3,-1,2,-1,1,0,1,2,3,-1]]},
+    boss:{bpm:148,prog:PROG_BOSS,motif:MELODY_BOSS},
+    garden:{bpm:84,prog:PROG_GARDEN,motif:[[0,-1,-1,-1,1,-1,2,-1,3,-1,-1,-1,2,-1,-1,-1],[2,-1,-1,-1,1,-1,-1,-1,0,-1,1,-1,2,-1,-1,-1],[1,-1,-1,-1,2,-1,3,-1,2,-1,-1,-1,0,-1,-1,-1],[1,-1,-1,-1,0,-1,-1,-1,2,-1,1,-1,0,-1,-1,-1]]},
+    picnic:{bpm:112,prog:PROG_CUTE,motif:[[0,-1,-1,1,2,-1,1,-1,3,-1,-1,2,1,-1,0,-1],[1,-1,2,-1,3,-1,-1,2,0,-1,-1,1,2,-1,0,-1],[2,-1,-1,3,1,-1,0,-1,2,-1,-1,1,0,-1,1,-1],[3,-1,2,-1,1,-1,-1,0,1,-1,2,-1,0,-1,-1,-1]]},
+    pond:{bpm:76,prog:PROG_POND,motif:[[0,-1,-1,-1,-1,-1,2,-1,1,-1,-1,-1,3,-1,-1,-1],[1,-1,-1,-1,0,-1,-1,-1,-1,-1,2,-1,1,-1,-1,-1],[0,-1,-1,-1,1,-1,-1,-1,2,-1,-1,-1,-1,-1,3,-1],[2,-1,-1,-1,-1,-1,1,-1,0,-1,-1,-1,1,-1,-1,-1]]},
+    starlight:{bpm:68,prog:PROG_STARS,motif:[[3,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,0,-1,-1,-1],[2,-1,-1,-1,-1,-1,-1,-1,3,-1,-1,-1,1,-1,-1,-1],[0,-1,-1,-1,-1,-1,2,-1,-1,-1,-1,-1,3,-1,-1,-1],[1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,2,-1,-1,-1]]}
+  };
   const M={on:false,step:0,next:0,timer:null,bpm:104,intensity:0,theme:'cute',keyOffset:0,arp:null,arpIdx:0,generation:0};
   function stepDur(){ return 60/M.bpm/4; }
   // A four-bar phrase with rests, soft toy keys and a quiet rhythm section.
   // Bosses use a distinct minor phrase, not merely a faster normal tune.
   function playStep(i,t){
-    const boss=M.theme==='boss',bar=Math.floor(i/16)%4,k=i%16;
-    const ch=(boss?PROG_BOSS:PROG_CUTE)[bar],motif=(boss?MELODY_BOSS:MELODY_CUTE)[bar];
-    const delay=Math.max(0,t-ac.currentTime),root=NOTE(ch.root);
-    if(k===0||k===8||(boss&&(k===6||k===14)))
-      osc({f0:root,dur:boss?.24:.38,vol:.15,type:'triangle',atk:.012,
-           filter:'lowpass',ff0:600,ff1:240,q:.6,delay,dest:musBus});
+    const scene=MUSIC_SCENES[M.theme],boss=M.theme==='boss',battle=boss||M.theme==='battle';
+    const garden=M.theme==='garden',pond=M.theme==='pond',stars=M.theme==='starlight',picnic=M.theme==='picnic';
+    const calm=garden||pond||stars,bar=Math.floor(i/16)%4,k=i%16;
+    const ch=scene.prog[bar],motif=scene.motif[bar];
+    const delay=Math.max(0,t-ac.currentTime)+(picnic&&k%2?.035:0),root=NOTE(ch.root);
+    if(k===0||(!stars&&k===8)||(battle&&(k===6||k===14)))
+      osc({f0:root,dur:calm?.7:battle?.21:.34,vol:calm?.095:.14,type:'triangle',atk:.016,
+           filter:'lowpass',ff0:battle?850:480,ff1:220,q:.6,delay,dest:musBus});
     if(motif[k]>=0){
-      const degree=(k===6||k===14)?(M.arp||ARP_VARIANTS[0])[(k+bar)%16]:motif[k];
-      const f=NOTE(ch.tones[degree]),pan=(bar%2?1:-1)*.16;
-      osc({f0:f,dur:boss?.27:.38,vol:boss?.095:.085,type:'sine',atk:.009,pan,delay,dest:musBus});
-      osc({f0:f*2,dur:.16,vol:.016,type:'triangle',atk:.006,
-           filter:'lowpass',ff0:1800,ff1:650,q:.6,pan,delay,dest:musBus});
+      const degree=battle&&(k===6||k===14)?(M.arp||ARP_VARIANTS[0])[(k+bar)%16]:motif[k];
+      const f=NOTE(ch.tones[degree]),pan=(bar%2?1:-1)*(pond?.35:.18);
+      osc({f0:pond?f*.997:f,f1:pond?f:undefined,dur:stars?1.1:pond?.75:garden?.46:picnic?.19:.25,
+           vol:stars?.055:calm?.075:.085,type:battle?'triangle':'sine',atk:battle?.006:.014,pan,delay,dest:musBus});
+      osc({f0:f*(stars?3:2),dur:stars?.65:picnic?.12:.18,vol:stars?.009:calm?.012:.018,type:'sine',atk:.009,pan,delay,dest:musBus});
     }
-    // Soft sustained harmony leaves room for weapon and warning cues.
     if(k===0)for(const degree of [0,2])
-      osc({f0:NOTE(ch.tones[degree]-12),dur:1.65,vol:.022,type:'triangle',atk:.12,
-           filter:'lowpass',ff0:750,ff1:320,q:.5,delay,dest:musBus});
-    if(k===0||k===8)
-      osc({f0:boss?120:100,f1:48,dur:.15,vol:boss?.15:.11,type:'sine',atk:.008,delay,dest:musBus});
-    if(k===4||k===12)
-      nz({dur:.075,vol:boss?.035:.022,f0:1200,f1:500,q:.55,atk:.006,delay,dest:musBus});
-    if(k===14&&bar%2===0)
-      osc({f0:740,f1:620,dur:.045,vol:.023,type:'sine',atk:.005,delay,dest:musBus});
+      osc({f0:NOTE(ch.tones[degree]-12),dur:calm?2.4:1.2,vol:calm?.023:.018,type:'triangle',atk:.12,
+           filter:'lowpass',ff0:650,ff1:300,q:.5,delay,dest:musBus});
+    if(!calm&&(k===0||k===8||(battle&&k===10)))
+      osc({f0:battle?130:95,f1:48,dur:.14,vol:battle?.17:.09,type:'sine',atk:.006,delay,dest:musBus});
+    if(!calm&&(k===4||k===12))
+      nz({dur:picnic?.045:.075,vol:battle?.04:.018,f0:battle?1800:1000,f1:500,q:.55,atk:.004,delay,dest:musBus});
+    if(battle&&k%2===0)
+      nz({dur:.028,vol:boss?.017:.012,f0:6000,f1:3500,q:.5,atk:.003,delay,dest:musBus});
+    if(garden&&k===14&&bar%2===0)
+      osc({f0:NOTE(ch.tones[2]+12),dur:.1,vol:.015,type:'sine',atk:.01,delay,dest:musBus});
+  }
+  // Retire the previous music bus so queued notes cannot pile up across screen changes.
+  function setMusicTheme(theme){
+    if(!MUSIC_SCENES[theme])theme='cute';
+    const old=musBus,now=ac.currentTime;
+    old.gain.cancelScheduledValues(now);old.gain.setTargetAtTime(.0001,now,.025);
+    setTimeout(()=>old.disconnect(),180);
+    musBus=ac.createGain();musBus.gain.value=.0001;musBus.connect(master);
+    if(!muted)musBus.gain.setTargetAtTime(1,now,.18);
+    M.theme=theme;M.bpm=MUSIC_SCENES[theme].bpm;M.step=0;M.next=now+.1;
   }
   function pump(){
     if(!M.on||!ac)return;
@@ -825,18 +852,17 @@ const SFX=(()=>{
       if(!muted) osc({f0:660,f1:990,dur:.10,vol:.16,type:'triangle'});
       return muted;
     },
-    musicStart(){
+    musicStart(theme='cute'){
       unlock(); if(!ac)return;
-      M.generation++; M.on=true; M.step=0; M.next=ac.currentTime+0.1; M.intensity=0; M.theme='cute';
-      M.bpm=104;
-      // v0.9.15：每次啟動音樂先重置回預設調（C大調、原版琶音）——選單音樂沒有
-      // 「關卡」概念，靠這行確保選單一律是熟悉的原版主題曲，不會殘留上一關的移調。
-      // 真正要玩關卡時，start() 會緊接著呼叫 musicSetLevel() 蓋成該關卡專屬的調。
-      M.keyOffset=0; M.arp=null; M.arpIdx=0;
-      musBus.gain.cancelScheduledValues(ac.currentTime);
-      musBus.gain.setValueAtTime(0.0001,ac.currentTime);
-      if(!muted) musBus.gain.setTargetAtTime(1,ac.currentTime,0.9);   // 慢慢淡入
-      clearInterval(M.timer); M.timer=setInterval(pump,25);
+      M.generation++;M.on=true;M.intensity=0;
+      M.keyOffset=0;M.arp=null;M.arpIdx=0;
+      setMusicTheme(theme);clearInterval(M.timer);M.timer=setInterval(pump,25);
+    },
+    musicScene(theme){
+      if(!MUSIC_SCENES[theme])theme='cute';
+      if(!M.on){this.musicStart(theme);return;}
+      if(M.theme===theme)return;
+      M.generation++;M.keyOffset=0;M.arp=null;M.arpIdx=0;setMusicTheme(theme);
     },
     // v0.9.15：每一關配一個專屬的（調性,琶音節奏型）組合，讓100關不會聽起來
     // 全部都是同一首歌——lvIdx 直接決定組合，同一關每次進去都聽到一樣的版本
@@ -859,7 +885,7 @@ const SFX=(()=>{
       const generation=M.generation;
       setTimeout(()=>{if(M.generation===generation){M.on=false;clearInterval(M.timer);}},fade===false?120:1400);
     },
-    musicIntensity(n){M.intensity=n;M.theme=n>0?'boss':'cute';M.bpm=n>0?124:104;},
+    musicIntensity(n){M.intensity=n;if(ac&&M.on)setMusicTheme(n>0?'boss':'battle');},
     // v0.9.10：切到背景（切別的App、鎖螢幕、滑掉）時立刻讓所有聲音停住。
     // 音樂用 lookahead 排程，note 一旦排進 Web Audio 的音訊執行緒，就算主執行緒被瀏覽器
     // 節流（分頁不可見時 rAF 幾乎都會被瀏覽器暫停，但 Web Audio 播放走獨立執行緒，
@@ -1064,9 +1090,14 @@ addEventListener('pageshow',onVisChange);
 // v0.9.10：首頁音樂。瀏覽器規定 AudioContext 一定要有使用者手勢才能真的發聲，
 // 頁面剛載入時沒辦法自動播放，所以在第一次觸控/點擊時（跟 SFX.unlock() 同一時機）
 // 順便啟動；如果玩家還在選單畫面就一直點，也不會每次都重新起音樂（isMusicOn 擋掉）。
+function syncHubMusic(){
+  if(G&&G.running)return;
+  const garden=!document.getElementById('garden').classList.contains('hide');
+  const theme=garden?(GARDEN_TAB==='play'&&GF?['picnic','pond','starlight'][GF.theme]:'garden'):'cute';
+  SFX.musicScene(theme);
+}
 function ensureMenuMusic(){
-  if((!G||!G.running) && menuEl && !menuEl.classList.contains('hide') && !SFX.isMusicOn())
-    SFX.musicStart();
+  if((!G||!G.running)&&!document.getElementById('hubNav').classList.contains('hide'))syncHubMusic();
 }
 // 選單畫面上的按鈕、銀河路線節點都是獨立的 DOM 元素（蓋在 canvas 上面），
 // 點下去不會經過 canvas 的 touchstart/mousedown/pointerdown 監聽器，
@@ -2251,6 +2282,7 @@ function gardenOpen(tab){
 function gardenNeedCrop(c){GARDEN_QUEST_CROP=c;gardenOpen('farm');}
 function gardenNoticeText(){return GARDEN_NOTICE?T(GARDEN_NOTICE.key,...GARDEN_NOTICE.args.map(a=>a&&typeof a==='object'?T(a.key):a)):'';}
 function gardenLifeRender(){
+ if(SFX.isMusicOn()&&!document.getElementById('garden').classList.contains('hide'))syncHubMusic();
  const host=document.getElementById('garden');let root=document.getElementById('gardenLife');
  if(!root){root=document.createElement('section');root.id='gardenLife';document.getElementById('gardenActions').after(root);}
  let beacon=document.getElementById('gardenLifeBeacon');
@@ -5541,6 +5573,7 @@ function setHubPage(page){
     document.getElementById(id).setAttribute('aria-current',page===dest?'page':'false');
   if(page==='upgrades'){const list=document.getElementById('shopList'),y=list.scrollTop;renderShop();list.scrollTop=y;}
   if(page==='settings')refreshSoundLabel();
+  if(SFX.isMusicOn())syncHubMusic();
 }
 function showShop(){
   overEl.classList.add('hide');setHubPage('upgrades');SFX.unlock();
@@ -5552,7 +5585,7 @@ function start(){
   shopEl.classList.add('hide');
   for(const id of ['langBox','codeBox','confirmBox','lockBox'])document.getElementById(id).classList.add('hide');
   G=newGame(); applyMeta(G); G.running=true;   // v0.9.17：先套用商店買的永久強化再開始
-  SFX.unlock(); SFX.musicStart(); SFX.musicSetLevel(LV_IDX);   // v0.9.15：每關換一套調＋節奏型
+  SFX.unlock(); SFX.musicStart('battle'); SFX.musicSetLevel(LV_IDX);   // v0.9.15：每關換一套調＋節奏型
   menuEl.classList.add('hide'); overEl.classList.add('hide'); cardsEl.classList.add('hide');
   document.getElementById('pauseOverlay').classList.add('hide');   // btnPause本身跟著G.running自動顯示，見drawHUD()
   lastT=performance.now();

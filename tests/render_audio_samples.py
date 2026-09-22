@@ -31,8 +31,8 @@ instrumented=source.replace(marker,'''    __scheduleTest(){
 report={'source_sha256':hashlib.sha256(Path(args.source).read_bytes()).hexdigest(),'samples':{},'diagnostic_only':True}
 with sync_playwright() as pw:
     browser=pw.chromium.launch(channel=os.environ.get('GOO_BROWSER_CHANNEL','msedge'))
-    for mode in ['cute','boss','bubble','graffiti','yoyo','hurt','mix']:
-        seconds=12 if mode in ['cute','boss','mix'] else 2
+    for mode in ['cute','battle','boss','garden','picnic','pond','starlight','bubble','graffiti','yoyo','hurt','mix']:
+        seconds=18 if mode in ['cute','battle','boss','garden','picnic','pond','starlight','mix'] else 2
         page=browser.new_page()
         errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
         page.add_init_script('''(()=>{
@@ -51,8 +51,8 @@ with sync_playwright() as pw:
         })();'''.replace('SECONDS',str(seconds)))
         page.goto((out/'probe.html').as_uri())
         signal=page.evaluate('''async mode=>{
-          if(['cute','boss','mix'].includes(mode)){
-            SFX.musicStart();SFX.musicIntensity(mode==='boss'?1:0);SFX.__scheduleTest();
+          if(['cute','battle','boss','garden','picnic','pond','starlight','mix'].includes(mode)){
+            SFX.musicStart(mode==='mix'?'battle':mode);SFX.__scheduleTest();
           }else SFX.unlock();
           if(['bubble','graffiti','yoyo','hurt'].includes(mode)){
             for(let i=0;i<4;i++){__clock=.1+i*.42;mode==='hurt'?SFX.hurt():SFX.shoot(mode);}

@@ -1,48 +1,50 @@
 # GOO BLASTER 精簡交接
 
 ## 目前任務（2026-09-22）
-- 使用者要求倒數隨升級延長；已選定小屋Lv.0／1／2／3倍率1／1.5／2／2.5。
-- v0.9.72已實作；79/80通過，效能環境門檻阻擋發布。只改新種時間，已種時間凍結；工具／料理／修屋仍即時。
-- 分支codex/soft-world-ui；v71遊戲9011350及交付588d50d已push，Pixel倒數核對文件3c5d081已push。
-- .codex-remote-attachments為使用者附件，不提交；手機存檔與簽章只在_private。
+- 使用者要求情境配樂：戰鬥刺激、庭院放鬆、挑戰各有主題。完成音樂後停止加功能，研究市場需求與AI團隊工作方式。
+- v0.9.73音樂已實作，市場研究已完成；完整81項中80項通過，效能環境判準兩次失敗，尚未發布。
+- 分支codex/soft-world-ui；先前v72提交7929733已push，未發布；v71公開及Pixel已交付，不重做。
+- 預設單一代理；.codex-remote-attachments是使用者附件，不提交。存檔、簽章、後台數據只留_private。
 
-## v72實作與決策
-- 薄荷60／90／120／150秒；莓果180／270／360／450秒；月光360／540／720／900秒，仍依原種類解鎖。
-- 每田duration＋readyAt；gardenPlantSeconds算新種時間，gardenDuration處理該批作物。升級不回溯延長，舊存檔沿原時間。
-- 倒數上限、存檔清理與成長比例改讀duration，避免高階時間被舊上限截短。
-- 任務板與单田詳情顯示新時間；gardenPace說明等級倍率。i18n/build_v0972.py產生11語言新key，原字串不變。
-- 原碼SHA b7fcbfb1e4eed2d71ca581b6c2254723a39a72ca3f1d25801c2e246de55a573f。
-- _private/level72/source-audit.json：pickBetterSave至EOF逐字未變；無戰鬥、價格、產量變更。
-- store/screenshots/v0.9.72為真實UI四輪種收→首次修屋→莓果預覽／倒數，只加速等待，無資源注入；中英圖片已檢視。
+## v73實作
+- battle132／boss148／garden84／picnic112／pond76／starlight68 BPM，menu104。旋律、和聲、節奏、配器與密度按情境分開。
+- 原創WebAudio合成，仍單檔／離線／零執行期相依／11語言；未新增可見字串。
+- syncHubMusic與庭院入口／挑戰進退連動；Boss結束回battle；淡出舊music bus並斷線，保留靜音與背景暫停。
+- 無戰鬥／存檔／計時／價格改動。SHA bcf79c3942ee5f7dae29d64dff63b7460940ca5b3a34547bbae204b26225c10d。
+- 新py_music_scenes列入全套，真實UI＋音訊排程驗七情境、快速30次切換、清理、靜音、暫停／恢復、離線；消耗遊戲RNG=0。
 
-## v72驗證進度
-- level72-edges：新test py_garden_level_timer 19.8秒PASS；涵蓋四級、預覽、半程、升級中舊田、遷移、極值、備份／原生合併、冷啟動離線、33語系尺寸。
-- 初輪level72-initial新test因JSON欄位順序誤報；改解碼物件比對後通過，保留原始失敗，不改遊戲處理。
-- CPU4離線兩項PASS：_private/test-runs/20260922-162652-776411-level72-cpu4-offline/results.json（timer63.7s／level_timer266.9s）。
-- 完整80項完成，原始78/80；layout補跑後79/80。_private/test-runs/20260922-162318-467202-level72-full/results.json。
-- py_layout_fit因擷取後數值變動找不到原行；改正規化數字後保留實測字框。20260922-163658-844548-level72-layout-retry 77.6s PASS。
-- py_v0927_perf兩次環境門檻失敗：對照組12.1／11.6FPS，單局約21FPS；未改v71亦對照11.6FPS失敗。僅證明舊版也過不了，不作跨批次效能差異推論。
-- 無殘留測試程序；另有SETUP64自16:08執行並持續用CPU，是否為原因尚未確定。已問使用者是否正在安裝，未中止或改設定。
-- retry：20260922-165411-961523-level72-perf-retry；v71對照_private/level72/baseline-v71-perf.log；總收據_private/level72/verification.json。
-- 不在Surface重跑全平行（曾無回應）；CPU4不能冒充全平行。效能需單独跑完才建APK。
+## v73證據
+- _private/test-runs/20260922-191326-238846-music73-initial/results.json：三項PASS（audio_quality、range_music、music_scenes）。
+- _private/test-runs/20260922-192109-001379-music73-cpu4-offline/results.json：兩項PASS，CPU4，20.5／45.0秒。
+- tests/py_release_smoke.py：新存檔progress1／coins0／meta{}；離線、CPU4、重啟還原PASS；0外部請求、0JS錯誤。
+- _private/test-artifacts/music73-preview/results.json與七場景wav：實際OfflineAudioContext輸出，全部0削波／0非有限值／0JS錯誤。真人聽感尚未驗收。
+- 完整81項：_private/test-runs/20260922-191446-066345-music73-full/results.json，complete=true、source_unchanged=true、80PASS，唯一FAIL為py_v0927_perf。
+- 效能初輪對照18.1FPS、單局31.3–39.6FPS；確認無殘留測試後獨立補跑仍對照18.2FPS、單局42.2–44.6FPS。失敗為環境門檻，原因未確定，不降門檻／不宣稱效能合格。
+- 補跑：_private/test-runs/20260922-193527-534085-music73-perf-retry/results.json。未建APK／更新Pixel／同步itch或Pages／發Devlog／清理。
+- 本輪py_test9第1／2關通關（59／68秒）、第3關87秒陣亡；符合既定第1關門檻，不冒稱全關通關。py_ab_base PASS。
+- Surface不跑全平行（曾無回應）；CPU4不等於全平行。效能獨立、不可與建置並跑。
 
-## 本輪後續
-- 待安裝／背景負載狀態確認，重跑單獨py_v0927_perf；不改門檻、不把舊版也失敗當通過。
-- 通過後以完整報告＋layout/perf補跑報告build_test_apk，再publish_test_apk；來源SHA不得改動，改動須重跑整套。
-- APK／itch／Pages／Devlog／頁面同步皆依現有授權執行，v72尚未發布。
-- 尚未填寫／儲存公開文案，未上傳截圖。新版Devlog不存在，已有檢查防重複；不要把本地準備當發布。
-- store/devlogs/v0.9.72-notes.json已準備，待公開itch收據通過後才devlog prepare。
-- Pixel目前已裝v71，若ADB連線可直接備份後install -r更新v72，不卸載／清資料。
+## 市場研究與暫停範圍
+- docs-19-market-review.md：有日期的官方競品資料、自身實際itch頁與後台、兩週觀察計畫、AI角色審查責任／否決條件與可重用prompt。
+- 判定：市場需求尚未驗證；建議先測「短場戰鬥→庭院可見成長」。不以版本數、下載級距或自動測試宣稱好玩／會賣。
+- _private/market73/analytics-note.md保存精確後台數字；樣本少、未排除開發流量，無留存／付費轉換證據，不公開提交。
+- 下一步提案為8–12名成人的非誘導觀察，尚未招募／發訊息／投廣告／改價／啟用多代理。
+- 不自動實作研究中的建議；新的功能開發等使用者決定。正常驗證與既有交付流程不代表批准市場實驗。
 
-## 已完成v71（不重做）
-- 完整79/79＋CPU4三項通過；APK97100，SHA48245f783d6b09305ac8efe3e8cbf2b41b8678b08ab173dc0dff8908541c5348。
-- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test 。
-- itch build2003135/upload19167726、Pages 1a5341e337b76e4770eea707f93c8448230d182f、Devlog1672834均已公開核對。
-- v71在Pixel由96400覆蓋更新97100，簽章、版本、原有存檔保留；新字段遷移正常。
-- 關App倒數回報：實機60秒，force-stop後14.010秒重開剩46秒；再關到成熟重開可收成，未重現停止。只UI收成重種第一田，其餘兩田未動。
-- _private/mobile-test/pixel-timer71-growing.json與pixel-timer71-mature.png；原始save備份未公開。
+## v72一併保留
+- 小屋Lv.0／1／2／3倍率1／1.5／2／2.5，只影響新種；已有作物duration＋readyAt凍結，關閉App繼續計時。
+- 薄荷60／90／120／150秒；莓果180／270／360／450秒；月光360／540／720／900秒。工具／料理／修屋仍即時。
+- v72因perf環境門檻失敗未交付；未改v71同環境亦失敗，只能作診斷，不能當通過。
+- 當時SETUP64安裝程序高CPU，不確定因果、未擅自中止；19:22查已無該程序。本輪效能以實測為準。
 
-## 其他未完成
-- 長時手機FPS、全平行、母語潤稿、長期耐玩性仍未驗證；不宣稱正式商店／商業品質驗收完成。
-- 論壇首文17090045及個人頁引用仍v64，前次核准阻擋未解除，不繞過。
-- 上次清理釋放13711759bytes；25個AccessDenied profile保留，不改ACL。
+## 已交付v71（不重做）
+- 版本v0.9.71，APK97100；固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test 。
+- itch build2003135/upload19167726；Pages1a5341e337b76e4770eea707f93c8448230d182f；Devlog1672834。
+- Pixel已覆蓋更新97100，簽章與存檔保留；倒數實機60秒force-stop14.010秒重開剩46秒，再关到成熟可收成，未重現關App停止。
+- v73尚未更新Pixel；需同SHA全套通過、APK稽核後才install -r，不卸載／清資料。
+
+## 未完成與後續限制
+- 發布卡在perf環境判準；使用者要求音樂後停工，暫不延伸效能重構。後續需先釐清量測環境與測試假設，不能只重跑至綠或降低門檻。
+- 通過後依native三平台與Devlog流程交付同版；v72＋v73應合併一篇Devlog，不發未公開版本。
+- 真機長時效能／聽感、全平行、母語潤稿、回訪與付費意願未完成。
+- 論壇首文17090045／個人頁引用仍v64，先前自動核准阻擋未解除，不繞過；舊清理25個AccessDenied profile保留，不改ACL。
