@@ -1,0 +1,18 @@
+{
+  "build": "v0.9.71",
+  "game_sha256": "51dae94f04efa369f6e85a8dee6b0a66c1f5fd625aea5898b98091c94dc47921",
+  "page": "https://davidform.itch.io/goo-blaster",
+  "description_updated": true,
+  "public_description_verified": true,
+  "public_images_loaded": true,
+  "first_four_image_ids": [30141028,30141027,30141026,30171953],
+  "new_screenshot": "store/screenshots/v0.9.71/panel-1-zh.png",
+  "new_screenshot_url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE3MTk1My5wbmc=/original/U9iIy7.png",
+  "selection": "New pond feedback from fresh-save UI play, unretouched. Full-size and uploaded thumbnail inspected; arrows and pearl tray readable. Existing verified combat lead images retained because combat is unchanged. All 14 historical images retained after the first four.",
+  "settings": "Price, visibility and game identity preserved.",
+  "community_profile_checked": "https://itch.io/profile/davidform",
+  "forum_checked": "https://itch.io/t/6826201/50-stages-no-ads-no-gacha-works-offline-my-browser-roguelite-needs-breaking",
+  "forum_updated": false,
+  "forum_reason": "Prior automatic approval rejection remains recorded in HANDOFF; no mutation retried. Read-only inspection shows original post still v0.9.64, also quoted in community profile.",
+  "devlog": "https://davidform.itch.io/goo-blaster/devlog/1672834/v0971-see-every-move-in-your-village-adventures"
+}

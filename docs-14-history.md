@@ -1310,3 +1310,14 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - CPU4三項PASS，timer10.8s/feedback39.2s/festival145.6s；報告`_private/test-runs/20260922-134912-526237-feedback71-cpu4/results.json`。offline smoke 0JS錯誤/0外部請求，重開progress9/coins456/dmg2/selection8保留。新測試對v70於「已送料理應保留」斷言預期失敗，log在_private/feedback71。
 - 新手第1/2/3關59/59/90秒通關，3/3、3/3、2/3心，0JS錯誤；獨立效能單局46.4FPS，同批同伴41.1→41.7（+1.3%），非Pixel、不跨版本作效能推論。
 - 工具限制：Windows沙箱帳戶程序啟動1909失敗；既有完整测试程序正常完成，後續測試經工具核准於沙箱外執行。全平行與真機尚未執行；新版平台同步待交付補記。
+
+
+### v0.9.71 交付紀錄
+- 遊戲9011350已push；Summary `v0.9.71: clarify themed garden challenge feedback`。
+- APK97100／0.9.71-test.0同原簽章，4362528bytes，公開SHA48245f783d6b09305ac8efe3e8cbf2b41b8678b08ab173dc0dff8908541c5348，asset580691054；ADB空，未安裝Pixel。
+- itch build2003135，公開payload同SHA，僅平台script後綴；CUA從公開頁Run game→第5關→暫停成功，保留既有瀏覽器進度。
+- Pages部署1a5341e337b76e4770eea707f93c8448230d182f、Actions35693149233成功；公開完整HTML一致，實際Start/Pause成功。
+- itch介紹及第四圖30171953更新，前三戰鬥圖／14歷史圖保留，公開18圖均載入。Devlog1672834經草稿核對後Published，中英正文、v71附件與新圖完整；流程測試9/9。
+- 圖片排序初次即時查DOM早於動畫完成而中止，讀新狀態後使用每次更新狀態的序列完成第四排序，無刪除舊圖。論壇首文及社群頁仍引用v64，舊核准阻擋未重試。
+- cleanup先盤點再Apply，移除v69APK及本輪release-profile-xnb_ryit，共13711759bytes，保留v71/v70及玩家資料；25個AccessDenied目錄未動、0失敗。
+- 收據_private/feedback71/verification.json。全平行、Pixel、長期耐玩性及母語潤稿未驗證，不宣稱商業品質或正式商店驗收已完成。
