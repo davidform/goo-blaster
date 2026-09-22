@@ -1,7 +1,8 @@
 # GOO BLASTER 精簡交接
 
-## 目前任務（2026-09-21）
-- 使用者認為庭院單調，要求繼續發揮並讓不同主題顯示不同且相關的動態圖示。
+## 目前任務（2026-09-22）
+- 2026-09-22使用者要求評估換對話以節省上下文；已核對v0.9.70與HEAD 4cdac9b，僅附件未追蹤，無遊戲未提交變更。
+- 建議新對話接手；前輪v70已交付，不重做發布／完整測試。後續聚焦庭院耐玩性與相關主題動態呈現，先實玩評估再選單一改動。
 - v0.9.70已實作三主題挑戰／成就／場景與動態入口；完整78/78、CPU4、offline與獨立效能已過；Android／itch／Pages／Devlog皆已交付。
 - 分支codex/soft-world-ui，接手eeb28a0，pull已最新；附件.codex-remote-attachments不可提交。
 - 來源SHA c4f376c1544f42c955e10ee334f5b4e8ba34c04ce2bcdf8333f0b72257df2aa1。
@@ -35,7 +36,7 @@
 - itch build2001061/upload19167726；完整636006byte payload一致、實際開始與暫停通過；_private/mobile-test/itch-v70.json。
 - Chrome首次載入曾截斷於字典，重新取得後完整；公開下載逐byte相同，非程式碼錯誤，不能掩蓋初次失敗。
 - Pages Actions35618312729成功；完整SHA與公開開始／暫停通過，_private/mobile-test/pages-v70.json。
-- itch頁v70介紹與首四圖已驗證；前三戦鬥保留、新池塘實玩30157101第四、13歷史圖保留；store/page-sync/v0.9.70.json。
+- itch頁v70介紹與首四圖已驗證；前三戰鬥保留、新池塘實玩30157101第四、13歷史圖保留；store/page-sync/v0.9.70.json。
 - Devlog1672102 Published，中英正文／v70附件／新截圖已核對；store/devlogs/v0.9.70/post.json，流程unit9/9。
 - https://davidform.itch.io/goo-blaster/devlog/1672102/v0970-three-new-ways-to-play-in-the-village
 - 清理先遭審查因未列完整路徑拒絕；補核對後獲准移除v68APK與本輪release-profile-wpn5b_g7，共13716306bytes；保留v70/v69，25舊profile未動，0失敗。
