@@ -177,7 +177,11 @@ with sync_playwright() as pw:
         pref=want["stage"][:14]
         stage=[bx for bx in boxes if bx["t"]==want["stage"] or
                (bx["t"].endswith("…") and bx["t"][:14]==pref)]
-        right=[bx for bx in boxes if bx["t"]==want["goo"]]
+        # Goo percentages can change after the captured frame but before want is read.
+        # Compare the localized label shape; measure the actual captured text boxes.
+        right=[bx for bx in boxes if _re.sub(r"\d+", "#", bx["t"])==_re.sub(r"\d+", "#", want["goo"])]
+        if right and not any(bx["t"]==want["goo"] for bx in right):
+            print("  INFO live HUD advanced after capture:", [bx["t"] for bx in right], "->", want["goo"])
         clash=[]
         if not stage or not right:
             clash.append(("找不到要比對的兩行", str(want)[:60]))

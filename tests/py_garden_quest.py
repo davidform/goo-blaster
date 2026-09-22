@@ -27,7 +27,7 @@ with sync_playwright() as pw:
  assert p.locator('#gardenQuest').get_attribute('data-step')=='repair'
  p.locator('#gardenQuestAction').click();assert p.evaluate('GARDEN.house===1&&GARDEN.petals===0')
  assert 'level 1' in p.locator('#gardenNotice').inner_text()
- p.locator('#gardenQuestCrop').select_option('1');assert '3:00' in p.locator('#gardenQuestDetail').inner_text()
+ p.locator('#gardenQuestCrop').select_option('1');assert '4:30' in p.locator('#gardenQuestDetail').inner_text()
  p.reload();p.locator('#navGarden').click();assert p.evaluate('GARDEN.house===1&&GARDEN.petals===0')
  # Limited seeds, mixed readiness, zero seeds, cap and completed home.
  p.evaluate('GARDEN=cleanGarden({seeds:1});renderGarden()');p.locator('#gardenQuestAction').click()

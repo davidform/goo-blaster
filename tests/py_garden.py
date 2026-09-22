@@ -21,7 +21,7 @@ with sync_playwright() as pw:
   GARDEN.petals=200;const upgrades=[gardenUpgrade(),gardenUpgrade(),gardenUpgrade(),!gardenUpgrade()];
   gardenPlant(0,0);gardenPlant(1,1);gardenPlant(2,2);
   for(let k=0;k<3;k++){start();endGame(true);}
-  window.__gardenNow+=360000;const allReady=GARDEN.plots.every(gardenReady);
+  window.__gardenNow+=900000;const allReady=GARDEN.plots.every(gardenReady);
   const petals=GARDEN.petals;for(let i=0;i<3;i++)gardenHarvest(i);const harvestYield=GARDEN.petals-petals;
   const stableStats=stats===combat();const garden=JSON.stringify(GARDEN),code=saveCodeEncode();
   GARDEN=cleanGarden();importSaveCode(code);const backup=JSON.stringify(GARDEN)===garden;

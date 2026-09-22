@@ -1330,3 +1330,22 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 證據_private/mobile-test/pixel-update-v71.json、pixel-runtime-v71.json、pixel-timer71-restart.json、pixel-timer71-growing.json、pixel-timer71-mature.png。沒有調整手機時間／注入資源。第二段測試在成熟斷言通過後，UI輪詢selector的引號造成測試腳本SyntaxError；只重跑UI讀取確認並補收據，未重複收成／種植。
 - 瀏覽器命令：GOO_BROWSER_CHANNEL=msedge，.venv/Scripts/python.exe run_tests.py --jobs 1 --only py_garden_timer --label pixel-timer71-check；13.8秒PASS，SHA未變。覆蓋倒數、離線、重开、遷移、成熟與時鐘邊界。
 - 結論：目前v71實機未重現關閉暫停，不修改計時邏輯、不提高BUILD、不重跑發版。v64存檔不含readyAt，第一次升級才建立時間；這可能解釋觀察，僅為推測。未執行長時待機／重啟手機；不能把本次短時force-stop當成所有情境驗收。教訓：區分舊版進度遷移與已持久化的時間戳，先量測真機再改程式。
+
+
+## v0.9.72 — 小屋等級決定新種作物時間（2026-09-22）
+- 使用者要求有倒數的項目隨升級等級延長，並明確選擇小屋Lv.0／1／2／3倍率1／1.5／2／2.5；目前只有農作需等待，料理／建設／修屋仍立即完成。
+- 根因／原行為：GARDEN_CROPS.seconds同時用於新種、清理存檔、剩餘上限、成長比例及兩個預覽，只有作物種類決定60／180／360秒，完全不讀小屋等級。
+- 單一改動：依小屋等級設定新種時間；薄荷60／90／120／150秒，莓果180／270／360／450秒，月光360／540／720／900秒（實際可種種類仍依原解鎖規則）。成本、產量、戰鬥與其他立即完成行為不變。
+- 每田凍結duration＋readyAt；升級途中已有作物不延長，舊存檔無duration時沿用原基礎時間與原readyAt。gardenRemaining／gardenGrowth／cleanGarden使用該田duration，避免新長倒數被旧60／180／360秒上限截短。舊式growth遷移仍按原比例。
+- 任務板與單田詳情預覽同步計算新時間；新增gardenPace說明当前等級倍率及既有作物不變。i18n/build_v0972.py產生11語言，原有字串未改。
+- 新tests/py_garden_level_timer.py驗四級／各可種作物、預覽與實際秒數、半程進度、未成熟禁止收成、升級不中途延長、舊存檔、極值／非數字、備份／原生合併、關閉整個瀏覽器後離線重開（900秒過120秒後餘780秒）、成熟與重複收成、33語系尺寸組合。既有三支流程測試更新預期等待時間，不改驗收結果。
+- 第一輪新test因JSON物件欄位順序而誤報備份／合併不等；改以解碼後物件比對即通過，保留level72-initial失敗紀錄。遊戲功能未因該測試誤報修改。level72-edges 19.8秒PASS。
+- 真實UI截圖store/screenshots/v0.9.72：新存檔四輪薄荷→第一次修屋→選莓果，僅加速等待，沒有注入資源、進度或升級。中英預覽／倒數畫面已檢視；來源native/capture_garden_level_timer.py。
+- 教訓：加長新種時間時，也必須獨立保存每批所需時間；只改種植公式會讓存檔清理與倒數上限截短時間。此版延長高等級等待，不宣稱已證明更耐玩。
+- CPU4壓力／離線兩項PASS：timer63.7s、level_timer266.9s，_private/test-runs/20260922-162652-776411-level72-cpu4-offline/results.json。與完整回歸並行增加負載，未與效能測試重疊。
+- 完整批次舊py_layout_fit右上角HUD兩項「找不到要比對的兩行」失敗：文字框先擷取，再讀即時果凍%，數值變動導致精確文字比對失配。與同檔左HUD既有做法一致，正規化數字識別行、仍檢查實際擷取字框。保留初次失敗，level72-layout-retry 77.6s PASS；遊戲HUD程式未改。
+- 最終完整80項原始78通過；layout補跑後79/80。py_v0927_perf環境門檻兩次失敗：無同伴對照12.1／11.6FPS，單局約21FPS，不能聲稱效能合格。獨立重跑20260922-165411-961523-level72-perf-retry保留失敗。
+- 已確認沒有殘留tests/run_tests程序；量到SETUP64背景安裝程序（自16:08）兩秒取樣消耗2.33CPU秒。其是否為主要原因仍不確定，已詢問使用者，未擅自中止安裝／改系統設定。
+- 未改動HEAD v71另於同一環境獨立跑py_v0927_perf也未過環境門檻；_private/level72/baseline-v71-perf.log。只能證明旧版也受影響，不用跨批次数字宣稱v72效能相同或通過。
+- 新手py_test9第1/2/3關54／72／90秒通關、愛心2／1／1，0JS錯誤；未變基準py_ab_base通過。
+- 截至此紀錄：v72尚未建置APK／發布／安裝Pixel，公開版及Pixel維持v71；遵守整套全綠後發布，不繞過效能門檻。程式與本地證據保存待環境恢复，待單獨perf通過後續交付。既有v71不重發。
