@@ -1373,3 +1373,7 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 補驗20260922-194512-979185-music73-perf-isolated PASS：無同伴43.325、有同伴41.675FPS（-3.81%）。遊戲index.html未改，沿用同SHA完整81項原始80PASS報告＋此補驗，合併81/81。
 - 研究可執行準備已完成：store/research/player-study-kit.md、observations.csv、outcomes.csv。未招募、發訊息、投放或生成假訪談。
 - 反向驗證GOO_PERF_CPU=4：對照24.1、有同伴23.2FPS，預期以exit1拒絕「單局FPS≥30」；_private/perf73/negative-cpu4.log與test-artifacts/perf-isolated-cpu4.json。證明修正未移除效能失敗能力。
+
+- 交付完成：APK97300公開下載SHA 447671ad9363d571ef82e72f48187d666e747244eff6e9559d902a83bf5d0a1d；itch build2003942／Pages e614100a9f1cb5a3f8596652e980b827dbfd7917（Actions35723987696）均核對公開位元組與實際開始／暫停。Pixel未連線，未覆蓋安裝。
+- Devlog1673107已Published並核對中英完整正文；遊戲介紹與小屋倍率截图已同步，保留前三張戰鬥圖及所有歷史截圖。論壇原首文編輯工具貼入位置異常，已還原未儲存；仍待同步，不影響已發布遊戲。
+- 清理先盤點再Apply，移除舊v70 APK與一份暫存，共13,748,740 bytes；保留v73與v71回退、存檔與簽章。25個AccessDenied暫存保留不改ACL。真人聽感／市場觀察／全平行尚未驗證。

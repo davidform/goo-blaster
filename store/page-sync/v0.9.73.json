@@ -1,0 +1,22 @@
+{
+  "build": "v0.9.73",
+  "game_sha256": "bcf79c3942ee5f7dae29d64dff63b7460940ca5b3a34547bbae204b26225c10d",
+  "page": "https://davidform.itch.io/goo-blaster",
+  "description_updated": true,
+  "public_description_verified": true,
+  "public_images_loaded": true,
+  "first_five_image_ids": [
+    30141028,
+    30141027,
+    30141026,
+    30176426,
+    30171953
+  ],
+  "new_screenshot": "store/screenshots/v0.9.73/cottage-level1-en.png",
+  "thumbnail_visual_verified": true,
+  "selection": "Existing combat lead retained; new cottage level 1 planting preview fourth. Full-size and public 231x500 thumbnail inspected. Historical images retained.",
+  "settings": "Price, visibility and identity preserved.",
+  "forum_updated": false,
+  "forum_reason": "Editing original post was accessible; rich-text paste and paragraph fill produced misplaced text. Reloaded original without saving. Original remains v0.9.64; profile quotation remains pending.",
+  "devlog": "https://davidform.itch.io/goo-blaster/devlog/1673107/v0973-music-for-every-adventure-growing-with-your-cottage"
+}
