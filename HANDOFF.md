@@ -27,7 +27,7 @@
 
 ## 已交付
 - Android97100／0.9.71-test.0同原簽章，公開下載SHA48245f783d6b09305ac8efe3e8cbf2b41b8678b08ab173dc0dff8908541c5348，asset580691054。
-- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；ADB無裝置，不宣稱Pixel覆蓋安裝完成。
+- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test；Pixel已由96400覆蓋更新97100，簽章一致、安裝時存檔位元組不變，WebView BUILD已核對；原有存檔欄位保留，新欄位正常遷移。
 - itch build2003135/upload19167726，公開完整payload一致（僅平台script後綴），CUA實際開始／暫停；_private/mobile-test/itch-v71.json。
 - Pages部署1a5341e337b76e4770eea707f93c8448230d182f，Actions35693149233成功，公開完整SHA與CUA開始／暫停通過；pages-v71.json。
 - itch介紹v71、新池塘圖30171953第四，前三戰鬥圖保留、14歷史圖未刪；18圖公開載入。store/page-sync/v0.9.71.json。
@@ -35,8 +35,15 @@
 - https://davidform.itch.io/goo-blaster/devlog/1672834/v0971-see-every-move-in-your-village-adventures
 - 清理13711759bytes：舊v69APK與release-profile-xnb_ryit，保留v71/v70。25個拒絕存取profile未動，0失敗，不改ACL。
 
+## Pixel更新與倒數回報核對（2026-09-22）
+- Pixel已覆蓋升級v64→v71，備份／簽章／版本／原有存檔欄位通過；資料僅存_private/mobile-test。
+- 使用者回報關App倒數似乎暫停；實機新種薄荷60秒，force-stop後14.010秒重開剩46秒，readyAt不變；再關到成熟，重開可收成。v71未重現暫停。
+- 實際UI收成並重種第一田一次，其餘兩田未動；沒有注入資源或修改手機時間。pixel-timer71-growing.json／pixel-timer71-mature.png為證據。
+- py_garden_timer 13.8秒PASS，報告20260922-161549-865585-pixel-timer71-check。原碼SHA未變，無新版本／重新發布。
+- 舊v64存檔沒有readyAt，首次升級才建立完成時間；可能與本次觀察有關，尚不能確定是回報根因。
+
 ## 未完成／下一步
-- 待使用者手機回饋：三主題操作是否更直覺；Pixel安裝／長時FPS、全平行未執行。Surface限制不能以CPU4冒充全平行。
+- 待使用者手機回饋：三主題操作是否更直覺；Pixel安裝已驗證；長時FPS、全平行未執行。Surface限制不能以CPU4冒充全平行。
 - 長期耐玩性、三階後經營選擇、動物／多區域／居民生活AI、母語潤稿仍未完成。
 - 論壇首文17090045及社群個人頁引用仍v0.9.64；舊核准阻擋未解除，本輪只讀核對，未重試修改。
-- Windows沙箱帳戶CreateProcessWithLogonW1909；必要命令走工具核准，不繞过權限。
+- Windows沙箱帳戶1909為前次環境紀錄；目前工具環境可正常執行。

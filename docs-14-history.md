@@ -1321,3 +1321,12 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 圖片排序初次即時查DOM早於動畫完成而中止，讀新狀態後使用每次更新狀態的序列完成第四排序，無刪除舊圖。論壇首文及社群頁仍引用v64，舊核准阻擋未重試。
 - cleanup先盤點再Apply，移除v69APK及本輪release-profile-xnb_ryit，共13711759bytes，保留v71/v70及玩家資料；25個AccessDenied目錄未動、0失敗。
 - 收據_private/feedback71/verification.json。全平行、Pixel、長期耐玩性及母語潤稿未驗證，不宣稱商業品質或正式商店驗收已完成。
+
+
+### v0.9.71 Pixel覆蓋更新與關閉倒數核對（2026-09-22）
+- Pixel 10 Pro由96400→97100；實際安裝APK簽章與既有App相同，APK SHA48245f783d6b09305ac8efe3e8cbf2b41b8678b08ab173dc0dff8908541c5348。adb install -r成功，無卸載／清資料。
+- 已在_private/mobile-test/pixel-before-v71-save.xml備份原生存檔；安裝後、啟動前位元組完全不變。啟動後WebView BUILD v0.9.71，進度／金幣／強化／語言／既有庭院欄位均保留。新版正常新增readyAt與其他庭院欄位；最初「整份JSON必須相同」的稽核因正常遷移失敗，改驗所有既有欄位後通過，未改手機資料。
+- 使用者回報程式關閉似乎停止倒數。實機先確認三田成熟狀態重開不倒退，再透過UI收成第一田、種一次薄荷（其餘兩田不動）：60秒→force-stop，14.010秒後啟動剩46秒，runtime/native readyAt相同；再次force-stop直到成熟，重開remaining=0且田地勾號、任務板可收成。
+- 證據_private/mobile-test/pixel-update-v71.json、pixel-runtime-v71.json、pixel-timer71-restart.json、pixel-timer71-growing.json、pixel-timer71-mature.png。沒有調整手機時間／注入資源。第二段測試在成熟斷言通過後，UI輪詢selector的引號造成測試腳本SyntaxError；只重跑UI讀取確認並補收據，未重複收成／種植。
+- 瀏覽器命令：GOO_BROWSER_CHANNEL=msedge，.venv/Scripts/python.exe run_tests.py --jobs 1 --only py_garden_timer --label pixel-timer71-check；13.8秒PASS，SHA未變。覆蓋倒數、離線、重开、遷移、成熟與時鐘邊界。
+- 結論：目前v71實機未重現關閉暫停，不修改計時邏輯、不提高BUILD、不重跑發版。v64存檔不含readyAt，第一次升級才建立時間；這可能解釋觀察，僅為推測。未執行長時待機／重啟手機；不能把本次短時force-stop當成所有情境驗收。教訓：區分舊版進度遷移與已持久化的時間戳，先量測真機再改程式。
