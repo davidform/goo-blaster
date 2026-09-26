@@ -1,0 +1,13 @@
+[
+  {
+    "file": "garden-selected-decorate-zh-Hant-390.png",
+    "build": "v0.9.77",
+    "sha256": "9d3d464837474274aa1df2fabed6ba0b49d4a09ad0e2c829b8f3ffc024e74627",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; actual UI category clicks. No inventory or progress injected."
+  }
+]

@@ -1439,3 +1439,15 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 先前未解的論壇首文17090045亦已修復：保留原三張戰鬥圖，精確選句更新v76、離線倒數、庭院工作頁及回饋問題，再由Choose image選已上傳庭院圖。公開首文與profile引用皆核對兩次版本文字、無v64與四張圖URL；未另發留言或改舊回覆。
 - 論壇編輯教訓：fill空字串未清空，HTML paste與clipboard HTML不保證富文字；最終使用原文selectText選句、明確Backspace刪除、再輸入，提交前查重。Upload image與Choose image是分頁按鈕，不是檔案輸入；選既有圖即可，兩次filechooser逾時未造成重複上傳。
 - cleanup_local先dry-run再Apply，釋放13,477,703 bytes（舊v74 APK與一份測試profile），2項移除／0失敗，25項AccessDenied保留；保留v76/v75 APK、所有進度與簽章。全平行壓測依Surface限制未執行，Pixel未連線，真人體驗與市場驗收仍待回饋。
+
+
+## v0.9.77 — 庭院分類選取顏色同步（2026-09-26）
+- 使用者真機截圖顯示已進佈置頁，第一顆田地按鈕仍綠色。根因是CSS first-child硬編碼綠色，加上gardenArrange漏設aria-pressed。
+- 唯一改動：四分類共用目前GARDEN_TAB狀態，依aria-pressed統一選中綠色／未選米色及陰影；無玩法、倒數、存檔、翻譯變動。
+- 新增py_garden_tabs並納入完整套件；未修改版實跑切廚房即FAIL，記錄farm=false仍rgb(206,222,204)、kitchen=true卻rgb(221,203,167)、arrange狀態null。最初修復仍有舊兄弟選擇器造成未選色不一致，153026失敗保留；修正所有未選按鈕共用顏色後153051通過。
+- 新測試264次真實切換（11語言×4尺寸×6切換），檢查實際computed background而非僅aria狀態，包含重畫／回首頁重入／建築捷徑／離線。CUA實際四分類顏色與頁面一致，截图store/screenshots/v0.9.77。教訓：頁面切換測試只看內容可見，漏掉選取視覺；必須同時測畫面、語意與顏色。
+- 最終HTML SHA 9d3d464837474274aa1df2fabed6ba0b49d4a09ad0e2c829b8f3ffc024e74627；完整與CPU4驗證／交付進行中。
+
+- 完整153126-tabs77-full：84/84全PASS，遊戲SHA未改。py_test9前三關61／69／93秒通關，0JS錯誤；長模擬test9 411.2秒PASS。最後獨立效能88.3秒PASS，當批無同伴35.2／有同伴36.8FPS（+4.5%為量測波動，不宣稱效能改善）。
+
+- 第三輪155806-tabs77-cpu4：264次切換125.7秒PASS；release_smoke另實跑，初始progress1/coins0/meta{}，CPU4離線及真實瀏覽器重開還原progress9/coins456/meta.dmg2/selection8，0JS錯誤／0外部請求。全平行依Surface限制未跑，Pixel無連線。
