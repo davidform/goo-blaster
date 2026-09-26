@@ -417,6 +417,29 @@
 .dishServe{animation:dishServe .9s both;animation-delay:var(--feedback-delay,0ms)}.dishRetry{animation:dishRetry .9s both;animation-delay:var(--feedback-delay,0ms)}.pearlCollect{animation:pearlCollect .9s both;animation-delay:var(--feedback-delay,0ms)}.fishRipple:after{content:'';position:absolute;inset:12%;border:3px solid #fff6d9;border-radius:50%;pointer-events:none;animation:fishRipple .9s both;animation-delay:var(--feedback-delay,0ms)}.starSwitch .gardenMotion{animation:starSwitch .9s both;animation-delay:var(--feedback-delay,0ms)}
 @keyframes dishServe{0%{transform:translateY(-14px) rotate(-12deg)}40%{transform:translateY(3px) rotate(3deg)}100%{transform:none}}@keyframes dishRetry{0%,40%{transform:translateX(-5px)}20%,60%{transform:translateX(5px)}100%{transform:none}}@keyframes pearlCollect{0%{transform:translateY(9px) scale(.7)}45%{transform:translateY(-5px) scale(1.15)}100%{transform:none}}@keyframes fishRipple{0%{transform:scale(.25);opacity:1}100%{transform:scale(1.5);opacity:0}}@keyframes starSwitch{0%{transform:scale(.7) rotate(-12deg)}45%{transform:scale(1.15) rotate(8deg)}100%{transform:none}}
 @media(prefers-reduced-motion:reduce){.dishServe,.dishRetry,.pearlCollect,.fishRipple:after,.starSwitch .gardenMotion{animation:none!important}.fishRipple:after{display:none}}
+
+/* v74: a living town is the hub; the existing stage route remains below it. */
+#menu{padding-left:12px;padding-right:12px;background:#ecedda;gap:10px;}
+#menu>h1{font-size:27px;color:#4b614b;text-shadow:0 2px #fff9e4;margin:0;}
+#menuHeader{max-width:1050px;}#townHome{order:1;width:100%;max-width:1050px;position:relative;border:3px solid #b5c59a;border-radius:24px;overflow:hidden;background:#adc780;flex-shrink:0;box-shadow:0 5px 0 #8f9e7655;}
+#townScene{position:relative;width:100%;aspect-ratio:1.12;overflow:hidden;}
+.townTerrain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.townPlace{position:absolute;width:24%;height:26%;padding:0;border:0;background:transparent;cursor:pointer;color:#344e40;display:flex;align-items:center;flex-direction:column;justify-content:flex-end;isolation:isolate;touch-action:pan-y;}
+.townPlace>svg{width:100%;height:80%;overflow:visible;transition:transform .18s;filter:drop-shadow(0 5px 2px #40543e25);}
+.townPlace>span{background:#fff5d8;border:1px solid #8d9f79;border-radius:8px;padding:5px 7px;font:750 clamp(10px,1.8vw,14px)/1.2 system-ui;max-width:100%;box-sizing:border-box;box-shadow:0 3px 0 #5f7b4d44;overflow-wrap:anywhere;}
+.townPlace:hover>svg,.townPlace:focus-visible>svg{transform:translateY(-5px);}.townPlace:active>svg{transform:translateY(2px);}.townPlace:focus-visible{outline:3px solid #5d667f;outline-offset:2px;border-radius:18px;}
+#townResources{position:absolute;left:10px;top:10px;display:flex;gap:5px;flex-wrap:wrap;max-width:75%;pointer-events:none;}
+#townResources span{padding:5px 8px;background:#fff5dcee;border:1px solid #8fa477;border-radius:8px;color:#445b40;font:bold 12px system-ui;box-shadow:0 2px 0 #66804f33;}
+#townGoal{border-top:1px solid #a7b58d;background:#fff4dbeF;padding:9px 12px;color:#4a654d;text-align:left;display:flex;align-items:center;gap:10px;}
+#townGoal strong{font-size:12px;flex-shrink:0;}#townGoal span{font-size:12px;line-height:1.4;}#townGoal button{margin-left:auto;border:1px solid #a9b78c;border-radius:9px;background:#dce7bd;color:#3d5944;padding:8px;font:700 12px system-ui;min-height:44px;cursor:pointer;}
+#menu #stageInfo{order:3;width:100%;max-width:650px;box-sizing:border-box;}#menu #galaxyWrap{order:4;max-width:650px;}#menu #btnPlay{order:2;max-width:650px;min-height:48px;padding:12px;font-size:17px;}#diag{order:5;}
+.townResident{animation:townWalk 12s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center;}.townResident:nth-of-type(2n){animation-delay:-7s;animation-duration:16s;}.townWater{animation:townShimmer 4s ease-in-out infinite alternate;}.townFlag{animation:townShimmer 2s ease-in-out infinite alternate;}
+@keyframes townWalk{to{transform:translate(28px,12px)}}@keyframes townShimmer{to{opacity:.45}}
+#menu.hide .townResident,#menu.hide .townWater,#menu.hide .townFlag{animation-play-state:paused;}
+@media(min-width:700px){#townScene{aspect-ratio:1.6;}#menu>h1{font-size:30px;}#townGoal span{font-size:14px;}}
+@media(max-width:350px){#townScene{aspect-ratio:.9;}.townPlace{width:27%;}.townPlace>span{font-size:10px;padding:4px;}#townGoal{gap:5px;padding:7px;}#townGoal strong{display:none;}#townResources span{font-size:10px;padding:4px;}}
+@media(prefers-reduced-motion:reduce){.townResident,.townWater,.townFlag{animation:none!important}.townPlace>svg{transition:none;}}
+
 </style>
 </head>
 <body>
@@ -428,6 +451,7 @@
     <div id="menu" class="panel">
       <h1>GOO BLASTER</h1>
       <div id="menuHeader"><span id="chapterLabel"></span><span id="menuWallet">🍬 <span id="coinTag">0</span></span></div>
+      <section id="townHome"><div id="townScene"></div><div id="townResources"></div><div id="townGoal"></div></section>
       <div id="stageInfo"></div>
       <div id="galaxyWrap"><div id="galaxyInner"></div></div>
       <button class="btn" id="btnPlay">開始遊戲</button>
@@ -545,7 +569,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.73';
+const BUILD='v0.9.74';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -5320,7 +5344,61 @@ function showCodeBox(){
   codeBoxEl.classList.remove('hide');
 }
 
+
+// Town artwork is deterministic: never consume the gameplay random sequence.
+function townBuilding(kind){
+ const colors={gate:['#7696bd','#c7d5d6'],house:['#d38b86','#f1dcb1'],shop:['#a289b5','#f2ddaa'],picnic:['#d59676','#f4dab0'],pond:['#6fabb5','#d9e6be'],stars:['#827fa9','#e2d9b4']};
+ const [roof,wall]=colors[kind];
+ let art='<ellipse cx="100" cy="145" rx="72" ry="13" fill="#637b4b" opacity=".23"/>';
+ if(kind==='pond') art+='<ellipse cx="100" cy="115" rx="83" ry="34" fill="#c9dcaa"/><ellipse cx="100" cy="112" rx="70" ry="28" fill="#77b8c1" stroke="#e4dfa4" stroke-width="7"/><path class="townWater" d="M54 107q15-8 30 0m26 18q20-8 35 0" fill="none" stroke="#d3eece" stroke-width="4"/><path d="M44 83v-35m0 10q-16-5-16 7m16-7q16-5 16 7" fill="none" stroke="#527d55" stroke-width="5"/><path d="M121 72l44 16v20l-44-16z" fill="#ba946c" stroke="#8f7955" stroke-width="3"/><path d="M120 82l43 15m-32-20v20m12-16v20m12-16v20" stroke="#e6c293" stroke-width="3"/><g transform="translate(71 76) scale(.65)">'+gardenMotionIcon('fish').replace(/<svg[^>]*>|<\/svg>/g,'')+'</g>';
+ else if(kind==='picnic') art+='<path d="M27 118l68-36 75 31-69 36z" fill="#e8b4a4" stroke="#f7e2b0" stroke-width="4"/><path d="M60 101l73 32m-89-23l73 32m-42-48l-49 26m79-13l-49 26m79-14l-49 26" stroke="#fff1cd" stroke-width="5"/><path d="M26 88V28m148 60V28M26 34q75 35 148 0" fill="none" stroke="#856e50" stroke-width="4"/><path class="townFlag" d="M45 40l8 20 14-15m18 5l12 19 11-18m19-3l13 17 9-22" fill="#c77e8b"/><ellipse cx="101" cy="107" rx="21" ry="10" fill="#fff4d7"/><path d="M87 104l14-15 15 15z" fill="#a97481"/><circle cx="103" cy="88" r="5" fill="#db9283"/>';
+ else {
+ art+='<path d="M40 71l64-31 61 32v60l-63 24-62-27z" fill="'+wall+'" stroke="#8c805e" stroke-width="3"/><path d="M103 83l62-11v60l-63 24z" fill="#b6b897" opacity=".7"/><path d="M30 73l65-53 80 50-69 22z" fill="'+roof+'" stroke="#756b60" stroke-width="3"/><path d="M95 20l11 72M47 59l65 21m-50-33l69 21m-53-32l72 21" fill="none" stroke="#f4e4ba" stroke-width="2" opacity=".5"/><path d="M63 140v-29q14-20 26 0v39" fill="#7b8c79" stroke="#f1dfb0" stroke-width="4"/><path d="M120 101l21-7v24l-21 7z" fill="#88b2b5" stroke="#f5e5b7" stroke-width="4"/><path d="M131 97v23M121 112l20-6" stroke="#f5e5b7" stroke-width="3"/>';
+ if(kind==='gate') art+='<path d="M26 133V46h30v90M149 137V49h27v82" fill="#c6d4cf" stroke="#788e88" stroke-width="4"/><path d="M20 46l21-35 21 35m81 3l20-35 19 35" fill="#7399b8" stroke="#657c94" stroke-width="3"/><path d="M41 12V0l25 7-25 8m122 0V0l24 7-24 8" fill="#e7bb75"/><path d="M99 134v-27" stroke="#5f796c" stroke-width="10"/>';
+ if(kind==='shop') art+='<path d="M32 89l65 15v18l-65-15z" fill="#f3d6ad" stroke="#937a63" stroke-width="2"/><path d="M32 89l65 15-9 16-64-15z" fill="#f3e5c3"/><path d="M40 91l10 3-9 16-10-3m29-11l10 3-9 16-10-3m29-11l10 3-9 16-10-3" fill="#cc8b96"/><path class="townFlag" d="M119 21V2l29 10-29 10" stroke="#8c765e" stroke-width="3" fill="#e4b96d"/>';
+ if(kind==='house') art+='<path d="M143 43V16h16v38" fill="#b8ac8f" stroke="#807863" stroke-width="3"/><path class="townWater" d="M148 10q-13-13 0-24" fill="none" stroke="#fff7de" stroke-width="8"/><path d="M33 126q-9-23 4-27m3 32q14-18 8-27" fill="none" stroke="#718c4e" stroke-width="5"/><circle cx="37" cy="104" r="5" fill="#e8afa1"/>';
+ if(kind==='stars') art+='<path d="M80 19Q101-18 127 26" fill="#8688ad" stroke="#697494" stroke-width="3"/><path d="M104 7l3 8 9 1-7 5 2 9-7-5-8 5 3-9-7-5 9-1z" fill="#f9e2a2"/><path d="M143 107l26-32 15 8-30 29z" fill="#8996ad" stroke="#62748b" stroke-width="3"/><path d="M156 110l-8 32m8-32l17 26" stroke="#8a8066" stroke-width="4"/>';
+ }
+ return '<svg viewBox="0 0 200 165" aria-hidden="true">'+art+'</svg>';
+}
+function townTerrain(){
+ let s='<svg class="townTerrain" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"><rect width="1000" height="1000" fill="#b1cb88"/><path d="M0 0h1000v130Q760 20 620 170T270 100Q110 160 0 95z" fill="#91b57b"/><path d="M0 760Q150 770 190 1000H0z" fill="#e7d399"/><path d="M1000 45Q655 105 800 400T810 700Q713 854 875 1000h125z" fill="#e9d9a0"/><path d="M1000 75Q713 155 850 415T858 700Q768 860 920 1000h80z" fill="#7eb8bb"/><path class="townWater" d="M923 209l46-8m-86 81l45-6m-10 213l47 7m-81 218l39-9m-37 192l45 8m-29 48l50 7" stroke="#cce9d1" stroke-width="8" stroke-linecap="round"/>';
+ const road='M-40 600Q160 420 358 491T733 526Q847 515 1040 549M477 107Q566 252 475 456T480 793Q461 942 331 1030M116 834Q340 820 476 793T809 809M287 236Q321 325 475 332T799 285';
+ s+='<path d="'+road+'" fill="none" stroke="#a8af7b" stroke-width="53"/><path d="'+road+'" fill="none" stroke="#ead5a2" stroke-width="42"/><path d="M803 530q87-47 166-15l4 46q-82-29-164 16z" fill="#b89671" stroke="#89795b" stroke-width="6"/><path d="M820 530l3 38m20-48l4 39m20-44l4 39m20-40l3 39m20-36l3 40m19-33l4 39" stroke="#e8c99b" stroke-width="5"/>';
+ for(let i=0;i<45;i++){
+ const x=(i*193+23)%990,y=(i*137+53)%1000;
+ if((x>750&&y>140)||(x>180&&x<760&&y>140&&y<900))continue;
+ const c=['#6d9b6b','#83ac72','#659780'][i%3];
+ s+='<g transform="translate('+x+' '+y+')"><ellipse cy="36" rx="29" ry="12" fill="#718c55" opacity=".25"/><path d="M0 5v38" stroke="#8d8f59" stroke-width="9"/><ellipse cy="-4" rx="28" ry="36" fill="'+c+'"/><ellipse cx="-7" cy="-13" rx="17" ry="22" fill="#b3cc82" opacity=".5"/></g>';
+ }
+ for(let i=0;i<28;i++){const x=(i*173+63)%760,y=(i*219+125)%990;s+='<g transform="translate('+x+' '+y+')"><path d="M-4 0l-3-9m7 10l3-12" stroke="#839f60" stroke-width="3"/><circle cx="-6" cy="-9" r="3" fill="#f6dfa0"/><circle cx="3" cy="-12" r="3" fill="#e5a795"/></g>';}
+ s+='<g transform="translate(290 378)"><path d="M-75-16l138-8 31 61-144 10z" fill="#9f9570" stroke="#d6bf8b" stroke-width="5"/>';
+ for(let i=0;i<12;i++){let x=(i%4)*30-50,y=Math.floor(i/4)*16;s+='<path d="M'+x+' '+y+'q-10-17-16-7q0 12 16 7q15-22 17-10q0 12-17 10" fill="'+(i%3?'#8ead64':'#ba8a9d')+'"/>';}
+ s+='</g><g transform="translate(565 601)"><ellipse rx="54" ry="28" fill="#dfd9b4" stroke="#a3ac81" stroke-width="5"/><ellipse cy="-5" rx="42" ry="18" fill="#84b8b0"/><path d="M0-8v-32" stroke="#e1dfb9" stroke-width="15"/><ellipse cy="-37" rx="28" ry="12" fill="#93b6af" stroke="#e8dfb9" stroke-width="5"/><path class="townWater" d="M0-43q-25-35-26 4m26-4q28-36 27 6" fill="none" stroke="#d9eee0" stroke-width="5"/></g>';
+ for(const [x,y,c] of [[400,535,'#ba879a'],[615,515,'#779ea4'],[490,716,'#b7a568'],[318,807,'#9988ac'],[650,810,'#6d9e87'],[341,299,'#b7866f']])s+='<g transform="translate('+x+' '+y+')"><g class="townResident"><ellipse cy="18" rx="13" ry="5" fill="#597746" opacity=".3"/><path d="M-8 13v8m16-8v8" stroke="#70785d" stroke-width="5"/><path d="M-14 10Q-21-16 0-18Q22-15 14 10z" fill="'+c+'" stroke="#64755b" stroke-width="2"/><ellipse cy="-13" rx="13" ry="11" fill="#f2d9ad"/><path d="M-12-18q12-20 24 0" fill="'+c+'"/><path d="M-5-12v2m10-2v2" stroke="#506555" stroke-width="3"/></g></g>';
+ return s+'</svg>';
+}
+function renderTown(){
+ const scene=document.getElementById('townScene');if(!scene)return;
+ if(!scene.firstChild){scene.innerHTML=townTerrain();
+ const places=[['gate','navAdventure',43,7],['house','gardenTitle',17,16],['shop','shopTitle',12,48],['picnic','festivalTheme0',48,36],['pond','festivalTheme1',68,63],['stars','festivalTheme2',34,69]];
+ for(const [kind,key,x,y] of places){const b=document.createElement('button');b.className='townPlace';b.dataset.place=kind;b.dataset.label=key;b.style.left=x+'%';b.style.top=y+'%';b.innerHTML=townBuilding(kind)+'<span></span>';b.onclick=()=>{
+ SFX.unlock();SFX.level();
+ if(kind==='gate'){document.getElementById('stageInfo').scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});return;}
+ if(kind==='shop'){showShop();return;}
+ setHubPage('garden');
+ if(kind==='house'){gardenOpen('farm');return;}
+ GF=null;GF_PICK=['picnic','pond','stars'].indexOf(kind);GF_LEVEL=Math.min(3,GARDEN.medals[GF_PICK]+1);gardenOpen('play');syncHubMusic();
+ };scene.appendChild(b);}
+ }
+ for(const b of scene.querySelectorAll('.townPlace')){const label=T(b.dataset.label);b.querySelector('span').textContent=label;b.setAttribute('aria-label',label);}
+ const stock=document.getElementById('townResources');stock.replaceChildren();
+ for(const [symbol,value,label] of [['🌱',GARDEN.seeds,T('gardenTitle')],['🌸',GARDEN.petals,T('gardenTitle')]]){const e=document.createElement('span');e.textContent=symbol+' '+value;e.title=label;stock.appendChild(e);}
+ const goal=document.getElementById('townGoal');goal.replaceChildren();const title=document.createElement('strong');title.textContent=T('storyGoalTitle');const text=document.createElement('span');text.textContent=T('storyStep'+(Math.max(0,Math.min(PROGRESS-1,49))%5));const button=document.createElement('button');button.textContent=T('gardenTitle');button.onclick=()=>{SFX.unlock();setHubPage('garden');};goal.append(title,text,button);
+}
+
 function renderStage(){
+  renderTown();
   const frontier=Math.min(PROGRESS-1,LEVELS.length-1);
   const cleared = PROGRESS>LEVELS.length;
   const storyOpen=!!document.querySelector('#stageInfo details[open]');
@@ -5568,6 +5646,7 @@ function setHubPage(page){
   document.getElementById('settings').classList.toggle('hide',page!=='settings');
   document.getElementById('garden').classList.toggle('hide',page!=='garden');
   if(page==='garden')renderGarden();
+  if(page==='adventure')renderTown();
   document.getElementById('hubNav').classList.remove('hide');
   for(const [id,dest] of [['navAdventure','adventure'],['btnShop','upgrades'],['navGarden','garden'],['navSettings','settings']])
     document.getElementById(id).setAttribute('aria-current',page===dest?'page':'false');

@@ -19,6 +19,9 @@ with sync_playwright() as pw:
     bounds=page.locator('#menu').evaluate('(e)=>({height:e.clientHeight,content:e.scrollHeight})')
     assert bounds['content']>bounds['height'],bounds
     # Start the gesture on the description, not an already-scrollable map or blank gutter.
+    # The town is now above the stage card; bring the actual text into view first.
+    page.locator('#stageInfo .ds').scroll_into_view_if_needed()
+    before_scroll=page.locator('#menu').evaluate('(e)=>e.scrollTop')
     box=page.locator('#stageInfo .ds').bounding_box()
     x=round(box['x']+box['width']/2);y=round(min(box['y']+box['height']/2,385))
     assert page.evaluate('([x,y])=>document.elementFromPoint(x,y).closest("#stageInfo")!==null',[x,y])
@@ -26,10 +29,11 @@ with sync_playwright() as pw:
     for step in range(1,13):
         cdp.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x,'y':y-step*18}]})
     cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
-    page.wait_for_function('''()=>document.querySelector('#menu').scrollTop>20 &&
-      document.querySelector('#btnPlay').getBoundingClientRect().bottom<=document.querySelector('#hubNav').getBoundingClientRect().top+1''',timeout=15000)
+    page.wait_for_function('(before)=>document.querySelector("#menu").scrollTop>before+20',arg=before_scroll,timeout=15000)
     scroll=page.locator('#menu').evaluate('(e)=>e.scrollTop')
     page.screenshot(path=str(ARTIFACTS/'l10n-small-scroll.png'))
+    page.locator('#btnPlay').scroll_into_view_if_needed()
+    assert page.locator('#btnPlay').evaluate('(e)=>{const r=e.getBoundingClientRect();return r.top>=0 && r.bottom<=document.querySelector("#hubNav").getBoundingClientRect().top+1}')
     page.set_viewport_size({'width':390,'height':844})
     stages=page.evaluate('LEVELS.flatMap((L,i)=>buildBosses(L).some(b=>b.superBoss)?[i+1]:[])')
     assert stages==list(range(5,51,5)),stages

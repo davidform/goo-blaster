@@ -1,0 +1,35 @@
+[
+  {
+    "file": "town-en-390.png",
+    "build": "v0.9.74",
+    "sha256": "9dd5e83dab40cc196e9767d430abcd7413965dec3fd86c610c16e0e1b9c27f15",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "en",
+    "setup": "Fresh save; only language changed; no progress/resources injected."
+  },
+  {
+    "file": "town-zh-Hant-390.png",
+    "build": "v0.9.74",
+    "sha256": "9dd5e83dab40cc196e9767d430abcd7413965dec3fd86c610c16e0e1b9c27f15",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; only language changed; no progress/resources injected."
+  },
+  {
+    "file": "town-en-1280.png",
+    "build": "v0.9.74",
+    "sha256": "9dd5e83dab40cc196e9767d430abcd7413965dec3fd86c610c16e0e1b9c27f15",
+    "viewport": [
+      1280,
+      900
+    ],
+    "language": "en",
+    "setup": "Fresh save; only language changed; no progress/resources injected."
+  }
+]
