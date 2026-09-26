@@ -1391,3 +1391,7 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 完整批次73/82初輪通過，9項失敗均保留：1項上述版面假設、8項Node因本次shell漏設studio.project.json既有NODE_PATH而未啟動（Cannot find module playwright）。补上_private/test-node/node_modules後以同SHA重跑8項，不安裝新的執行期相依。
 - 效能最後獨立PASS：無同伴42.7／有同伴44.5FPS（+4.3%）；這是當批波動，不宣稱首頁讓戰鬥變快。單局≥30／相對損失<20%門檻保留，0JS錯誤。
 - 合併validate_reports驗證82/82 PASS、同SHA；Node補驗083510-town74-node-retry八項全過，保留原始報告。
+- 交付：2d0e2a3已push；APK97400同簽章，公開SHA 3a1631475f8e9763e3c21d7e3a3fcec0b72d63d50d311cc01b1f5a919f9c8ba2。itch build2017752／Pages 0c486a55b64130e8b8d3560671cde39ec2e82d0d（Actions36205898857）公開payload與開始／暫停均通過。
+- Devlog1677436已Published，中英正文與附件v74核對、record成功；工作流9項PASS。遊戲介紹與新截圖30261011已公開，前三戰鬥圖與歷史圖片保留；原圖及公開縮圖目視確認。
+- 論壇原首文17090045／個人頁引用仍v64：本次UI選取替換出現插在舊字前的問題，已還原未存，列為未完成。Pixel未連線，未宣稱真機更新；全平行未跑。
+- 本地cleanup先盤點再Apply，移除v71回退APK及一份測試profile，釋放13,488,053 bytes，保留v74＋v73和存檔／簽章。25個AccessDenied目錄保留。合併收據／核對／清理命令曾被自動核准阻擋，使用明確檔案patch與各別核對／盤點後完成。

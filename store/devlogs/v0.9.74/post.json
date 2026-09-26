@@ -1,0 +1,43 @@
+{
+  "build": "v0.9.74",
+  "title": "v0.9.74 — Welcome to your candy town",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "The home screen is now a little candy town, with a river, bridge, cottages, fields and strolling residents. Tap the adventure gate, Candy Shop, garden, picnic, pond or starlight landmark to reach the existing activities. Your seeds and petals come from your actual save."
+    },
+    {
+      "kind": "p",
+      "text": "The stage route and story remain below the town. Building labels follow your language, the layout adapts to phones and larger screens, and reduced-motion settings stop the town animations. This update changes the home screen; combat balance and crop timers stay the same."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "主頁變成一座糖果小鎮，加入河流、橋、小屋、田地與散步居民。點擊冒險城門、糖果屋、庭院、野餐、池塘或星光地標，就能進入原有玩法；種子與花瓣顯示真實存檔數量。"
+    },
+    {
+      "kind": "p",
+      "text": "關卡路線與故事保留在小鎮下方。建築標籤跟隨語言設定，版面適應手機與較大螢幕，減少動態設定會停止小鎮動畫。本次只改首頁，戰鬥平衡與種植倒數維持原樣。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "52b6c31cf9eae7d05d79b9e325d10a168c3c6a03497b1ad09cf6b716113a42f6",
+  "public_game_sha256": "9dd5e83dab40cc196e9767d430abcd7413965dec3fd86c610c16e0e1b9c27f15",
+  "public_build_id": 2017752,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>The home screen is now a little candy town, with a river, bridge, cottages, fields and strolling residents. Tap the adventure gate, Candy Shop, garden, picnic, pond or starlight landmark to reach the existing activities. Your seeds and petals come from your actual save.</p>\n<p>The stage route and story remain below the town. Building labels follow your language, the layout adapts to phones and larger screens, and reduced-motion settings stop the town animations. This update changes the home screen; combat balance and crop timers stay the same.</p>\n<h2>繁體中文</h2>\n<p>主頁變成一座糖果小鎮，加入河流、橋、小屋、田地與散步居民。點擊冒險城門、糖果屋、庭院、野餐、池塘或星光地標，就能進入原有玩法；種子與花瓣顯示真實存檔數量。</p>\n<p>關卡路線與故事保留在小鎮下方。建築標籤跟隨語言設定，版面適應手機與較大螢幕，減少動態設定會停止小鎮動畫。本次只改首頁，戰鬥平衡與種植倒數維持原樣。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1677436/v0974-welcome-to-your-candy-town",
+  "verified_at": "2026-09-26T00:51:19.359039+00:00"
+}
