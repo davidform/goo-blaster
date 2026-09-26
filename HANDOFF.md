@@ -1,7 +1,7 @@
 # GOO BLASTER 精簡交接
 
 ## 目前任務（2026-09-26）
-- 使用者要求首頁只作小鎮入口，各主題獨立頁面並有回首頁按鈕；v0.9.75已實作與瀏覽器驗證，正在交付。
+- 使用者要求首頁只作小鎮入口，各主題獨立頁面並有回首頁按鈕；v0.9.75已實作、驗證與三平台交付。
 - 分支codex/soft-world-ui；單一代理。只改頁面分層／導覽，不改戰鬥、倒數、存檔或價格。
 - HTML SHA b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c。
 - .codex-remote-attachments是使用者附件，禁止提交；私密收據／憑證／存檔僅_private。
@@ -26,14 +26,20 @@
 - Surface不跑全平行；CPU4不取代全平行。Android建置不能與效能並行。
 - 測試環境GOO_BROWSER_CHANNEL=msedge、PYTHONUTF8=1、NODE_PATH=_private/test-node/node_modules。
 
-## 交付待辦
-- 提交經驗證v75→APK稽核及固定android-test→itch公開核對→Pages→Devlog→介紹與截圖→清理→文件收據。
+## 交付完成與未完成
+- 遊戲commit 3b76d1b06020103e9a21dcabad7e902530d55c45已push：v0.9.75: separate the town home from themed game pages。
 - 固定APK：https://github.com/davidform/goo-blaster/releases/tag/android-test。
-- 目前公開仍v74，這版未發布前不要宣稱已更新。v74發布／驗證不要重做。
-- Pixel本次adb devices沒有裝置；最後實測v71／97100，不卸載／不清資料。
-- Chrome David已登入；已讀取遊戲編輯頁文案準備v75，尚未儲存。
-- 論壇原首文17090045／個人頁引用仍v64；前次編輯工具插入位置錯誤，重新載入未存。勿用新回覆取代。
-- 原25個AccessDenied舊暫存仍留存，不擅改ACL；更新後清理依白名單工具。
+- APK97500／0.9.75-test.0／同簽章；公開下載SHA 82e5ff9758b2e57aa644a8ac0a97d897a7aac32916ee53e924f2f77ae5d17b7c。
+- itch build2018298／upload19167726，完整原始payload一致（僅平台腳本後綴），實際池塘→回主頁→冒險→開始／暫停通過。
+- Pages f11efd29273d53d0ec674323c25ed0ce3408010d，Actions36216389644成功；公開完整SHA／實際開始／暫停皆核對。
+- 中英Devlog1677545已Published並record；tests/test_devlog_workflow.py九項PASS。
+- Devlog：https://davidform.itch.io/goo-blaster/devlog/1677545/v0975-a-little-room-for-every-adventure。
+- 公開介紹v75／分頁文案核對；新首頁30263551排第四，池塘30263552第五；前三戰鬥及歷史圖保留，實際縮圖已檢視。store/page-sync/v0.9.75.json。
+- 圖片排序長批次逾時後舊tab控制失效；新編輯頁核對已上傳圖片，未重複上傳，重新填文案及短批次排序後公開驗證完成。
+- 收據_private/mobile-test/itch-v75.json、pages-v75.json、published.json、devlog-v75-receipt.json。
+- cleanup盤點＋Apply完成，釋放13,456,431 bytes；保留v75／v74回退、存檔／簽章。25個AccessDenied仍保留，不改ACL。
+- Pixel本次adb devices沒有裝置；最後實測v71／97100，不卸載／不清資料，不宣稱手機已更新。
+- 論壇原首文17090045／個人頁引用最後核對仍v64；前次編輯工具插入位置錯誤，未儲存。v75未重試該編輯，不發新回覆取代；仍未完成。
 
 ## 範圍限制
 - 市場需求未驗證；docs-19-market-review.md與store/research/player-study-kit.md已備妥，不生成假訪談。

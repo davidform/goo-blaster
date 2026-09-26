@@ -1408,3 +1408,6 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 最終HTML SHA b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c。完整20260926-112822-457114-pages75-verified-full為81PASS／1FAIL；py_ui_fixes仍假設首頁有關卡圖，讀隱藏圖0/0。改為實際點城門後驗證原定位，115208-785775-pages75-edges-retry兩項PASS，validate_reports合併82/82。未降低門檻，原失敗保留。
 - 第二輪入口／版面／返回／不重疊／存檔隔離由上述edges驗證；第三輪115228-016840-pages75-cpu4，py_town_home／py_music_scenes／py_l10n_context全部PASS，CPU4。py_release_smoke另實跑PASS：全新progress1/coins0/meta{}，離線與瀏覽器重啟後progress9/coins456/meta.dmg2/selection8，0JS錯誤／0外部請求。
 - 新手py_test9第1／2／3關58／57／95秒通關。效能在全套最後獨立PASS：無同伴39.8／有同伴38.1FPS，損失4.1%。此為當批效能，不宣稱改善。Surface依既定限制未跑全平行，CPU4不取代全平行。
+- 交付：遊戲commit3b76d1b已push；APK97500同簽章，公開下載SHA82e5ff9758b2e57aa644a8ac0a97d897a7aac32916ee53e924f2f77ae5d17b7c。itch build2018298與Pages f11efd29273d53d0ec674323c25ed0ce3408010d（Actions36216389644）核對公開完整payload與實際開始／暫停，itch另驗證池塘返回。
+- Devlog1677545已Published，核對中英正文與v75附件並record；九項工作流程單元測試通過。遊戲介紹與新首頁／池塘截圖已公開，順序為三張原戰鬥圖後接30263551／30263552；原圖及實際公開縮圖目視通過。長批次排序曾逾時，恢復新編輯頁後核對既有附件、短批次操作並公開驗證，沒有重複上傳。
+- cleanup_local.ps1先盤點再Apply，釋放13,456,431 bytes，保留v75與v74、存檔與簽章。25個AccessDenied保留；Pixel無ADB裝置，未真機覆蓋安装；論壇／個人頁沿用v74未解決編輯問題，v75未重試，不能宣稱已同步。未進行全平行壓測及真人聽感／市場驗證。

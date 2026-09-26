@@ -1,0 +1,32 @@
+{
+  "build": "v0.9.75",
+  "game_sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+  "page": "https://davidform.itch.io/goo-blaster",
+  "description_updated": true,
+  "public_description_verified": true,
+  "first_five_image_ids": [
+    30141028,
+    30141027,
+    30141026,
+    30263551,
+    30263552
+  ],
+  "new_screenshots": [
+    {
+      "file": "store/screenshots/v0.9.75/town-en-390.png",
+      "original": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2MzU1MS5wbmc=/original/16FIHw.png",
+      "thumbnail": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2MzU1MS5wbmc=/347x500/Djhk%2FL.png"
+    },
+    {
+      "file": "store/screenshots/v0.9.75/page-pond-zh-Hant-390.png",
+      "original": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2MzU1Mi5wbmc=/original/%2BACCDL.png",
+      "thumbnail": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2MzU1Mi5wbmc=/347x500/6fy4YV.png"
+    }
+  ],
+  "thumbnail_visual_verified": true,
+  "selection": "Fresh-save real UI screenshots, original and public thumbnail inspected; original combat lead and historical images retained. New images are secondary interface evidence.",
+  "settings": "Price, visibility and identity preserved.",
+  "forum_updated": false,
+  "forum_reason": "Existing v74 editor insertion problem unresolved; v75 did not retry forum editing. Last verified post17090045/profile quote is v0.9.64. No new reply posted.",
+  "devlog": "https://davidform.itch.io/goo-blaster/devlog/1677545/v0975-a-little-room-for-every-adventure"
+}

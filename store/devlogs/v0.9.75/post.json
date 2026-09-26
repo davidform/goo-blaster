@@ -1,0 +1,43 @@
+{
+  "build": "v0.9.75",
+  "title": "v0.9.75 — A little room for every adventure",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "The town home is now a place to choose where to go. Tap a landmark to open its own activity screen. The adventure route and Play button are on the adventure page, and picnic, pond and starlight challenges have focused pages without the garden panels around them."
+    },
+    {
+      "kind": "p",
+      "text": "Every destination has a Main Menu button at the top. Each challenge brings its own animated icons and music when you enter. Returning home keeps your saved resources, medals and progress. Combat rules and crop timers are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "小鎮首頁現在專心讓你選擇目的地。點擊地標會切換到各自的遊戲頁；冒險路線與開始按鈕移到冒險頁，野餐、池塘及星光挑戰也各有乾淨的主題畫面，不再夾在庭院面板中。"
+    },
+    {
+      "kind": "p",
+      "text": "每個目的地頂端都有回主畫面按鈕，主題挑戰在進入時就會播放各自的音樂，搭配原有動態圖示。回首頁會保留已儲存資源、獎章與進度；戰鬥規則及作物倒數不變。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "7db3a8181eae4ac54f32849fa4d86ddb89759ba1b604e3179f5b73486c712630",
+  "public_game_sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+  "public_build_id": 2018298,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>The town home is now a place to choose where to go. Tap a landmark to open its own activity screen. The adventure route and Play button are on the adventure page, and picnic, pond and starlight challenges have focused pages without the garden panels around them.</p>\n<p>Every destination has a Main Menu button at the top. Each challenge brings its own animated icons and music when you enter. Returning home keeps your saved resources, medals and progress. Combat rules and crop timers are unchanged.</p>\n<h2>繁體中文</h2>\n<p>小鎮首頁現在專心讓你選擇目的地。點擊地標會切換到各自的遊戲頁；冒險路線與開始按鈕移到冒險頁，野餐、池塘及星光挑戰也各有乾淨的主題畫面，不再夾在庭院面板中。</p>\n<p>每個目的地頂端都有回主畫面按鈕，主題挑戰在進入時就會播放各自的音樂，搭配原有動態圖示。回首頁會保留已儲存資源、獎章與進度；戰鬥規則及作物倒數不變。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1677545/v0975-a-little-room-for-every-adventure",
+  "verified_at": "2026-09-26T04:05:59.950165+00:00"
+}
