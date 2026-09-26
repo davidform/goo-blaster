@@ -1,0 +1,23 @@
+{
+  "build": "v0.9.76",
+  "game_sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+  "page": "https://davidform.itch.io/goo-blaster",
+  "description_updated": true,
+  "public_description_verified": true,
+  "first_five_image_ids": [30141028,30141027,30141026,30265118,30265119],
+  "gallery_image_count": 24,
+  "new_screenshots": [
+    {"file":"store/screenshots/v0.9.76/garden-plant-zh-Hant-390-house0.png","original":"https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NTExOC5wbmc=/original/W9%2BGbu.png"},
+    {"file":"store/screenshots/v0.9.76/garden-farm-zh-Hant-390-house0.png","original":"https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NTExOS5wbmc=/original/CkMW%2BG.png"}
+  ],
+  "original_visual_verified": true,
+  "public_thumbnails_loaded": true,
+  "selection": "Fresh-save cottage level 0. Original combat lead and all historical gallery images retained. Upload completion order differed from file order; mapped by inspecting both public originals.",
+  "settings": "Price, visibility and identity preserved.",
+  "forum_updated": true,
+  "forum_post_id": 17090045,
+  "forum_url":"https://itch.io/t/6826201/50-stages-no-ads-no-gacha-works-offline-my-browser-roguelite-needs-breaking#post-17090045",
+  "forum_verified": "Opening post has two v0.9.76 references, corrected offline timer and contextual controls, no v0.9.64, original three combat image URLs plus new farm image. No new reply.",
+  "profile_quote_verified": "https://itch.io/profile/davidform#post-17090045 shows updated text and same four image URLs.",
+  "devlog": "https://davidform.itch.io/goo-blaster/devlog/1677628/v0976-garden-controls-where-you-need-them"
+}

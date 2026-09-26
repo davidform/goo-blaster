@@ -1,8 +1,8 @@
 # GOO BLASTER 精簡交接
 
-## 目前任務（2026-09-26，進行中）
+## 目前任務（2026-09-26，已交付）
 - 使用者要求重新研究雜亂介面：點田地後植物選項要就近出现，其他工作也需重新排版。
-- v0.9.76已實作，尚未發布；分支codex/soft-world-ui，單一代理。
+- v0.9.76已實作並完成三平台交付；分支codex/soft-world-ui，單一代理。
 - 最終HTML SHA 62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc。
 - v75已完成三平台交付，不重做；遊戲基準3b76d1b。
 - .codex-remote-attachments為使用者附件，禁止提交；私密收據／存檔／憑證仅_private。
@@ -33,15 +33,18 @@
 - 環境GOO_BROWSER_CHANNEL=msedge、PYTHONUTF8=1、NODE_PATH=_private/test-node/node_modules。
 - Surface不跑全平行；CPU4不替代全平行。效能單独、勿與Android建置並行。
 
-## 下一步與交付
-- 程式／截圖／測試已核對，接著提交及建置APK；尚未發布。
-- 檢查diff，commit Summary：v0.9.76: keep garden actions beside their objects。
-- 已授權完成APK→itch公開→Pages→中英Devlog→介紹／截圖／原論壇首文→清理。
-- 待發布文案_private/mobile-test/notes76-draft.json；不要在公開遊戲前宣稱已上線。
-- 論壇原首文17090045仍v64；本次診斷找到安全替換：contenteditable先Control+Home、Control+Shift+End，確認選取全文，再Backspace，DOM只剩1字元且hidden body空，再paste HTML。fill空字串無法清除，勿沿用。
-- 論壇診斷未Save，已reload還原公開原文；須v76公開後再原地更新，不另發留言。原文有3張combat圖需保留。
-- 固定APK：https://github.com/davidform/goo-blaster/releases/tag/android-test，目前仍97500；本次adb devices沒有裝置。
-- 既有25個AccessDenied清理殘留不更改ACL；先盤點再Apply，保留最新與上一版、存檔、簽章和證據。
+## 交付與下一步
+- 遊戲commit35d793ed0b16924715dbaec83b6477a0b98153e3已push；Summary：v0.9.76: keep garden actions beside their objects。
+- APK97600／0.9.76-test.0，同applicationId／簽章；公開下載SHA 582dfec36b5b56ae040e1f1a69e39641d7dc1c1b1970ae904289186e7c90b146。
+- 固定APK：https://github.com/davidform/goo-blaster/releases/tag/android-test；asset590052403。Pixel本次無ADB裝置，未覆蓋安裝；不卸載／清資料。
+- itch build2018613/upload19167726，公開完整payload及實際種植卡／廚房／開始暫停驗證，收據_private/mobile-test/itch-v76.json。
+- Pages部署d1b43724e1a619db94dc606d0ead19fb97fe02ad，Actions36222857750成功；完整HTML SHA及實際開始／暫停通過，pages-v76.json。
+- 中英Devlog1677628已Published並核對完整正文／附件；store/devlogs/v0.9.76/post.json已record，工作流程9項PASS。
+- store/page-sync/v0.9.76.json：介紹及圖庫已公開；前三張戰鬥圖保留，第4張30265118種植、第5張30265119庭院；24張歷史圖均保留。
+- 論壇原首文17090045已從v64更新v76，離線倒數／操作說明修正，保留3張combat加1張新庭院圖；個人頁引用同時核對，未另發留言。
+- 論壇編輯教訓：HTML貼上會變純字串；clipboard HTML亦未保留格式。最終reload原文，selectText精確選句→Backspace→輸入，逐段核對，保留圖片。不要整份fill或盲信貼上；某次typeText追加未取代，提交前已清除重複。
+- cleanup先盤點再Apply，釋放13,477,703 bytes，2項刪除／0失敗，25個AccessDenied略過不改ACL；保留v76與v75 APK、存檔、簽章、證據。
+- 本次排版實作／可運作發布項目已完成；下一步為使用者在手機確認新版操作體感，勿重做已完成發布。
 
 ## 範圍限制
 - 真人易用性、聽感、市場需求、母語潤稿、真機長時效能尚未驗證。

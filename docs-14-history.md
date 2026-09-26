@@ -1431,3 +1431,11 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 最後獨立效能PASS：無同伴44.0／有同伴43.7FPS，-0.7%，不是手機FPS證據。UI 44組與村莊六建設／九主題解題／音樂／存檔都已通過完整套件。
 
 - CPU4批次135430四項（context/world/quest/l10n）全PASS，同SHA；release_smoke新progress1/coins0/meta{}、離線/CPU4/真實瀏覽器重開還原progress9/coins456/meta.dmg2/selection8，0JS錯誤、0外部請求。Pixel本次無ADB裝置，不能宣稱已真機更新。
+
+- 交付commit35d793e已push。APK97600／0.9.76-test.0，原applicationId與簽章；公開SHA582dfec36b5b56ae040e1f1a69e39641d7dc1c1b1970ae904289186e7c90b146，固定android-test資產590052403核對通過。itch build2018613/upload19167726，公開完整payload同HTML SHA，CUA實際點田地操作卡／廚房隔離／開始暫停通過。
+- Pages部署d1b43724e1a619db94dc606d0ead19fb97fe02ad／Actions36222857750成功，公開完整HTML逐位元相同，CUA實際冒險→開始→Pause顯示pauseOverlay。最初click逾時後讀狀態確認仍遊玩，再點可見按鈕成功；不把逾時當完成。一次複合核對／收據／預檢指令被自動審查拒絕，已改成分開核對、明確記錄實際CUA證據及發布，無未解阻擋。
+- 中英Devlog1677628 Published，逐段正文／v76附件驗證並record，test_devlog_workflow九項PASS。HTML模式回可視編輯器後以pressSequentially空格再Backspace觸發同步，核對post[body]後才Save；最初直接HTML貼上變轉義字串，未提交並已修正。
+- 公開介紹／圖庫已同步，前三張戰鬥圖保留，30265118為種植卡、30265119為庭院總覽，共24張。多檔上傳完成順序與輸入順序相反，已實際打開兩張公開原圖辨識，不能用陣列順序猜檔案對應。
+- 先前未解的論壇首文17090045亦已修復：保留原三張戰鬥圖，精確選句更新v76、離線倒數、庭院工作頁及回饋問題，再由Choose image選已上傳庭院圖。公開首文與profile引用皆核對兩次版本文字、無v64與四張圖URL；未另發留言或改舊回覆。
+- 論壇編輯教訓：fill空字串未清空，HTML paste與clipboard HTML不保證富文字；最終使用原文selectText選句、明確Backspace刪除、再輸入，提交前查重。Upload image與Choose image是分頁按鈕，不是檔案輸入；選既有圖即可，兩次filechooser逾時未造成重複上傳。
+- cleanup_local先dry-run再Apply，釋放13,477,703 bytes（舊v74 APK與一份測試profile），2項移除／0失敗，25項AccessDenied保留；保留v76/v75 APK、所有進度與簽章。全平行壓測依Surface限制未執行，Pixel未連線，真人體驗與市場驗收仍待回饋。

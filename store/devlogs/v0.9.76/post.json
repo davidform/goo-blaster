@@ -1,0 +1,43 @@
+{
+  "build": "v0.9.76",
+  "title": "v0.9.76 — Garden controls where you need them",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "Tap a garden field to choose a plant right beside it. Crop icons, growing times and yields now appear together, without scrolling down to a separate form. Tap the cottage for its restoration controls, and use Cancel or tap outside to return to the scene."
+    },
+    {
+      "kind": "p",
+      "text": "The kitchen, village orders and decorating tools now have focused workspaces with a persistent category bar. Wide screens place the restoration goal beside the village. Your crops keep their timers, and your saved resources, progress and combat rules stay the same."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "點一下田地，就能在附近選擇植物。作物圖示、成長時間與產量集中在同一張操作卡，不必再拉到下方找表單。點小屋可直接操作修復，按取消或點卡片外側即可回到場景。"
+    },
+    {
+      "kind": "p",
+      "text": "廚房、村莊委託與佈置工具改成各自聚焦的工作頁，上方分類列可直接切換。寬螢幕將修復目標放在村莊旁；已種作物的倒數、存檔資源、進度與戰鬥規則維持原樣。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "01f25df2be9faed06cca63d3086e812ee27ae9439e4a61a105f6cc0a68c4d280",
+  "public_game_sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+  "public_build_id": 2018613,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>Tap a garden field to choose a plant right beside it. Crop icons, growing times and yields now appear together, without scrolling down to a separate form. Tap the cottage for its restoration controls, and use Cancel or tap outside to return to the scene.</p>\n<p>The kitchen, village orders and decorating tools now have focused workspaces with a persistent category bar. Wide screens place the restoration goal beside the village. Your crops keep their timers, and your saved resources, progress and combat rules stay the same.</p>\n<h2>繁體中文</h2>\n<p>點一下田地，就能在附近選擇植物。作物圖示、成長時間與產量集中在同一張操作卡，不必再拉到下方找表單。點小屋可直接操作修復，按取消或點卡片外側即可回到場景。</p>\n<p>廚房、村莊委託與佈置工具改成各自聚焦的工作頁，上方分類列可直接切換。寬螢幕將修復目標放在村莊旁；已種作物的倒數、存檔資源、進度與戰鬥規則維持原樣。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1677628/v0976-garden-controls-where-you-need-them",
+  "verified_at": "2026-09-26T06:23:51.461854+00:00"
+}
