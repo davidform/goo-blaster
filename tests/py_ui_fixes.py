@@ -229,8 +229,9 @@ with sync_playwright() as pw:
     check("銜接線數＝帶數-1", r["銜接線數"]==r["背景帶數"]-1, str(r["銜接線數"]))
     check("所有節點都在（＝總關數）", r["節點數"]==50, str(r["節點數"]))
     # 進度為第1關時，畫面應該捲到最底部（第1關的位置）
+    pg.evaluate("PROGRESS=1; SEL_IDX=0; showMenu()")
+    pg.locator('[data-place="gate"]').click()
     r2=pg.evaluate("""()=>{
-        PROGRESS=1; SEL_IDX=0; showMenu();
         const w=document.getElementById('galaxyWrap');
         return new Promise(res=>requestAnimationFrame(()=>requestAnimationFrame(()=>
             res({scrollTop:w.scrollTop, max:w.scrollHeight-w.clientHeight}))));

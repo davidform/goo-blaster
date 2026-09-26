@@ -60,7 +60,7 @@ const { chromium } = require('playwright');
     const errs=[]; p.on('pageerror',e=>errs.push(e.message));
     await p.goto(require('node:url').pathToFileURL(require('node:path').join(process.env.GOO_ROOT || require('node:path').resolve(__dirname, '..'), 'index.html')).href);
     await p.waitForTimeout(300);
-    await p.click('#btnPlay'); await p.waitForTimeout(300);
+    await p.click('#navAdventure'); await p.click('#btnPlay'); await p.waitForTimeout(300);
     R.touchRecovery = await p.evaluate(async ()=>{
       const cvs=document.getElementById('cv');
       const mk=(id,x,y)=>new Touch({identifier:id,target:cvs,clientX:x,clientY:y});

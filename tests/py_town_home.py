@@ -12,14 +12,25 @@ with sync_playwright() as pw:
  p.goto((Path(GAME_ROOT)/'index.html').as_uri());p.wait_for_function("document.querySelectorAll('.townPlace').length===6")
  initial=p.evaluate('JSON.stringify({COINS,META,PROGRESS,GARDEN})')
  assert p.evaluate('LANG')=='en'
- p.screenshot(path=str(ARTIFACTS/'town74-mobile.png'))
+ p.screenshot(path=str(ARTIFACTS/'town75-mobile.png'))
  for place,selector in [('shop','#shop'),('house','#gardenQuest'),('picnic','.festivalPanel.theme0'),('pond','.festivalPanel.theme1'),('stars','.festivalPanel.theme2')]:
   p.locator('[data-place="'+place+'"]').click();assert p.locator(selector).is_visible(),place
-  p.locator('#navAdventure').click();assert p.locator('#townHome').is_visible()
+  assert p.locator('#townHome').is_hidden();assert p.locator('#btnHome').is_visible()
+  if place in ['picnic','pond','stars']:
+   assert p.locator('#gardenViewport').is_hidden() and p.locator('#gardenQuest').is_hidden()
+   assert p.locator('.festivalThemes').is_hidden()
+   p.locator('#festivalStart').click();assert p.locator('.festivalPanel.playing').is_visible()
+   assert p.locator('.festivalHero').evaluate('e=>e.getBoundingClientRect().top>=document.querySelector("#btnHome").getBoundingClientRect().bottom'), 'Return header must not cover the activity'
+   assert p.locator('#garden').evaluate('e=>e.getBoundingClientRect().top>=document.querySelector("#btnHome").getBoundingClientRect().bottom')
+  p.locator('#btnHome').click();assert p.locator('#townHome').is_visible()
+  assert p.locator('#btnPlay').is_hidden() and p.locator('#galaxyWrap').is_hidden()
  assert p.evaluate('JSON.stringify({COINS,META,PROGRESS,GARDEN})')==initial
  p.locator('[data-place="gate"]').click();p.locator('#btnPlay').click();p.wait_for_function('G.running && G.t>1',timeout=120000)
  assert p.locator('#townHome').is_hidden()
- p.evaluate('G.running=false;showMenu()')
+ p.locator('#btnPause').click();p.locator('#btnQuitToMenu').click()
+ assert p.locator('#townHome').is_visible() and p.locator('#btnPlay').is_hidden()
+ p.locator('#navSettings').click();assert p.locator('#settings').is_visible()
+ p.locator('#btnHome').click();assert p.locator('#settings').is_hidden()
  checks=0
  for w,h in [(320,568),(390,844),(844,390),(1280,900)]:
   p.set_viewport_size({'width':w,'height':h})
@@ -29,12 +40,12 @@ with sync_playwright() as pw:
    assert p.locator('.townPlace').evaluate_all("es=>es.every(e=>e.getBoundingClientRect().width>=44 && e.getBoundingClientRect().height>=44 && e.scrollWidth<=e.clientWidth+1 && e.querySelector('span').textContent===e.getAttribute('aria-label'))"),(lang,w)
    assert p.evaluate("[...document.querySelectorAll('.townPlace')].every(e=>L10N[LANG][e.dataset.label] && e.querySelector('span').textContent===T(e.dataset.label))"),(lang,w)
    checks+=1
- p.evaluate("applyLanguage('en');renderStage()");p.locator('#menu').evaluate('e=>e.scrollTop=0');p.screenshot(path=str(ARTIFACTS/'town74-wide.png'))
+ p.evaluate("applyLanguage('en');renderStage()");p.locator('#menu').evaluate('e=>e.scrollTop=0');p.screenshot(path=str(ARTIFACTS/'town75-wide.png'))
  p.emulate_media(reduced_motion='reduce')
  assert p.locator('.townResident').first.evaluate("e=>getComputedStyle(e).animationName")=='none'
  p.evaluate('PROGRESS=51;COINS=999999;GARDEN.seeds=999;GARDEN.petals=999;showMenu()')
  assert p.locator('#townResources').inner_text().count('999')==2
- p.set_viewport_size({'width':390,'height':844});p.evaluate("applyLanguage('zh-Hant');renderStage()");p.locator('#menu').evaluate('e=>e.scrollTop=0');p.screenshot(path=str(ARTIFACTS/'town74-zh.png'))
+ p.set_viewport_size({'width':390,'height':844});p.evaluate("applyLanguage('zh-Hant');renderStage()");p.locator('#menu').evaluate('e=>e.scrollTop=0');p.screenshot(path=str(ARTIFACTS/'town75-zh.png'))
  assert not errors,errors
  print(json.dumps({'layouts':checks,'errors':errors,'cpu':os.environ.get('GOO_UI_CPU','1'),'save_unchanged_by_navigation':True}))
  b.close()

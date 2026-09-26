@@ -9,6 +9,7 @@ with sync_playwright() as pw:
  p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)))
  c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_READ_CPU','1'))})
  p.goto((Path(GAME_ROOT)/'index.html').as_uri())
+ p.locator('#navAdventure').click()
  goals=[]
  for lang in p.evaluate('Object.keys(L10N)'):
   p.set_viewport_size({'width':320,'height':568})
@@ -25,6 +26,7 @@ with sync_playwright() as pw:
  c.close();c=b.new_context(viewport={'width':390,'height':844});c.add_init_script('window.requestAnimationFrame=()=>0');p=c.new_page();p.on('pageerror',lambda e:errors.append(str(e)))
  c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_READ_CPU','1'))})
  p.goto((Path(GAME_ROOT)/'index.html').as_uri())
+ p.locator('#navAdventure').click()
  ranks=p.evaluate('''()=>{applyLanguage('en');const u=META_UPGRADES.find(x=>x.id==='dash');return [0,1,2,3].map(n=>{META={dash:n};LV_IDX=8;start();const before=G.P.dashCDmax;tryDash(1,0);return {n,cooldown:before,iframe:G.P.iframe,description:n?u.d(n-1):'',max:u.max};});}''')
  assert [round(x['cooldown'],2) for x in ranks]==[3,3,3,3],ranks
  assert all(x['iframe']==.42 and x['max']==3 for x in ranks),ranks

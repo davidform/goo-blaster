@@ -35,7 +35,7 @@ with sync_playwright() as pw:
  old=p.evaluate('JSON.stringify([GARDEN.seeds,GARDEN.petals,GARDEN.pantry,COINS,META])')
  rounds=0
  for theme in range(3):
-  p.locator(f'.festivalTheme[data-theme="{theme}"]').click();p.locator('#festivalStart').click()
+  p.locator("#btnHome").click();p.locator('[data-place="'+["picnic","pond","stars"][theme]+'"]').click();p.locator('#festivalStart').click()
   for level in range(1,4):
    if theme==0:
     seq=p.locator('.festivalSequence>span').evaluate_all('(es)=>es.map(e=>e.getAttribute("aria-label"))');foods=p.evaluate('[0,1,2].map(i=>T("gardenFood"+i))');answers=[foods.index(t) for t in seq]
@@ -75,12 +75,12 @@ with sync_playwright() as pw:
    for theme in range(3):
     p.evaluate('a=>{applyLanguage(a[0]);GF=null;GF_PICK=a[1];GARDEN_TAB="play";renderGarden()}',[lang,theme])
     assert p.locator('#gardenLife').evaluate('e=>e.scrollWidth<=e.clientWidth+1'),(lang,w,theme)
-    for button in p.locator('#gardenLife button').all():assert button.bounding_box()['height']>=44,(lang,w,theme)
+    for button in p.locator('#gardenLife button:visible').all():assert button.bounding_box()['height']>=44,(lang,w,theme)
     layouts+=1
  p.set_viewport_size({'width':390,'height':844});p.evaluate('applyLanguage("zh-Hant");GF=null;GF_PICK=2;GARDEN_TAB="play";renderGarden()')
  p.locator('#gardenLife').scroll_into_view_if_needed();p.screenshot(path=str(ARTIFACTS/'festival70-overview-zh.png'))
- p.emulate_media(reduced_motion='reduce');assert p.locator('#gardenPlay .iconTwinkle').evaluate('e=>getComputedStyle(e).animationName')=='none'
- p.emulate_media(reduced_motion='no-preference');initial=p.locator('#gardenPlay .iconTwinkle').evaluate('e=>getComputedStyle(e).opacity');p.wait_for_function('s=>getComputedStyle(document.querySelector("#gardenPlay .iconTwinkle")).opacity!==s',arg=initial)
+ p.emulate_media(reduced_motion='reduce');assert p.locator('.festivalHero .iconTwinkle').evaluate('e=>getComputedStyle(e).animationName')=='none'
+ p.emulate_media(reduced_motion='no-preference');initial=p.locator('.festivalHero .iconTwinkle').evaluate('e=>getComputedStyle(e).opacity');p.wait_for_function('s=>getComputedStyle(document.querySelector(".festivalHero .iconTwinkle")).opacity!==s',arg=initial)
  assert not errors,errors
  (ARTIFACTS/'festival70.json').write_text(json.dumps(dict(result,rounds=rounds,layouts=layouts,offline=True,free_play=True,reduced_motion=True,errors=errors),indent=2),encoding='utf-8');b.close()
 print('PASS 9 UI challenges, distinct boards, free replay, medals/themes, reload/backup/merge, 99 locale layouts, reduced motion')

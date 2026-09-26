@@ -15,6 +15,7 @@ with sync_playwright() as pw:
     rate=int(os.environ.get('GOO_L10N_CPU','1'))
     cdp.send('Emulation.setCPUThrottlingRate',{'rate':rate})
     page.goto((Path(GAME_ROOT)/'index.html').as_uri())
+    page.locator('#navAdventure').click()
     page.wait_for_function("document.querySelector('#stageInfo .ds').textContent.length>0")
     bounds=page.locator('#menu').evaluate('(e)=>({height:e.clientHeight,content:e.scrollHeight})')
     assert bounds['content']>bounds['height'],bounds

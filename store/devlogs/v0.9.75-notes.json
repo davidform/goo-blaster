@@ -1,0 +1,34 @@
+{
+  "build": "v0.9.75",
+  "title": "v0.9.75 — A little room for every adventure",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "The town home is now a place to choose where to go. Tap a landmark to open its own activity screen. The adventure route and Play button are on the adventure page, and picnic, pond and starlight challenges have focused pages without the garden panels around them."
+    },
+    {
+      "kind": "p",
+      "text": "Every destination has a Main Menu button at the top. Each challenge brings its own animated icons and music when you enter. Returning home keeps your saved resources, medals and progress. Combat rules and crop timers are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "小鎮首頁現在專心讓你選擇目的地。點擊地標會切換到各自的遊戲頁；冒險路線與開始按鈕移到冒險頁，野餐、池塘及星光挑戰也各有乾淨的主題畫面，不再夾在庭院面板中。"
+    },
+    {
+      "kind": "p",
+      "text": "每個目的地頂端都有回主畫面按鈕，主題挑戰在進入時就會播放各自的音樂，搭配原有動態圖示。回首頁會保留已儲存資源、獎章與進度；戰鬥規則及作物倒數不變。"
+    }
+  ]
+}

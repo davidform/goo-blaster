@@ -32,7 +32,7 @@ with sync_playwright() as pw:
   for lang in p.evaluate('Object.keys(L10N)'):
    p.evaluate('lang=>{applyLanguage(lang);start();queueCards(2);}',lang)
    assert p.locator('.buildSlots').evaluate('e=>e.textContent.length>5&&e.scrollWidth<=e.clientWidth+1'),(width,lang)
- p.set_viewport_size({'width':390,'height':844});p.evaluate('applyLanguage("zh-Hant");showMenu();PROGRESS=50;SEL_IDX=49;renderStage()');p.locator('#startingWeapon').select_option('yoyo');p.screenshot(path=str(ARTIFACTS/'build63-loadout.png'));p.locator('#btnPlay').click()
+ p.set_viewport_size({'width':390,'height':844});p.evaluate('applyLanguage("zh-Hant");showMenu();setHubPage("adventure");PROGRESS=50;SEL_IDX=49;renderStage()');p.locator('#startingWeapon').select_option('yoyo');p.screenshot(path=str(ARTIFACTS/'build63-loadout.png'));p.locator('#btnPlay').click()
  assert p.evaluate('G.P.wep.yoyo===5&&G.P.wep.graffiti===0')
  p.set_viewport_size({'width':390,'height':844});p.evaluate('applyLanguage("zh-Hant");start();queueCards(1)')
  p.screenshot(path=str(ARTIFACTS/'build63-cards.png'));assert not errors,errors

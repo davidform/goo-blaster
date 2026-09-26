@@ -440,6 +440,21 @@
 @media(max-width:350px){#townScene{aspect-ratio:.9;}.townPlace{width:27%;}.townPlace>span{font-size:10px;padding:4px;}#townGoal{gap:5px;padding:7px;}#townGoal strong{display:none;}#townResources span{font-size:10px;padding:4px;}}
 @media(prefers-reduced-motion:reduce){.townResident,.townWater,.townFlag{animation:none!important}.townPlace>svg{transition:none;}}
 
+/* v75: the town is a destination picker; activities own their screen. */
+#menu.homePage #stageInfo,#menu.homePage #galaxyWrap,#menu.homePage #btnPlay,#menu.homePage #chapterLabel{display:none}
+#menu:not(.homePage) #townHome{display:none}
+#menu.homePage #townGoal{display:none}
+@media(max-width:699px){#menu.homePage #townScene{aspect-ratio:auto;height:max(340px,calc(100dvh - 245px))}}
+#btnHome{position:absolute;top:0;left:0;right:0;z-index:9;height:calc(64px + env(safe-area-inset-top,0px));min-height:44px;max-width:none;width:100%;margin:0;padding:env(safe-area-inset-top,0px) 18px 0;text-align:left;border:0;border-bottom:1px solid var(--edge);border-radius:0;background:var(--paper)}
+#menu:not(.homePage),#garden,#shop,#settings{top:calc(64px + env(safe-area-inset-top,0px));padding-top:12px}
+#garden.themePage> :not(h1):not(#gardenLife){display:none!important}
+#garden.themePage #gardenLife{width:min(100%,680px);margin:0 auto}
+#garden.themePage #gardenLife>h2,#garden.themePage #gardenLife>.gardenLifeIntro,#garden.themePage .festivalThemes{display:none}
+#garden.themePage .festivalPanel{margin-top:0}
+#garden.themePage[data-activity="0"]{background:#f9eee0}
+#garden.themePage[data-activity="1"]{background:#e5f3f2}
+#garden.themePage[data-activity="2"]{background:#eee9f6}
+#menu:not(.homePage) .townResident,#menu:not(.homePage) .townWater,#menu:not(.homePage) .townFlag{animation-play-state:paused}
 </style>
 </head>
 <body>
@@ -448,7 +463,8 @@
   <div class="ui">
     <div id="cards" class="hide"><div class="lvtitle">升級！選一張</div></div>
 
-    <div id="menu" class="panel">
+    <button id="btnHome" class="btn small hide"></button>
+    <div id="menu" class="panel homePage">
       <h1>GOO BLASTER</h1>
       <div id="menuHeader"><span id="chapterLabel"></span><span id="menuWallet">🍬 <span id="coinTag">0</span></span></div>
       <section id="townHome"><div id="townScene"></div><div id="townResources"></div><div id="townGoal"></div></section>
@@ -569,7 +585,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.74';
+const BUILD='v0.9.75';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1117,7 +1133,7 @@ addEventListener('pageshow',onVisChange);
 function syncHubMusic(){
   if(G&&G.running)return;
   const garden=!document.getElementById('garden').classList.contains('hide');
-  const theme=garden?(GARDEN_TAB==='play'&&GF?['picnic','pond','starlight'][GF.theme]:'garden'):'cute';
+  const theme=garden?(GARDEN_TAB==='play'?['picnic','pond','starlight'][GF?GF.theme:GF_PICK]:'garden'):'cute';
   SFX.musicScene(theme);
 }
 function ensureMenuMusic(){
@@ -2301,13 +2317,17 @@ function gardenBuild(expected){
 }
 function gardenOpen(tab){
  GARDEN_TAB=tab;GV.selected=null;renderGarden();
+ if(tab==='play'){document.getElementById('garden').scrollTop=0;return;}
  document.getElementById(tab==='farm'?'gardenQuest':'gardenLife').scrollIntoView({block:'start',behavior:'smooth'});
 }
 function gardenNeedCrop(c){GARDEN_QUEST_CROP=c;gardenOpen('farm');}
 function gardenNoticeText(){return GARDEN_NOTICE?T(GARDEN_NOTICE.key,...GARDEN_NOTICE.args.map(a=>a&&typeof a==='object'?T(a.key):a)):'';}
 function gardenLifeRender(){
  if(SFX.isMusicOn()&&!document.getElementById('garden').classList.contains('hide'))syncHubMusic();
- const host=document.getElementById('garden');let root=document.getElementById('gardenLife');
+ const host=document.getElementById('garden');
+ host.classList.toggle('themePage',GARDEN_TAB==='play');host.dataset.activity=String(GF_PICK);
+ host.querySelector('h1').textContent=T(GARDEN_TAB==='play'?'festivalTheme'+GF_PICK:'gardenTitle');
+ let root=document.getElementById('gardenLife');
  if(!root){root=document.createElement('section');root.id='gardenLife';document.getElementById('gardenActions').after(root);}
  let beacon=document.getElementById('gardenLifeBeacon');
  if(!beacon){beacon=document.createElement('button');beacon.id='gardenLifeBeacon';document.getElementById('gardenQuest').after(beacon);beacon.onclick=()=>gardenOpen('community');}
@@ -2430,7 +2450,7 @@ function gardenFestivalRender(root){
  el('p',T('festivalRule'+GF_PICK),panel,'festivalRule');
  if(!GF){const levels=el('div',undefined,panel,'festivalLevels');for(let i=1;i<=3;i++){const b=btn(T('festivalLevel',i),()=>{GF_LEVEL=i;gardenLifeRender();},levels);b.dataset.level=i;b.disabled=i>GARDEN.medals[GF_PICK]+1;b.setAttribute('aria-pressed',String(GF_LEVEL===i));}
   const start=btn(T('festivalStart'),()=>gardenFestivalStart(GF_PICK,GF_LEVEL),panel);start.id='festivalStart';
-  if(GARDEN.medals[GF_PICK]){const style=btn(T('festivalStyle'),()=>{GARDEN.theme=GF_PICK;saveGarden();document.getElementById('gardenViewport').scrollIntoView({block:'start'});},panel);style.id='festivalStyle';}
+  if(GARDEN.medals[GF_PICK]){const style=btn(T('festivalStyle'),()=>{GARDEN.theme=GF_PICK;saveGarden();gardenOpen('farm');document.getElementById('gardenViewport').scrollIntoView({block:'start'});},panel);style.id='festivalStyle';}
   else el('p',T('festivalUnlock'),panel,'gardenLifeIntro');
  }else{
   el('small',T('festivalLevel',GF.level),panel);
@@ -3335,6 +3355,7 @@ function applyLanguage(code){
   document.querySelector('#navSettings .navLabel').textContent=T('navSettings');
   document.querySelector('#navGarden .navLabel').textContent=T('navGarden');
   document.getElementById('btnGarden').textContent=T('navGarden');
+  document.getElementById('btnHome').textContent='⌂ '+T('toMenu');
   renderGarden();
   setTxt('settingsTitle',T('navSettings')); setTxt('settingsHint',T('settingsHint'));
   setTxt('btnLang',T('languageLabel')+' · '+LANGS.find(l=>l.c===LANG).n);
@@ -5384,7 +5405,7 @@ function renderTown(){
  const places=[['gate','navAdventure',43,7],['house','gardenTitle',17,16],['shop','shopTitle',12,48],['picnic','festivalTheme0',48,36],['pond','festivalTheme1',68,63],['stars','festivalTheme2',34,69]];
  for(const [kind,key,x,y] of places){const b=document.createElement('button');b.className='townPlace';b.dataset.place=kind;b.dataset.label=key;b.style.left=x+'%';b.style.top=y+'%';b.innerHTML=townBuilding(kind)+'<span></span>';b.onclick=()=>{
  SFX.unlock();SFX.level();
- if(kind==='gate'){document.getElementById('stageInfo').scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});return;}
+ if(kind==='gate'){setHubPage('adventure');return;}
  if(kind==='shop'){showShop();return;}
  setHubPage('garden');
  if(kind==='house'){gardenOpen('farm');return;}
@@ -5595,7 +5616,7 @@ function showMenu(){
   overEl.classList.add('hide'); cardsEl.classList.add('hide');
   document.getElementById('shop').classList.add('hide');
   menuEl.classList.remove('hide');
-  setHubPage('adventure');
+  setHubPage('home');
   document.getElementById('confirmBox').classList.add('hide');   // 保險：不要帶著上次沒關掉的確認彈窗回來
   document.getElementById('langBox').classList.add('hide');
   document.getElementById('coinTag').textContent=Math.round(COINS);
@@ -5641,12 +5662,18 @@ function refreshSoundLabel(){
   b.setAttribute('aria-pressed',String(!SFX.isMuted()));
 }
 function setHubPage(page){
-  menuEl.classList.toggle('hide',page!=='adventure');
+  menuEl.classList.toggle('hide',page!=='adventure'&&page!=='home');
+  menuEl.classList.toggle('homePage',page==='home');
+  document.getElementById('btnHome').classList.toggle('hide',page==='home');
+  document.getElementById('btnHome').textContent='⌂ '+T('toMenu');
+  if(page==='home'){GF=null;GARDEN_TAB='farm';}
+  for(const id of ['menu','garden','settings'])document.getElementById(id).scrollTop=0;
   shopEl.classList.toggle('hide',page!=='upgrades');
   document.getElementById('settings').classList.toggle('hide',page!=='settings');
   document.getElementById('garden').classList.toggle('hide',page!=='garden');
   if(page==='garden')renderGarden();
-  if(page==='adventure')renderTown();
+  if(page==='adventure')renderStage();
+  if(page==='home')renderTown();
   document.getElementById('hubNav').classList.remove('hide');
   for(const [id,dest] of [['navAdventure','adventure'],['btnShop','upgrades'],['navGarden','garden'],['navSettings','settings']])
     document.getElementById(id).setAttribute('aria-current',page===dest?'page':'false');
@@ -5658,6 +5685,7 @@ function showShop(){
   overEl.classList.add('hide');setHubPage('upgrades');SFX.unlock();
 }
 function start(){
+  document.getElementById('btnHome').classList.add('hide');
   document.getElementById('garden').classList.add('hide');
   document.getElementById('hubNav').classList.add('hide');
   document.getElementById('settings').classList.add('hide');
@@ -5806,8 +5834,9 @@ document.getElementById('btnLockBuy').onclick=()=>{
 };
 lockBoxEl.onclick=e=>{ if(e.target===lockBoxEl) lockBoxEl.classList.add('hide'); };
 document.getElementById('btnShop').onclick=showShop;
+document.getElementById('btnHome').onclick=()=>{SFX.unlock();setHubPage('home');};
 document.getElementById('navAdventure').onclick=()=>setHubPage('adventure');
-document.getElementById('navGarden').onclick=()=>setHubPage('garden');
+document.getElementById('navGarden').onclick=()=>{GARDEN_TAB='farm';setHubPage('garden');};
 document.getElementById('gardenUpgrade').onclick=gardenUpgrade;
 document.getElementById('navSettings').onclick=()=>setHubPage('settings');
 document.getElementById('btnSound').onclick=()=>{SFX.toggle();refreshSoundLabel();};
@@ -5990,6 +6019,7 @@ applyLanguage();          // v0.9.19：套用偵測/存檔的語言，再畫主�
 // 很少有人真的「關掉再重開」。
 syncSelToFrontier();
 renderStage();
+setHubPage('home');
 // v0.9.28：主選單先用 localStorage 的內容畫出來（純網頁版到這裡就結束了），
 // 再非同步把原生儲存的存檔讀進來合併、必要時重畫一次。
 // 這樣不論有沒有原生外殼，開機都不會有等待畫面。

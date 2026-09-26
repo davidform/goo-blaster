@@ -21,6 +21,8 @@ with sync_playwright() as pw:
     page.screenshot(path=str(ARTIFACTS / 'soft-menu.png'))
     # Select an unlocked earlier stage; returning through navigation must not jump to frontier.
     page.evaluate('PROGRESS=12; showMenu(); SEL_IDX=3; renderStage()')
+    page.locator('#navAdventure').click()
+    page.wait_for_function('document.querySelector("#galaxyWrap").scrollTop>0')
     selected = page.evaluate('SEL_IDX')
     map_y = page.locator('#galaxyWrap').evaluate('(el)=>el.scrollTop')
     page.locator('#btnShop').click()
@@ -68,6 +70,7 @@ with sync_playwright() as pw:
     page.set_viewport_size({'width':390,'height':844})
     page.evaluate("applyLanguage('en'); PROGRESS=1; showMenu()")
     assert page.evaluate('JSON.stringify({META,COINS,PROGRESS})') == initial
+    page.locator('#navAdventure').click()
     page.locator('#btnPlay').click()
     assert page.locator('#hubNav').is_hidden()
     assert page.locator('#settings').is_hidden()

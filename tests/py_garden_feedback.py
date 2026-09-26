@@ -25,7 +25,7 @@ with sync_playwright() as pw:
  assert p.evaluate('GARDEN.outings[0]===1')
  p.evaluate('gardenFestivalAct(0);gardenFestivalWin()');assert p.evaluate('GARDEN.outings[0]===1')
  p.screenshot(path=str(ARTIFACTS/'feedback71-picnic.png'))
- p.locator('#festivalChoose').click();p.locator('[data-theme="1"]').click();p.locator('#festivalStart').click()
+ p.locator('#festivalChoose').click();p.locator("#btnHome").click();p.locator('[data-place="pond"]').click();p.locator('#festivalStart').click()
  assert p.locator('[data-reachable=true]').count()==2
  assert p.locator('.festivalGrid .pearl').count()==3
  assert p.evaluate('JSON.stringify(GF)')==p.evaluate('(()=>{gardenFestivalAct(24);return JSON.stringify(GF)})()')
@@ -37,7 +37,7 @@ with sync_playwright() as pw:
  assert p.locator('.festivalCell').count()==25 and p.locator('.festivalCell:enabled').count()==0
  assert p.locator('.festivalPearls [data-collected=true]').count()==3
  p.screenshot(path=str(ARTIFACTS/'feedback71-pond.png'))
- p.locator('#festivalChoose').click();p.locator('[data-theme="2"]').click();p.locator('#festivalStart').click()
+ p.locator('#festivalChoose').click();p.locator("#btnHome").click();p.locator('[data-place="stars"]').click();p.locator('#festivalStart').click()
  p.locator('[data-cell="0"]').click()
  assert p.locator('[data-linked=true]').count()==3
  assert p.locator('.festivalStatus').inner_text()==p.evaluate('T("festivalLit",GF.lights.filter(Boolean).length)')

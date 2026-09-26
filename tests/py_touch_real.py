@@ -31,6 +31,7 @@ def run(scheme):
         pg.on("pageerror", lambda e: errs.append(str(e)))
         pg.goto(url)
         pg.wait_for_timeout(600)
+        pg.locator('#navAdventure').click()
         pg.click("#btnPlay", no_wait_after=True)   # 單頁遊戲不會導航，等它只會白等到逾時
         pg.wait_for_timeout(800)
 

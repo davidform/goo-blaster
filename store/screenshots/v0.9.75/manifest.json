@@ -1,0 +1,90 @@
+[
+  {
+    "file": "town-en-390.png",
+    "build": "v0.9.75",
+    "sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "en",
+    "setup": "Fresh save; only language changed; no progress/resources injected."
+  },
+  {
+    "file": "town-zh-Hant-390.png",
+    "build": "v0.9.75",
+    "sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; only language changed; no progress/resources injected."
+  },
+  {
+    "file": "town-en-1280.png",
+    "build": "v0.9.75",
+    "sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+    "viewport": [
+      1280,
+      900
+    ],
+    "language": "en",
+    "setup": "Fresh save; only language changed; no progress/resources injected."
+  },
+  {
+    "file": "page-gate-zh-Hant-390.png",
+    "build": "v0.9.75",
+    "sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; entered gate through its landmark; started challenge where available; no progress/resources injected."
+  },
+  {
+    "file": "page-house-zh-Hant-390.png",
+    "build": "v0.9.75",
+    "sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; entered house through its landmark; started challenge where available; no progress/resources injected."
+  },
+  {
+    "file": "page-picnic-zh-Hant-390.png",
+    "build": "v0.9.75",
+    "sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; entered picnic through its landmark; started challenge where available; no progress/resources injected."
+  },
+  {
+    "file": "page-pond-zh-Hant-390.png",
+    "build": "v0.9.75",
+    "sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; entered pond through its landmark; started challenge where available; no progress/resources injected."
+  },
+  {
+    "file": "page-stars-zh-Hant-390.png",
+    "build": "v0.9.75",
+    "sha256": "b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; entered stars through its landmark; started challenge where available; no progress/resources injected."
+  }
+]

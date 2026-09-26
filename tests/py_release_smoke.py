@@ -29,6 +29,7 @@ with sync_playwright() as pw:
     initial = page.evaluate('({build:BUILD, progress:PROGRESS, coins:COINS, meta:META})')
     assert initial['progress'] == 1 and initial['coins'] == 0 and not initial['meta'], initial
     page.screenshot(path=str(ARTIFACTS / 'release-offline-menu.png'))
+    page.locator('#navAdventure').click()
     page.click('#btnPlay')
     page.mouse.move(195, 500)
     page.mouse.down()

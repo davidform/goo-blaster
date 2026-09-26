@@ -8,6 +8,7 @@ with sync_playwright() as pw:
  errors=[];p.on('pageerror',lambda e:errors.append(str(e)))
  p.context.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_WORLD_CPU','1'))})
  p.goto((Path(GAME_ROOT)/'index.html').as_uri())
+ p.locator('#navAdventure').click()
  for lang in p.evaluate('Object.keys(L10N)'):
   texts=p.evaluate('lang=>{applyLanguage(lang);return LEVELS.map((_,i)=>stageStory(i));}',lang)
   assert len(set(texts))==50 and all(len(s)>30 for s in texts),(lang,texts)
@@ -22,7 +23,7 @@ with sync_playwright() as pw:
  p.set_viewport_size({'width':390,'height':844})
  p.evaluate("applyLanguage('zh-Hant');PROGRESS=50")
  for i in [0,14,24,49]:
-  p.evaluate('i=>{SEL_IDX=i;showMenu();SEL_IDX=i;renderStage();document.querySelector("#stageInfo details").open=true;}',i)
+  p.evaluate('i=>{SEL_IDX=i;showMenu();setHubPage("adventure");SEL_IDX=i;renderStage();document.querySelector("#stageInfo details").open=true;}',i)
   p.wait_for_function('''i=>{const w=document.querySelector('#galaxyWrap'),n=document.querySelectorAll('.gnode')[i];return Math.abs(w.scrollTop-Math.min(w.scrollHeight-w.clientHeight,Math.max(0,n.offsetTop-w.clientHeight/2)))<2;}''',arg=i)
   p.locator('#galaxyWrap').scroll_into_view_if_needed()
   p.screenshot(path=str(ARTIFACTS/f'world-stage-{i+1}.png'))
@@ -36,6 +37,7 @@ with sync_playwright() as pw:
  # Freeze the RAF only in a new test context; paint the real rendering functions.
  c=b.new_context(viewport={'width':240,'height':240});c.add_init_script('window.requestAnimationFrame=()=>0')
  q=c.new_page();q.on('pageerror',lambda e:errors.append(str(e)));q.goto((Path(GAME_ROOT)/'index.html').as_uri())
+ p.locator('#navAdventure').click()
  specs=[];hashes=[]
  for lv in range(5,51,5):
   spec=q.evaluate('''lv=>{

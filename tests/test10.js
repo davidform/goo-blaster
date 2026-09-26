@@ -29,7 +29,7 @@ const { chromium } = require('playwright');
   const R={};
   R.touchListIterable = await p.evaluate(()=>typeof TouchList.prototype[Symbol.iterator]);
 
-  await p.click('#btnPlay'); await p.waitForTimeout(400);
+  await p.click('#navAdventure'); await p.click('#btnPlay'); await p.waitForTimeout(400);
 
   // 用真的 TouchEvent（非可迭代 TouchList）驅動移動
   R.move = await p.evaluate(async ()=>{

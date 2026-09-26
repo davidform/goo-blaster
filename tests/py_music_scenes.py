@@ -22,12 +22,12 @@ with sync_playwright() as pw:
     p.locator('#gardenPlay').click()
     scenes=[]
     for theme,name in enumerate(['picnic','pond','starlight']):
-        p.locator(f'[data-theme="{theme}"]').click();p.locator('#festivalStart').click()
+        p.locator("#btnHome").click();p.locator('[data-place="'+["picnic","pond","stars"][theme]+'"]').click();p.locator('#festivalStart').click()
         assert p.evaluate('SFX.musicDebug().theme')==name
         scenes.append(p.evaluate('SFX.musicDebug()'))
         before=p.evaluate('__created');p.wait_for_function('n=>__created>n',arg=before,timeout=15000)
         p.locator('#festivalChoose').click()
-        assert p.evaluate('SFX.musicDebug().theme')=='garden'
+        assert p.evaluate('SFX.musicDebug().theme')==name
     p.locator('#navAdventure').click();assert p.evaluate('SFX.musicDebug().theme')=='cute'
     p.locator('#btnPlay').click()
     assert p.evaluate('SFX.musicDebug().theme')=='battle'

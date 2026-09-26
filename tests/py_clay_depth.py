@@ -13,6 +13,7 @@ with sync_playwright() as pw:
     page.on('pageerror',lambda e:errors.append(str(e)))
     context.new_cdp_session(page).send('Emulation.setCPUThrottlingRate',{'rate':int(os.environ.get('GOO_UI_CPU','1'))})
     page.goto((Path(GAME_ROOT)/'index.html').as_uri())
+    page.locator('#navAdventure').click()
     page.click('#btnPlay')
     page.keyboard.down('ArrowRight')
     page.wait_for_function('G.running && G.t>1',timeout=60000)
