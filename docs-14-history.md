@@ -1451,3 +1451,8 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 完整153126-tabs77-full：84/84全PASS，遊戲SHA未改。py_test9前三關61／69／93秒通關，0JS錯誤；長模擬test9 411.2秒PASS。最後獨立效能88.3秒PASS，當批無同伴35.2／有同伴36.8FPS（+4.5%為量測波動，不宣稱效能改善）。
 
 - 第三輪155806-tabs77-cpu4：264次切換125.7秒PASS；release_smoke另實跑，初始progress1/coins0/meta{}，CPU4離線及真實瀏覽器重開還原progress9/coins456/meta.dmg2/selection8，0JS錯誤／0外部請求。全平行依Surface限制未跑，Pixel無連線。
+
+- 交付commit b7c9a83已push；APK97700／0.9.77-test.0，同applicationId／簽章，公開下載SHA64e0debc8444fda5815f225d5a615bb37b220e1fcb109c0eae56c961bdd6b861，資產590222801核對通過。itch build2018911/upload19167726公開完整payload相同，CUA四分類逐一實測選中色及開始／暫停PASS。
+- Pages部署62a0fc020e1affd70e12800e6c3853b67a17b93b／Actions36228689338成功；完整HTML SHA一致，公開v77分類與開始／暫停通過。中英Devlog1677699 Published，完整正文／單一v77附件核對並record，九項工作流程測試PASS。
+- 商店介紹更新版本與選取色說明，截圖30267050為新存檔實際佈置選中，放在原三張combat後，保留歷史圖片。原圖實際開啟目視、公開縮圖載入通過；論壇17090045原地更新、profile引用核對文字與新圖。編輯器選句替換仍曾留下舊句，提交前核對、獨立選舊句刪除後再Save，沒有重複發文。
+- cleanup先盘點再Apply，釋放13,460,377 bytes，2項移除／0失敗／25項AccessDenied略過，保留v77/v76 APK與所有進度簽章證據。Pixel未連線／全平行未執行，不宣稱真機正式驗收。

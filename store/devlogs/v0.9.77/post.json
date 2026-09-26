@@ -1,0 +1,35 @@
+{
+  "build": "v0.9.77",
+  "title": "v0.9.77 — Garden tabs follow your selection",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "The garden category buttons now highlight the page you are viewing. Switch between fields, kitchen, village orders and decorations: the selected button turns green and the others return to beige. This fixes the field button staying green when another page was open. Your saved progress and crop timers are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "庭院分類按鈕現在會跟著目前頁面變色。切換照顧田地、甜點廚房、村莊與委託、佈置與訪客時，選中的按鈕會變綠，其餘恢復米色。修正已切換頁面、田地按鈕卻仍保持綠色的問題；存檔進度與作物倒數不變。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "4c8f6d458ec452bcb632f730d577bc405b13f6379b8277bd8b3bff67fe4af31b",
+  "public_game_sha256": "9d3d464837474274aa1df2fabed6ba0b49d4a09ad0e2c829b8f3ffc024e74627",
+  "public_build_id": 2018911,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>The garden category buttons now highlight the page you are viewing. Switch between fields, kitchen, village orders and decorations: the selected button turns green and the others return to beige. This fixes the field button staying green when another page was open. Your saved progress and crop timers are unchanged.</p>\n<h2>繁體中文</h2>\n<p>庭院分類按鈕現在會跟著目前頁面變色。切換照顧田地、甜點廚房、村莊與委託、佈置與訪客時，選中的按鈕會變綠，其餘恢復米色。修正已切換頁面、田地按鈕卻仍保持綠色的問題；存檔進度與作物倒數不變。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1677699/v0977-garden-tabs-follow-your-selection",
+  "verified_at": "2026-09-26T08:12:58.931928+00:00"
+}

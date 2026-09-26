@@ -1,6 +1,6 @@
 # GOO BLASTER 精簡交接
 
-## 目前任務（2026-09-26，進行中）
+## 目前任務（2026-09-26，已交付）
 - 使用者回報：切到佈置與訪客，綠色仍停在照顧田地；附67707.jpg。
 - 本次v0.9.77只修四分類選取狀態與顏色，不改玩法／存檔／倒數／字串。
 - 分支codex/soft-world-ui；接手安全pull完成，基準5d5af44；原本僅未追蹤使用者附件。
@@ -25,16 +25,19 @@
 - 環境GOO_BROWSER_CHANNEL=msedge、PYTHONUTF8=1、NODE_PATH=_private/test-node/node_modules。
 - Surface不跑全平行，CPU4不取代全平行；建置不與效能測試同跑。
 
-## 待完成交付
-- 完整測試及CPU4／離線完成；commit：v0.9.77: sync garden category selection colours。
-- 已授權APK→itch公開→Pages→中英Devlog→介紹／截圖／原論壇首文→清理。
-- 私有文案_private/mobile-test/notes77-draft.json；尚未公開，不能宣稱v77已發布。
-- 固定APK：https://github.com/davidform/goo-blaster/releases/tag/android-test；目前v76/97600，v77待建置。
+## 已完成交付
+- 完整測試及CPU4／離線完成；commit b7c9a83826aa924a0d9a09adb2b8046cf47fc62a已push：v0.9.77: sync garden category selection colours。
+- APK、itch、Pages、中英Devlog、介紹／截圖／原論壇首文及清理均已完成核對。
+- Devlog1677699已Published，正文／v77附件核對並record；工作流程9项PASS。
+- 固定APK：https://github.com/davidform/goo-blaster/releases/tag/android-test；目前v77/97700，公開APK SHA64e0debc8444fda5815f225d5a615bb37b220e1fcb109c0eae56c961bdd6b861，同簽章。
 - 本次ADB無裝置；不宣稱Pixel已更新，不卸載／清資料。
 - v76三平台、Devlog1677628、介紹／論壇17090045及profile引用都已完成，不重做歷史發布。
 - 論壇編輯需selectText精確選句→Backspace→輸入→查重；HTML貼上未保留格式，不能整份fill。
-- 上傳圖片完成順序不可推測檔案對應，需開實際公開原圖核對；保留前三張combat與歷史圖片。
-- 清理先dry-run再Apply；既有25項AccessDenied不改ACL，保留最新＋上一版APK與存檔簽章證據。
+- itch build2018911/upload19167726，完整payload與四分類實際顏色／開始暫停核對。
+- Pages部署62a0fc020e1affd70e12800e6c3853b67a17b93b，Actions36228689338成功，完整SHA及實際分類／開始暫停通過。
+- 新截圖30267050位於三張原combat後；公開原圖目視通過，商店縮圖載入；論壇原首文與profile正文及新圖已核對，未新增留言。
+- 清理先dry-run再Apply，實際釋放13,460,377 bytes，2項刪除／0失敗／25項AccessDenied略過不改ACL，保留v77＋v76 APK與存檔簽章證據。
+- 本次修正與可運作交付皆完成，下一步待使用者手機體驗回饋，不重跑歷史發布。
 
 ## 限制
 - 真人易用性、聽感、市場需求、母語潤稿、真機長時效能仍未驗證。
