@@ -455,6 +455,39 @@
 #garden.themePage[data-activity="1"]{background:#e5f3f2}
 #garden.themePage[data-activity="2"]{background:#eee9f6}
 #menu:not(.homePage) .townResident,#menu:not(.homePage) .townWater,#menu:not(.homePage) .townFlag{animation-play-state:paused}
+
+/* v76: contextual field/cottage controls and focused village workspaces. */
+#gardenContext{position:fixed;inset:auto;margin:0;width:330px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 152px);overflow:auto;padding:14px;border:1px solid #a6b69c;border-radius:20px;background:#fff9e9;color:#455c4b;box-shadow:0 12px 36px #263d4240;text-align:left;}
+#gardenContext::backdrop{background:transparent;}
+#gardenContextHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+#gardenContextClose{min-width:64px;min-height:44px;border:1px solid #c5c9ae;border-radius:12px;background:#e8ecd9;color:inherit;font:inherit;font-size:12px;padding:8px;}
+#gardenContext .gardenPlot{border:0;padding:0;background:none;display:block!important;}
+#gardenContext .gardenPlot[style*="none"]{display:none!important;}
+#gardenContext .gardenPlantArt{display:none;}
+#gardenContext .gardenPlotBody>strong{display:none;}
+#gardenContext .btn{width:100%;margin:10px 0 0;}
+.gardenCropChoices{display:grid;gap:6px;}
+.gardenCropChoice{display:grid;grid-template-columns:44px 1fr;align-items:center;text-align:left;gap:8px;width:100%;min-height:56px;border:1px solid #cbd1b7;border-radius:12px;background:#f5f1df;color:inherit;padding:6px;font:inherit;font-size:13px;cursor:pointer;}
+.gardenCropChoice svg{width:44px;height:44px;grid-row:1 / 3;}.gardenCropChoice small{font-size:11px;line-height:1.4;}.gardenCropChoice[aria-pressed=true]{border:2px solid #64866b;background:#e1ecd4;}
+.gardenSpot[aria-expanded=true]{outline:3px solid #6f8970;outline-offset:3px;}
+#gardenContextStock,#gardenContextPace{font-size:12px;line-height:1.5;margin:8px 0;}
+#gardenActions{position:sticky;top:0;z-index:4;background:#f3efdf;order:0;grid-template-columns:repeat(4,minmax(0,1fr));max-width:850px;}
+#gardenActions .gardenMotion{width:28px;height:28px;}#garden #gardenActions button{min-width:0;font-size:11px;flex-direction:column;text-align:center;justify-content:center;padding:6px;gap:4px;min-height:72px;}
+#gardenPlay{display:none!important;}#gardenLifeBeacon{display:none;}
+#garden[data-workspace=kitchen]>:not(h1):not(#gardenActions):not(#gardenLife):not(#gardenContext),#garden[data-workspace=community]>:not(h1):not(#gardenActions):not(#gardenLife):not(#gardenContext),#garden[data-workspace=decorate]>:not(h1):not(#gardenActions):not(#gardenWorkshop):not(#gardenContext){display:none!important;}
+#garden[data-workspace=decorate] #gardenWorkshop>summary{display:none;}
+#garden:not([data-workspace=decorate])>#gardenWorkshop{display:none;}
+#gardenHelp{display:none;}#gardenLife>h2{display:none;}
+#gardenQuest{padding:10px;}.gardenQuestTop canvas{width:56px;height:56px;}#gardenQuestSteps{display:none;}#gardenPace{display:block;font-size:11px;margin:4px 0;}
+#gardenViewport{height:clamp(300px,45vh,480px);}
+@media(min-width:800px){#gardenLife{max-width:850px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}#gardenLife>h2,#gardenLife>.gardenLifeIntro,#gardenLife>.gardenLifeNotice,#gardenLife>.gardenPantry,#gardenLife>.gardenProject,#gardenLife>h3,#gardenLife>button{grid-column:1 / -1;}#garden.themePage #gardenLife{display:block;}}
+
+@media(min-width:1000px){
+#garden[data-workspace=farm]{display:grid;grid-template-columns:minmax(240px,300px) minmax(0,850px);align-content:start;align-items:start;justify-content:center;gap:14px;}
+#garden[data-workspace=farm]>h1,#garden[data-workspace=farm]>#gardenActions,#garden[data-workspace=farm]>#gardenStock{grid-column:1 / -1;justify-self:center;}
+#garden[data-workspace=farm]>#gardenQuest{grid-column:1;grid-row:4;}
+#garden[data-workspace=farm]>#gardenViewport{grid-column:2;grid-row:4;height:clamp(360px,65vh,650px);}
+}
 </style>
 </head>
 <body>
@@ -585,7 +618,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.75';
+const BUILD='v0.9.76';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -2316,17 +2349,19 @@ function gardenBuild(expected){
  GARDEN.projects++;GARDEN_NOTICE={key:'gardenBuilt',args:[{key:'gardenBuild'+expected}]};saveGarden();return true;
 }
 function gardenOpen(tab){
- GARDEN_TAB=tab;GV.selected=null;renderGarden();
+ gardenContextClose();GARDEN_TAB=tab;GV.selected=null;renderGarden();
  if(tab==='play'){document.getElementById('garden').scrollTop=0;return;}
- document.getElementById(tab==='farm'?'gardenQuest':'gardenLife').scrollIntoView({block:'start',behavior:'smooth'});
+ document.getElementById('garden').scrollTop=0;
 }
 function gardenNeedCrop(c){GARDEN_QUEST_CROP=c;gardenOpen('farm');}
 function gardenNoticeText(){return GARDEN_NOTICE?T(GARDEN_NOTICE.key,...GARDEN_NOTICE.args.map(a=>a&&typeof a==='object'?T(a.key):a)):'';}
 function gardenLifeRender(){
  if(SFX.isMusicOn()&&!document.getElementById('garden').classList.contains('hide'))syncHubMusic();
  const host=document.getElementById('garden');
+ host.dataset.workspace=GARDEN_TAB;
+ if(GARDEN_TAB!=='farm')gardenContextClose();
  host.classList.toggle('themePage',GARDEN_TAB==='play');host.dataset.activity=String(GF_PICK);
- host.querySelector('h1').textContent=T(GARDEN_TAB==='play'?'festivalTheme'+GF_PICK:'gardenTitle');
+ host.querySelector('h1').textContent=T(GARDEN_TAB==='play'?'festivalTheme'+GF_PICK:GARDEN_TAB==='kitchen'?'gardenKitchen':GARDEN_TAB==='community'?'gardenCommunity':GARDEN_TAB==='decorate'?'gardenArrange':'gardenTitle');
  let root=document.getElementById('gardenLife');
  if(!root){root=document.createElement('section');root.id='gardenLife';document.getElementById('gardenActions').after(root);}
  let beacon=document.getElementById('gardenLifeBeacon');
@@ -2334,7 +2369,7 @@ function gardenLifeRender(){
  const ready=GARDEN_RECIPES.filter((_,i)=>i<=GARDEN.house&&GARDEN.pantry[i+3]>=gardenOrder(i).count).length;
  beacon.textContent=T('gardenCommunity')+' → '+T('gardenVillageStatus',GARDEN.stamps,GARDEN.projects,ready);
  for(const [id,tab] of [['gardenFarm','farm'],['gardenKitchen','kitchen'],['gardenCommunity','community']])document.getElementById(id).setAttribute('aria-pressed',String(GARDEN_TAB===tab));
- root.hidden=GARDEN_TAB==='farm';root.replaceChildren();if(root.hidden)return;
+ root.hidden=GARDEN_TAB==='farm'||GARDEN_TAB==='decorate';root.replaceChildren();if(root.hidden)return;
  if(GARDEN_TAB==='play'){gardenFestivalRender(root);return;}
  const el=(tag,text,parent=root,cls='')=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;e.className=cls;parent.append(e);return e;};
  const button=(text,fn,parent,disabled=false)=>{const e=el('button',text,parent,'btn small');e.onclick=fn;e.disabled=disabled;return e;};
@@ -2663,7 +2698,7 @@ function gardenQuestAction(){
   const crop=clamp(GARDEN_QUEST_CROP,0,Math.min(2,GARDEN.house));
   for(const i of q.empty.slice(0,q.count))gardenPlant(i,crop);
  }else if(q.kind==='grow'){return;}else if(q.kind==='seed'){setHubPage('adventure');}
- else{document.getElementById('gardenWorkshop').open=true;document.getElementById('gardenWorkshop').scrollIntoView({block:'start',behavior:'smooth'});}
+ else{document.getElementById('gardenWorkshop').open=true;gardenOpen('decorate');}
 }
 function gardenQuestRender(){
  let root=document.getElementById('gardenQuest');
@@ -2703,16 +2738,17 @@ function gardenWorldInit(){
  view.innerHTML='<canvas id="gardenCanvas" aria-hidden="true"></canvas><div id="gardenHotspots"></div><div id="gardenCamera"><button id="gardenZoomOut">−</button><button id="gardenHome">⌂</button><button id="gardenZoomIn">+</button></div><p id="gardenWorldHint"></p>';
  host.insertBefore(view,document.getElementById('gardenDesign'));
  const actions=document.createElement('div');actions.id='gardenActions';actions.innerHTML='<button id="gardenArrange" class="btn small"></button><button id="gardenFarm" class="btn small"></button><button id="gardenKitchen" class="btn small"></button><button id="gardenCommunity" class="btn small"></button><button id="gardenPlay" class="btn small"></button>';
- host.insertBefore(actions,view.nextSibling);
+ host.insertBefore(actions,host.querySelector('h1').nextSibling);actions.append(document.getElementById('gardenArrange'));
  host.insertBefore(document.getElementById('gardenStock'),view);
  const details=document.createElement('details');details.id='gardenWorkshop';const summary=document.createElement('summary');summary.textContent=T('gardenArrange');details.append(summary);details.append(document.getElementById('gardenDesign'));host.append(details);
- document.getElementById('gardenArrange').onclick=()=>{details.open=!details.open;if(details.open)details.scrollIntoView({block:'start',behavior:'smooth'});};
- document.getElementById('gardenFarm').onclick=()=>{GARDEN_TAB='farm';gardenSelect('plot',0);};
+ document.getElementById('gardenArrange').onclick=()=>{details.open=GARDEN_TAB!=='decorate';gardenOpen(details.open?'decorate':'farm');};
+ document.getElementById('gardenFarm').onclick=()=>gardenOpen('farm');
  document.getElementById('gardenKitchen').onclick=()=>gardenOpen('kitchen');
  document.getElementById('gardenCommunity').onclick=()=>gardenOpen('community');
  document.getElementById('gardenPlay').onclick=()=>gardenOpen('play');
  for(const [id,z] of [['gardenZoomOut',-.2],['gardenZoomIn',.2]])document.getElementById(id).onclick=()=>{GV.zoom=clamp(GV.zoom+z,.8,1.8);gardenWorldPaint(0);};
  document.getElementById('gardenHome').onclick=()=>{GV.zoom=1;GV.panX=GV.panY=0;gardenWorldPaint(0);};
+ gardenContextInit();
  const canvas=document.getElementById('gardenCanvas');
  view.addEventListener('pointerdown',e=>{if(e.target.closest('#gardenCamera'))return;GV.drag={active:true,id:e.pointerId,x:e.clientX,y:e.clientY,px:GV.panX,py:GV.panY,moved:false};});
  view.addEventListener('pointermove',e=>{const d=GV.drag;if(!d||!d.active||d.id!==e.pointerId)return;const dx=e.clientX-d.x,dy=e.clientY-d.y;if(Math.hypot(dx,dy)>7)d.moved=true;if(d.moved){view.setPointerCapture(e.pointerId);GV.panX=clamp(d.px+dx,-GV.w*.65,GV.w*.65);GV.panY=clamp(d.py+dy,-GV.h*.55,GV.h*.55);gardenWorldPaint(0);}});
@@ -2726,12 +2762,41 @@ function gardenWorldInit(){
  canvas.addEventListener('keydown',e=>e.preventDefault());
  new ResizeObserver(()=>gardenWorldPaint(0)).observe(view);
 }
+
+function gardenContextInit(){
+ const pop=document.createElement('section');pop.id='gardenContext';pop.setAttribute('popover','auto');pop.setAttribute('role','dialog');pop.setAttribute('aria-labelledby','gardenContextTitle');
+ pop.innerHTML='<div id="gardenContextHead"><strong id="gardenContextTitle"></strong><button id="gardenContextClose"></button></div><p id="gardenContextStock"></p>';
+ for(const id of ['gardenHouse','gardenUpgrade','gardenPlots'])pop.append(document.getElementById(id));
+ const pace=document.createElement('p');pace.id='gardenContextPace';pop.append(pace);document.getElementById('garden').append(pop);
+ document.getElementById('gardenContextClose').onclick=()=>gardenContextClose();
+ pop.addEventListener('toggle',e=>{if(e.newState==='closed'){const selected=GV.selected;GV.selected=null;document.querySelectorAll('.gardenSpot[aria-expanded]').forEach(b=>b.setAttribute('aria-expanded','false'));if(selected&&document.activeElement===document.body)document.querySelector('.gardenSpot[data-kind="'+selected.kind+'"][data-index="'+selected.i+'"]')?.focus({preventScroll:true});}});
+ window.addEventListener('resize',gardenContextPosition);document.getElementById('garden').addEventListener('scroll',gardenContextPosition,{passive:true});
+}
+function gardenContextClose(){const pop=document.getElementById('gardenContext');if(pop?.matches(':popover-open'))pop.hidePopover();}
+function gardenContextPosition(){
+ const pop=document.getElementById('gardenContext');if(!pop?.matches(':popover-open'))return;
+ const spot=document.querySelector('.gardenSpot[data-kind="'+GV.selected?.kind+'"][data-index="'+GV.selected?.i+'"]');if(!spot)return;
+ const a=spot.getBoundingClientRect(),w=pop.offsetWidth,h=pop.offsetHeight,top=document.getElementById('btnHome').getBoundingClientRect().bottom+8,bottom=document.getElementById('hubNav').getBoundingClientRect().top-8;
+ let left=a.right+10,y=a.top;if(left+w>innerWidth-12)left=a.left-w-10;
+ if(left<12){left=(innerWidth-w)/2;y=a.bottom+8;if(y+h>bottom)y=a.top-h-8;}
+ pop.style.left=Math.max(12,Math.min(innerWidth-w-12,left))+'px';pop.style.top=Math.max(top,Math.min(bottom-h,y))+'px';
+}
+function gardenContextRender(){
+ const s=GV.selected;document.getElementById('gardenContextTitle').textContent=s?.kind==='house'?T('gardenHouse',GARDEN.house):T('gardenPlot',(s?.i||0)+1);
+ document.getElementById('gardenContextClose').textContent=T('cancel');
+ document.getElementById('gardenContextStock').textContent=T('gardenStock',GARDEN.seeds,GARDEN.petals);
+ document.getElementById('gardenContextPace').textContent=s?.kind==='house'?T('gardenPace',GARDEN.house,1+GARDEN.house/2):'';
+ document.querySelectorAll('.gardenSpot').forEach(b=>b.setAttribute('aria-expanded',String(s?.kind===b.dataset.kind&&s?.i===+b.dataset.index)));
+ gardenContextPosition();
+}
+
 function gardenSelect(kind,i){
  if(kind==='guest'){GV.cheer=i;GV.cheerUntil=GV.time+2.4;gardenOpen('community');return;}
  if(kind==='building'){gardenOpen(i===0?'kitchen':'community');return;}
  GARDEN_TAB='farm';
  GV.selected={kind,i};renderGarden();
- const target=kind==='house'?document.getElementById('gardenUpgrade'):document.querySelectorAll('.gardenPlot')[i];target.scrollIntoView({block:'nearest',behavior:'smooth'});
+ const pop=document.getElementById('gardenContext');pop.showPopover();gardenContextPosition();
+ pop.querySelector('button').focus({preventScroll:true});
 }
 function gardenWorldRender(){
  gardenWorldInit();
@@ -2749,7 +2814,7 @@ function gardenWorldRender(){
  gardenLifeRender();
  document.getElementById('gardenPlay').setAttribute('aria-pressed',String(GARDEN_TAB==='play'));
  document.getElementById('garden').dataset.theme=String(GARDEN.theme);
- gardenWorldPaint(0);
+ gardenWorldPaint(0);gardenContextRender();
 }
 function gardenWorldPaint(dt){
  const view=document.getElementById('gardenViewport');if(!view||document.getElementById('garden').classList.contains('hide')||document.hidden)return;
@@ -2757,7 +2822,7 @@ function gardenWorldPaint(dt){
  GV.time+=dt;GV.w=w;GV.h=h;const dpr=Math.min(devicePixelRatio||1,2),rw=Math.round(w*dpr),rh=Math.round(h*dpr);if(canvas.width!==rw||canvas.height!==rh){canvas.width=rw;canvas.height=rh;}
  const x=canvas.getContext('2d');x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,w,h);
  const bg=x.createLinearGradient(0,0,0,h);bg.addColorStop(0,['#efcfca','#b9d9df','#4e5877'][GARDEN.theme]||'#c8ded5');bg.addColorStop(1,['#eee2b9','#d9e9d7','#9ca5b8'][GARDEN.theme]||'#e8e6c8');x.fillStyle=bg;x.fillRect(0,0,w,h);
- const scale=Math.max(w/690,h/800)*GV.zoom,ox=w/2-450*scale+GV.panX,oy=h/2-355*scale+GV.panY;
+ const scale=Math.min(w/740,h/650)*GV.zoom,ox=w/2-450*scale+GV.panX,oy=h/2-355*scale+GV.panY;
  x.translate(ox,oy);x.scale(scale,scale);
  const ellipse=(a,b,rx,ry,col)=>{x.fillStyle=col;x.beginPath();x.ellipse(a,b,rx,ry,0,0,Math.PI*2);x.fill();};
  const polygon=(points,col)=>{x.fillStyle=col;x.beginPath();points.forEach((p,i)=>i?x.lineTo(p.x,p.y):x.moveTo(p.x,p.y));x.closePath();x.fill();};
@@ -2814,6 +2879,7 @@ function gardenRefreshTimers(){
 
 function renderGarden(){
  const host=document.getElementById('garden');if(!host)return;
+ const focused=document.activeElement,focusCrop=focused?.matches('.gardenCropChoice')?focused.dataset.crop:null,focusPlant=focused?.matches('.gardenPlantSubmit');
  host.querySelector('h1').textContent=T('gardenTitle');
  document.getElementById('gardenHint').textContent=T('gardenHint');
  document.getElementById('gardenStock').textContent=T('gardenStock',GARDEN.seeds,GARDEN.petals);
@@ -2835,14 +2901,27 @@ function renderGarden(){
    const progress=document.createElement('progress');progress.max=data.days;progress.value=gardenGrowth(plot);progress.setAttribute('aria-label',gardenPlotStatus(plot));body.appendChild(progress);
    const button=document.createElement('button');button.className='btn small';button.textContent=ready?T('gardenHarvest'):gardenPlotStatus(plot);button.disabled=!ready;button.onclick=()=>gardenHarvest(i);body.appendChild(button);
   }else{
-   const select=document.createElement('select');select.setAttribute('aria-label',T('gardenPlant')+' · '+T('gardenPlot',i+1));
-   for(let crop=0;crop<=Math.min(2,GARDEN.house);crop++){const option=document.createElement('option');option.value=crop;option.textContent=T('gardenCrop'+crop);select.appendChild(option);}body.appendChild(select);
-   const info=document.createElement('p');const refresh=()=>{const crop=GARDEN_CROPS[+select.value];info.textContent=T('gardenCropInfo',gardenTime(gardenPlantSeconds(+select.value)),crop.yield);};refresh();select.onchange=refresh;body.appendChild(info);
-   const button=document.createElement('button');button.className='btn small';button.textContent=T('gardenPlant');button.disabled=GARDEN.seeds<1;button.onclick=()=>gardenPlant(i,+select.value);body.appendChild(button);
+   let chosen=clamp(GV.cropChoices?.[i]??GARDEN_QUEST_CROP,0,Math.min(2,GARDEN.house));
+   const choices=document.createElement('div');choices.className='gardenCropChoices';choices.setAttribute('role','group');choices.setAttribute('aria-label',T('gardenChooseCrop'));body.append(choices);
+   const info=document.createElement('p');info.className='gardenCropInfo';
+   const refresh=()=>{info.textContent=T('gardenCropInfo',gardenTime(gardenPlantSeconds(chosen)),GARDEN_CROPS[chosen].yield);choices.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.crop===chosen)));};
+   for(let crop=0;crop<=Math.min(2,GARDEN.house);crop++){
+    const b=document.createElement('button');b.className='gardenCropChoice';b.dataset.crop=crop;b.innerHTML=gardenSprout(crop,2);
+    const name=document.createElement('span');name.textContent=T('gardenCrop'+crop);b.append(name);
+    const detail=document.createElement('small');detail.textContent=T('gardenCropInfo',gardenTime(gardenPlantSeconds(crop)),GARDEN_CROPS[crop].yield);b.append(detail);
+    b.onclick=()=>{chosen=crop;(GV.cropChoices??=[])[i]=crop;refresh();};choices.append(b);
+   }
+   refresh();body.append(info);
+   const button=document.createElement('button');button.className='btn small gardenPlantSubmit';button.textContent=T('gardenPlant');button.disabled=GARDEN.seeds<1;button.onclick=()=>{gardenPlant(i,chosen);gardenContextClose();};body.appendChild(button);
   }
   list.appendChild(row);
  });
  gardenWorldRender();
+ if(document.getElementById('gardenContext').matches(':popover-open')&&GV.selected?.kind==='plot'){
+  const row=document.querySelectorAll('.gardenPlot')[GV.selected.i];
+  if(focusCrop!==null)row.querySelector('[data-crop="'+focusCrop+'"]')?.focus({preventScroll:true});
+  else if(focusPlant)row.querySelector('.gardenPlantSubmit')?.focus({preventScroll:true});
+ }
 }
 
 let META={};                    // {升級id: 已購買等級}
@@ -5662,6 +5741,7 @@ function refreshSoundLabel(){
   b.setAttribute('aria-pressed',String(!SFX.isMuted()));
 }
 function setHubPage(page){
+ gardenContextClose();
   menuEl.classList.toggle('hide',page!=='adventure'&&page!=='home');
   menuEl.classList.toggle('homePage',page==='home');
   document.getElementById('btnHome').classList.toggle('hide',page==='home');

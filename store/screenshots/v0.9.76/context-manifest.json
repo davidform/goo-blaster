@@ -1,0 +1,277 @@
+[
+  {
+    "file": "garden-farm-zh-Hant-390-house0.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 0. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-plant-zh-Hant-390-house0.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 0. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-kitchen-zh-Hant-390-house0.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 0. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-community-zh-Hant-390-house0.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 0. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-decorate-zh-Hant-390-house0.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 0. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-farm-zh-Hant-390-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-plant-zh-Hant-390-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-kitchen-zh-Hant-390-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-community-zh-Hant-390-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-decorate-zh-Hant-390-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-farm-en-320-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      320,
+      568
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-plant-en-320-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      320,
+      568
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-kitchen-en-320-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      320,
+      568
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-community-en-320-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      320,
+      568
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-decorate-en-320-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      320,
+      568
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-farm-de-844-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      844,
+      390
+    ],
+    "language": "de",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-plant-de-844-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      844,
+      390
+    ],
+    "language": "de",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-kitchen-de-844-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      844,
+      390
+    ],
+    "language": "de",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-community-de-844-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      844,
+      390
+    ],
+    "language": "de",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-decorate-de-844-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      844,
+      390
+    ],
+    "language": "de",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-farm-en-1280-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      1280,
+      900
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-plant-en-1280-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      1280,
+      900
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-kitchen-en-1280-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      1280,
+      900
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-community-en-1280-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      1280,
+      900
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  },
+  {
+    "file": "garden-decorate-en-1280-house2.png",
+    "build": "v0.9.76",
+    "sha256": "62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc",
+    "viewport": [
+      1280,
+      900
+    ],
+    "language": "en",
+    "setup": "QA fixture: clean save with cottage level 2. No inventory injected. Real clicks for each view."
+  }
+]

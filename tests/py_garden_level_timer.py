@@ -27,9 +27,9 @@ with sync_playwright() as pw:
             assert clock in p.locator('#gardenQuestDetail').inner_text(), (level, crop)
             p.locator('.gardenSpot.plot[data-index="0"]').click()
             row = p.locator('.gardenPlot').first
-            row.locator('select').select_option(str(crop))
+            row.locator(f'[data-crop="{crop}"]').click()
             assert clock in row.locator('p').inner_text(), (level, crop)
-            row.locator('button').click()
+            row.locator('.gardenPlantSubmit').click()
             r = p.evaluate('({duration:GARDEN.plots[0].duration,remaining:gardenRemaining(GARDEN.plots[0]),growth:gardenGrowth(GARDEN.plots[0])})')
             assert r == {'duration': seconds, 'remaining': seconds, 'growth': 0}, (level, crop, r)
             p.evaluate('seconds=>{window.__now+=seconds*500;gardenRefreshTimers()}', seconds)

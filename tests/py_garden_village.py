@@ -19,7 +19,7 @@ with sync_playwright() as pw:
    # Plant individual beds to keep the choice independent of repair-ready tasks.
    for i in range(3):
     p.locator(f'.gardenSpot[data-kind=plot][data-index="{i}"]').click()
-    row=p.locator('.gardenPlot').nth(i);row.locator('select').select_option(str(crop));row.locator('button').click()
+    row=p.locator('.gardenPlot').nth(i);row.locator(f'[data-crop="{crop}"]').click();row.locator('.gardenPlantSubmit').click()
    p.evaluate('window.__villageNow+=900001;gardenRefreshTimers()')
    p.locator('#gardenQuestAction').click()
  farm(0,1)

@@ -1,46 +1,48 @@
 # GOO BLASTER 精簡交接
 
-## 目前任務（2026-09-26）
-- 使用者要求首頁只作小鎮入口，各主題獨立頁面並有回首頁按鈕；v0.9.75已實作、驗證與三平台交付。
-- 分支codex/soft-world-ui；單一代理。只改頁面分層／導覽，不改戰鬥、倒數、存檔或價格。
-- HTML SHA b8297cb48e149c91c35a18dddc14b0fb5c536ac97980ba2d477e01fe5930278c。
-- .codex-remote-attachments是使用者附件，禁止提交；私密收據／憑證／存檔僅_private。
+## 目前任務（2026-09-26，進行中）
+- 使用者要求重新研究雜亂介面：點田地後植物選項要就近出现，其他工作也需重新排版。
+- v0.9.76已實作，尚未發布；分支codex/soft-world-ui，單一代理。
+- 最終HTML SHA 62af7c7fa665bdb0da759d8d565d83176381ba50746e98f9160c0a91785b72cc。
+- v75已完成三平台交付，不重做；遊戲基準3b76d1b。
+- .codex-remote-attachments為使用者附件，禁止提交；私密收據／存檔／憑證仅_private。
 
-## 實作與證據
-- 首頁只顯示小鎮與資源；冒險地標進入關卡／開始頁，野餐／池塘／星光進入相應挑戰頁。
-- 挑戰隱藏庭院任務／村莊／其他主題選單，進入即切換主題音樂；既有動態與回饋保留。
-- 各目的地固定返回列，內容區從64px＋safe-area下方開始，避免scrollIntoView後遮擋。
-- 返回首頁清除單次挑戰暫態，保留已存資源、獎章及進度。底部導覽仍可切冒險／強化／庭院／設定。
-- 既有11語言toMenu文字；預設英文；不新增翻譯鍵。AGENTS第25節記錄需求。
-- 截圖store/screenshots/v0.9.75：新存檔真實UI，含首頁及五目的地；已檢視手機／桌面／主題。
-- native/capture_town_home.py能重現；manifest逐張保存來源與設定。
+## 本次實作
+- 田地／小屋操作改為就地popover，作物圖示＋時間／產量；取消／外側／Escape關閉。
+- 廚房／委託／佈置為聚焦工作頁，固定分類列；主題挑战由首頁地標進入。
+- 寬螢幕任務與村莊並排，鏡頭初始比例適配；保留11語言／原音樂／存檔／倒數及所有平衡。
+- 其他田地成熟時保留所選植物與焦點。關閉文字使用既有cancel，避免back繁中誤為回主畫面。
+- docs-20-garden-layout.md記研究、實際操作與量測；AGENTS新增26節。
+- 同條件390×844：v75點田地自捲477px且種植鍵被底導覽遮住；v76自捲0px，按鈕可見。
+- 前後量測_private/test-artifacts/context76-comparison.json，基準從git 3b76d1b取出。
+- native/capture_garden_context.py產25張QA圖，manifest逐張標fixture／SHA；高屋等級不是玩家進度。
+- store/screenshots/v0.9.76另有8張首頁／主題圖；兩manifest均已核對最終SHA。
+- 真實Chrome本機實際點田地→種植→倒數／焦點返回，已通過；也檢查商店和設定，無同類遠距操作問題。
 
-## 測試
-- 完整82項：_private/test-runs/20260926-112822-457114-pages75-verified-full/results.json，jobs2，同一SHA。
-- 初輪81PASS／1FAIL：py_ui_fixes舊首頁地圖假設讀0/0；修正測試先點城門再驗證原定位。
-- 補驗115208-785775-pages75-edges-retry，py_ui_fixes與py_town_home皆PASS；validate_reports合併82/82。
-- CPU4：115228-016840-pages75-cpu4，town_home／music_scenes／l10n_context三項PASS。
-- py_release_smoke PASS：新progress1/coins0/meta{}，離線／CPU4／瀏覽器重啟還原progress9/coins456/meta.dmg2/selection8，無JS錯誤／外部請求。
-- py_test9第1／2／3關58／57／95秒通關；效能最後單独PASS：39.8→38.1FPS，-4.1%。
-- 早期111446、112244完整批次因視覺修正中止；111758診斷來源中途變更；保留，不拿來驗收。
-- Surface不跑全平行；CPU4不取代全平行。Android建置不能與效能並行。
-- 測試環境GOO_BROWSER_CHANNEL=msedge、PYTHONUTF8=1、NODE_PATH=_private/test-node/node_modules。
+## 測試進行狀態
+- 新增py_garden_context，44語言／尺寸、無選取捲頁、界線／44px／Escape／頁面隔離／離線／成熟邊界焦點。
+- 既有庭院測試改用作物按鈕；festival／feedback／music測試入口改首頁地標。原機制門檻保留。
+- 早期131827三FAIL已修手機分類排版與倍率說明，131941三項PASS。
+- 132252診斷全項PASS但中途改SHA，不當驗收。
+- 132500完整批次因取消文字修正中止，已終止該批次程序樹；不拼接其結果。
+- 最終完整83項：_private/test-runs/20260926-133204-906479-context76-verified-full/results.json。
+- jobs2；py_ui_fixes初輪HUD項FAIL：300ms時pause0×0、MUTE初始化114。測試改等可見非零HUD，135414-140336-context76-hud-retry已PASS，遊戲SHA未改。
+- validate_reports已合併83/83，保留初輪82PASS／1FAIL；最後獨立效能44.0→43.7FPS（-0.7%）PASS。
+- CPU4 135430-623550-context76-cpu4四項全PASS；release_smoke離線／新存檔／真實瀏覽器重開還原PASS，0JS錯誤／外部請求。
+- py_test9第一關46秒、第二關59秒通關，第三關85秒陣亡為觀察；第一關硬門檻通過。
+- 環境GOO_BROWSER_CHANNEL=msedge、PYTHONUTF8=1、NODE_PATH=_private/test-node/node_modules。
+- Surface不跑全平行；CPU4不替代全平行。效能單独、勿與Android建置並行。
 
-## 交付完成與未完成
-- 遊戲commit 3b76d1b06020103e9a21dcabad7e902530d55c45已push：v0.9.75: separate the town home from themed game pages。
-- 固定APK：https://github.com/davidform/goo-blaster/releases/tag/android-test。
-- APK97500／0.9.75-test.0／同簽章；公開下載SHA 82e5ff9758b2e57aa644a8ac0a97d897a7aac32916ee53e924f2f77ae5d17b7c。
-- itch build2018298／upload19167726，完整原始payload一致（僅平台腳本後綴），實際池塘→回主頁→冒險→開始／暫停通過。
-- Pages f11efd29273d53d0ec674323c25ed0ce3408010d，Actions36216389644成功；公開完整SHA／實際開始／暫停皆核對。
-- 中英Devlog1677545已Published並record；tests/test_devlog_workflow.py九項PASS。
-- Devlog：https://davidform.itch.io/goo-blaster/devlog/1677545/v0975-a-little-room-for-every-adventure。
-- 公開介紹v75／分頁文案核對；新首頁30263551排第四，池塘30263552第五；前三戰鬥及歷史圖保留，實際縮圖已檢視。store/page-sync/v0.9.75.json。
-- 圖片排序長批次逾時後舊tab控制失效；新編輯頁核對已上傳圖片，未重複上傳，重新填文案及短批次排序後公開驗證完成。
-- 收據_private/mobile-test/itch-v75.json、pages-v75.json、published.json、devlog-v75-receipt.json。
-- cleanup盤點＋Apply完成，釋放13,456,431 bytes；保留v75／v74回退、存檔／簽章。25個AccessDenied仍保留，不改ACL。
-- Pixel本次adb devices沒有裝置；最後實測v71／97100，不卸載／不清資料，不宣稱手機已更新。
-- 論壇原首文17090045／個人頁引用最後核對仍v64；前次編輯工具插入位置錯誤，未儲存。v75未重試該編輯，不發新回覆取代；仍未完成。
+## 下一步與交付
+- 程式／截圖／測試已核對，接著提交及建置APK；尚未發布。
+- 檢查diff，commit Summary：v0.9.76: keep garden actions beside their objects。
+- 已授權完成APK→itch公開→Pages→中英Devlog→介紹／截圖／原論壇首文→清理。
+- 待發布文案_private/mobile-test/notes76-draft.json；不要在公開遊戲前宣稱已上線。
+- 論壇原首文17090045仍v64；本次診斷找到安全替換：contenteditable先Control+Home、Control+Shift+End，確認選取全文，再Backspace，DOM只剩1字元且hidden body空，再paste HTML。fill空字串無法清除，勿沿用。
+- 論壇診斷未Save，已reload還原公開原文；須v76公開後再原地更新，不另發留言。原文有3張combat圖需保留。
+- 固定APK：https://github.com/davidform/goo-blaster/releases/tag/android-test，目前仍97500；本次adb devices沒有裝置。
+- 既有25個AccessDenied清理殘留不更改ACL；先盤點再Apply，保留最新與上一版、存檔、簽章和證據。
 
 ## 範圍限制
-- 市場需求未驗證；docs-19-market-review.md與store/research/player-study-kit.md已備妥，不生成假訪談。
-- 未招募／發訊息／投廣告／改價／啟用多代理；真人聽感、真機長時效能、回訪／付費意願與母語潤稿未驗收。
+- 真人易用性、聽感、市場需求、母語潤稿、真機長時效能尚未驗證。
+- 不招募／發訊息／投廣告／改價／啟用多代理；不以自動化測試宣稱市場驗收。

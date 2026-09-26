@@ -9,7 +9,7 @@ with sync_playwright() as pw:
  c=b.new_context(viewport={'width':390,'height':844},has_touch=True);c.set_offline(True)
  p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)))
  c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_UI_CPU','1'))})
- p.goto((Path(GAME_ROOT)/'index.html').as_uri());p.locator('#navGarden').click();p.locator('#gardenPlay').click();p.locator('#festivalStart').click()
+ p.goto((Path(GAME_ROOT)/'index.html').as_uri());p.locator('[data-place=picnic]').click();p.locator('#festivalStart').click()
  seq=p.locator('.festivalSequence>span').evaluate_all('(es)=>es.map(e=>e.getAttribute("aria-label"))')
  foods=p.evaluate('[0,1,2].map(i=>T("gardenFood"+i))');answers=[foods.index(x) for x in seq]
  p.locator('#festivalReady').click();p.locator(f'[data-answer="{answers[0]}"]').click()

@@ -29,7 +29,7 @@ def stars_solution(lights):
 with sync_playwright() as pw:
  b=pw.chromium.launch(channel=BROWSER_CHANNEL);c=b.new_context(viewport={'width':390,'height':844},device_scale_factor=2,has_touch=True);c.set_offline(True)
  p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)));c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_UI_CPU','1'))})
- p.goto((Path(GAME_ROOT)/'index.html').as_uri());p.locator('#navGarden').click();p.locator('#gardenPlay').click()
+ p.goto((Path(GAME_ROOT)/'index.html').as_uri());p.locator('[data-place=picnic]').click()
  assert p.evaluate('GARDEN.medals.join()==="0,0,0"&&GARDEN.theme===-1')
  assert p.locator('[data-level="2"]').is_disabled()
  old=p.evaluate('JSON.stringify([GARDEN.seeds,GARDEN.petals,GARDEN.pantry,COINS,META])')

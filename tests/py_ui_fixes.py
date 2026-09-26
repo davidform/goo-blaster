@@ -166,7 +166,10 @@ with sync_playwright() as pw:
     print("\n=== 問題2：右上角按鈕不能蓋住成長型數值 ===")
     pg,c,errs=page(b)
     pg.evaluate("()=>{ LV_IDX=0; start(); }")
-    pg.wait_for_timeout(300)
+    # drawHUD supplies the live button geometry; initialization coordinates are
+    # not a rendered frame. Fixed 300 ms read a hidden 0x0 Pause under load.
+    pg.wait_for_selector('#btnPause:not(.hide)', timeout=60000)
+    pg.wait_for_function("document.getElementById('btnPause').getBoundingClientRect().height>0")
     geo=pg.evaluate("""()=>{
         const p=document.getElementById('btnPause').getBoundingClientRect();
         return {pauseTop:p.top,pauseBottom:p.bottom,

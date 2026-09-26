@@ -19,7 +19,7 @@ with sync_playwright() as pw:
     assert p.evaluate('SFX.musicDebug().theme')=='garden'
     garden_bpm=p.evaluate('SFX.musicDebug().bpm')
     p.wait_for_function('__created>4',timeout=15000)
-    p.locator('#gardenPlay').click()
+    p.locator('#btnHome').click();p.locator('[data-place=picnic]').click()
     scenes=[]
     for theme,name in enumerate(['picnic','pond','starlight']):
         p.locator("#btnHome").click();p.locator('[data-place="'+["picnic","pond","stars"][theme]+'"]').click();p.locator('#festivalStart').click()
