@@ -445,7 +445,15 @@
 #menu:not(.homePage) #townHome{display:none}
 #menu.homePage #townGoal{display:none}
 @media(max-width:699px){#menu.homePage #townScene{aspect-ratio:auto;height:max(340px,calc(100dvh - 245px))}}
-#btnHome{position:absolute;top:0;left:0;right:0;z-index:9;height:calc(64px + env(safe-area-inset-top,0px));min-height:44px;max-width:none;width:100%;margin:0;padding:env(safe-area-inset-top,0px) 18px 0;text-align:left;border:0;border-bottom:1px solid var(--edge);border-radius:0;background:var(--paper)}
+#btnHome{position:absolute;top:calc(8px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left,0px));z-index:9;height:48px;min-height:44px;max-width:calc(100% - 24px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px));width:auto;margin:0;padding:8px 18px;text-align:left;border:2px solid #fff9ec;border-radius:14px;background:#3f634e;color:#fff9ec;font-size:16px;line-height:1.2;box-shadow:0 3px 0 #294835,0 0 0 1px #64866b;white-space:normal}
+#btnHome::before{content:'←';display:inline-block;margin-right:10px;font-size:22px;vertical-align:-1px}
+#homeHeader{position:absolute;inset:0 0 auto;height:calc(64px + env(safe-area-inset-top,0px));background:var(--paper);border-bottom:1px solid var(--edge);z-index:8;pointer-events:none}#btnHome.hide+#homeHeader{display:none}
+/* Selection is a state, never the first button's position. */
+#gardenLife .festivalLevels .btn[aria-pressed=false]{background:#ecdfbf;color:#526750;box-shadow:0 3px 0 #c6b793}
+#gardenLife .festivalLevels .btn[aria-pressed=true],.festivalTheme[aria-pressed=true],#btnSound[aria-pressed=true]{background:#3f634e;color:#fff9ec;border-color:#294835;box-shadow:0 3px 0 #294835}
+.festivalTheme[aria-pressed=true],#gardenLife .festivalLevels .btn[aria-pressed=true]{outline:3px solid #294835;outline-offset:-3px}
+#btnSound[aria-pressed=false]{background:#ecdfbf;color:#526750;box-shadow:0 3px 0 #c6b793}
+.gnode.sel{background:#3f634e!important;color:#fff9ec}
 #menu:not(.homePage),#garden,#shop,#settings{top:calc(64px + env(safe-area-inset-top,0px));padding-top:12px}
 #garden.themePage> :not(h1):not(#gardenLife){display:none!important}
 #garden.themePage #gardenLife{width:min(100%,680px);margin:0 auto}
@@ -497,6 +505,7 @@
     <div id="cards" class="hide"><div class="lvtitle">升級！選一張</div></div>
 
     <button id="btnHome" class="btn small hide"></button>
+    <div id="homeHeader" aria-hidden="true"></div>
     <div id="menu" class="panel homePage">
       <h1>GOO BLASTER</h1>
       <div id="menuHeader"><span id="chapterLabel"></span><span id="menuWallet">🍬 <span id="coinTag">0</span></span></div>
@@ -618,7 +627,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.77';
+const BUILD='v0.9.78';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -3434,7 +3443,7 @@ function applyLanguage(code){
   document.querySelector('#navSettings .navLabel').textContent=T('navSettings');
   document.querySelector('#navGarden .navLabel').textContent=T('navGarden');
   document.getElementById('btnGarden').textContent=T('navGarden');
-  document.getElementById('btnHome').textContent='⌂ '+T('toMenu');
+  document.getElementById('btnHome').textContent=T('toMenu');
   renderGarden();
   setTxt('settingsTitle',T('navSettings')); setTxt('settingsHint',T('settingsHint'));
   setTxt('btnLang',T('languageLabel')+' · '+LANGS.find(l=>l.c===LANG).n);
@@ -5745,7 +5754,7 @@ function setHubPage(page){
   menuEl.classList.toggle('hide',page!=='adventure'&&page!=='home');
   menuEl.classList.toggle('homePage',page==='home');
   document.getElementById('btnHome').classList.toggle('hide',page==='home');
-  document.getElementById('btnHome').textContent='⌂ '+T('toMenu');
+  document.getElementById('btnHome').textContent=T('toMenu');
   if(page==='home'){GF=null;GARDEN_TAB='farm';}
   for(const id of ['menu','garden','settings'])document.getElementById(id).scrollTop=0;
   shopEl.classList.toggle('hide',page!=='upgrades');
