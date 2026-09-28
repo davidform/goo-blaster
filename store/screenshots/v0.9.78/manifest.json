@@ -20,5 +20,16 @@
     ],
     "language": "zh-Hant",
     "setup": "Fresh save; pond levels 1 and 2 earned by UI clicks using a solver of the visible board; difficulty 3 selected via UI. No progress or inventory injection."
+  },
+  {
+    "file": "garden-selected-decorate-zh-Hant-390.png",
+    "build": "v0.9.78",
+    "sha256": "6462ca6a1bf06e14f8fef80c292a9ac8b335f71ad947582fa3844ff3a5c1e4c9",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Captured by py_garden_tabs during final full regression; fresh save, UI category clicks, no progress or inventory injection."
   }
 ]

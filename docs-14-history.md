@@ -1469,3 +1469,8 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - CPU4專項202245-selection78-cpu4兩項PASS，來源SHA未變：就地操作44版面388.6秒，選取回饋396次423.3秒；完整測試仍待最後戰鬥模擬及效能。
 - py_release_smoke另實跑PASS：全新progress1 coins0 meta{}，CPU4離線啟動及真實瀏覽器關閉重開還原progress9 coins456 meta.dmg2 selection8，0JS錯誤／0外部請求。
 - 完整201809-selection78-full最終85/85 PASS、SHA不變；最後獨立效能44.2→44.1FPS（-0.2%）PASS，無JS錯誤，非真機FPS。test9長模擬230.7秒PASS。py_test9第1／2關48／62秒通關，第3關54秒陣亡，既定硬门檻為第1關，保留原始結果。
+- 遊戲commit 2cc09a4d025b90825f78a1a8fa66f5ead6e5f6a9已push，Summary：v0.9.78: clarify selected options and home navigation。
+- APK97800／0.9.78-test.0完成實體內容、applicationId與簽章稽核；公開資產595389199重新下載核對SHA 0edd3af57f8998728fca0d7eb6184f27014f871a49a18c640191eb2d0c15f3fb，public_download_verified=true。Pixel未連線，不宣稱已更新手機。
+- itch僅上傳已測index.html，build2029949；20:51台北時間Butler與通道UI均顯示Processing，v77/build2018911仍Active。公開Run game實際iframe亦仍v77，故尚未產生v78公開驗證收據；不重複上傳。
+- 因平台處理未完成，Pages、Devlog、介紹／截圖／原論壇首文與profile、清理暫未執行完成。商店介紹只在編輯器準備未Save；論壇局部編輯工具將文字插到錯位，未提交且reload核對原v77及5張圖片完整保留。不可把準備視為公開更新。
+- 私人pending收據_private/mobile-test/itch-v78-pending.json；後续只需接續待處理build，不重做已完成85項與APK。公開source不同時才重測。
