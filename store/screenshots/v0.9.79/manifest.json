@@ -1,0 +1,35 @@
+[
+  {
+    "file": "shop-bottom-home-en-390.png",
+    "build": "v0.9.79",
+    "sha256": "6c8259ca544dd2087907061a51afa4be3ecdd7dd49cee604508a1883bf8fb538",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "en",
+    "setup": "Fresh save; actual touch navigation; no injected progress, resources or upgrades."
+  },
+  {
+    "file": "shop-bottom-home-zh-Hant-390.png",
+    "build": "v0.9.79",
+    "sha256": "6c8259ca544dd2087907061a51afa4be3ecdd7dd49cee604508a1883bf8fb538",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; actual touch navigation; no injected progress, resources or upgrades."
+  },
+  {
+    "file": "garden-selected-decorate-zh-Hant-390.png",
+    "build": "v0.9.79",
+    "sha256": "6c8259ca544dd2087907061a51afa4be3ecdd7dd49cee604508a1883bf8fb538",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "py_garden_tabs: fresh save, actual category clicks; no injected progress or resources."
+  }
+]

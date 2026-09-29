@@ -35,8 +35,8 @@ with sync_playwright() as pw:
                 box=home.bounding_box()
                 assert box['height']>=44 and box['x']>=0 and box['x']+box['width']<=w
                 assert home.evaluate('e=>e.scrollWidth<=e.clientWidth && e.scrollHeight<=e.clientHeight')
-                assert home.evaluate('e=>getComputedStyle(e).backgroundColor')=='rgb(63, 99, 78)'
-                assert p.locator('#garden').bounding_box()['y']>=box['y']+box['height']
+                assert home.locator('.navIcon').is_visible()
+                assert p.locator('#garden').evaluate('e=>e.getBoundingClientRect().bottom<=document.querySelector("#hubNav").getBoundingClientRect().top+1')
                 home.click();assert p.locator('#townHome').is_visible()
     # Other groups: all tools, visitors, crops, navigation and native selects.
     p.set_viewport_size({'width':390,'height':844})

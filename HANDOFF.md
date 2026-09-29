@@ -1,52 +1,43 @@
 # GOO BLASTER 精簡交接
 
-## 目前任務（2026-09-28，修正與APK完成，網頁同步待平台）
-- 使用者要求回主畫面更醒目，難度切換變綠，逐頁修正同類選取問題。
-- 分支codex/soft-world-ui；安全pull完成，接手基準f4882a3／v77。勿重做v77發布。
-- 遊戲v0.9.78 commit 2cc09a4d025b90825f78a1a8fa66f5ead6e5f6a9已push。
-- Summary：v0.9.78: clarify selected options and home navigation。
-- HTML SHA 6462ca6a1bf06e14f8fef80c292a9ac8b335f71ad947582fa3844ff3a5c1e4c9。
-- .codex-remote-attachments為使用者附件，不可提交；私人收據僅_private。
+## 目前任務（2026-09-29，v79驗證完成，交付進行中）
+- 使用者要求移除兩個回主畫面按鈕，統一放到最下方導覽，改善手機觸控。
+- 分支codex/soft-world-ui；接手HEAD3978977，安全pull已完成。v78遊戲commit2cc09a4已發布APK，勿重做。
+- 本次v0.9.79尚未commit/push；預定Summary：v0.9.79: unify home navigation in the bottom bar。
+- HTML SHA 6c8259ca544dd2087907061a51afa4be3ecdd7dd49cee604508a1883bf8fb538。
+- .codex-remote-attachments使用者附件不可提交；私人收據僅_private。
 
-## 改動與實際驗證
-- 三主題難度依aria-pressed上色，選中深綠、未選米色；根因是相鄰按鈕CSS按位置上色。
-- 冒險選中關卡深綠；設定音效開關依狀態上色。庭院作物／擺設／訪客／四分類、語言及導覽逐項檢查。
-- 返回鍵48px高／16px白字／箭頭及外框，保留64px頁首背景與safe-area；不露出底層HUD。
-- 沿用11語言toMenu，無玩法、倒數、存檔及新翻譯字串改動。
-- docs-21-selection-audit.md有逐頁清單；新增py_selection_feedback，完整套件共85項。
-- 未改v77實跑新測試FAIL，難度2选中仍米色、難度1未選卻綠；最終版本396次難度點擊通過。
-- store/screenshots/v0.9.78中英手機截圖與manifest。池塘前兩階實際UI通關後選難度3，未注入成績。
-- CUA本機實際玩池塘第一階，回首頁重入難度2變綠、1／3米色，返回頁首目視正常。
+## 改動
+- 五格底列：冒險／強化／主畫面／庭院／設定，主畫面居中；移除homeHeader與btnShopBack。
+- 88px底列加safe-area，至少48px觸控目標與4px間距；目前頁依aria-current變色。戰鬥仍隱藏整個導覽。
+- 商店由內層清單改為整頁捲動並保存捲動位置；內容末端不被底列遮住。
+- 庭院就地面板依內容上緣定位，不再依頂端返回鍵；11語言新增navHome短標籤，由i18n/build_v0979.py產生。
+- 無玩法、倒數、價格或存檔格式改动。AGENTS第25／27節記錄使用者新決策。
+- docs-22-bottom-navigation.md與docs-14-history.md有根因／新布局／量測；完成後更新結果。
 
-## 測試證據（完成，不重跑）
-- 完整：_private/test-runs/20260928-201809-749466-selection78-full/results.json，85/85 PASS、來源SHA不變。
-- CPU4：_private/test-runs/20260928-202245-030853-selection78-cpu4/results.json，兩項PASS且SHA不變；context388.6秒、selection423.3秒。
-- 201737-selection78-edges四項PASS但過程補頁首背景，source_unchanged=false，不作發版證據。
-- py_release_smoke已PASS：CPU4／離線／freshsave progress1 coins0 meta{}，瀏覽器真實重開還原progress9 coins456 meta.dmg2 selection8，0JS錯誤／0外部請求。
-- py_test9第1／2關48／62秒通關，第3關54秒陣亡；硬門檻第1關PASS，不冒稱全部通關。
-- 最後獨立效能44.2→44.1FPS（-0.2%）PASS，無JS錯誤；不與Android建置同跑。
+## 驗證證據
+- 新py_bottom_nav已註冊，完整套件86項。44版面、220次實際tap、中央位置、顏色、完整可見、三主題中途返回、存檔隔離。
+- 未改v78實跑新測試FAIL，證據_private/baseline78-bottom/regression.log。
+- 182213-bottom79-edges：py_soft_ui／py_town_home／py_garden_context／py_selection_feedback四項PASS且SHA未變。
+- 完整：_private/test-runs/20260929-182818-349067-bottom79-full/results.json，首輪85/86，保留py_ui_fixes舊容器失敗。
+- 原py_ui_fixes失敗因仍要求shopList內層捲動，已改測shop整頁真實觸控，185020-bottom79-cpu4-retry補跑PASS，真實滑動129px；保持原失敗報告。
+- CPU4底列160.8秒／就地面板196.8秒PASS；同批三項全綠，合併完整86/86。效能獨立47.8→49.5FPS PASS。
+- py_release_smoke CPU4離線／新存檔／真實重開PASS，恢復progress9 coins456 meta.dmg2 selection8，0錯誤／0外部請求。
+- CUA本機實際強化→首頁→池塘→開始→移動鱼→首頁正常；中英390px截圖store/screenshots/v0.9.79已目視。
+- 首次末項可見檢查scrollIntoView留下0.47px裁切，改實際捲到底後完整可見，不放寬門檻。
 - .venv/Scripts/python.exe；GOO_BROWSER_CHANNEL=msedge、PYTHONUTF8=1、NODE_PATH=_private/test-node/node_modules。
-- Surface依既定限制不跑全平行，CPU4不取代全平行。
+- Surface依既定限制不跑全平行；本次ADB無裝置，Pixel未更新。
 
-## 已完成交付
-- Android v78／97800／0.9.78-test.0，applicationId及簽章與上一版相同，實際APK內HTML SHA核對。
-- APK SHA 0edd3af57f8998728fca0d7eb6184f27014f871a49a18c640191eb2d0c15f3fb。
-- 固定入口：https://github.com/davidform/goo-blaster/releases/tag/android-test。
-- _private/mobile-test/published.json public_download_verified=true；資產595389199，已重新下載驗SHA。
-- 本次ADB無裝置，Pixel尚未更新；不卸載／不清資料。
-
-## 網頁同步卡點與下一步
-- Butler已成功上傳唯一index.html至固定html5通道，pending build2029949／upload19167726；不重複上傳。
-- 20:51台北時間Butler及itch通道UI仍Processing v78，Active仍v77/build2018911。
-- CUA公開Run game實際仍載入https://html-classic.itch.zone/html/19167726-2018911/index.html?v=1790409730。
-- _private/mobile-test/itch-v78-pending.json明列尚未驗證；不可拿pending當已公開收據。
-- 下一步先butler status；完成後從公開Run game實際iframe取得新URL，再native/verify_itch_payload.py核對完整payload並實際開始／暫停及選取色。
-- 公開驗證通過後，依native/PAGES-PUBLISHING.md使用上述遊戲commit＋完整測試＋itch收據，完成Pages Actions／SHA／開始暫停。
-- 接著中英Devlog、商店介紹與截圖、原論壇17090045及profile引用，最後cleanup_local先dry-run再Apply。
-- Pages、Devlog、介紹／截圖／論壇／profile、清理本次均尚未完成，不宣稱全部平台更新。
-- 商店與論壇均未Save v78，已reload核對公開原文仍v77；論壇5張原圖保留。
-- 論壇selectText後按鍵／paste這次會刪除選句卻把新字插到編輯器開頭，p.fill也錯位；未提交。後續先量測焦點與游標，不能盲目重複或整份覆寫丟失圖片。
-- Devlog管理頁目前最新v77，沒有v78草稿。原論壇編輯入口https://itch.io/post/17090045/edit。
+## 發版狀態與下一步
+- v79尚未建置、上傳或發布；測試完成→遊戲commit/push→APK建置稽核／固定測試通道→itch→Pages→中英Devlog→商店／原論壇／profile→cleanup。
+- v78 Butler build2029949現已Active，先前處理卡點已解除；不重傳v78。本批可合併v78選取色與v79導覽更新的Devlog。
+- v78 APK97800／0.9.78-test.0已公開核對，APK SHA0edd3af57f8998728fca0d7eb6184f27014f871a49a18c640191eb2d0c15f3fb。
+- 固定APK入口：https://github.com/davidform/goo-blaster/releases/tag/android-test。
+- Pages／Devlog／商店介紹／原論壇首文與profile目前仍v77，不能宣稱已同步。
+- 原論壇17090045仍保留5圖；先前選句局部替換會把新字插到开頭，沒有Save错误內容。後續須驗證完整正文／圖片／實際送出欄位才提交。
+- 原論壇編輯https://itch.io/post/17090045/edit；公帖https://itch.io/t/6826201/50-stages-no-ads-no-gacha-works-offline-my-browser-roguelite-needs-breaking。
+- 本版清理尚未執行，僅平台同步完後執行cleanup_local盤點再Apply。
 
 ## 限制
-- 單代理；真人易用性、聽感、市場、母語潤稿、Pixel覆蓋更新與真機長時效能仍待實際回饋。
+- 單代理；真人手持舒適度／聽感／市場／母語潤稿／Pixel覆蓋更新仍需實際回饋。
+- 小鎮是原創小型場景，不以自動測試或畫面布局宣稱已達參考作品的內容量或市場驗證。

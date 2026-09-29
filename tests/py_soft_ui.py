@@ -27,8 +27,8 @@ with sync_playwright() as pw:
     map_y = page.locator('#galaxyWrap').evaluate('(el)=>el.scrollTop')
     page.locator('#btnShop').click()
     assert page.locator('#btnShop').get_attribute('aria-current') == 'page'
-    page.locator('#shopList').evaluate('(el)=>el.scrollTop=120')
-    shop_y = page.locator('#shopList').evaluate('(el)=>el.scrollTop')
+    page.locator('#shop').evaluate('(el)=>el.scrollTop=120')
+    shop_y = page.locator('#shop').evaluate('(el)=>el.scrollTop')
     assert shop_y > 0
     page.locator('#navSettings').click()
     page.screenshot(path=str(ARTIFACTS / 'soft-settings.png'))
@@ -43,13 +43,13 @@ with sync_playwright() as pw:
     assert page.locator('#langBox').is_visible()
     page.evaluate("document.querySelector('#langBox').classList.add('hide')")
     page.locator('#btnShop').click()
-    assert page.locator('#shopList').evaluate('(el)=>el.scrollTop') == shop_y
+    assert page.locator('#shop').evaluate('(el)=>el.scrollTop') == shop_y
     page.screenshot(path=str(ARTIFACTS / 'soft-upgrades.png'))
     page.locator('#navAdventure').click()
     assert page.evaluate('SEL_IDX') == selected
     assert page.locator('#galaxyWrap').evaluate('(el)=>el.scrollTop') == map_y
     page.locator('#btnShop').click()
-    page.locator('#btnShopBack').click()
+    page.locator('#btnHome').click()
     assert page.evaluate('SEL_IDX') == selected, 'Shop Back must preserve selected stage too'
     # Every new label is contained at narrow, short landscape, mobile and tablet sizes.
     checks = 0

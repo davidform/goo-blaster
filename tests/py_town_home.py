@@ -20,8 +20,8 @@ with sync_playwright() as pw:
    assert p.locator('#gardenViewport').is_hidden() and p.locator('#gardenQuest').is_hidden()
    assert p.locator('.festivalThemes').is_hidden()
    p.locator('#festivalStart').click();assert p.locator('.festivalPanel.playing').is_visible()
-   assert p.locator('.festivalHero').evaluate('e=>e.getBoundingClientRect().top>=document.querySelector("#btnHome").getBoundingClientRect().bottom'), 'Return header must not cover the activity'
-   assert p.locator('#garden').evaluate('e=>e.getBoundingClientRect().top>=document.querySelector("#btnHome").getBoundingClientRect().bottom')
+   assert p.locator('.festivalHero').evaluate('e=>e.getBoundingClientRect().top>=0'), 'Activity must start inside the content area'
+   assert p.locator('#garden').evaluate('e=>e.getBoundingClientRect().bottom<=document.querySelector("#hubNav").getBoundingClientRect().top+1')
   p.locator('#btnHome').click();assert p.locator('#townHome').is_visible()
   assert p.locator('#btnPlay').is_hidden() and p.locator('#galaxyWrap').is_hidden()
  assert p.evaluate('JSON.stringify({COINS,META,PROGRESS,GARDEN})')==initial

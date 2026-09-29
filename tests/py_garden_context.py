@@ -30,7 +30,7 @@ with sync_playwright() as pw:
             assert pop.locator('.gardenCropChoice:visible').count()==3
             bounds=pop.bounding_box()
             assert bounds['x']>=0 and bounds['x']+bounds['width']<=w+1
-            assert bounds['y']>=p.locator('#btnHome').bounding_box()['height']-1
+            assert bounds['y']>=8
             assert bounds['y']+bounds['height']<=p.locator('#hubNav').bounding_box()['y']+1
             assert pop.evaluate('e=>e.scrollWidth<=e.clientWidth+1')
             for choice in pop.locator('.gardenCropChoice:visible').all():

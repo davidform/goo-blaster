@@ -187,17 +187,17 @@ with sync_playwright() as pw:
     pg,c,errs=page(b)
     r=pg.evaluate("""()=>{
         COINS=200; showShop();
-        const el=document.getElementById('shopList');
+        const el=document.getElementById('shop');
         const cs=getComputedStyle(el);
         return {touchAction:cs.touchAction, overflowY:cs.overflowY,
                 scrollH:el.scrollHeight, clientH:el.clientHeight};
     }""")
     print(f"  {r}")
-    check("shopList 的 touch-action 允許直向捲動", r["touchAction"] in ("pan-y","pan-y pinch-zoom"), r["touchAction"])
+    check("shop 整頁的 touch-action 允許直向捲動", r["touchAction"] in ("pan-y","pan-y pinch-zoom"), r["touchAction"])
     check("內容確實超出容器（有東西可捲）", r["scrollH"]>r["clientH"], f"{r['scrollH']}>{r['clientH']}")
     # 真的用觸控滑一下看 scrollTop 有沒有變
     cdp=c.new_cdp_session(pg)
-    box=pg.evaluate("""()=>{const r=document.getElementById('shopList').getBoundingClientRect();
+    box=pg.evaluate("""()=>{const r=document.getElementById('shop').getBoundingClientRect();
                          return {x:r.x+r.width/2,y:r.y+r.height/2};}""")
     cdp.send("Input.dispatchTouchEvent",{"type":"touchStart","touchPoints":[{"x":box["x"],"y":box["y"],"id":1}]})
     for i in range(1,9):
@@ -205,8 +205,8 @@ with sync_playwright() as pw:
             "touchPoints":[{"x":box["x"],"y":box["y"]-i*18,"id":1}]})
         pg.wait_for_timeout(16)
     cdp.send("Input.dispatchTouchEvent",{"type":"touchEnd","touchPoints":[]})
-    pg.wait_for_timeout(400)
-    st=pg.evaluate("()=>document.getElementById('shopList').scrollTop")
+    pg.wait_for_function("document.getElementById('shop').scrollTop>0")
+    st=pg.evaluate("()=>document.getElementById('shop').scrollTop")
     check("實際觸控滑動後有捲動", st>0, f"scrollTop={st}")
     pg.close(); c.close()
 

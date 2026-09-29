@@ -1474,3 +1474,17 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - itch僅上傳已測index.html，build2029949；20:51台北時間Butler與通道UI均顯示Processing，v77/build2018911仍Active。公開Run game實際iframe亦仍v77，故尚未產生v78公開驗證收據；不重複上傳。
 - 因平台處理未完成，Pages、Devlog、介紹／截圖／原論壇首文與profile、清理暫未執行完成。商店介紹只在編輯器準備未Save；論壇局部編輯工具將文字插到錯位，未提交且reload核對原v77及5張圖片完整保留。不可把準備視為公開更新。
 - 私人pending收據_private/mobile-test/itch-v78-pending.json；後续只需接續待處理build，不重做已完成85項與APK。公開source不同時才重測。
+
+
+## v0.9.79 — 底部中央主畫面與單層捲動（2026-09-29）
+- 使用者指出糖果屋有兩個返回鍵，要求統一放入底列、改善手持觸控。根因為v78共用頂端返回與原商店返回並存；底列未列首頁，且原商店返回實際回冒險。此次將返回統一為中央Home，移除兩個舊位置，維持冒險／強化／主畫面／庭院／設定五個穩定入口。
+- 單一改動是導覽與觸控配置：底列88px加safe-area、按鈕至少48px、4px間隔、選取狀態顯色；內容空間不再預留64px返回頁首，商店改整頁捲動。庭院就地面板改依內容上緣及底列定位。11語言新增短標籤navHome，由i18n/build_v0979.py生成；無平衡／計時／存檔格式變動。
+- 新py_bottom_nav涵蓋44版面、220次tap、商店末項可達、唯一首頁、三主題中途返回、資料不變；未改v78實跑即FAIL（首頁不在底列）。初次scrollIntoView量測義大利文320px末項下緣超過0.47px，改用捲到底的使用情境驗證，保持完整可見門檻。
+- 邊角182213-bottom79-edges四項PASS且SHA未變；中英實際新存檔截圖store/screenshots/v0.9.79已目視，CUA操作商店→首頁→池塘→開始→移動→首頁成功。完整套件新增至86项，進行中。
+- 完整首輪py_ui_fixes仍檢查shopList內層scrollTop而失敗，依新設計改測shop整頁並保留真實觸控滑動；原失敗保留並補驗證。
+- HTML SHA 6c8259ca544dd2087907061a51afa4be3ecdd7dd49cee604508a1883bf8fb538。教訓：共用返回入口改動須清查各頁原有入口；驗證操作目的與手勢，不能將舊捲動容器名稱當永久需求。
+- 接手核對v78 Butler build2029949已Active；不重做已通過v78測試或APK，待本批v79完成後統一同步公開文件。ADB目前無裝置，真機與Surface禁止的全平行均未執行。
+
+- 完整182818-bottom79-full：85/86首輪PASS，唯一py_ui_fixes舊容器測試失敗。185020-bottom79-cpu4-retry三項全部PASS（補跑py_ui_fixes8.9秒，真實滑動scrollTop129；CPU4底列160.8秒、就地面板196.8秒），合併86/86且HTML SHA未變。
+- 獨立效能47.8→49.5FPS（+3.6%為量測波動），既定相對／絕對門檻PASS，0JS錯誤。py_test9第1關54秒／第2關64秒通關，第3關90秒陣亡，保留機率性結果；test9長模擬346.7秒PASS。
+- py_release_smoke另實跑：CPU4離線、新存檔progress1 coins0 meta{}，真實關閉重開恢復progress9 coins456 meta.dmg2 selection8，0JS錯誤／0外部請求。全平行／Pixel仍未執行。
