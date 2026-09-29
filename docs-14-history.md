@@ -1494,3 +1494,15 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 本批中英Devlog1682140 Published，完整正文／單一v79附件核對並record，9項工作流程測試PASS。商店介紹及30370495新截圖公開核對，前三張仍為既有combat，新圖第四；原圖目視與公開縮圖載入通過。
 - 原公告17090045及profile已同步v79，所有段落、兩個連結及六張圖載入核對。富文字HTML貼上會清空草稿，contenteditable.fill會重複或失效，未提交失敗草稿；最後明確清空→確認空白→CUA typeText原生輸入→工具列恢復連結→圖片工具補回5張舊圖＋新版截圖。圖片庫僅10張近期，前三張combat由原v64檔案重傳，未冒稱新版戰鬥截图，未刪舊資產或歷史回覆。收據store/page-sync/v0.9.79.json。
 - cleanup先盤點後Apply，移除4項，釋放26,930,141 bytes，0刪除失敗／25項AccessDenied略過；保留v79／v78 APK、進度／簽章／全部測試證據。Pixel本次未連線，Surface全平行未執行，實際手持舒適度仍需手機回饋。
+
+
+## v0.9.80 — 設定中的隱私權政策入口（2026-09-29）
+
+- 根因：公開隱私政策已存在，但遊戲設定沒有入口；既有 UI 測試也沒有檢查政策可達性。Google Play 準備時發現此缺口。
+- 單一遊戲改動：設定新增開啟公開政策網站的按鈕，11 語言由 i18n/build_v0980.py 產生；新分頁 noopener/noreferrer，原遊戲與進度保留。沒有改戰鬥、庭院數值或存檔格式。
+- 前後：v79 的新 py_privacy_entry 實跑在缺少按鈕斷言失敗；v80 通過 44 版面、真實點按、離線導覽與保留存檔、新分頁隔離檢查。政策目的頁在測試中用 fixture，不能當公開網站或 Android 外部瀏覽器證據。
+- 完整測試 87/87 PASS：_private/test-runs/20260929-194400-848598-privacy80-full/results.json；來源 SHA a70daa8c6c507d3584a414152220e4141d25a81fab7253ec0271b9a335f79217。
+- 邊角與嚴苛：20260929-200922-480275-privacy80-cpu4 兩項 PASS（privacy 44.6s、bottom nav 111s）；py_release_smoke CPU4、離線、新存檔、真正瀏覽器重開 PASS，0 JS 錯誤／0 外部請求，進度9／456幣／dmg2／selection8正確還原。Surface 未跑全平行，真機仍待測。
+- 新手 bot 第1／2／3關57／60／89秒通關；效能單獨49.2→52.3FPS（+6.4%量測波動，不宣稱效能改善），所有門檻 PASS。
+- 同批商店準備：使用者定價 US$1.99、定位9歲以上與成人；中英政策補列本機庭院資料。Console、正式簽章、封測／送審狀態另見 store/google-play 與 HANDOFF，不把本機通過當上架完成。
+- 教訓：網站有政策不代表 App 內可找到；UI 可點、公開政策可讀、原生開啟與 Console 聲明須分別驗證。截圖 store/screenshots/v0.9.80 已目視。
