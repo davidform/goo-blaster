@@ -27,7 +27,7 @@
     "model": "paid-once",
     "price": {
       "currency": "USD",
-      "amount": 2.99
+      "amount": 1.99
     },
     "audience": "family"
   },

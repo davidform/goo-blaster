@@ -11,7 +11,9 @@ from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 source=(ROOT/'index.html').read_bytes()
 build=re.search(rb"const BUILD='([^']+)'",source)[1].decode()
-out=ROOT/'_private'/'combat-candidates'/build/'defensive-build'
+height=int(os.getenv('GOO_CAPTURE_HEIGHT','900'))
+assert height in (900,960), 'Use the standard gallery or Google Play 9:16 portrait size'
+out=ROOT/'_private'/'combat-candidates'/build/('defensive-build' if height==900 else 'portrait-960')
 out.mkdir(parents=True,exist_ok=True)
 rows=[]; errors=[]
 BOT=r'''() => {
@@ -52,7 +54,7 @@ BOT=r'''() => {
 with sync_playwright() as pw:
  b=pw.chromium.launch(channel=os.environ.get('GOO_BROWSER_CHANNEL','msedge'))
  for stage in [5,10,20]:
-  c=b.new_context(viewport={'width':540,'height':900},device_scale_factor=2,has_touch=True)
+  c=b.new_context(viewport={'width':540,'height':height},device_scale_factor=2,has_touch=True)
   c.add_init_script('window.requestAnimationFrame=()=>0');c.set_offline(True)
   p=c.new_page();p.on('pageerror',lambda e:errors.append(str(e)));p.goto((ROOT/'index.html').as_uri())
   p.evaluate('''stage=>{META={hearts:2,revive:2,pickup:1,xp:0,wep:0,dmg:1,aspd:0};

@@ -1,0 +1,27 @@
+{
+  "status": "console-drafts-saved-not-submitted",
+  "console_target_age_saved": false,
+  "console_listing_locales_saved": ["en-US", "zh-TW"],
+  "console_ai_visual_labels_saved": true,
+  "application_id": "com.demjastudio.gooblaster",
+  "business_model": "paid-download-full-game",
+  "base_price": {"currency": "USD", "amount": 1.99, "user_confirmed": "2026-09-29", "console_saved": false},
+  "category": "GAME_ACTION",
+  "target_age_groups": ["9-12", "13-15", "16-17", "18+"],
+  "target_age_user_confirmed": "2026-09-29",
+  "contact_email": "davidformbz@gmail.com",
+  "website": "https://davidform.github.io/goo-blaster/",
+  "privacy_policy": "https://davidform.github.io/goo-blaster/privacy.html",
+  "localizations": {
+    "en-US": {
+      "title": "GOO BLASTER",
+      "short_description": "Dodge, dash and blast through 50 stages. Grow a candy garden between battles.",
+      "full_description": "Dodge the crowd. Choose your upgrades. Take on the next boss.\n\nGOO BLASTER is a colorful survival action game with 50 stages, automatic attacks and hands-on movement. Drag to move, dash through danger, and choose upgrades as you level up. Build a combination of weapons and abilities that suits your run.\n\nBETWEEN BATTLES\nUse earned Candy Coins for permanent upgrades, then return to the adventure. Visit your candy garden to plant and harvest crops, cook recipes, fulfill orders and restore a small village. Crops keep growing while the app is closed and do not wither when ready.\n\nTHREE SMALL CHALLENGES\nTry a picnic memory game, guide a fish through a pond, or solve starlight puzzles. Each activity has three difficulty levels and its own music and visual feedback.\n\nPLAY AT YOUR OWN PACE\nThe full game works offline. No ads, subscriptions, in-app purchases or paid random rewards. One purchase includes the full game. Progress is saved on your device, with backup codes you can export and restore.\n\nSupports English, Traditional and Simplified Chinese, Japanese, Korean, German, French, Spanish, Italian, Brazilian Portuguese and Russian."
+    },
+    "zh-TW": {
+      "title": "GOO BLASTER",
+      "short_description": "閃避、衝刺、迎戰 Boss！挑戰 50 關，戰鬥之間回到糖果庭院種植與修復小村莊。",
+      "full_description": "閃過敵群、選擇升級、迎戰下一位 Boss。\n\nGOO BLASTER 是一款色彩繽紛的生存動作遊戲，提供 50 個關卡。角色會自動攻擊，你負責拖曳移動、衝刺避險，並在升級時選擇武器與能力，組合適合這一局的搭配。\n\n戰鬥之間的小天地\n使用遊玩獲得的糖果幣購買永久強化，再回到冒險。也能走進糖果庭院種植與收成、製作料理、完成委託，逐步修復小村莊。關閉程式後作物仍會成長，成熟後不會枯萎。\n\n三種小挑戰\n體驗野餐記憶配餐、池塘小魚尋路，以及星光點燈謎題。各有三個難度，搭配不同音樂、動態圖示與互動回饋。\n\n照自己的步調遊玩\n完整遊戲可離線遊玩，沒有廣告、訂閱、App 內購或隨機付費獎勵。一次購買即可取得完整遊戲。進度儲存在裝置上，也可以匯出備份碼並還原。\n\n支援英文、繁體中文、簡體中文、日文、韓文、德文、法文、西班牙文、義大利文、巴西葡萄牙文及俄文。"
+    }
+  }
+}

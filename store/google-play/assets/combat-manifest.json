@@ -1,0 +1,170 @@
+{
+  "build": "v0.9.80",
+  "source_sha256": "a70daa8c6c507d3584a414152220e4141d25a81fab7253ec0271b9a335f79217",
+  "method": "Record unretouched frames from normal combat simulation, for human selection.\n\nUses an isolated, attainable veteran save. No health resets, invented enemies,\nforced drops, direct XP, or camera repositioning. Fixed-step clock is accelerated\nfor capture, not an FPS benchmark or evidence of human playtesting.\n",
+  "errors": [],
+  "candidates": [
+    {
+      "time": 132.36666666665963,
+      "over": false,
+      "hearts": 5,
+      "level": 19,
+      "kills": 724,
+      "enemies": 8,
+      "bullets": 12,
+      "shots": 6,
+      "bosses": [
+        {
+          "name": "Spiky Jelly",
+          "superBoss": true,
+          "hp": 10061.233895000003,
+          "flash": -0.01666666666660458,
+          "above": true
+        }
+      ],
+      "overlay": false,
+      "flash": 0,
+      "toast": 0,
+      "weapon": {
+        "bubble": 5,
+        "graffiti": 5,
+        "yoyo": 0
+      },
+      "meta": {
+        "hearts": 2,
+        "revive": 2,
+        "pickup": 1,
+        "xp": 0,
+        "wep": 0,
+        "dmg": 1,
+        "aspd": 0
+      },
+      "file": "stage-5-t132.png",
+      "stage": 5,
+      "score": 149
+    },
+    {
+      "time": 48.600000000001046,
+      "over": false,
+      "hearts": 3,
+      "level": 8,
+      "kills": 268,
+      "enemies": 13,
+      "bullets": 11,
+      "shots": 4,
+      "bosses": [
+        {
+          "name": "Jelly Giant",
+          "superBoss": false,
+          "hp": 6513.3047000000015,
+          "flash": -0.01374999999998491,
+          "above": true
+        }
+      ],
+      "overlay": false,
+      "flash": 0,
+      "toast": 0,
+      "weapon": {
+        "bubble": 2,
+        "graffiti": 0,
+        "yoyo": 1
+      },
+      "meta": {
+        "hearts": 2,
+        "revive": 2,
+        "pickup": 1,
+        "xp": 0,
+        "wep": 0,
+        "dmg": 1,
+        "aspd": 0
+      },
+      "file": "stage-10-t048.png",
+      "stage": 10,
+      "score": 121
+    },
+    {
+      "time": 48.73333333333437,
+      "over": false,
+      "hearts": 3,
+      "level": 8,
+      "kills": 269,
+      "enemies": 15,
+      "bullets": 12,
+      "shots": 4,
+      "bosses": [
+        {
+          "name": "Jelly Giant",
+          "superBoss": false,
+          "hp": 6459.820500000002,
+          "flash": -0.01374999999998491,
+          "above": true
+        }
+      ],
+      "overlay": false,
+      "flash": 0,
+      "toast": 0,
+      "weapon": {
+        "bubble": 2,
+        "graffiti": 0,
+        "yoyo": 1
+      },
+      "meta": {
+        "hearts": 2,
+        "revive": 2,
+        "pickup": 1,
+        "xp": 0,
+        "wep": 0,
+        "dmg": 1,
+        "aspd": 0
+      },
+      "file": "stage-10-t048.png",
+      "stage": 10,
+      "score": 126
+    },
+    {
+      "time": 48.96666666666757,
+      "over": false,
+      "hearts": 4,
+      "level": 20,
+      "kills": 457,
+      "enemies": 10,
+      "bullets": 21,
+      "shots": 22,
+      "bosses": [
+        {
+          "name": "Jelly Giant",
+          "superBoss": false,
+          "hp": 1148.7061000000108,
+          "flash": -0.016666666666651148,
+          "above": true
+        }
+      ],
+      "overlay": false,
+      "flash": 0,
+      "toast": 0,
+      "weapon": {
+        "bubble": 5,
+        "graffiti": 5,
+        "yoyo": 0
+      },
+      "meta": {
+        "hearts": 2,
+        "revive": 2,
+        "pickup": 1,
+        "xp": 0,
+        "wep": 0,
+        "dmg": 1,
+        "aspd": 0
+      },
+      "file": "stage-20-t048.png",
+      "stage": 20,
+      "score": 133
+    }
+  ],
+  "selected_order": [
+    "stage-5-t132.png",
+    "stage-10-t048.png",
+    "stage-20-t048.png"
+  ],
+  "visual_review": "Full-size and 180px-wide thumbnails checked: hero, boss, projectiles and dodge space visible; no major toast, tutorial or hit flash. These are real unretouched simulation frames, not human playtest results."
+}

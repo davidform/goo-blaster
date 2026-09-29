@@ -1506,3 +1506,10 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 新手 bot 第1／2／3關57／60／89秒通關；效能單獨49.2→52.3FPS（+6.4%量測波動，不宣稱效能改善），所有門檻 PASS。
 - 同批商店準備：使用者定價 US$1.99、定位9歲以上與成人；中英政策補列本機庭院資料。Console、正式簽章、封測／送審狀態另見 store/google-play 與 HANDOFF，不把本機通過當上架完成。
 - 教訓：網站有政策不代表 App 內可找到；UI 可點、公開政策可讀、原生開啟與 Console 聲明須分別驗證。截圖 store/screenshots/v0.9.80 已目視。
+
+- v80交付：遊戲8edd220已push；APK98000同簽章且公開SHA915aa00110f0c441259dc70f1ef8e9a98e1e32ce53e776fecb3713fef23d4858核對。itch2035680 Active、Pages3db64d5／Actions36568248919成功，公開完整HTML與開始／暫停通過；政策真實另頁可讀。
+- Devlog1682276已Published、工作流程9項PASS；商店介紹／截圖30372721／論壇17090045／profile已核對版本、完整正文與七圖。局部文字選取可保留既有連結和圖片，比重建整段富文字可靠。
+- Google Play沿用既有草稿，EN-US／zh-TW文案、512圖示、1024×500主視覺與四张1080×1920截圖已存；六圖AI標記已存。前3張為實際可達成戰鬥狀態，第四張為新存檔小鎮，來源與縮圖檢視見assets manifests。沒有送審。
+- 未簽AAB98001／0.9.80-rc.1實際建置與bundletool validate成功，API36／debug=false／full／HTML一致；SHA7d8f7be37fd1ff5a5517a0d85e422ac2783b5f2601d47bd6f408e97e6a5416d6。測試Gradle逐位元組還原。未建立金鑰、簽署、上傳；待使用者確認IARC條款與金鑰操作，商家帳戶由本人處理，US$1.99尚未存Console。
+- 真實帳戶要求12名測試者持續14天，目前0；商店草稿與自動測試不取代封測。Surface全平行、Pixel、原生政策連結與最終Play交付尚未驗證。
+- cleanup先dry-run再Apply：移除2項／13,480,216 bytes，0失敗／25拒絕存取略過；保留v80、v79與進度／證據。下載bundletool及Pages首次載入曾逾時，分別續傳核對官方SHA、重新載入驗證成功，未隱藏失敗。

@@ -19,7 +19,7 @@
 | Xcode | 打包 iOS | **只能在 Mac 上**。沒有 Mac 就先做 Android |
 
 **建議先只做 Android。** 理由見 `docs-12-上架路線圖.md`：
-Google Play 有 12 位測試員 × 14 天的強制等待期，那個鐘要越早開始越好。
+本作的個人開發者帳號已在 2026-09-29 由 Console 確認：需要 12 位測試員持續參加封閉測試 14 天，之後才能申請正式版權限。不是所有帳號都適用，也不是上傳 APK 就開始計算；見 [封閉測試計畫](../store/google-play/testing-plan.md)。
 
 ---
 
@@ -67,9 +67,9 @@ Android Studio 開起來之後：
 - **產生上架用的檔案**：選單 `Build` → `Generate Signed Bundle / APK`
   → 選 **Android App Bundle (.aab)**（Google Play 要的是 aab，不是 apk）
 
-⚠ **簽章金鑰（keystore）產生之後一定要備份。**
-弄丟的話，你**永遠沒辦法更新**這個 App，只能用新的套件名重新上架、
-所有既有玩家與評價都拿不回來。備份到雲端硬碟，密碼另外記。
+⚠ **先分清 App signing key 與 upload key，再決定簽章方案並安全備份。**
+使用 Play App Signing 時，Google 保管配送用的 App signing key；遺失 upload key 可以申請重設，不能籠統宣稱任何金鑰遺失都永遠無法更新。跨商店與目前測試 APK 的簽章相容性仍需個別核對。不要把私鑰或密碼放入 Git／Release，敏感金鑰操作須按 AGENTS.md 確認。
+官方：[Play App Signing](https://support.google.com/googleplay/android-developer/answer/9842756?hl=en)。
 
 ---
 

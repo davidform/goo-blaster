@@ -1,0 +1,13 @@
+{
+  "build": "v0.9.80",
+  "source_sha256": "a70daa8c6c507d3584a414152220e4141d25a81fab7253ec0271b9a335f79217",
+  "artwork": "Original Canvas promotional composition with the unchanged in-game drawSoftHero; not a gameplay screenshot.",
+  "screenshots": "Fresh save, English, 540x960 @2x, actual town/settings navigation; no injected progress.",
+  "files": {
+    "feature-1024x500.png": "345c8a3e9b3ea4268d666f322c3e4f101f46cfff05c6fac7a46518e68aff7103",
+    "icon-512x512.png": "c6713a2e1c9fc6d9bd9d11d7a04f13ea4c0c496a4cb69df5b05da806896f1d1f",
+    "settings-1080x1920.png": "1c50399e4b47174040bb8d8305c988f3db92f5117a836d96756c0ca8ec45b5f8",
+    "town-1080x1920.png": "46547037e5697876758717a0a5f0bc24cc427dee58d47eb30c21b35922b4384e"
+  },
+  "errors": []
+}

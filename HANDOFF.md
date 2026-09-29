@@ -1,45 +1,53 @@
 # GOO BLASTER 精簡交接
 
-## 目前狀態（2026-09-29，v79完成）
-- 使用者要求移除重複回主畫面按鈕，統一放底列並改善手機觸控，已完成本次範圍。
-- 分支codex/soft-world-ui；遊戲commit bcb3d0f8ffc214cbd6589e132c04bac963e9e309已push。
-- Summary：v0.9.79: unify home navigation in the bottom bar。
-- HTML SHA 6c8259ca544dd2087907061a51afa4be3ecdd7dd49cee604508a1883bf8fb538。
-- .codex-remote-attachments為使用者附件，不可提交；私人收據僅_private。勿重做v78／v79已完成驗證與發布。
+## 目前任務（2026-09-29）
+- Google Play 上架準備；使用者定價 US$1.99、目標 9 歲以上與成人。尚未送審／正式發布。
+- 使用者會自行完成商家帳戶；不可代填收款／稅務／身分。Console 價格尚未儲存。
+- 分支 codex/soft-world-ui；遊戲 commit 8edd22063eccf79e2d24fc3bd95a64997c963d3c 已 push。
+- Summary：v0.9.80: add a privacy policy entry in settings。
+- HTML SHA a70daa8c6c507d3584a414152220e4141d25a81fab7253ec0271b9a335f79217。
+- 附件 .codex-remote-attachments 不提交；私人產物只放 _private。勿重做已完成的 v79／v80 發布。
 
-## 改動與決策
-- 五格固定底列：冒險／強化／主畫面／庭院／設定，主畫面居中；移除homeHeader與btnShopBack。
-- 底列88px加safe-area、至少48px觸控範圍與4px間距；目前頁依aria-current變色，戰鬥隱藏整個導覽。
-- 商店整頁捲動並保存位置，取消內層清單；內容末端與庭院就地面板不被底列遮住。
-- 11語言新增navHome短標籤，由i18n/build_v0979.py生成；無玩法、倒數、價格或存檔格式改動。
-- AGENTS第25／27節記錄新決策，取代舊頂端返回要求。設計／根因見docs-22-bottom-navigation.md及docs-14-history.md。
-
-## 已驗證
-- 完整：_private/test-runs/20260929-182818-349067-bottom79-full/results.json，首輪85/86；唯一舊捲動測試失敗保留。
-- 補跑：_private/test-runs/20260929-185020-589524-bottom79-cpu4-retry/results.json，三項全PASS且SHA未變，合併86/86。
-- py_ui_fixes改測shop整頁真實滑動，scrollTop129；CPU4底列160.8秒／庭院就地面板196.8秒。
-- 新py_bottom_nav：44版面（11語言×4尺寸）、220次真實tap、唯一中央首頁、顏色、末項可達、三主題中途返回、存檔隔離。
-- 未改v78實跑新測試FAIL，證據_private/baseline78-bottom/regression.log；邊角182213-bottom79-edges四項PASS。
-- py_test9第1／2關54／64秒通關，第3關90秒陣亡；硬門檻第1關PASS，沒有冒稱全通。test9長模擬346.7秒PASS。
-- 效能獨立47.8→49.5FPS（+3.6%量測波動）PASS；不與Android建置同跑，0JS錯誤。
-- py_release_smoke CPU4／離線／新存檔／真實重開PASS，還原progress9 coins456 meta.dmg2 selection8，0錯誤／0外部請求。
-- CUA本機強化→首頁→池塘→開始→移動魚→首頁成功；中英實際新存檔截圖store/screenshots/v0.9.79已目視且附manifest。
-- 環境：.venv/Scripts/python.exe；GOO_BROWSER_CHANNEL=msedge、PYTHONUTF8=1、NODE_PATH=_private/test-node/node_modules。
+## v80 範圍與驗證
+- 設定新增隱私政策網站入口，11 語言；另頁開啟、原遊戲保留。政策補庭院存檔與 9+ 定位。
+- 不改玩法、倒數、存檔格式與預設英文。i18n/build_v0980.py；tests/py_privacy_entry.py 已納入全測。
+- 完整 87/87 PASS：_private/test-runs/20260929-194400-848598-privacy80-full/results.json。
+- 命令：.venv/Scripts/python.exe run_tests.py --jobs 2 --label privacy80-full。
+- 環境 PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
+- test9 第 1／2／3 關 57／60／89 秒通關；效能獨立 49.2→52.3 FPS（+6.4% 量測波動）。
+- CPU4 privacy／bottomnav 兩項 PASS：_private/test-runs/20260929-200922-480275-privacy80-cpu4/results.json。
+- 離線／新存檔／真實關閉重開 PASS：_private/play-preparation/release-smoke-v80.log；0 錯誤、0 外部請求。
+- 新隱私測試 44 版面、真實點擊、48px／無溢位／存檔不變；v79 對照實跑缺入口 FAIL，_private/baseline79-privacy/regression.log。
+- 截圖 store/screenshots/v0.9.80 已目視；本機 popup fixture 不冒充原生實機。
 
 ## 已交付
-- APK97900／0.9.79-test.0，applicationId及簽章延續；實際APK內HTML／簽章核對。
-- APK SHA755559421f431e33d266d5bc57eb3552ad9a15c66f7090ed160bc1080ef6a10a；公開資產597990169重新下載核對。
-- 固定入口：https://github.com/davidform/goo-blaster/releases/tag/android-test。
-- itch build2035414/upload19167726 Active，_private/mobile-test/itch-v79.json；完整payload一致，實際開始／暫停與底列返回PASS。
-- Pages部署0246bf171e506d5b8c45a4498efe0f6ad2a5ba52，Actions36558941043成功；公開SHA及實際開始／暫停PASS，pages-v79.json。
-- 中英Devlog已Published並record，9項工作流程測試PASS：https://davidform.itch.io/goo-blaster/devlog/1682140/v0979-one-home-button-within-thumb-reach。
-- 商店介紹／新截圖30370495、原公告17090045／profile均已公開核對；所有段落／兩個連結／六圖完整，store/page-sync/v0.9.79.json。
-- 商店前三張保留原combat，v79介面圖第四。論壇圖片庫限近期10張，原3張combat由v64原檔重傳，仍明確為歷史圖，未刪舊資產與回覆。
-- 論壇HTML貼上／fill失效曾產生空白或重複草稿，均未Save；明確清空→確認→高階CUA typeText→工具列重建連結／圖片後完成。見native/ITCH-PUBLISHING.md實測補充。
-- cleanup先dry-run後Apply，移除4項釋放26,930,141 bytes，0失敗／25項AccessDenied略過；保留v79／v78 APK與進度、簽章、測試證據。
+- APK 98000／0.9.80-test.0，既有簽章不變，公開重新下載核對。
+- APK SHA 915aa00110f0c441259dc70f1ef8e9a98e1e32ce53e776fecb3713fef23d4858。
+- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test。
+- itch build2035680／upload19167726 Active；公開完整 HTML 與平台附加腳本核對，開始／暫停 PASS；itch-v80.json。
+- Pages 3db64d5350080c98ad89035f86f876a5e2738a0c、Actions36568248919 成功；公開 SHA／開始暫停／另頁政策 PASS；pages-v80.json。
+- Pages 初次載入逾時，reload 後成功；原始紀錄保留。
+- Devlog1682276 已 Published、record、工作流程9項 PASS；store/devlogs/v0.9.80/。
+- 商店／原論壇公告17090045／profile 已更新，兩連結及七圖完整；store/page-sync/v0.9.80.json。
+- cleanup dry-run 後 Apply：移除2項釋放13,480,216 bytes；0失敗、25 AccessDenied略過。保留v80／v79 APK、進度與證據。
 
-## 未執行與限制
-- 本次ADB無裝置，Pixel尚未覆蓋更新；使用固定APK入口更新，不卸載或清資料。
-- Surface依既定限制未跑全平行；CPU4不冒充全平行。真人手持舒適度／市場／母語潤稿仍需實際回饋。
-- 預設單代理；本次沒有新增研究提案中的玩法／行銷活動，沒有調價或正式商店送審。
-- 小鎮是原創小型場景，不以自動測試或布局宣稱已達參考作品的內容量或市場驗證。
+## Google Play 實際狀態
+- 既有草稿 app4976029382108915574／com.demjastudio.gooblaster；不要重建。
+- 已存隱私、存取／無廣告／非政府／非金融／非健康、Action分類與公開信箱及HTTPS網址。
+- EN-US／zh-TW商店全文、圖示、主視覺、四張手機截圖已存草稿；六視覺素材AI標記已存，未送審。
+- 資料安全不收集／不分享已存草稿，最終完成受目標對象設定阻擋。
+- 使用者確認9–12／13–15／16–17／18+；Console 9–12暫被ESRB Teen提示停用，IARC尚未填，不猜分級。
+- 待回覆問題一：同意IARC條款後才能開始問卷；問題二：同意建立專用上傳金鑰及簽署AAB。未回覆不得執行。
+- Google已管理App簽章、Console尚無上傳憑證；不要更換App簽章或使用debug金鑰當上傳金鑰。
+- 未簽AAB：_private/play-preparation/goo-blaster-v0.9.80-98001-unsigned.aab，98001／0.9.80-rc.1。
+- AAB SHA 7d8f7be37fd1ff5a5517a0d85e422ac2783b5f2601d47bd6f408e97e6a5416d6；candidate.json／candidate-manifest.xml。
+- bundletool1.18.3 validate PASS；實際API36、debug=false、full、HTML一致、無.so／簽署，測試Gradle已還原。
+- native/build_play_candidate.py已實跑；未建立金鑰、未簽署、未上傳。初次下載逾時後續傳完成並核對官方SHA。
+- 詳細素材、證據及後續步驟：store/google-play/README.md、listing.json、testing-plan.md。
+
+## 未執行與下一步
+- 待商家帳戶、IARC／金鑰回覆；完成相應步驟後再核對最終簽署產物與Play交付。
+- 此個人帳戶Console實際要求12名測試者持續14天，目前0位；自動測試／GitHub APK不替代。
+- ADB無裝置，Pixel未覆蓋更新；需真機政策連結／離線／進度與手感驗證，不卸載或清資料。
+- Surface依既定限制未全平行，CPU4不冒充全平行；市場與母語潤稿未驗證。
+- 單代理，不新增玩法／投廣告／招募私訊／正式送審；以已保存草稿接續，不重做發布。

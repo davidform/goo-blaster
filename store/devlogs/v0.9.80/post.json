@@ -1,0 +1,35 @@
+{
+  "build": "v0.9.80",
+  "title": "v0.9.80 — Privacy information in Settings",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "You can now open the privacy policy website from Settings in all 11 game languages. The link opens separately so you can return to your game. The policy now describes garden saves as well as adventure progress. Gameplay, saved progress and crop timers are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "現在可以從設定開啟隱私權政策網站，入口支援遊戲的 11 種語言。連結會另外開啟，方便回到遊戲；政策也補充庭院與冒險進度的儲存說明。玩法、既有進度與作物倒數不變。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "ce2c23c2e810e50693a4e34bfcaa4f84c999c528b073f0b8a3550e9644b2be85",
+  "public_game_sha256": "a70daa8c6c507d3584a414152220e4141d25a81fab7253ec0271b9a335f79217",
+  "public_build_id": 2035680,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>You can now open the privacy policy website from Settings in all 11 game languages. The link opens separately so you can return to your game. The policy now describes garden saves as well as adventure progress. Gameplay, saved progress and crop timers are unchanged.</p>\n<h2>繁體中文</h2>\n<p>現在可以從設定開啟隱私權政策網站，入口支援遊戲的 11 種語言。連結會另外開啟，方便回到遊戲；政策也補充庭院與冒險進度的儲存說明。玩法、既有進度與作物倒數不變。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1682276/v0980-privacy-information-in-settings",
+  "verified_at": "2026-09-29T12:40:13.442658+00:00"
+}
