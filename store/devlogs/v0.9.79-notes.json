@@ -1,0 +1,26 @@
+{
+  "build": "v0.9.79",
+  "title": "v0.9.79 — One home button, within thumb reach",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "Home now sits in the centre of the bottom navigation, alongside Adventure, Upgrades, Garden and Settings. The duplicate return buttons are gone. The Candy Shop scrolls as one page, keeping the navigation within reach. Selected difficulties, garden categories and navigation destinations show their current state in green. Your saved progress and crop timers are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "主畫面現在固定在底部導覽中央，與冒險、強化、庭院、設定並列，移除重複的返回按鈕。糖果屋改成整頁捲動，導覽入口保持在手指容易碰到的位置。難度、庭院分類與導覽選項會依目前狀態變綠。存檔進度與作物倒數不變。"
+    }
+  ]
+}

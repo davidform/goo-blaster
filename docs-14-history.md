@@ -1488,3 +1488,9 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 完整182818-bottom79-full：85/86首輪PASS，唯一py_ui_fixes舊容器測試失敗。185020-bottom79-cpu4-retry三項全部PASS（補跑py_ui_fixes8.9秒，真實滑動scrollTop129；CPU4底列160.8秒、就地面板196.8秒），合併86/86且HTML SHA未變。
 - 獨立效能47.8→49.5FPS（+3.6%為量測波動），既定相對／絕對門檻PASS，0JS錯誤。py_test9第1關54秒／第2關64秒通關，第3關90秒陣亡，保留機率性結果；test9長模擬346.7秒PASS。
 - py_release_smoke另實跑：CPU4離線、新存檔progress1 coins0 meta{}，真實關閉重開恢復progress9 coins456 meta.dmg2 selection8，0JS錯誤／0外部請求。全平行／Pixel仍未執行。
+
+- 遊戲commit bcb3d0f8ffc214cbd6589e132c04bac963e9e309已push，Summary：v0.9.79: unify home navigation in the bottom bar。APK97900／0.9.79-test.0同簽章，公開下載資產597990169核對SHA755559421f431e33d266d5bc57eb3552ad9a15c66f7090ed160bc1080ef6a10a。
+- itch build2035414/upload19167726 Active；公開完整payload核對與CUA強化→首頁→冒險→開始／暫停PASS。Pages部署0246bf171e506d5b8c45a4498efe0f6ad2a5ba52／Actions36558941043成功，公開整份HTML SHA一致並實際開始／暫停PASS。
+- 本批中英Devlog1682140 Published，完整正文／單一v79附件核對並record，9項工作流程測試PASS。商店介紹及30370495新截圖公開核對，前三張仍為既有combat，新圖第四；原圖目視與公開縮圖載入通過。
+- 原公告17090045及profile已同步v79，所有段落、兩個連結及六張圖載入核對。富文字HTML貼上會清空草稿，contenteditable.fill會重複或失效，未提交失敗草稿；最後明確清空→確認空白→CUA typeText原生輸入→工具列恢復連結→圖片工具補回5張舊圖＋新版截圖。圖片庫僅10張近期，前三張combat由原v64檔案重傳，未冒稱新版戰鬥截图，未刪舊資產或歷史回覆。收據store/page-sync/v0.9.79.json。
+- cleanup先盤點後Apply，移除4項，釋放26,930,141 bytes，0刪除失敗／25項AccessDenied略過；保留v79／v78 APK、進度／簽章／全部測試證據。Pixel本次未連線，Surface全平行未執行，實際手持舒適度仍需手機回饋。

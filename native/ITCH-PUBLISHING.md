@@ -47,3 +47,10 @@
 現有No payments、公開狀態、Portrait／mobile friendly均保留；使用者此次只授權同步遊戲，沒有要求改價格或其他商店。若需要重新登入或權限失效，完成本地準備並明示卡點，不聲稱發布成功。
 
 官方工具說明：[Butler pushing](https://itch.io/docs/butler/pushing.html)。
+
+
+## 論壇編輯器實測補充（2026-09-29）
+
+論壇沒有HTML按鈕。若選句替換、HTML剪貼簿或contenteditable.fill造成錯位、空白或重複，先reload保留公開原文，不儲存失敗草稿。v79有效方法：先讀取完整原文／連結／圖片來源；Control+A、Backspace後**讀回確認空白**，再用CUA高階typeText輸入完整文字（換行即段落，勿大量重複空行）。用selectText與Link→Insert link恢復原超連結；Add image逐一恢復图片，最後核對textarea實際提交欄位、所有段落、連結與圖片再Save。
+
+Choose image僅顯示近期十張；老圖片可由已有且已核對的原始截圖檔經Upload image→Pick image重傳，不把歷史圖改稱新版截圖。等Add image對話框真正就緒再等filechooser並點Pick image，避免載入期間逾時。公開profile圖片為lazy loading，實際捲到引用區後再檢查naturalWidth；不能僅因尚未捲到就判定圖片失效。此紀錄是實測處理方式，不保證工具每次相同，仍須逐步核對。
