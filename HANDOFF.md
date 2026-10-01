@@ -38,19 +38,21 @@
 - 資料安全不收集／不分享已存草稿，最終完成受目標對象設定阻擋。
 - 使用者確認9–12／13–15／16–17／18+；先前9–12停用提示已不作現況依據，IARC已完成後以Console實際儲存結果核對。
 - 使用者截圖確認IARC於10月1日10:04已完成、信箱demjaholding@gmail.com；不要重填。目標對象／資料安全有填寫及預覽圖，但最終儲存待核對。
-- Google已管理App簽章、Console尚無上傳憑證；不要更換App簽章或使用debug金鑰當上傳金鑰。
+- Google已管理App簽章；已簽AAB上傳成功並發布內部測試，勿更換App簽章或使用debug金鑰當上傳金鑰。
 - 未簽AAB：_private/play-preparation/goo-blaster-v0.9.80-98001-unsigned.aab，98001／0.9.80-rc.1。
 - AAB SHA 7d8f7be37fd1ff5a5517a0d85e422ac2783b5f2601d47bd6f408e97e6a5416d6；candidate.json／candidate-manifest.xml。
 - bundletool1.18.3 validate PASS；實際API36、debug=false、full、HTML一致、無.so／簽署，測試Gradle已還原。
-- 使用者10月1日明確授權金鑰／簽署，native/sign_play_candidate.ps1已實跑；未上傳。金鑰在使用者目錄.goo-blaster-signing，PKCS12／DPAPI／限定ACL，異地備份尚未完成，見其中BACKUP-README.txt。
+- 使用者10月1日明確授權金鑰／簽署，native/sign_play_candidate.ps1已實跑；已上傳。金鑰在使用者目錄.goo-blaster-signing，PKCS12／DPAPI／限定ACL，異地備份尚未完成，見其中BACKUP-README.txt。
 - 已簽_private/play-preparation/v0.9.80-98001-play-signed.aab；SHA948b7409f4680a8bdaffc6c7891676ed817fabbf0c0a7793867aa9b04958bef5。
 - 憑證SHA ed7ec469e074b8489d6515520d1a20e99ec29b4ae25c53f71cc0d56a4fe2eee6；jarsigner strict／bundletool／manifest與原始ZIP逐項比對PASS，只新增三簽章檔。signed-candidate.json記錄。
 - 詳細素材、證據及後續步驟：store/google-play/README.md、listing.json、testing-plan.md。
 
 ## 未執行與下一步
-- 下一步上傳已簽AAB核對Console憑證與內部測試安裝，再既有Alpha封測；不是正式發布。商家帳戶／US$1.99待核對，不能從填寫截圖推定已儲存。
+- 使用者截圖確認10月1日10:50發布0.9.80-rc.1 Internal Test；名單1位，Pixel已從Play安裝98001。下一步既有Alpha封測；不是正式發布。商家帳戶／US$1.99仍待核對。
 - 客服改用demjaholding@gmail.com；商店／公開隱私政策同步尚未完成。不得將使用者截圖內私人電話／地址寫入Git。
 - 此個人帳戶Console實際要求12名測試者持續14天，目前0位；自動測試／GitHub APK不替代。
-- ADB無裝置，Pixel未覆蓋更新；需真機政策連結／離線／進度與手感驗證，不卸載或清資料。
+- Pixel私人空間舊97100/debug簽章阻擋Play安裝；使用者明確允許本次移除，先備份及隔離還原PASS後才移除。此例外不擴及日後更新。
+- Pixel Play98001實測啟動／關閉重開後匯出碼與舊備份逐字相同（第1關、0幣）；實際APK內HTML SHA同v80。證據_private/pixel-play-migration/migration-verification.json；完整資料及備份碼同目錄勿提交。
+- Play實機簽章SHA256 57965f11182c1fa87082dc48573a7b9426ab029361da21ff0128416e1e7268f9；不同於debug及uploadkey。真機離線／政策連結／完整手感尚未驗證。
 - Surface依既定限制未全平行，CPU4不冒充全平行；市場與母語潤稿未驗證。
 - 單代理，不新增玩法／投廣告／招募私訊／正式送審；以已保存草稿接續，不重做發布。

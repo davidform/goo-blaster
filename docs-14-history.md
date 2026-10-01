@@ -1522,3 +1522,12 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 沒有新遊戲測試；index.html SHA未變，沿用已完成87/87。未上傳／未啟動封測／未驗證Play交付或真機。證據_private/play-preparation/signed-candidate.json及簽署／驗證日誌。
 - 使用者截圖已證明IARC於10月1日10:04完成，通知信箱改用demjaholding@gmail.com；目標對象／資料安全尚未核對最後儲存。商家／價格與客服政策同步仍待處理，不把填寫過程當完成。
 - 密碼恢復首測發現Get-Content -Raw保留檔尾換行，ConvertTo-SecureString拒絕；修正為Trim後實測重新開啟keystore PASS。修正未重建金鑰或變更AAB。
+
+## 2026-10-01 — Pixel Google Play 安裝衝突與遷移（無遊戲改動）
+- 使用者截圖確認98001已上傳並於10:50發布內部測試，IARC已完成；12人14天封測尚未啟動。
+- 實機根因：一般使用者沒有本作，但私人空間仍有97100／v0.9.71測試版，debug憑證SHA256 fa00189cc20d1c630da9c5ad9d3b1c54ddd230f61b84ecf1ba1531914fa14513。Play回報其他使用者安裝不相容版本。
+- 私人空間解鎖後先用run-as備份本作資料（55個tar項目），並從實際WebView匯出備份碼；隔離瀏覽器匯入v80後進度／幣／強化／語言／庭院逐項一致。使用者另行明確同意本次移除舊版，才執行pm uninstall --user 10；此例外不改變日後禁止卸載更新的規則。
+- 從Pixel Play頁按安裝成功，實機98001／0.9.80-rc.1，installer=com.android.vending。拉回實際base.apk驗簽PASS，Google交付憑證SHA256 57965f11182c1fa87082dc48573a7b9426ab029361da21ff0128416e1e7268f9，確實不同於測試簽章。內嵌HTML SHA與已驗證v80完全一致。
+- 開啟與force-stop後重開PASS；透過實際備份UI取出的碼與原碼逐字一致（第1關、0幣、英文、庭院預設資料）。原備份是初始狀態，新版已相同，未套用任何改造進度。輸入法曾將自動輸入碼轉成亂碼，沒有按還原套用，改用匯出碼確認；主頁動畫造成uiautomator idle逾時，設定頁取值成功，失敗保留於操作紀錄。
+- 證據_private/pixel-play-migration/backup-verification.json、migration-verification.json、play-signature.txt及實機截圖；私人備份不提交。手機備份／遊戲資料之外未清理，暫時ADB轉送已移除。
+- 未重跑87項或重發v80；真機離線／政策連結／完整操作手感未執行，價格、商家與封測仍待處理。教訓：跨Android使用者也共用套件簽章限制；Play交付憑證與上傳憑證不可混為一談。
