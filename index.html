@@ -935,7 +935,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.82';
+const BUILD='v0.9.83';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：
@@ -1036,6 +1036,7 @@ addEventListener('resize',resize); addEventListener('orientationchange',()=>setT
 // 避免「同一顆取樣重複播放」的機械感。
 const SFX=(()=>{
   let ac=null,master=null,sfxBus=null,musBus=null,muted=false,initFailed=null;
+  const celebrationVoices=new Set();
   const last={}; let noiseBuf=null, soundSeed=0x6d2b79f5;
   // Audio variation must never consume the gameplay/card random stream.
   const soundRand=()=>{soundSeed^=soundSeed<<13;soundSeed^=soundSeed>>>17;soundSeed^=soundSeed<<5;return (soundSeed>>>0)/4294967296;};
@@ -1094,7 +1095,8 @@ const SFX=(()=>{
       node.connect(p); node=p;
     }
     node.connect(g); g.connect(dest);
-    s.onended=()=>{for(const n of chain)n.disconnect();};
+    if(o.celebration)celebrationVoices.add(s);
+    s.onended=()=>{celebrationVoices.delete(s);for(const n of chain)n.disconnect();};
     s.start(t); s.stop(t+o.dur+0.03);
   }
   // 一段噪音 + 帶通/低通掃頻
@@ -1116,7 +1118,8 @@ const SFX=(()=>{
       f.connect(p); node=p;
     }
     s.connect(f); node.connect(g); g.connect(dest);
-    s.onended=()=>{for(const n of chain)n.disconnect();};
+    if(o.celebration)celebrationVoices.add(s);
+    s.onended=()=>{celebrationVoices.delete(s);for(const n of chain)n.disconnect();};
     s.start(t); s.stop(t+o.dur+0.03);
   }
 
@@ -1396,11 +1399,15 @@ const SFX=(()=>{
       [523.25,783.99,1046.5].forEach((f,i)=>
         osc({f0:f,dur:.34,vol:.085,type:'triangle',delay:0.26+i*0.085}));
     },
+    celebrationStop(){
+      for(const voice of celebrationVoices){try{voice.stop();voice.disconnect();}catch(e){}}
+      celebrationVoices.clear();delete last.f;delete last.w;
+    },
     fw(){
       if(!ok('f',0.04))return;
       const p=R(-.6,.6);
-      nz({dur:R(.28,.42),vol:R(.075,.11),f0:R(1200,2800),f1:R(300,600),q:1.1,pan:p});
-      osc({f0:R(600,1100),f1:R(140,240),dur:.22,vol:.035,type:'sine',pan:p});
+      nz({celebration:true,dur:R(.28,.42),vol:R(.075,.11),f0:R(1200,2800),f1:R(300,600),q:1.1,pan:p});
+      osc({celebration:true,f0:R(600,1100),f1:R(140,240),dur:.22,vol:.035,type:'sine',pan:p});
     },
     // v0.9.12：使用者反應過關時「除了煙火還需要有慶祝勝利的音效」——原本的
     // win() 其實有在響（一段上行音階+低音墊），但太像普通的「完成提示音」，
@@ -1410,16 +1417,16 @@ const SFX=(()=>{
     win(){
       if(!ok('w',1))return;
       [523.25,659.25,783.99,1046.5,1318.5,1568].forEach((f,i)=>{
-        osc({f0:f,dur:.46,vol:.11,type:'triangle',delay:i*0.11});
-        osc({f0:f*1.5,dur:.36,vol:.034,type:'square',filter:'lowpass',ff0:3600,ff1:1400,delay:i*0.11});
+        osc({celebration:true,f0:f,dur:.46,vol:.11,type:'triangle',delay:i*0.11});
+        osc({celebration:true,f0:f*1.5,dur:.36,vol:.034,type:'square',filter:'lowpass',ff0:3600,ff1:1400,delay:i*0.11});
       });
-      osc({f0:130.81,dur:1.9,vol:.09,type:'sawtooth',atk:.1,filter:'lowpass',ff0:600,ff1:250,delay:.1});
+      osc({celebration:true,f0:130.81,dur:1.9,vol:.09,type:'sawtooth',atk:.1,filter:'lowpass',ff0:600,ff1:250,delay:.1});
       // 歡呼／彩帶灑落感：寬頻噪音由高往低緩緩掃過，疊在音階跑完之後
-      nz({dur:1.1,vol:.075,f0:6800,f1:1400,q:.5,delay:.55});
-      nz({dur:.9, vol:.05, f0:5200,f1:2200,q:.6,delay:.78});
+      nz({celebration:true,dur:1.1,vol:.075,f0:6800,f1:1400,q:.5,delay:.55});
+      nz({celebration:true,dur:.9, vol:.05, f0:5200,f1:2200,q:.6,delay:.78});
       // 收尾大和弦（C大三和弦，比前面的單音階更飽滿，做「勝利定格」的感覺）
       [523.25,659.25,783.99,1046.5].forEach((f,i)=>
-        osc({f0:f,dur:.85,vol:.095,type:'triangle',atk:.02,delay:1.28+i*0.02}));
+        osc({celebration:true,f0:f,dur:.85,vol:.095,type:'triangle',atk:.02,delay:1.28+i*0.02}));
     },
     lose(){
       if(!ok('lo',1))return;
@@ -6151,6 +6158,7 @@ function refreshSoundLabel(){
   b.setAttribute('aria-pressed',String(!SFX.isMuted()));
 }
 function setHubPage(page){
+ stopCelebration();
  gardenContextClose();
   menuEl.classList.toggle('hide',page!=='adventure'&&page!=='home');
   menuEl.classList.toggle('homePage',page==='home');
@@ -6175,6 +6183,7 @@ function showShop(){
   overEl.classList.add('hide');setHubPage('upgrades');SFX.unlock();
 }
 function start(){
+  stopCelebration();
   document.getElementById('garden').classList.add('hide');
   document.getElementById('hubNav').classList.add('hide');
   document.getElementById('settings').classList.add('hide');
@@ -6188,6 +6197,13 @@ function start(){
 }
 
 //====================== 過關花火 ======================
+const celebrationTimers=new Set();
+function stopCelebration(){
+  for(const timer of celebrationTimers)clearTimeout(timer);
+  celebrationTimers.clear();
+  if(G){G.fw=false;G.fwT=0;G.FW.length=0;}
+  SFX.celebrationStop();
+}
 function spawnFirework(big){
   const x=rnd(W*0.10,W*0.90), y=rnd(H*0.08,H*0.58);
   const hue=rnd(0,360), hue2=hue+rnd(90,220);
@@ -6258,7 +6274,13 @@ function endGame(win){
   if(win){
     G.gardenSeedGain=gardenClear();
     G.fw=true; G.fwT=0; SFX.win();
-    for(let i=0;i<7;i++) setTimeout(()=>{ if(G&&G.fw) spawnFirework(i%3===0); }, i*120);
+    const wonGame=G;
+    for(let i=0;i<7;i++){
+      const timer=setTimeout(()=>{celebrationTimers.delete(timer);
+        if(G===wonGame&&G.fw)spawnFirework(i%3===0);
+      },i*120);
+      celebrationTimers.add(timer);
+    }
     // 解鎖下一關
     if(G.lvIdx+2>PROGRESS){ PROGRESS=G.lvIdx+2; saveProgress(); }   // 只能往前推一關
   } else SFX.lose();
@@ -6305,7 +6327,11 @@ function endGame(win){
   shotEl.src=makePolaroid(win);
   document.getElementById('shotStatus').textContent='';
   overEl.classList.toggle('win',!!win);
-  setTimeout(()=>overEl.classList.remove('hide'), win?1600:320);
+  const endedGame=G;
+  const revealTimer=setTimeout(()=>{celebrationTimers.delete(revealTimer);
+    if(G===endedGame&&G.over)overEl.classList.remove('hide');
+  },win?1600:320);
+  celebrationTimers.add(revealTimer);
 }
 
 document.getElementById('btnPlay').onclick=()=>{

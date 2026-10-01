@@ -1,0 +1,6 @@
+<en-US>
+Victory fireworks and queued celebration sounds now stop when leaving the results screen, including Home, Garden, retry and next stage. Gameplay and saved progress are unchanged.
+</en-US>
+<zh-TW>
+修正離開過關畫面後仍持續播放煙火音效。回首頁、庭院、重玩及下一關均會停止煙火與排程中的慶祝聲音；玩法與存檔不變。
+</zh-TW>

@@ -1,0 +1,26 @@
+{
+  "build": "v0.9.83",
+  "title": "v0.9.83 — Leave the fireworks at the finish line",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "Victory fireworks now stop when you leave the results screen. Returning home, visiting the Candy Garden, retrying or starting the next stage also clears any queued celebration sounds. Each themed activity keeps its own music. Combat, rewards, crop timers and saved progress are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "修正離開過關畫面後，煙火音效仍在其他頁面持續播放的問題。回主畫面、前往庭院、重玩或進入下一關，都會停止煙火並清除尚未播放的慶祝聲音，各主題保留自己的背景音樂。戰鬥、獎勵、作物倒數與存檔不變。"
+    }
+  ]
+}

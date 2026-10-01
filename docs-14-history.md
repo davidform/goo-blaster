@@ -1570,3 +1570,14 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 中英Devlog1685583已Published，工作流程9項PASS；商店v82介紹／三張新UI圖30439741、30439740、30439739已公開，仍保留前三張戰鬥主圖。原論壇17090045及profile更新v82並新增庭院圖，兩处各9圖均實際載入成功；收據store/page-sync/v0.9.82.json。
 - 論壇編輯器的DOM文字選取會被鍵盤動作覆蓋為舊游標，未儲存錯誤草稿已撤回。以Ctrl+Home／Ctrl+ArrowDown／Ctrl+Shift+ArrowDown建立真實鍵盤選取，核對後刪除，再分25字pressSequentially插入；長單次輸入曾逾時，按已插入前綴續填，沒有重複公告。Play整頁截圖逾時改局部截圖成功，發布狀態另有文字證據。
 - cleanup先dry-run再Apply：移除2項共13,446,234 bytes、0失敗，25權限拒絕目錄保留；保留v82／v81 APK、手機進度／私鑰／備份。未執行全平行及Pixel更新後存檔／版面驗收，不把瀏覽器／AAB／Console當真機證據。上傳金鑰異地備份、價格最終儲存與封測仍待處理。
+
+## v0.9.83 — 過關慶祝聲音隨結算頁結束（2026-10-02）
+- 使用者影片回報過關後回首頁或庭院仍持續聽見煙火；影片影格確認已離開結算頁，聲音根因另由實際Web Audio與遊戲迴圈驗證，不把影格當聽感證據。
+- 根因：showMenu只隱藏結算畫面，G.fw仍為true；主迴圈每幀都跑updateFW，不受G.running限制，於是每0.34–0.62秒繼續產生煙火。勝利號角已提前排程的音符也沒有離頁清理。
+- 單一改動為結算慶祝生命週期：回任一主選單頁或開始新局時取消煙火／結算延遲回呼、清空粒子並停止／斷開專屬慶祝音源；背景音樂與其他音效不受影響。回呼綁定原局，避免快速重玩後跨局觸發。玩法、獎勵、倒數、存檔及11語言字串均不變。
+- 新測試py_victory_audio實際開Web Audio，追蹤Oscillator／BufferSource的ended與disconnect；透過回首頁／直達庭院／重玩／下一關按鈕退出，再走所有底列及三個主題；涵蓋快速連續過關、背景暫停恢復與離線。
+- v82對照實跑FAIL：返回首頁後fw仍true、164個粒子、煙火呼叫持續累積至15次；修正後四出口的新增煙火皆0、粒子0、音源已停止並斷開。證據_private/audio83/baseline-v82.log及_private/test-artifacts/victory-audio.json。
+- 首次修正驗證發現立即結束測試局後showMenu，320ms後舊結算面板又浮出；追加同生命週期取消與局身分檢查後PASS。保留fixed-first／fixed-diagnostic失敗日誌；run_tests.sh首次更新因預設cp950讀取失敗，指定utf8後完成，沒有略過新測試。
+- 教訓：隱藏畫面不會自動停止rAF／setTimeout或Web Audio已排程節點；必須一起清理，不能只將整個音效匯流排靜音。最終完整／CPU4／離線與交付結果見後续紀錄。
+- 最終完整91/91 PASS，source_unchanged=true：20261002-002932-647933-victory83-final，HTML SHA 6dfd46f3f9769f38b873e7698b7d7317bb4f846c5ec36fb8e169b57b198c00dd。新增音效回歸21.2秒PASS；py_test9前三關57/64/87秒通過、無JS錯誤；Node test9跑571.8秒，第1–5關通過、第6關失敗屬診斷結果，非驗收失敗。獨立效能54.3→54.3FPS（同伴差-0.0%），非Pixel數據。
+- 四倍CPU第三輪3/3 PASS：20261002-005637-940242-victory83-cpu4，音效品質7.9秒、主題音樂17.8秒、勝利清理31.8秒；來源一致。離線／零強化新存檔／實際瀏覽器關閉重開PASS，0外部請求與JS錯誤；_private/test-artifacts/release-smoke-v83.log。全平行與Pixel真機聽感未執行。
