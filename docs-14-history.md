@@ -1581,3 +1581,9 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 教訓：隱藏畫面不會自動停止rAF／setTimeout或Web Audio已排程節點；必須一起清理，不能只將整個音效匯流排靜音。最終完整／CPU4／離線與交付結果見後续紀錄。
 - 最終完整91/91 PASS，source_unchanged=true：20261002-002932-647933-victory83-final，HTML SHA 6dfd46f3f9769f38b873e7698b7d7317bb4f846c5ec36fb8e169b57b198c00dd。新增音效回歸21.2秒PASS；py_test9前三關57/64/87秒通過、無JS錯誤；Node test9跑571.8秒，第1–5關通過、第6關失敗屬診斷結果，非驗收失敗。獨立效能54.3→54.3FPS（同伴差-0.0%），非Pixel數據。
 - 四倍CPU第三輪3/3 PASS：20261002-005637-940242-victory83-cpu4，音效品質7.9秒、主題音樂17.8秒、勝利清理31.8秒；來源一致。離線／零強化新存檔／實際瀏覽器關閉重開PASS，0外部請求與JS錯誤；_private/test-artifacts/release-smoke-v83.log。全平行與Pixel真機聽感未執行。
+
+- v83交付完成：遊戲2e6a74b已push；APK98300公開SHA 2d8caf14fae7176ad93289812dc6b64aaaaa44287f41c024b21379a4a8e40623，原debug簽章及實際HTML稽核PASS。itch2047572 Active；Pages ca5265ff／Actions36896268358成功，兩平台完整payload與實際開始／暫停PASS。
+- Play AAB98301／0.9.83-rc.1簽包SHA 744f3ce905b2206e64a6b76f284ce3a1a6eb3cdd697d2d7feb055bca59538714；既有上傳key、strict驗簽／bundletool／manifest／ZIP一致性PASS。Console 10月2日01:06 release4提供給內部測試人員，裝置支援數不變，只有缺去混淆檔警告（minify=false）。未正式上架、未啟動封測。
+- 中英Devlog1685658已Published，流程9/9 PASS；https://davidform.itch.io/goo-blaster/devlog/1685658/v0983-leave-the-fireworks-at-the-finish-line。商店與原論壇／profile核對v83、兩處各9張原圖正常載入；音效修正保留現有真實UI圖，收據store/page-sync/v0.9.83.json。
+- cleanup dry-run後Apply，移除2項13,446,775bytes、0失敗、25權限拒絕略過；保留v83/v82APK及所有進度／金鑰／備份。Pixel無連線，真機聽感及更新後存檔未驗；全平行未跑，不能把CPU4或Console當手機驗收。
+- 瀏覽器截圖曾逾時，透過頁面正常鍵盤聚焦後保存成功；DOM generic角色不支援及heading level選項不支援時改用已觀察到的編輯區選擇器，沒有隱藏API改頁／送出或重複發布。

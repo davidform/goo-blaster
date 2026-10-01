@@ -1,0 +1,35 @@
+{
+  "build": "v0.9.83",
+  "title": "v0.9.83 — Leave the fireworks at the finish line",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "Victory fireworks now stop when you leave the results screen. Returning home, visiting the Candy Garden, retrying or starting the next stage also clears any queued celebration sounds. Each themed activity keeps its own music. Combat, rewards, crop timers and saved progress are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "修正離開過關畫面後，煙火音效仍在其他頁面持續播放的問題。回主畫面、前往庭院、重玩或進入下一關，都會停止煙火並清除尚未播放的慶祝聲音，各主題保留自己的背景音樂。戰鬥、獎勵、作物倒數與存檔不變。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "c9ad0109175c4aff7bad2d3f25753bba7238e8e9d09960e018faabae498bdd5b",
+  "public_game_sha256": "6dfd46f3f9769f38b873e7698b7d7317bb4f846c5ec36fb8e169b57b198c00dd",
+  "public_build_id": 2047572,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>Victory fireworks now stop when you leave the results screen. Returning home, visiting the Candy Garden, retrying or starting the next stage also clears any queued celebration sounds. Each themed activity keeps its own music. Combat, rewards, crop timers and saved progress are unchanged.</p>\n<h2>繁體中文</h2>\n<p>修正離開過關畫面後，煙火音效仍在其他頁面持續播放的問題。回主畫面、前往庭院、重玩或進入下一關，都會停止煙火並清除尚未播放的慶祝聲音，各主題保留自己的背景音樂。戰鬥、獎勵、作物倒數與存檔不變。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1685658/v0983-leave-the-fireworks-at-the-finish-line",
+  "verified_at": "2026-10-01T17:08:17.616076+00:00"
+}
