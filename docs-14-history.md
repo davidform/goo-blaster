@@ -1513,3 +1513,12 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 未簽AAB98001／0.9.80-rc.1實際建置與bundletool validate成功，API36／debug=false／full／HTML一致；SHA7d8f7be37fd1ff5a5517a0d85e422ac2783b5f2601d47bd6f408e97e6a5416d6。測試Gradle逐位元組還原。未建立金鑰、簽署、上傳；待使用者確認IARC條款與金鑰操作，商家帳戶由本人處理，US$1.99尚未存Console。
 - 真實帳戶要求12名測試者持續14天，目前0；商店草稿與自動測試不取代封測。Surface全平行、Pixel、原生政策連結與最終Play交付尚未驗證。
 - cleanup先dry-run再Apply：移除2項／13,480,216 bytes，0失敗／25拒絕存取略過；保留v80、v79與進度／證據。下載bundletool及Pages首次載入曾逾時，分別續傳核對官方SHA、重新載入驗證成功，未隱藏失敗。
+
+## 2026-10-01 — Google Play 上傳金鑰與 AAB 簽署（無遊戲改動）
+- 使用者明確同意建立本作專用上傳金鑰並簽署。新增native/sign_play_candidate.ps1，先核對候選／遊戲SHA，拒絕覆寫既有產物及金鑰，未動Google管理的App簽章或測試APK簽章。
+- 金鑰置使用者目錄.goo-blaster-signing，RSA3072／SHA256withRSA／PKCS12；隨機密碼使用Windows DPAPI保存，限定本人與SYSTEM權限，密碼不入命令列／repo／日誌。DPAPI取回密碼後重新開啟keystore實測PASS。異地備份未完成，目錄內提供本人備份說明。
+- 已簽v0.9.80-98001-play-signed.aab，SHA948b7409f4680a8bdaffc6c7891676ed817fabbf0c0a7793867aa9b04958bef5。憑證SHA ed7ec469e074b8489d6515520d1a20e99ec29b4ae25c53f71cc0d56a4fe2eee6。
+- 實跑jarsigner -verify -strict（以專用keystore信任該憑證）與bundletool validate PASS；manifest確認套件／版本／API36／debug=false；逐項ZIP比對原有內容0變更，只新增MANIFEST.MF／SF／RSA三項。重複執行的拒絕覆寫測試PASS，PowerShell語法PASS。
+- 沒有新遊戲測試；index.html SHA未變，沿用已完成87/87。未上傳／未啟動封測／未驗證Play交付或真機。證據_private/play-preparation/signed-candidate.json及簽署／驗證日誌。
+- 使用者截圖已證明IARC於10月1日10:04完成，通知信箱改用demjaholding@gmail.com；目標對象／資料安全尚未核對最後儲存。商家／價格與客服政策同步仍待處理，不把填寫過程當完成。
+- 密碼恢復首測發現Get-Content -Raw保留檔尾換行，ConvertTo-SecureString拒絕；修正為Trim後實測重新開啟keystore PASS。修正未重建金鑰或變更AAB。

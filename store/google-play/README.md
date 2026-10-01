@@ -1,6 +1,21 @@
 # Google Play 上架準備
 
-核對日期：2026-09-29。沿用既有草稿 `com.demjastudio.gooblaster`，**未送審、未正式發布**。
+核對日期：2026-10-01。沿用既有草稿 `com.demjastudio.gooblaster`，**AAB 尚未上傳、未正式發布**。
+
+## 2026-10-01 簽署與使用者操作進度
+- 使用者已明確同意建立專用上傳金鑰並簽署；native/sign_play_candidate.ps1 已實跑。
+- 可上傳檔案：`_private/play-preparation/v0.9.80-98001-play-signed.aab`。
+- 已簽 AAB SHA256：`948b7409f4680a8bdaffc6c7891676ed817fabbf0c0a7793867aa9b04958bef5`。
+- 上傳憑證 SHA256：`ed7ec469e074b8489d6515520d1a20e99ec29b4ae25c53f71cc0d56a4fe2eee6`。
+- jarsigner 嚴格驗證與 bundletool validate 通過；逐項比對原始 ZIP 內容完全不變，只新增三個簽章項目。實際套件、98001／0.9.80-rc.1、API36、debug=false 均核對。
+- 金鑰在使用者目錄 `.goo-blaster-signing`，不在專案／Git；RSA3072，PKCS12 密碼保護、密碼以 Windows DPAPI 儲存，目錄僅目前使用者與 SYSTEM 可讀。無明文密碼寫入 repo／輸出。
+- **尚未完成異地備份**；該目錄 BACKUP-README.txt 有本人取回密碼及備份說明。DPAPI 檔不能單獨當跨電腦密碼備份。
+- 證據：`_private/play-preparation/signed-candidate.json`、`aab-signature-verification.log`、`signed-manifest.xml`、`signed-bundle-validation.log`。
+- 使用者截图已確認 IARC 10月1日10:04「已完成」，通知信箱 demjaholding@gmail.com；不要重填問卷。目標對象／資料安全僅看過填寫與預覽圖，未核對最終儲存。
+- 商家帳戶是否完成、價格是否儲存仍待 Console 核對。客服改用 demjaholding@gmail.com 的商店／政策同步尚未完成。
+- 未上傳、未登記遠端上傳憑證、未啟動封閉測試、未驗證 Play 交付與真機。接續先內部安裝驗證，再轉既有 Alpha 封閉測試；內部測試不計入 12 人／14 天。
+
+以下為 9月29日的準備基準；IARC 與簽署待辦已由上方新進度取代。
 
 ## 已完成
 - 使用者定價 US$1.99，一次付費下載完整遊戲；商家帳戶尚待本人完成，Console 價格尚未儲存。
