@@ -1,0 +1,24 @@
+[
+  {
+    "file": "shop-bottom-home-en-390.png",
+    "build": "v0.9.82",
+    "sha256": "0e00482770105e320d9f44d59bd96772ceeacf2797c814dff4948dbcff0b0d77",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "en",
+    "setup": "Fresh save; actual touch navigation; no injected progress, resources or upgrades."
+  },
+  {
+    "file": "shop-bottom-home-zh-Hant-390.png",
+    "build": "v0.9.82",
+    "sha256": "0e00482770105e320d9f44d59bd96772ceeacf2797c814dff4948dbcff0b0d77",
+    "viewport": [
+      390,
+      844
+    ],
+    "language": "zh-Hant",
+    "setup": "Fresh save; actual touch navigation; no injected progress, resources or upgrades."
+  }
+]

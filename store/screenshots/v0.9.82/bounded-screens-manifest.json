@@ -1,0 +1,88 @@
+{
+  "build": "v0.9.82",
+  "sha256": "0e00482770105e320d9f44d59bd96772ceeacf2797c814dff4948dbcff0b0d77",
+  "source": "Actual offline browser, fresh save, real UI taps; no fabricated gameplay; not Pixel",
+  "viewport": [
+    393,
+    759
+  ],
+  "device_scale_factor": 2,
+  "files": [
+    {
+      "file": "home-en.png",
+      "language": "en",
+      "view": "home"
+    },
+    {
+      "file": "garden-en.png",
+      "language": "en",
+      "view": "garden"
+    },
+    {
+      "file": "plant-nearby-en.png",
+      "language": "en",
+      "view": "plant-nearby"
+    },
+    {
+      "file": "upgrades-en.png",
+      "language": "en",
+      "view": "upgrades"
+    },
+    {
+      "file": "upgrades-page2-en.png",
+      "language": "en",
+      "view": "upgrades-page2"
+    },
+    {
+      "file": "adventure-en.png",
+      "language": "en",
+      "view": "adventure"
+    },
+    {
+      "file": "pond-en.png",
+      "language": "en",
+      "view": "pond"
+    },
+    {
+      "file": "home-zh-Hant.png",
+      "language": "zh-Hant",
+      "view": "home"
+    },
+    {
+      "file": "garden-zh-Hant.png",
+      "language": "zh-Hant",
+      "view": "garden"
+    },
+    {
+      "file": "plant-nearby-zh-Hant.png",
+      "language": "zh-Hant",
+      "view": "plant-nearby"
+    },
+    {
+      "file": "upgrades-zh-Hant.png",
+      "language": "zh-Hant",
+      "view": "upgrades"
+    },
+    {
+      "file": "upgrades-page2-zh-Hant.png",
+      "language": "zh-Hant",
+      "view": "upgrades-page2"
+    },
+    {
+      "file": "adventure-zh-Hant.png",
+      "language": "zh-Hant",
+      "view": "adventure"
+    },
+    {
+      "file": "pond-zh-Hant.png",
+      "language": "zh-Hant",
+      "view": "pond"
+    }
+  ],
+  "store_selection": [
+    "garden-zh-Hant.png",
+    "upgrades-page2-en.png",
+    "adventure-en.png"
+  ],
+  "review": "Actual UI inspected at full size and thumbnail scale. Shows stationary garden title, reachable page controls, and chapter navigation. Retain the existing three combat images first; these are secondary UI examples, not invented gameplay or phone-performance evidence."
+}

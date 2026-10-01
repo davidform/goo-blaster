@@ -1,0 +1,11 @@
+{
+  "build": "v0.9.82",
+  "title": "v0.9.82 — Turn pages, keep your place",
+  "languages": ["en", "zh-Hant"],
+  "blocks": [
+    {"kind":"h2","text":"English"},
+    {"kind":"p","text":"Game menus now stay within the screen, with their titles and bottom navigation in place. Browse adventure stages by chapter and turn pages through longer upgrade and garden lists. Stories and extra instructions open in matching reading cards. Plant choices remain beside the selected plot, and challenge results have their own compact view. This is a layout update: combat, crop timers, resources and saved progress are unchanged."},
+    {"kind":"h2","text":"繁體中文"},
+    {"kind":"p","text":"遊戲選單改為不需上下捲動的排版，標題與底部導覽保持可見。冒險按章節選關，強化與庭院的長清單改用翻頁；故事和補充說明放進同風格的閱讀視窗。作物選項仍在點選的田地旁出現，挑戰結果也有獨立的精簡畫面。這次只調整排版，戰鬥、作物倒數、資源與存檔不變。"}
+  ]
+}

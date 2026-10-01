@@ -2,6 +2,7 @@
 import json, os, hashlib
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 from test_paths import GAME_ROOT, ARTIFACTS, BROWSER_CHANNEL
 
 with sync_playwright() as pw:
@@ -31,8 +32,8 @@ with sync_playwright() as pw:
                 assert p.locator(panel).evaluate('e=>e.getBoundingClientRect().bottom<=document.querySelector("#hubNav").getBoundingClientRect().top+1')
                 checks+=1
             p.locator('#btnShop').tap()
-            assert p.locator('#shopList').evaluate('e=>getComputedStyle(e).overflowY')=='visible'
-            p.locator('#shop').evaluate('e=>e.scrollTop=e.scrollHeight')
+            assert p.locator('#shopList').evaluate('e=>getComputedStyle(e).overflowY')=='clip'
+            reveal(p, p.locator('.mbuy').last)
             assert p.locator('.mbuy').last.evaluate('e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=document.querySelector("#hubNav").getBoundingClientRect().top}'), (lang,w,h,p.locator('.mbuy').last.evaluate('e=>e.getBoundingClientRect().toJSON()'))
             p.locator('#btnHome').tap();assert p.locator('#townHome').is_visible()
     assert p.evaluate('JSON.stringify([PROGRESS,COINS,META,GARDEN])')==initial
@@ -51,4 +52,4 @@ with sync_playwright() as pw:
     assert not errors,errors
     (ARTIFACTS/'bottom-nav.json').write_text(json.dumps(dict(checks=checks,layouts=44,offline=True,errors=errors,cpu=os.getenv('GOO_UI_CPU','1'))),encoding='utf-8')
     b.close()
-print('PASS 220 touch destination changes, 44 layouts, one central home entry, reachable targets, single shop scroll, save isolation and theme exits')
+print('PASS 220 touch destination changes, 44 layouts, one central home entry, reachable targets, paged shop without scrolling, save isolation and theme exits')

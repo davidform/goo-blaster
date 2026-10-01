@@ -2,6 +2,7 @@
 import json, os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 from test_paths import GAME_ROOT, ARTIFACTS, BROWSER_CHANNEL
 
 with sync_playwright() as pw:
@@ -43,10 +44,10 @@ with sync_playwright() as pw:
     p.locator('#navGarden').click();p.locator('#gardenArrange').click()
     for selector in ['.gardenTools button','.gardenWishTabs button']:
         for i in range(p.locator(selector).count()):
-            p.locator(selector).nth(i).click();selected(selector)
+            reveal(p, p.locator(selector).nth(i)).click();selected(selector)
     p.locator('#gardenFarm').click()
     p.evaluate('GARDEN.house=2;renderGarden()')
-    p.locator('.gardenSpot.plot[data-index="0"]').click()
+    reveal(p, p.locator('.gardenSpot.plot[data-index="0"]')).click()
     for i in range(3):
         p.locator('.gardenCropChoice:visible').nth(i).click();selected('.gardenCropChoice:visible')
     p.locator('#gardenContextClose').click()
@@ -68,12 +69,12 @@ with sync_playwright() as pw:
         p.locator('.lrow.on').click()
     p.evaluate('PROGRESS=10;setHubPage("adventure")')
     for k in [1,8,0]:
-        p.locator('.gnode[data-k="'+str(k)+'"]').click()
+        reveal(p, p.locator('.gnode[data-k="'+str(k)+'"]')).click()
         assert p.locator('.gnode.sel').get_attribute('data-k')==str(k)
         assert p.locator('.gnode.sel').evaluate('e=>getComputedStyle(e).backgroundColor')=='rgb(63, 99, 78)'
     p.evaluate('SEL_IDX=49;renderStage()')
     for weapon in ['yoyo','graffiti']:
-        p.locator('#startingWeapon').select_option(weapon)
+        reveal(p, p.locator('#startingWeapon')).select_option(weapon)
         assert p.locator('#startingWeapon').input_value()==weapon
         assert p.evaluate('SECONDARY_WEAPON')==weapon
     # Locked difficulties cannot change selection; theme identity survives selected styling.

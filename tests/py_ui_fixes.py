@@ -7,11 +7,12 @@
 
 1. 拖曳中要能按到加速鍵與核彈鍵
 2. 右上角按鈕不能蓋住「果凍%/傷害+%/速度×」這些成長型數值
-3. 糖果屋要能捲動
-4. 關卡圖：第1關在最下方、最後一關在最上方；每5關一個背景色帶
+3. 糖果屋的所有強化可翻頁取得，滑動不移走標題（v82使用者要求取代捲動）
+4. 關卡按章節瀏覽，每頁五關，所有關卡可達
 """
 import http.server, socketserver, threading, functools, sys
 from test_paths import BROWSER_CHANNEL, GAME_ROOT
+from ui_pages import reveal
 from playwright.sync_api import sync_playwright
 
 ROOT = GAME_ROOT; PORT=8777
@@ -183,7 +184,7 @@ with sync_playwright() as pw:
     pg.close(); c.close()
 
     # ---------- 3. 糖果屋可捲動 ----------
-    print("\n=== 問題3：糖果屋要能捲動 ===")
+    print("\n=== 問題3：糖果屋免捲動並可翻頁 ===")
     pg,c,errs=page(b)
     r=pg.evaluate("""()=>{
         COINS=200; showShop();
@@ -193,8 +194,8 @@ with sync_playwright() as pw:
                 scrollH:el.scrollHeight, clientH:el.clientHeight};
     }""")
     print(f"  {r}")
-    check("shop 整頁的 touch-action 允許直向捲動", r["touchAction"] in ("pan-y","pan-y pinch-zoom"), r["touchAction"])
-    check("內容確實超出容器（有東西可捲）", r["scrollH"]>r["clientH"], f"{r['scrollH']}>{r['clientH']}")
+    pg.wait_for_function("document.querySelector('#shopList').dataset.pages")
+    check("shop 內容不需直向捲動", r["touchAction"]=='none' and r['scrollH']<=r['clientH']+1,str(r))
     # 真的用觸控滑一下看 scrollTop 有沒有變
     cdp=c.new_cdp_session(pg)
     box=pg.evaluate("""()=>{const r=document.getElementById('shop').getBoundingClientRect();
@@ -205,43 +206,30 @@ with sync_playwright() as pw:
             "touchPoints":[{"x":box["x"],"y":box["y"]-i*18,"id":1}]})
         pg.wait_for_timeout(16)
     cdp.send("Input.dispatchTouchEvent",{"type":"touchEnd","touchPoints":[]})
-    pg.wait_for_function("document.getElementById('shop').scrollTop>0")
+    pg.evaluate('()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))')
     st=pg.evaluate("()=>document.getElementById('shop').scrollTop")
-    check("實際觸控滑動後有捲動", st>0, f"scrollTop={st}")
+    check("實際觸控滑動後頁面固定", st==0, f"scrollTop={st}")
+    for row in pg.locator('#shopList .mrow').all():
+        reveal(pg,row)
+        check("每個強化可由翻頁取得",row.evaluate('e=>{const r=e.getBoundingClientRect(),p=e.closest(".folioBody").getBoundingClientRect();return r.top>=p.top-1&&r.bottom<=p.bottom+1}'))
     pg.close(); c.close()
 
-    # ---------- 4. 關卡圖反轉 + 每5關背景 ----------
-    print("\n=== 問題4：第1關在最下方、最後一關在最上方，每5關一個背景 ===")
+    # v82: actual chapter controls replace the historical scrolling route.
+    print("\n=== 問題4：十章／每章五關可達 ===")
     pg,c,errs=page(b)
-    r=pg.evaluate("""()=>{
-        PROGRESS=LEVELS.length+1; showMenu();
-        const inner=document.getElementById('galaxyInner');
-        const g=k=>{const e=inner.querySelector('.gnode[data-k="'+k+'"]');return e?parseFloat(e.style.top):null;};
-        return {第1關y:g(0), 第2關y:g(1), 第25關y:g(24), 最終關y:g(LEVELS.length-1),
-                內層高度:parseFloat(inner.style.height),
-                背景帶數:inner.querySelectorAll('.gband').length,
-                銜接線數:inner.querySelectorAll('.gbandline').length,
-                節點數:inner.querySelectorAll('.gnode').length};
-    }""")
-    for k,v in r.items(): print(f"  {k}: {v}")
-    check("第1關在最下方（y最大）", r["第1關y"]>r["最終關y"])
-    check("最終關在最上方（y最小）", r["最終關y"]<r["第25關y"]<r["第1關y"])
-    check("順序單調（第2關在第1關上方）", r["第2關y"]<r["第1關y"])
-    nLv=r["節點數"]
-    check("背景帶數＝總關數/5", r["背景帶數"]==-(-nLv//5), str(r["背景帶數"]))
-    check("銜接線數＝帶數-1", r["銜接線數"]==r["背景帶數"]-1, str(r["銜接線數"]))
-    check("所有節點都在（＝總關數）", r["節點數"]==50, str(r["節點數"]))
-    # 進度為第1關時，畫面應該捲到最底部（第1關的位置）
-    pg.evaluate("PROGRESS=1; SEL_IDX=0; showMenu()")
+    pg.evaluate('PROGRESS=1;showMenu()')
     pg.locator('[data-place="gate"]').click()
-    r2=pg.evaluate("""()=>{
-        const w=document.getElementById('galaxyWrap');
-        return new Promise(res=>requestAnimationFrame(()=>requestAnimationFrame(()=>
-            res({scrollTop:w.scrollTop, max:w.scrollHeight-w.clientHeight}))));
-    }""")
-    print(f"  新玩家開啟選單: scrollTop={r2['scrollTop']:.0f} / 最大={r2['max']:.0f}")
-    check("新玩家開選單時自動捲到底部（第1關）", r2["scrollTop"] > r2["max"]*0.8,
-          f"{r2['scrollTop']:.0f}/{r2['max']:.0f}")
+    seen=[]
+    for chapter in range(10):
+        nodes=pg.locator('.gnode:visible').evaluate_all('(es)=>es.map(e=>+e.dataset.k)')
+        check("每章五關且順序正確",nodes==list(range(chapter*5,chapter*5+5)),str(nodes))
+        seen.extend(nodes)
+        if chapter<9:pg.locator('#chapterTurns button').last.tap()
+    check("全部50關可瀏覽",seen==list(range(50)))
+    check("最後一章不能超出範圍",pg.locator('#chapterTurns button').last.is_disabled())
+    pg.locator('#btnHome').click();pg.locator('[data-place="gate"]').click()
+    reveal(pg,pg.locator('.gnode[data-k="0"]'))
+    check("第1關保持可達與解鎖",pg.locator('.gnode[data-k="0"]').is_visible() and 'locked' not in pg.locator('.gnode[data-k="0"]').get_attribute('class'))
     check("無 JS 錯誤", not errs, str(errs[:2]))
     pg.close(); c.close()
     b.close()

@@ -22,13 +22,13 @@ with sync_playwright() as pw:
     # Select an unlocked earlier stage; returning through navigation must not jump to frontier.
     page.evaluate('PROGRESS=12; showMenu(); SEL_IDX=3; renderStage()')
     page.locator('#navAdventure').click()
-    page.wait_for_function('document.querySelector("#galaxyWrap").scrollTop>0')
+    page.wait_for_function('document.querySelector("#chapterTurns")!==null')
     selected = page.evaluate('SEL_IDX')
     map_y = page.locator('#galaxyWrap').evaluate('(el)=>el.scrollTop')
     page.locator('#btnShop').click()
     assert page.locator('#btnShop').get_attribute('aria-current') == 'page'
-    page.locator('#shop').evaluate('(el)=>el.scrollTop=120')
-    shop_y = page.locator('#shop').evaluate('(el)=>el.scrollTop')
+    page.locator('#shopList>.folioNav button').last.click()
+    shop_y = int(page.locator('#shopList').get_attribute('data-page'))
     assert shop_y > 0
     page.locator('#navSettings').click()
     page.screenshot(path=str(ARTIFACTS / 'soft-settings.png'))
@@ -43,7 +43,7 @@ with sync_playwright() as pw:
     assert page.locator('#langBox').is_visible()
     page.evaluate("document.querySelector('#langBox').classList.add('hide')")
     page.locator('#btnShop').click()
-    assert page.locator('#shop').evaluate('(el)=>el.scrollTop') == shop_y
+    page.wait_for_function('(n)=>Number(document.querySelector("#shopList").dataset.page)===n',arg=shop_y)
     page.screenshot(path=str(ARTIFACTS / 'soft-upgrades.png'))
     page.locator('#navAdventure').click()
     assert page.evaluate('SEL_IDX') == selected

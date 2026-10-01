@@ -1,0 +1,22 @@
+[
+  {
+    "file": "privacy-settings-en-390.png",
+    "language": "en",
+    "viewport": [
+      390,
+      844
+    ],
+    "setup": "Fresh save; real settings navigation; no injected resources",
+    "sha256": "0e00482770105e320d9f44d59bd96772ceeacf2797c814dff4948dbcff0b0d77"
+  },
+  {
+    "file": "privacy-settings-zh-Hant-390.png",
+    "language": "zh-Hant",
+    "viewport": [
+      390,
+      844
+    ],
+    "setup": "Fresh save; real settings navigation; no injected resources",
+    "sha256": "0e00482770105e320d9f44d59bd96772ceeacf2797c814dff4948dbcff0b0d77"
+  }
+]

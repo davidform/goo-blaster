@@ -2,6 +2,7 @@
 import hashlib,json,os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 from test_paths import GAME_ROOT,ARTIFACTS,BROWSER_CHANNEL
 with sync_playwright() as pw:
  b=pw.chromium.launch(channel=BROWSER_CHANNEL);p=b.new_page(viewport={'width':390,'height':844})
@@ -15,15 +16,16 @@ with sync_playwright() as pw:
   assert not any('undefined' in s or 'storyCh' in s for s in texts)
   p.set_viewport_size({'width':320,'height':568})
   p.evaluate('PROGRESS=51;SEL_IDX=49;renderStage()')
-  p.locator('#stageInfo summary').click()
-  if not p.locator('#stageInfo details').evaluate('e=>e.open'):p.locator('#stageInfo summary').click()
-  assert p.locator('.storyText').evaluate('e=>e.scrollWidth<=e.clientWidth+1'),lang
+  reveal(p, p.locator('#stageInfo summary')).click()
+
+  assert p.locator('#readingBox .sub2').evaluate('e=>e.scrollWidth<=e.clientWidth+1'),lang
+  p.locator('#readingBox button').click()
   p.locator('#btnPlay').scroll_into_view_if_needed()
   assert p.locator('#btnPlay').is_visible()
  p.set_viewport_size({'width':390,'height':844})
  p.evaluate("applyLanguage('zh-Hant');PROGRESS=50")
  for i in [0,14,24,49]:
-  p.evaluate('i=>{SEL_IDX=i;showMenu();setHubPage("adventure");SEL_IDX=i;renderStage();document.querySelector("#stageInfo details").open=true;}',i)
+  p.evaluate('i=>{SEL_IDX=i;showMenu();setHubPage("adventure");SEL_IDX=i;renderStage();ROUTE_CHAPTER=Math.floor(i/5);renderChapterTurns();}',i)
   p.wait_for_function('''i=>{const w=document.querySelector('#galaxyWrap'),n=document.querySelectorAll('.gnode')[i];return Math.abs(w.scrollTop-Math.min(w.scrollHeight-w.clientHeight,Math.max(0,n.offsetTop-w.clientHeight/2)))<2;}''',arg=i)
   p.locator('#galaxyWrap').scroll_into_view_if_needed()
   p.screenshot(path=str(ARTIFACTS/f'world-stage-{i+1}.png'))

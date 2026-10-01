@@ -4,6 +4,7 @@ import os
 import re
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 from test_paths import ARTIFACTS, GAME_ROOT, BROWSER_CHANNEL
 
 with sync_playwright() as pw:
@@ -18,10 +19,10 @@ with sync_playwright() as pw:
     page.locator('#navAdventure').click()
     page.wait_for_function("document.querySelector('#stageInfo .ds').textContent.length>0")
     bounds=page.locator('#menu').evaluate('(e)=>({height:e.clientHeight,content:e.scrollHeight})')
-    assert bounds['content']>bounds['height'],bounds
+    assert bounds['content']<=bounds['height']+1,bounds
     # Start the gesture on the description, not an already-scrollable map or blank gutter.
     # The town is now above the stage card; bring the actual text into view first.
-    page.locator('#stageInfo .ds').scroll_into_view_if_needed()
+    reveal(page, page.locator('#stageInfo .ds'))
     before_scroll=page.locator('#menu').evaluate('(e)=>e.scrollTop')
     box=page.locator('#stageInfo .ds').bounding_box()
     x=round(box['x']+box['width']/2);y=round(min(box['y']+box['height']/2,385))
@@ -30,7 +31,7 @@ with sync_playwright() as pw:
     for step in range(1,13):
         cdp.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x,'y':y-step*18}]})
     cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
-    page.wait_for_function('(before)=>document.querySelector("#menu").scrollTop>before+20',arg=before_scroll,timeout=15000)
+    assert page.locator('#menu').evaluate('e=>e.scrollTop')==before_scroll
     scroll=page.locator('#menu').evaluate('(e)=>e.scrollTop')
     page.screenshot(path=str(ARTIFACTS/'l10n-small-scroll.png'))
     page.locator('#btnPlay').scroll_into_view_if_needed()

@@ -1,0 +1,14 @@
+<en-US>
+Menus fit within the screen without vertical scrolling.
+Browse stages by chapter and use page buttons for longer upgrade and garden lists.
+Garden titles stay visible. Plant choices remain beside the selected field.
+Stories, help and challenge results use compact views.
+Combat, crop timers and saved progress are unchanged.
+</en-US>
+<zh-TW>
+遊戲選單改為不需上下捲動的排版。
+冒險按章節選關，強化與庭院長清單使用翻頁。
+庭院標題保持可見，作物選項仍在田地旁顯示。
+故事、說明與挑戰結果改用精簡畫面。
+戰鬥、作物倒數與存檔不變。
+</zh-TW>

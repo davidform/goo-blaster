@@ -4,6 +4,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tests'))
 from test_paths import GAME_ROOT,ARTIFACTS,BROWSER_CHANNEL
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 with sync_playwright() as pw:
  b=pw.chromium.launch(channel=BROWSER_CHANNEL);c=b.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
  p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)))
@@ -16,14 +17,14 @@ with sync_playwright() as pw:
   rows=p.evaluate('''lang=>{applyLanguage(lang);PROGRESS=50;return LEVELS.map((_,i)=>{SEL_IDX=i;renderStage();const e=document.querySelector('.storyGoal');return {text:e.textContent,expected:T('storyStep'+(i%5)),fits:e.scrollWidth<=e.clientWidth+1,label:document.querySelector('#storyGoalLabel').textContent,scene:!!document.querySelector('.storyScene svg'),collapsed:!document.querySelector('#stageInfo details').open};});}''',lang)
   assert all(r['text']==r['expected'] and r['fits'] and r['scene'] and r['collapsed'] and r['label']!='storyGoalTitle' for r in rows),lang
   p.locator('#btnPlay').scroll_into_view_if_needed();assert p.locator('#btnPlay').is_visible()
-  p.locator('#stageInfo summary').click();assert p.locator('.storyText').evaluate('e=>e.scrollWidth<=e.clientWidth+1')
-  p.evaluate('document.querySelector("#stageInfo details").open=false');goals.append(lang)
+  reveal(p, p.locator('#stageInfo summary')).click();assert p.locator('#readingBox .sub2').evaluate('e=>e.scrollWidth<=e.clientWidth+1')
+  p.locator('#readingBox button').click();goals.append(lang)
  p.set_viewport_size({'width':390,'height':844})
  for stage in [8,49]:
   p.evaluate('i=>{applyLanguage("zh-Hant");PROGRESS=50;SEL_IDX=i;renderStage();document.querySelector("#menu").scrollTop=0;}',stage)
   p.wait_for_function('''i=>{const w=document.querySelector('#galaxyWrap'),n=document.querySelectorAll('.gnode')[i];return Math.abs(w.scrollTop-Math.min(w.scrollHeight-w.clientHeight,Math.max(0,n.offsetTop-w.clientHeight/2)))<2;}''',arg=stage)
   p.screenshot(path=str(ARTIFACTS/f'story58-stage{stage+1}.png'))
- c.close();c=b.new_context(viewport={'width':390,'height':844});c.add_init_script('window.requestAnimationFrame=()=>0');p=c.new_page();p.on('pageerror',lambda e:errors.append(str(e)))
+ c.close();c=b.new_context(viewport={'width':390,'height':844});p=c.new_page();p.on('pageerror',lambda e:errors.append(str(e)))
  c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_READ_CPU','1'))})
  p.goto((Path(GAME_ROOT)/'index.html').as_uri())
  p.locator('#navAdventure').click()
@@ -34,7 +35,7 @@ with sync_playwright() as pw:
  repeat=p.evaluate('''()=>{META={dash:3};start();G.bosses=[];G.nukeCalm=999;G.P.wep={};const u=UPGRADES.find(x=>x.id==='cd');u.f(G.P);u.f(G.P);let protectedFrames=0,dashes=0;for(let i=0;i<1800;i++){const before=G.P.dashCD;tryDash(1,0);if(before<=0&&G.P.dashCD>0)dashes++;update(1/60,1/60);if(G.P.iframe>0)protectedFrames++;}return {cooldown:G.P.dashCDmax,ratio:protectedFrames/1800,dashes};}''')
  assert abs(repeat['cooldown']-2.2)<1e-6 and repeat['ratio']<=.21 and 13<=repeat['dashes']<=14,repeat
  p.evaluate('''()=>{showMenu();applyLanguage('zh-Hant');COINS=200;META={dash:1};showShop();}''')
- p.locator('.mrow').filter(has_text='衝刺訓練').scroll_into_view_if_needed()
+ reveal(p, p.locator('.mrow').filter(has_text='衝刺訓練'))
  p.screenshot(path=str(ARTIFACTS/'dash-shop58.png'))
  ink=p.evaluate('''()=>{showMenu();LV_IDX=8;start();G.paused=true;const bg=[207,216,192];const sample=n=>{G.GOO=Array.from({length:n},()=>({x:0,y:0,r:50,hue:140,life:7.5,max:7.5,burn:0,wob:0}));const before=JSON.stringify(G.GOO);ctx.setTransform(DPR,0,0,DPR,0,0);ctx.fillStyle='rgb('+bg.join(',')+')';ctx.fillRect(0,0,W,H);drawGooGround(W/2,H/2);const px=Array.from(ctx.getImageData(W/2*DPR,H/2*DPR,1,1).data);return {px,unchanged:before===JSON.stringify(G.GOO)};};return {one:sample(1),many:sample(64),bg,size:[gooSurface.width,gooSurface.height,W,H]};}''')
  assert ink['one']['px']==ink['many']['px'] and ink['one']['unchanged'] and ink['many']['unchanged'],ink

@@ -2,12 +2,13 @@
 import json, os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 from test_paths import GAME_ROOT, ARTIFACTS, BROWSER_CHANNEL
 with sync_playwright() as pw:
- b=pw.chromium.launch(channel=BROWSER_CHANNEL);c=b.new_context(viewport={'width':390,'height':844},has_touch=True);c.set_offline(True);c.add_init_script('window.requestAnimationFrame=()=>0')
+ b=pw.chromium.launch(channel=BROWSER_CHANNEL);c=b.new_context(viewport={'width':390,'height':844},has_touch=True);c.set_offline(True)
  p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)));c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_UI_CPU','1'))});p.goto((Path(GAME_ROOT)/'index.html').as_uri())
- p.locator('#navGarden').click();p.locator('#gardenArrange').click();p.locator('.gardenTool').nth(4).click();p.locator('.gardenTile').nth(9).click()
- assert p.locator('#gardenWelcome').is_enabled();p.locator('#gardenWelcome').click();assert p.locator('#gardenWelcome').is_disabled();assert p.locator('.resident.home').count()==1
+ reveal(p, p.locator('#navGarden')).click();reveal(p, p.locator('#gardenArrange')).click();reveal(p, p.locator('.gardenTool').nth(4)).click();reveal(p, p.locator('.gardenTile').nth(9)).click()
+ assert p.locator('#gardenWelcome').is_enabled();reveal(p, p.locator('#gardenWelcome')).click();assert p.locator('#gardenWelcome').is_disabled();assert p.locator('.resident.home').count()==1
  result=p.evaluate('''()=>{
  const a=(pairs)=>{const x=Array(16).fill(0);for(const [i,t] of pairs)x[i]=t;return x;};
  const cases=[[[5,4],[4,2],[6,2]],[[5,3],[1,1],[6,1]],[[0,5],[1,5],[2,5],[3,5]],[[5,4],[7,4],[1,2],[6,2],[11,2]],[[0,1],[3,1],[12,1],[15,1],[5,3]],[[0,1],[1,2],[2,3],[3,4],[7,5]]];
@@ -29,7 +30,8 @@ with sync_playwright() as pw:
   p.set_viewport_size({'width':w,'height':h})
   for lang in p.evaluate('Object.keys(L10N)'):
    p.evaluate('lang=>{applyLanguage(lang);setHubPage("garden");}',lang)
-   if not p.locator('.gardenTile').first.is_visible():p.locator('#gardenArrange').click()
+   if p.evaluate('GARDEN_TAB')!='decorate':p.locator('#gardenArrange').click()
+   reveal(p, p.locator('.gardenTile').first)
    assert p.locator('#garden').evaluate('e=>e.scrollWidth<=e.clientWidth+1'),(w,lang)
    assert p.locator('.gardenTile').count()==16 and p.locator('.gardenTool').count()==6
    assert p.locator('.gardenTile').first.bounding_box()['width']>=44,(w,h,lang,p.locator('.gardenTile').first.bounding_box(),p.locator('#gardenWorkshop').get_attribute('open'))
@@ -37,7 +39,7 @@ with sync_playwright() as pw:
   toolbar=p.locator('.gardenTools').bounding_box()
   assert toolbar['y']>=0 and toolbar['y']+toolbar['height']<=h-60,(w,h,toolbar)
  p.set_viewport_size({'width':390,'height':844});p.evaluate('applyLanguage("zh-Hant");GARDEN_WISH=5;renderGarden();document.querySelector("#garden").scrollTop=0')
- p.screenshot(path=str(ARTIFACTS/'garden65.png'));p.locator('.gardenWishStatus').scroll_into_view_if_needed();p.screenshot(path=str(ARTIFACTS/'garden65-wish.png'))
+ p.screenshot(path=str(ARTIFACTS/'garden65.png'));reveal(p, p.locator('.gardenWishStatus'));p.screenshot(path=str(ARTIFACTS/'garden65-wish.png'))
  payload=p.evaluate('localStorage.getItem(PROG_KEY)')
  native=b.new_context();native.add_init_script('window.requestAnimationFrame=()=>0;window.__saved='+json.dumps(payload)+';window.Capacitor={getPlatform:()=>"android",Plugins:{Preferences:{get:async()=>({value:window.__saved}),set:async()=>{}}}};')
  q=native.new_page();q.goto((Path(GAME_ROOT)/'index.html').as_uri());q.wait_for_function('NATIVE_READY');assert q.evaluate('JSON.stringify(GARDEN)')==result['snapshot'];native.close()

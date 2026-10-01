@@ -2,19 +2,20 @@
 import json,os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 from test_paths import GAME_ROOT,ARTIFACTS,BROWSER_CHANNEL
 with sync_playwright() as pw:
  b=pw.chromium.launch(channel=BROWSER_CHANNEL);c=b.new_context(viewport={'width':390,'height':844},device_scale_factor=2,has_touch=True);c.set_offline(True)
  # Real clock + controlled offset. One live second is tested, long waits are accelerated.
  c.add_init_script('window.__offset=0;window.__realNow=Date.now.bind(Date);Date.now=()=>window.__realNow()+window.__offset')
  p=c.new_page();errors=[];p.on('pageerror',lambda e:errors.append(str(e)));c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate',{'rate':int(os.getenv('GOO_UI_CPU','1'))})
- p.goto((Path(GAME_ROOT)/'index.html').as_uri());p.locator('#navGarden').click();p.locator('#gardenQuestAction').click()
+ p.goto((Path(GAME_ROOT)/'index.html').as_uri());reveal(p, p.locator('#navGarden')).click();reveal(p, p.locator('#gardenQuestAction')).click()
  assert p.locator('#gardenQuestAction').is_disabled()
  assert p.locator('#gardenQuestSteps [aria-current]').inner_text()=='Plant & harvest'
  assert p.evaluate('GARDEN.petals===0&&!gardenHarvest(0)&&gardenQuestState().kind==="grow"')
  first=p.locator('#gardenQuestAction').inner_text();p.wait_for_function('s=>document.getElementById("gardenQuestAction").textContent!==s',arg=first,timeout=10000)
  deadline=p.evaluate('GARDEN.plots[0].readyAt')
- p.reload();p.locator('#navGarden').click();assert p.evaluate('GARDEN.plots[0].readyAt')==deadline
+ p.reload();reveal(p, p.locator('#navGarden')).click();assert p.evaluate('GARDEN.plots[0].readyAt')==deadline
  # Clearing a stage must not skip the countdown, and planting must not move to Adventure.
  p.evaluate('gardenClear();renderGarden()');assert p.evaluate('!gardenReady(GARDEN.plots[0])')
  assert p.locator('#garden').is_visible()
@@ -23,10 +24,10 @@ with sync_playwright() as pw:
  p.evaluate('window.__offset=61000');p.wait_for_function('document.getElementById("gardenQuest").dataset.step==="harvest"')
  assert p.locator('#gardenQuestSteps [aria-current]').inner_text()=='Plant & harvest'
  assert p.locator('#gardenQuestAction').is_enabled()
- p.locator('#gardenQuestAction').click();assert p.evaluate('GARDEN.petals===15&&GARDEN.plots.every(p=>!p)&&!gardenHarvest(0)')
+ reveal(p, p.locator('#gardenQuestAction')).click();assert p.evaluate('GARDEN.petals===15&&GARDEN.plots.every(p=>!p)&&!gardenHarvest(0)')
  assert p.locator('#gardenQuest').get_attribute('data-step')=='repair'
  # A ready save stays ready after reload/offline, no auto-collection or loss.
- p.evaluate('window.__offset=0;GARDEN=cleanGarden({house:2,plots:[{crop:2,growth:3}]});saveGame()');p.reload();p.locator('#navGarden').click()
+ p.evaluate('window.__offset=0;GARDEN=cleanGarden({house:2,plots:[{crop:2,growth:3}]});saveGame()');p.reload();reveal(p, p.locator('#navGarden')).click()
  assert p.evaluate('gardenReady(GARDEN.plots[0])&&GARDEN.petals===0')
  # Legacy partial growth maps proportionally; migration persists, no restart.
  r=p.evaluate('''()=>{const before=Date.now();const old={v:2,progress:9,coins:456,meta:{dmg:2},garden:{seeds:2,petals:7,house:2,plots:[{crop:1,growth:1},{crop:2,growth:3},null]}};

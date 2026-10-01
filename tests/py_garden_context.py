@@ -2,6 +2,7 @@
 import json, os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 from test_paths import GAME_ROOT, ARTIFACTS, BROWSER_CHANNEL
 
 with sync_playwright() as pw:
@@ -12,16 +13,16 @@ with sync_playwright() as pw:
     p.on('pageerror', lambda e: errors.append(str(e)))
     c.new_cdp_session(p).send('Emulation.setCPUThrottlingRate', {'rate':int(os.getenv('GOO_UI_CPU','1'))})
     p.goto((Path(GAME_ROOT)/'index.html').as_uri())
-    p.locator('#navGarden').click()
+    reveal(p, p.locator('#navGarden')).click()
     checks=0
     for w,h in [(320,568),(390,844),(844,390),(1280,900)]:
         p.set_viewport_size({'width':w,'height':h})
         for lang in p.evaluate('Object.keys(L10N)'):
             p.evaluate('lang=>{gardenContextClose();GARDEN=cleanGarden({house:2,seeds:3});GARDEN_TAB="farm";applyLanguage(lang);setHubPage("garden")}',lang)
             spot=p.locator('.gardenSpot.plot[data-index="0"]')
-            spot.scroll_into_view_if_needed()
+            reveal(p, spot)
             before=p.locator('#garden').evaluate('e=>e.scrollTop')
-            spot.click()
+            reveal(p, spot).click()
             pop=p.locator('#gardenContext')
             assert pop.is_visible()
             if lang in ['en','zh-Hant','zh-Hans']:
@@ -35,34 +36,34 @@ with sync_playwright() as pw:
             assert pop.evaluate('e=>e.scrollWidth<=e.clientWidth+1')
             for choice in pop.locator('.gardenCropChoice:visible').all():
                 assert choice.bounding_box()['height']>=44
-            pop.locator('.gardenCropChoice[data-crop="2"]:visible').click()
+            reveal(p, pop.locator('.gardenCropChoice[data-crop="2"]:visible')).click()
             assert pop.locator('.gardenCropChoice[data-crop="2"]:visible').get_attribute('aria-pressed')=='true'
             # Tick updates must not silently change the chosen plant.
             p.evaluate('gardenRefreshTimers()')
-            pop.locator('.gardenPlantSubmit:visible').click()
+            reveal(p, pop.locator('.gardenPlantSubmit:visible')).click()
             assert p.evaluate('GARDEN.seeds===2&&GARDEN.plots[0].crop===2&&GARDEN.plots[0].duration===720')
             assert pop.is_hidden()
-            spot.click();p.keyboard.press('Escape');assert pop.is_hidden()
-            p.locator('#gardenKitchen').click()
+            reveal(p, spot).click();p.keyboard.press('Escape');assert pop.is_hidden()
+            reveal(p, p.locator('#gardenKitchen')).click()
             assert p.locator('#gardenViewport').is_hidden() and p.locator('#gardenQuest').is_hidden()
-            assert p.locator('.gardenRecipe').first.is_visible()
-            p.locator('#gardenCommunity').click()
-            assert p.locator('.gardenRecipe').count()==0 and p.locator('.gardenOrder').first.is_visible()
-            p.locator('#gardenArrange').click()
-            assert p.locator('#gardenLife').is_hidden() and p.locator('.gardenTile').first.is_visible()
-            p.locator('#gardenFarm').click()
-            assert p.locator('.gardenTile').first.is_hidden() and p.locator('#gardenViewport').is_visible()
+            assert reveal(p, p.locator('.gardenRecipe').first).is_visible()
+            reveal(p, p.locator('#gardenCommunity')).click()
+            assert p.locator('.gardenRecipe').count()==0 and reveal(p, p.locator('.gardenOrder').first).is_visible()
+            reveal(p, p.locator('#gardenArrange')).click()
+            assert p.locator('#gardenLife').is_hidden() and reveal(p, p.locator('.gardenTile').first).is_visible()
+            reveal(p, p.locator('#gardenFarm')).click()
+            assert p.locator('.gardenTile').first.is_hidden() and reveal(p, p.locator('#gardenViewport')).is_visible()
             assert p.locator('#garden').evaluate('e=>e.scrollWidth<=e.clientWidth+1')
             checks+=1
     # Another field maturing must not erase an in-progress crop choice or focus.
     p.evaluate('gardenContextClose();GARDEN=cleanGarden({house:2});GARDEN_TAB="farm";setHubPage("garden");GARDEN.plots[1]={crop:0,duration:60,readyAt:Date.now()+60000,growth:0};renderGarden()')
-    p.locator('.gardenSpot.plot[data-index="0"]').click()
-    p.locator('.gardenPlot').first.locator('[data-crop="2"]').click()
+    reveal(p, p.locator('.gardenSpot.plot[data-index="0"]')).click()
+    reveal(p, p.locator('.gardenPlot').first.locator('[data-crop="2"]')).click()
     p.evaluate('GARDEN.plots[1].readyAt=Date.now()-1;GARDEN_TIMER_SECOND=-1;gardenRefreshTimers()')
     assert p.locator('.gardenPlot').first.locator('[data-crop="2"]').get_attribute('aria-pressed')=='true'
     assert p.evaluate('document.activeElement.dataset.crop==="2"')
-    p.locator('#gardenContextClose').click()
-    p.locator('#btnHome').click()
+    reveal(p, p.locator('#gardenContextClose')).click()
+    reveal(p, p.locator('#btnHome')).click()
     assert p.locator('#gardenContext').is_hidden()
     assert not errors,errors
     (ARTIFACTS/'garden76-context.json').write_text(json.dumps({'layouts':checks,'errors':errors,'offline':True,'cpu':os.getenv('GOO_UI_CPU','1'),'no_scroll_on_selection':True}),encoding='utf-8')

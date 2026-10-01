@@ -3,6 +3,7 @@ import json
 import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
+from ui_pages import reveal
 from test_paths import GAME_ROOT, ARTIFACTS, BROWSER_CHANNEL
 
 with sync_playwright() as pw:
@@ -80,7 +81,11 @@ with sync_playwright() as pw:
             p.evaluate('lang=>{applyLanguage(lang);setHubPage("garden");GARDEN_QUEST_CROP=2;renderGarden()}', lang)
             assert '15:00' in p.locator('#gardenQuestDetail').inner_text()
             assert p.locator('#gardenQuest').evaluate('e=>e.scrollWidth<=e.clientWidth+1'), (width, lang)
-            assert p.locator('#gardenPace').evaluate('e=>e.getBoundingClientRect().width>0')
+            if not p.locator('#gardenPace').is_visible():
+                reveal(p, p.locator('.questMore')).click()
+                assert p.evaluate("document.querySelector('#readingBox .sub2').textContent.includes(T('gardenPace',GARDEN.house,1+GARDEN.house/2))")
+                p.locator('#readingBox button').click()
+            else:assert p.locator('#gardenPace').evaluate('e=>e.getBoundingClientRect().width>0')
     p.set_viewport_size({'width': 390, 'height': 844})
     p.evaluate('applyLanguage("zh-Hant");renderGarden();document.getElementById("garden").scrollTop=0')
     p.screenshot(path=str(ARTIFACTS / 'garden72-level3-preview.png'))
