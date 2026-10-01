@@ -1,6 +1,9 @@
 # GOO BLASTER 精簡交接
 
 ## 目前狀態（2026-10-02）
+- 目前目標：交接規範已整合至AGENTS.md第7節並同步CLAUDE.md；下一步仍為Pixel Play版真機驗證，再核對上架待辦。
+- 本輪接手HEAD b7af2f9（交付紀錄）與遊戲commit均已推送；git pull --ff-only回報Already up to date。
+- 本輪文件變更AGENTS.md／CLAUDE.md／HANDOFF.md；提交以docs: clarify proactive conversation handoff rules查找。未追蹤.codex-remote-attachments/保留且不提交。
 - 本次煙火音效跨頁持續播放問題已完成v0.9.83修正、驗證與授權平台交付。
 - 分支codex/soft-world-ui；遊戲commit 2e6a74b33450f9ef06c0b3ad671e70778571ad87已push。
 - Summary：v0.9.83: stop victory celebrations when leaving results。
@@ -42,13 +45,14 @@
 - Console 10月2日01:06：0.9.83-rc.1 Internal Test提供給內測者，track4701357753096403615／release4。
 - 內測入口 https://play.google.com/apps/internaltest/4701357753096403615；更新包不等於已安裝到Pixel。
 - 唯一Console警告為缺去混淆檔（minify=false）；裝置支援數不變。_private/play-preparation/internal-v83-receipt.json。
-- Pixel已為Play簽章版；本次adb無裝置。必須走Play更新，不混裝GitHub debug APK、不卸載／清資料。
+- 前輪記錄Pixel已為Play簽章版；2026-10-02本輪adb devices -l仍為空清單，98301安裝狀態、真機聽感與存檔均未驗。必須走Play更新，不混裝GitHub debug APK、不卸載／清資料。
 - Play簽章57965f11182c1fa87082dc48573a7b9426ab029361da21ff0128416e1e7268f9；upload憑證ed7ec469e074b8489d6515520d1a20e99ec29b4ae25c53f71cc0d56a4fe2eee6。
 - 上傳金鑰異地備份未完成，不得建立新key。IARC已完成；商家由本人處理，價格最終儲存／客服政策同步仍待核對。
 - 未正式上架；Alpha4700117103530327117的12人持續14天尚未開始，內測1位與自動測試均不等於封測。
 
 ## 下一次接手
-- 對話累積多次長任務，使用者要求完成後評估換視窗；建議同專案開新對話以減少歷史上下文負擔。
+- 本輪僅文件整合與唯讀核對，未啟動測試／建置／發布工作；沒有本輪尚在執行的外部操作。Play待驗事項如上，不代表新對話必須立即再換。
+- 文件驗證：studio.py check設定有效（未跑遊戲測試）；HTML SHA仍與上述v83一致。既有91項／CPU／離線／發布驗證不得重做；文件差異以git diff --check核對。
 - 先讀AGENTS.md／本檔，核對Git與實際BUILD；歷史只按需要搜尋，不重跑已完成的v83發布與三輪驗證。
 - 優先核對Pixel已更新98301；以真實過關→主畫面→庭院／三主題確認無殘留煙火聲，保留存檔。
 - 無手機連線則明示真機未驗；可續處理Play上架待辦，但不得替代12人14天或擅自正式發布。
