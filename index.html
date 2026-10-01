@@ -504,6 +504,31 @@
 #garden[data-workspace=farm]>#gardenQuest{grid-column:1;grid-row:4;}
 #garden[data-workspace=farm]>#gardenViewport{grid-column:2;grid-row:4;height:clamp(360px,65vh,650px);}
 }
+/* v81: fit the destination map to the available screen; clip scroll below system insets. */
+.ui::before{content:'';position:absolute;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:9;pointer-events:none;}
+#menu,#garden,#shop,#settings{top:env(safe-area-inset-top,0px);padding-top:16px;}
+#menu.homePage{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr) auto;align-items:center;justify-items:center;overflow:hidden;gap:8px;padding:10px 12px;}
+#menu.homePage>h1{grid-row:1;grid-column:1;justify-self:start;font-size:clamp(20px,5vw,28px);white-space:nowrap;}
+#menu.homePage #menuHeader{grid-row:1;grid-column:2;width:auto;}
+#menu.homePage #menuWallet{padding:6px 9px;}
+#menu.homePage #townHome{grid-row:2;grid-column:1 / -1;width:100%;height:100%;min-height:0;}
+#menu.homePage #townScene{height:100%;aspect-ratio:auto;}
+#menu.homePage #diag{grid-row:3;grid-column:1 / -1;}
+#menu.homePage #diag:empty{display:none;}
+#menu.homePage .townPlace{width:24%;height:24%;}
+#menu.homePage .townPlace[data-place=shop]{left:8%!important;}
+#menu.homePage .townPlace>svg{min-height:0;flex:1;width:100%;}
+#menu.homePage .townPlace>span{flex-shrink:0;font-size:clamp(10px,2.7vw,14px);padding:4px 5px;}
+#gardenActions{box-shadow:0 -18px 0 #f3efdf,0 5px 0 #f3efdf;}
+@media(min-aspect-ratio:6/5){
+ #menu.homePage .townPlace{width:29%;height:38%;top:14%!important;}
+ #menu.homePage .townPlace[data-place=gate],#menu.homePage .townPlace[data-place=picnic]{left:3%!important;}
+ #menu.homePage .townPlace[data-place=house],#menu.homePage .townPlace[data-place=pond]{left:35.5%!important;}
+ #menu.homePage .townPlace[data-place=shop],#menu.homePage .townPlace[data-place=stars]{left:68%!important;}
+ #menu.homePage .townPlace[data-place=picnic],#menu.homePage .townPlace[data-place=pond],#menu.homePage .townPlace[data-place=stars]{top:57%!important;}
+ #menu.homePage .townPlace>span{font-size:12px;}
+ #menu.homePage .townPlace>svg{max-height:100%;}
+}
 </style>
 </head>
 <body>
@@ -634,7 +659,7 @@
 </div>
 <script>
 'use strict';
-const BUILD='v0.9.80';
+const BUILD='v0.9.81';
 //====================== 多語系（v0.9.19）======================
 // 預設英文。原本 289 條中文字串全部抽成 key，翻譯放在 L10N 表裡。
 // 設計重點：

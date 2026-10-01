@@ -1531,3 +1531,14 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 開啟與force-stop後重開PASS；透過實際備份UI取出的碼與原碼逐字一致（第1關、0幣、英文、庭院預設資料）。原備份是初始狀態，新版已相同，未套用任何改造進度。輸入法曾將自動輸入碼轉成亂碼，沒有按還原套用，改用匯出碼確認；主頁動畫造成uiautomator idle逾時，設定頁取值成功，失敗保留於操作紀錄。
 - 證據_private/pixel-play-migration/backup-verification.json、migration-verification.json、play-signature.txt及實機截圖；私人備份不提交。手機備份／遊戲資料之外未清理，暫時ADB轉送已移除。
 - 未重跑87項或重發v80；真機離線／政策連結／完整操作手感未執行，價格、商家與封測仍待處理。教訓：跨Android使用者也共用套件簽章限制；Play交付憑證與上傳憑證不可混為一談。
+
+## v0.9.81 — 首頁與庭院的螢幕邊界（2026-10-01）
+- 使用者Pixel截圖：首頁最下方主題藏在底部導覽後，庭院捲動時標題／資源進入系統狀態列底層。
+- 根因：首頁地圖用固定最小高度及視窗高度估算，沒有按標題／錢包／版本資訊／底部導覽實際分配空間；庭院安全區只用padding，捲動後仍可進入該區；Android API36的edge-to-edge未啟用Capacitor原生邊界處理。
+- 本版只改畫面邊界：首頁改為標題錢包同列、地圖填滿剩餘高度，橫向六入口排成兩排；庭院捲動區從安全區下方開始，分類列加完整底色。安全區補不透明遮罩，避免露出底層遊戲HUD。Android設定adjustMarginsForEdgeToEdge=force，原生按系統列／瀏海調整WebView邊界，並加入APK／AAB實際設定稽核。
+- 沒有調整戰鬥、庭院資源、倒數、存檔或翻譯字串；預設英文不變。新增py_viewport_layout至完整套件：66組尺寸／11語言，檢查零垂直溢出、入口不重疊／不裁切／至少44px、庭院捲動、32px頂部與24px底部安全區、離線及資料不變。
+- 實跑v80對照確實FAIL：320×568首頁溢出7px；_private/baseline80-layout/regression.log。新版針對性測試PASS，首頁溢出0px。初次截圖發現安全區露出HUD，修正後已目視確認遮罩；未把中途產物當最終驗收。
+- 第一批因UTF-8名單更新失敗而仍用舊87項清單，停止並重新建立88項完整批次；第二批在補安全區遮罩時停止。最終HTML SHA b5eb47b19ab8924ac111944237eda0ade7a058629a428db05def1780fe3dd89e，完整批次_private/test-runs/20261001-185753-386699-viewport81-final/results.json（結果與交付見後續紀錄）。
+- 教訓：DOM存在／按鈕可捲到不等於首頁可完整看見；原生system bars與瀏覽器env安全區必須分別驗證。不能把瀏覽器安全區模擬當成Pixel實機驗收。
+- 最終完整88/88 PASS；CPU4的viewport_layout／bottom_nav／garden_context三項PASS（20261001-192128-638059-viewport81-cpu4）。離線新存檔及實際關閉重開PASS、0 JS錯誤／0外部請求。獨立效能有同伴52.9FPS、同批差+11.4%屬波動；py_test9第1關52秒滿心通關、第2關60秒2心、第3關53秒失敗，硬門檻第1關已滿足。Surface未全平行，未冒充手機效能。
+- 已目視393×759新存檔中英文首頁／庭院圖，來源與SHA見store/screenshots/v0.9.81/viewport-manifest.json。最新adb無裝置，v81 Pixel實測尚未執行；保留現有Play安裝及資料。

@@ -69,6 +69,7 @@ def build_test(tests,java,sdk,retries=()):
         assert sha(z.read('assets/public/index.html'))==game_sha
         config=json.loads(z.read('assets/capacitor.config.json'))
         assert config['appId']=='com.demjastudio.gooblaster'
+        assert config['android']['adjustMarginsForEdgeToEdge']=='force', 'Packaged WebView must avoid system bars and cutouts'
         dex=b''.join(z.read(n) for n in z.namelist() if re.fullmatch(r'classes\d*\.dex',n))
         assert b'Lcom/demjastudio/gooblaster/BattleReportPlugin;' in dex,'APK is missing the native report exporter'
         assert b'android.intent.action.CREATE_DOCUMENT' in dex,'APK is missing the system document export action'

@@ -1,0 +1,11 @@
+{
+  "build": "v0.9.81",
+  "title": "v0.9.81 — A home screen that fits",
+  "languages": ["en", "zh-Hant"],
+  "blocks": [
+    {"kind":"h2","text":"English"},
+    {"kind":"p","text":"All six town destinations now fit on the home screen without scrolling. The map uses the space above the bottom navigation, with two rows of destinations in landscape. The garden category bar has an opaque backing so scrolled content no longer peeks through above it. This update changes layout only; gameplay, crop timers and saved progress are unchanged."},
+    {"kind":"h2","text":"繁體中文"},
+    {"kind":"p","text":"首頁六個目的地現在能完整顯示，不必捲動尋找。地圖依底部導覽上方的空間調整大小，橫向時入口分成兩排。庭院分類列也補上完整底色，捲動內容不再從上方露出。這次只調整排版，玩法、作物倒數與存檔不變。"}
+  ]
+}

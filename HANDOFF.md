@@ -1,35 +1,35 @@
 # GOO BLASTER 精簡交接
 
 ## 目前任務（2026-10-01）
-- Google Play 上架準備；使用者定價 US$1.99、目標 9 歲以上與成人。尚未送審／正式發布。
-- 使用者會自行完成商家帳戶；不可代填收款／稅務／身分。Console 價格尚未儲存。
-- 分支 codex/soft-world-ui；遊戲 commit 8edd22063eccf79e2d24fc3bd95a64997c963d3c 已 push。
-- Summary：v0.9.80: add a privacy policy entry in settings。
-- HTML SHA a70daa8c6c507d3584a414152220e4141d25a81fab7253ec0271b9a335f79217。
-- 附件 .codex-remote-attachments 不提交；私人產物只放 _private。勿重做已完成的 v79／v80 發布。
+- 修正使用者Pixel截圖：首頁六入口完整顯示、不需捲動；庭院捲動不侵入頂部安全區。
+- 分支codex/soft-world-ui；BUILD v0.9.81。本版只改畫面邊界，玩法／時間／存檔／翻譯不變。
+- Summary：v0.9.81: fit home and garden pages within screen bounds。
+- HTML SHA b5eb47b19ab8924ac111944237eda0ade7a058629a428db05def1780fe3dd89e。
+- 首頁改剩餘高度自適應，橫向兩排；庭院分類列與安全區不透明遮罩。
+- Android adjustMarginsForEdgeToEdge=force；APK／AAB建置均檢查實際封裝設定。
+- 單代理；附件.codex-remote-attachments及_private不提交；v80發布與Pixel遷移已完成勿重做。
 
-## v80 範圍與驗證
-- 設定新增隱私政策網站入口，11 語言；另頁開啟、原遊戲保留。政策補庭院存檔與 9+ 定位。
-- 不改玩法、倒數、存檔格式與預設英文。i18n/build_v0980.py；tests/py_privacy_entry.py 已納入全測。
-- 完整 87/87 PASS：_private/test-runs/20260929-194400-848598-privacy80-full/results.json。
-- 命令：.venv/Scripts/python.exe run_tests.py --jobs 2 --label privacy80-full。
-- 環境 PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
-- test9 第 1／2／3 關 57／60／89 秒通關；效能獨立 49.2→52.3 FPS（+6.4% 量測波動）。
-- CPU4 privacy／bottomnav 兩項 PASS：_private/test-runs/20260929-200922-480275-privacy80-cpu4/results.json。
-- 離線／新存檔／真實關閉重開 PASS：_private/play-preparation/release-smoke-v80.log；0 錯誤、0 外部請求。
-- 新隱私測試 44 版面、真實點擊、48px／無溢位／存檔不變；v79 對照實跑缺入口 FAIL，_private/baseline79-privacy/regression.log。
-- 截圖 store/screenshots/v0.9.80 已目視；本機 popup fixture 不冒充原生實機。
+## v81 已驗證
+- 完整88/88 PASS：_private/test-runs/20261001-185753-386699-viewport81-final/results.json。
+- 命令 .venv/Scripts/python.exe run_tests.py --jobs 2 --label viewport81-final。
+- 環境PYTHONUTF8=1、GOO_BROWSER_CHANNEL=msedge、NODE_PATH=_private/test-node/node_modules。
+- py_test9第1關52秒／3心通關、第2關60秒／2心通關；第3關53秒失敗是觀察值，未當成全關通過。
+- 獨立效能52.9 FPS有同伴、同批差+11.4%為量測波動，0 JS錯誤；不是Pixel效能。
+- CPU4三項PASS：_private/test-runs/20261001-192128-638059-viewport81-cpu4/results.json（viewport_layout、bottom_nav、garden_context）。
+- 離線／新存檔／實際關閉重開PASS，0錯誤／0外部請求：_private/play-preparation/release-smoke-v81.log。
+- 新測試66版面＝6尺寸×11語言，零溢出、44px入口、無重疊、32／24px安全區、存檔不變。
+- v80對照FAIL首頁溢出7px，新版0px；_private/baseline80-layout/regression.log。
+- 初次舊87名單及第二次補遮罩前批次均中止且保留，不拿它們替代最終報告。
+- store/screenshots/v0.9.81/viewport-manifest.json記錄真實新存檔瀏覽器截圖，非Pixel。
+- Surface依既定限制未全平行；CPU4不冒充全平行。最新adb清單無手機，v81真機待驗。
 
-## 已交付
-- APK 98000／0.9.80-test.0，既有簽章不變，公開重新下載核對。
-- APK SHA 915aa00110f0c441259dc70f1ef8e9a98e1e32ce53e776fecb3713fef23d4858。
-- 固定入口 https://github.com/davidform/goo-blaster/releases/tag/android-test。
-- itch build2035680／upload19167726 Active；公開完整 HTML 與平台附加腳本核對，開始／暫停 PASS；itch-v80.json。
-- Pages 3db64d5350080c98ad89035f86f876a5e2738a0c、Actions36568248919 成功；公開 SHA／開始暫停／另頁政策 PASS；pages-v80.json。
-- Pages 初次載入逾時，reload 後成功；原始紀錄保留。
-- Devlog1682276 已 Published、record、工作流程9項 PASS；store/devlogs/v0.9.80/。
-- 商店／原論壇公告17090045／profile 已更新，兩連結及七圖完整；store/page-sync/v0.9.80.json。
-- cleanup dry-run 後 Apply：移除2項釋放13,480,216 bytes；0失敗、25 AccessDenied略過。保留v80／v79 APK、進度與證據。
+## v81 交付進度
+- 原始碼測試完成；正在建立APK／已授權簽署的Play候選及同步既有通道。
+- 尚未宣稱v81 Play／APK／itch／Pages／Devlog已發布；完成後補實際收據。
+- Chrome既有Play內部測試建立版本頁已填v81名稱與中英說明，尚未上傳AAB。
+- itch編輯頁及原論壇17090045有未儲存v81文字，待公開payload完成後再存。
+- Pixel已是Play簽章版本；不可用debug APK覆蓋，不卸載／不清除資料。
+- 已完成v80交付：APK98000、itch2035680、Pages3db64d5、Devlog1682276；詳歷史，勿重做。
 
 ## Google Play 實際狀態
 - 既有草稿 app4976029382108915574／com.demjastudio.gooblaster；不要重建。

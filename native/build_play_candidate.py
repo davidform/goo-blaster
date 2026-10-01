@@ -66,6 +66,7 @@ def build(args):
         assert z.testzip() is None
         assert hashlib.sha256(z.read('base/assets/public/index.html')).hexdigest() == sha
         assert json.loads(z.read('base/assets/capacitor.config.json'))['appId'] == app_id
+        assert json.loads(z.read('base/assets/capacitor.config.json'))['android']['adjustMarginsForEdgeToEdge'] == 'force', 'Packaged WebView must avoid system bars and cutouts'
         signatures = [n for n in z.namelist() if re.match(r'META-INF/.*\.(RSA|DSA|EC|SF)$',n)]
         assert not signatures, 'Unexpected signature in unsigned candidate'
         native_libraries = [n for n in z.namelist() if n.endswith('.so')]
