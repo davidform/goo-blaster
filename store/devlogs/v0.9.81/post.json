@@ -1,0 +1,35 @@
+{
+  "build": "v0.9.81",
+  "title": "v0.9.81 — A home screen that fits",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "All six town destinations now fit on the home screen without scrolling. The map uses the space above the bottom navigation, with two rows of destinations in landscape. The garden category bar has an opaque backing so scrolled content no longer peeks through above it. This update changes layout only; gameplay, crop timers and saved progress are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "首頁六個目的地現在能完整顯示，不必捲動尋找。地圖依底部導覽上方的空間調整大小，橫向時入口分成兩排。庭院分類列也補上完整底色，捲動內容不再從上方露出。這次只調整排版，玩法、作物倒數與存檔不變。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "81caba4135af380101b0dac01b64d72215883f2579000efc27f0c559f456dd9b",
+  "public_game_sha256": "b5eb47b19ab8924ac111944237eda0ade7a058629a428db05def1780fe3dd89e",
+  "public_build_id": 2046126,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>All six town destinations now fit on the home screen without scrolling. The map uses the space above the bottom navigation, with two rows of destinations in landscape. The garden category bar has an opaque backing so scrolled content no longer peeks through above it. This update changes layout only; gameplay, crop timers and saved progress are unchanged.</p>\n<h2>繁體中文</h2>\n<p>首頁六個目的地現在能完整顯示，不必捲動尋找。地圖依底部導覽上方的空間調整大小，橫向時入口分成兩排。庭院分類列也補上完整底色，捲動內容不再從上方露出。這次只調整排版，玩法、作物倒數與存檔不變。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1685212/v0981-a-home-screen-that-fits",
+  "verified_at": "2026-10-01T11:39:58.234750+00:00"
+}

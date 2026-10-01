@@ -51,7 +51,7 @@ try {
     if ($LASTEXITCODE -ne 0) { throw 'Signing failed' }
     & "$jdk/jarsigner.exe" -verify -strict -verbose -certs -keystore $keystore -storetype PKCS12 -storepass:env GOO_UPLOAD_PASSWORD $signed $alias 2>&1 | Set-Content (Join-Path $out 'aab-signature-verification.log')
     if ($LASTEXITCODE -ne 0) { throw 'Strict signature verification failed' }
-    & "$jdk/keytool.exe" -J-Duser.language=en -J-Duser.country=US -printcert -jarfile $signed 2>&1 | Set-Content (Join-Path $out 'aab-signer-certificate.log')
+    & "$jdk/keytool.exe" '-J-Duser.language=en' '-J-Duser.country=US' -printcert -jarfile $signed 2>&1 | Set-Content (Join-Path $out 'aab-signer-certificate.log')
     if ($LASTEXITCODE -ne 0) { throw 'Signer certificate inspection failed' }
     Write-Output "Signed and strictly verified: $signed"
     Write-Output "Key directory (not backed up externally): $keyDir"

@@ -1542,3 +1542,9 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 教訓：DOM存在／按鈕可捲到不等於首頁可完整看見；原生system bars與瀏覽器env安全區必須分別驗證。不能把瀏覽器安全區模擬當成Pixel實機驗收。
 - 最終完整88/88 PASS；CPU4的viewport_layout／bottom_nav／garden_context三項PASS（20261001-192128-638059-viewport81-cpu4）。離線新存檔及實際關閉重開PASS、0 JS錯誤／0外部請求。獨立效能有同伴52.9FPS、同批差+11.4%屬波動；py_test9第1關52秒滿心通關、第2關60秒2心、第3關53秒失敗，硬門檻第1關已滿足。Surface未全平行，未冒充手機效能。
 - 已目視393×759新存檔中英文首頁／庭院圖，來源與SHA見store/screenshots/v0.9.81/viewport-manifest.json。最新adb無裝置，v81 Pixel實測尚未執行；保留現有Play安裝及資料。
+- 交付：遊戲commit5471adf已push；APK98100／0.9.81-test.0，SHA de036d65a6753190645c5c303d425dcf6a00a8c9942a3484aadde8c01fc3e067，原簽章、實際HTML與原生force設定核對、公開重新下載PASS。
+- itch2046126／19167726 Active，完整payload／平台suffix與開始暫停PASS；Pages378329b、Actions36855904052成功且公開完整SHA與開始暫停PASS。中英Devlog1685212已Published，record與9項工作流程PASS；商店／原公告／profile正文及新圖同步，保留原圖，論壇／profile各8張載入成功。
+- Play AAB98101／0.9.81-rc.1，SHA973d7f134539c7108de5db5ce47c27e7201211186e4bc886ec78f05d55a89db5；API36、debug=false、原HTML及force邊界一致。沿用既有uploadkey，strict驗簽／bundletool／manifest／ZIP比對PASS；沒有變更原ZIP項目，只新增3簽章項目。10月1日19:33原內測track4701357753096403615／release2顯示提供給內部測試人員；不是正式上架，12人14天仍未啟動。
+- 簽署已成功，但後續keytool憑證檢查首次因PowerShell拆解未加引號的-J-Duser.language=en參數失敗。修正native/sign_play_candidate.ps1兩個參數引號，保留first-failure日誌，直接對原簽包重新檢查PASS，不覆寫已簽包、不換key。Play只有未提供去混淆檔警告（minifyEnabled=false），裝置支援數不變。
+- 介面自動操作曾有文字插入重複、圖片移動未生效、Play filechooser與完整截圖逾時；未存入錯誤正文。明確selectText selectionType=text、核對選取後刪除，再重填；圖片Move up用Enter逐次核對DOM排序；Play上傳Enter成功，發布截圖改適當範圍成功。最終公開正文及圖均重新確認。
+- cleanup先盤點後Apply：移除2項／13,481,330 bytes，0失敗、25存取拒絕略過；保留v81/v80、手機進度與備份／金鑰。v81 Pixel未連線，尚未核對Play交付APK、更新後存檔及真機安全區；不將瀏覽器或封裝檢查冒充真機。

@@ -1,0 +1,96 @@
+{
+  "build": "v0.9.81",
+  "checked_on": "2026-10-01",
+  "source_sha256": "b5eb47b19ab8924ac111944237eda0ade7a058629a428db05def1780fe3dd89e",
+  "game_page": "https://davidform.itch.io/goo-blaster",
+  "topic": "https://itch.io/t/6826201/50-stages-no-ads-no-gacha-works-offline-my-browser-roguelite-needs-breaking#post-17090045",
+  "profile": "https://itch.io/profile/davidform",
+  "game_description_public_verified": true,
+  "topic_description_public_verified": true,
+  "profile_current_version_verified": true,
+  "first_five_image_ids": [
+    30141028,
+    30141027,
+    30141026,
+    30433214,
+    30433215
+  ],
+  "new_screenshots": [
+    "store/screenshots/v0.9.81/home-fit-en.png",
+    "store/screenshots/v0.9.81/garden-scroll-en.png"
+  ],
+  "new_public_images": [
+    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzMzIxNC5wbmc=/original/qKFNzV.png",
+    "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzMzIxNS5wbmc=/original/qjOycM.png"
+  ],
+  "topic_images": [
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzMzIxNC5wbmc=/original/qKFNzV.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzU0LnBuZw==/original/UccTzS.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzcxLnBuZw==/original/oJLgib.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzgzLnBuZw==/original/j4muTB.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NTExOS5wbmc=/original/CkMW%2BG.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NzA1MC5wbmc=/original/g%2F5MRz.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDM3MDQ5NS5wbmc=/original/KcNTE5.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDM3MjcyMS5wbmc=/original/jlC7ql.png"
+    }
+  ],
+  "profile_images": [
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzMzIxNC5wbmc=/original/qKFNzV.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzU0LnBuZw==/original/UccTzS.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzcxLnBuZw==/original/oJLgib.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzgzLnBuZw==/original/j4muTB.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NTExOS5wbmc=/original/CkMW%2BG.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NzA1MC5wbmc=/original/g%2F5MRz.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDM3MDQ5NS5wbmc=/original/KcNTE5.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDM3MjcyMS5wbmc=/original/jlC7ql.png"
+    }
+  ],
+  "historical_images_preserved": true,
+  "remaining": []
+}

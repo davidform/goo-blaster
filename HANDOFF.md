@@ -23,36 +23,36 @@
 - store/screenshots/v0.9.81/viewport-manifest.json記錄真實新存檔瀏覽器截圖，非Pixel。
 - Surface依既定限制未全平行；CPU4不冒充全平行。最新adb清單無手機，v81真機待驗。
 
-## v81 交付進度
-- 原始碼測試完成；正在建立APK／已授權簽署的Play候選及同步既有通道。
-- 尚未宣稱v81 Play／APK／itch／Pages／Devlog已發布；完成後補實際收據。
-- Chrome既有Play內部測試建立版本頁已填v81名稱與中英說明，尚未上傳AAB。
-- itch編輯頁及原論壇17090045有未儲存v81文字，待公開payload完成後再存。
-- Pixel已是Play簽章版本；不可用debug APK覆蓋，不卸載／不清除資料。
-- 已完成v80交付：APK98000、itch2035680、Pages3db64d5、Devlog1682276；詳歷史，勿重做。
+## v81 已交付
+- 遊戲commit 5471adf45c3499a080510b4054444f6412ada8f6已push；Summary見上方。
+- APK98100／0.9.81-test.0，原debug簽章不變；實際HTML及原生force邊界設定PASS。
+- APK SHA de036d65a6753190645c5c303d425dcf6a00a8c9942a3484aadde8c01fc3e067；公開重新下載核對PASS。
+- 固定測試入口 https://github.com/davidform/goo-blaster/releases/tag/android-test。
+- itch build2046126／upload19167726 Active，公開完整payload＋平台suffix核對、實際開始／暫停PASS；_private/mobile-test/itch-v81.json。
+- Pages378329b07a3b11cf943969d0df776f5e3f331080，Actions36855904052成功；公開SHA／開始暫停PASS；pages-v81.json。
+- 中英Devlog1685212已Published與record，工作流程9項PASS；store/devlogs/v0.9.81/。
+- 商店／原公告17090045／profile正文同步；三張戰鬥主圖後放新版首頁／庭院；保留歷史圖片，論壇與profile各8張已載入。store/page-sync/v0.9.81.json。
+- cleanup dry-run後Apply移除2項／13,481,330 bytes，0失敗／25拒絕存取略過。保留v81／v80 APK、進度、金鑰及證據。
 
 ## Google Play 實際狀態
-- 既有草稿 app4976029382108915574／com.demjastudio.gooblaster；不要重建。
-- 已存隱私、存取／無廣告／非政府／非金融／非健康、Action分類與公開信箱及HTTPS網址。
-- EN-US／zh-TW商店全文、圖示、主視覺、四張手機截圖已存草稿；六視覺素材AI標記已存，未送審。
-- 資料安全不收集／不分享已存草稿，最終完成受目標對象設定阻擋。
-- 使用者確認9–12／13–15／16–17／18+；先前9–12停用提示已不作現況依據，IARC已完成後以Console實際儲存結果核對。
-- 使用者截圖確認IARC於10月1日10:04已完成、信箱demjaholding@gmail.com；不要重填。目標對象／資料安全有填寫及預覽圖，但最終儲存待核對。
-- Google已管理App簽章；已簽AAB上傳成功並發布內部測試，勿更換App簽章或使用debug金鑰當上傳金鑰。
-- 未簽AAB：_private/play-preparation/goo-blaster-v0.9.80-98001-unsigned.aab，98001／0.9.80-rc.1。
-- AAB SHA 7d8f7be37fd1ff5a5517a0d85e422ac2783b5f2601d47bd6f408e97e6a5416d6；candidate.json／candidate-manifest.xml。
-- bundletool1.18.3 validate PASS；實際API36、debug=false、full、HTML一致、無.so／簽署，測試Gradle已還原。
-- 使用者10月1日明確授權金鑰／簽署，native/sign_play_candidate.ps1已實跑；已上傳。金鑰在使用者目錄.goo-blaster-signing，PKCS12／DPAPI／限定ACL，異地備份尚未完成，見其中BACKUP-README.txt。
-- 已簽_private/play-preparation/v0.9.80-98001-play-signed.aab；SHA948b7409f4680a8bdaffc6c7891676ed817fabbf0c0a7793867aa9b04958bef5。
-- 憑證SHA ed7ec469e074b8489d6515520d1a20e99ec29b4ae25c53f71cc0d56a4fe2eee6；jarsigner strict／bundletool／manifest與原始ZIP逐項比對PASS，只新增三簽章檔。signed-candidate.json記錄。
-- 詳細素材、證據及後續步驟：store/google-play/README.md、listing.json、testing-plan.md。
+- app4976029382108915574／com.demjastudio.gooblaster；不要重建。售價US$1.99、目標9歲以上成人。
+- 商家帳戶由本人完成；Console價格最終儲存仍待核對，不代填收款／稅務／身分。
+- IARC使用者截圖確認10月1日10:04完成，通知信箱demjaholding@gmail.com；不重填。
+- 目標9–12／13–15／16–17／18+、資料安全不收集／不分享已有填寫截圖，最終儲存待核對。
+- EN-US／zh-TW商店素材、隱私／存取／無廣告等草稿已準備；客服政策仍需同步新信箱。詳store/google-play/。
+- Play管理App簽章；沿用使用者已授權的既有上傳金鑰，未更換任何簽章或建立新金鑰。
+- v81已簽AAB98101／0.9.81-rc.1：_private/play-preparation/v0.9.81-98101-play-signed.aab。
+- AAB SHA 973d7f134539c7108de5db5ce47c27e7201211186e4bc886ec78f05d55a89db5；HTML同上、API36／debug=false／full／force邊界，strict簽章與bundletool／manifest／原ZIP逐項比對PASS。
+- 上傳憑證SHA ed7ec469e074b8489d6515520d1a20e99ec29b4ae25c53f71cc0d56a4fe2eee6；金鑰在使用者目錄.goo-blaster-signing，異地備份仍未完成。
+- 10月1日19:33 Console已顯示0.9.81-rc.1 Internal Test有效／提供給內部測試人員，track4701357753096403615／release2；簽署收據signed-candidate.json、play-v81-console.txt／published.png。
+- 唯一提示未提供去混淆檔；minifyEnabled=false，沒有阻擋錯誤、裝置支援數不變。未正式上架或開始12人封測。
+- 原內測連結 https://play.google.com/apps/internaltest/4701357753096403615。
+- 首次v81憑證檢查因PowerShell未引號包住-J參數失敗；簽署與strict已成功，保留失敗日誌後修正引號，直接驗證原簽包PASS，未重新簽署或換key。
 
-## 未執行與下一步
-- 使用者截圖確認10月1日10:50發布0.9.80-rc.1 Internal Test；名單1位，Pixel已從Play安裝98001。下一步既有Alpha封測；不是正式發布。商家帳戶／US$1.99仍待核對。
-- 客服改用demjaholding@gmail.com；商店／公開隱私政策同步尚未完成。不得將使用者截圖內私人電話／地址寫入Git。
-- 此個人帳戶Console實際要求12名測試者持續14天，目前0位；自動測試／GitHub APK不替代。
-- Pixel私人空間舊97100/debug簽章阻擋Play安裝；使用者明確允許本次移除，先備份及隔離還原PASS後才移除。此例外不擴及日後更新。
-- Pixel Play98001實測啟動／關閉重開後匯出碼與舊備份逐字相同（第1關、0幣）；實際APK內HTML SHA同v80。證據_private/pixel-play-migration/migration-verification.json；完整資料及備份碼同目錄勿提交。
-- Play實機簽章SHA256 57965f11182c1fa87082dc48573a7b9426ab029361da21ff0128416e1e7268f9；不同於debug及uploadkey。真機離線／政策連結／完整手感尚未驗證。
-- Surface依既定限制未全平行，CPU4不冒充全平行；市場與母語潤稿未驗證。
-- 單代理，不新增玩法／投廣告／招募私訊／正式送審；以已保存草稿接續，不重做發布。
+## Pixel與未完成項目
+- Pixel私人空間97100/debug簽章阻擋Play，先備份與隔離還原PASS；使用者明確同意一次性移除後改由Play安裝98001。不得擴及日後卸載更新。
+- v80 Play實機啟動／重開匯出碼與舊備份相同；證據_private/pixel-play-migration/。備份與碼不得提交。
+- Play交付簽章SHA 57965f11182c1fa87082dc48573a7b9426ab029361da21ff0128416e1e7268f9，與debug／uploadkey均不同。
+- 本次adb清單無手機，v81 Play交付APK、覆蓋更新存檔及真機狀態列／首頁手感尚未驗證；不要用debug APK覆蓋Play版，不卸載／清資料。
+- 個人帳戶要求12人持續14天，既有Alpha4700117103530327117尚未啟動；內部名單1位不等於封測。商家／價格與正式上架仍未完成。
+- 已完成v80發版及遷移不重做。Surface未全平行；市場／母語潤稿未驗證。單代理、不新增玩法／招募私訊／正式送審。

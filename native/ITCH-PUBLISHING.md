@@ -54,3 +54,7 @@
 論壇沒有HTML按鈕。若選句替換、HTML剪貼簿或contenteditable.fill造成錯位、空白或重複，先reload保留公開原文，不儲存失敗草稿。v79有效方法：先讀取完整原文／連結／圖片來源；Control+A、Backspace後**讀回確認空白**，再用CUA高階typeText輸入完整文字（換行即段落，勿大量重複空行）。用selectText與Link→Insert link恢復原超連結；Add image逐一恢復图片，最後核對textarea實際提交欄位、所有段落、連結與圖片再Save。
 
 Choose image僅顯示近期十張；老圖片可由已有且已核對的原始截圖檔經Upload image→Pick image重傳，不把歷史圖改稱新版截圖。等Add image對話框真正就緒再等filechooser並點Pick image，避免載入期間逾時。公開profile圖片為lazy loading，實際捲到引用區後再檢查naturalWidth；不能僅因尚未捲到就判定圖片失效。此紀錄是實測處理方式，不保證工具每次相同，仍須逐步核對。
+
+## 2026-10-01 編輯器操作補充
+
+CUA的selectText請明確指定selectionType=text，並讀回window.getSelection().toString()確認；未指定可能只定位游標。修改後必須檢查實際textarea，殘留重複句用已核對選取範圍＋Backspace移除。商店截圖Move up的連續click可能在動畫期間失效；以按鈕Enter逐次操作並核對DOM索引可完成排序。歷史圖lazy loading要實際顯示後再確認naturalWidth，不因初次未載入就刪除。
