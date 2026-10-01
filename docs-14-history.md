@@ -1563,3 +1563,10 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 
 - 離線smoke PASS：py_release_smoke.py以四倍CPU節流、零永久強化的新存檔實際開始，再用測試資料第9關／456幣／dmg2保存並關閉瀏覽器；重新啟動完整恢復，無外部請求／JS錯誤。證據_private/test-artifacts/release-smoke-v82.log；注入資料只驗證持久性，不是真人進度。
 - 四倍CPU節流第三輪4/4 PASS：pages82-cpu4；底部導覽122.4秒、就地操作193.2秒、挑戰狀態104.8秒、全頁巡覽373.0秒，來源未變。Surface遵守最多2工作，未做全平行；Pixel尚未連線／真機未驗。
+
+- v82交付（2026-10-02）：遊戲commit9e99161已push；APK98200／0.9.82-test.0，SHA cd1e625b437b0cc3d314476c6efdf337bda29991b2fd0675fe1c41c10bc82101，原debug簽章／force邊界／HTML一致，固定測試通道重新下載核對PASS。
+- itch2047274 Active，完整payload及平台suffix與受測來源一致；Pages8e009276／Actions36889382603成功，公開完整HTML SHA相同。兩平台實際開始／暫停PASS，收據_private/mobile-test/itch-v82.json與pages-v82.json。
+- Play AAB98201／0.9.82-rc.1，SHA749c47e030bdc6cae4074030ecafd3fcaaff6ee932af69b567458a012fb4666d；沿用上傳金鑰，strict驗簽／bundletool／manifest／ZIP PASS，原ZIP項目0改動、只新增3項簽章。10月2日00:09原內測track4701357753096403615／release3有效且提供給內部測試人員；僅缺去混淆檔警告，minify=false，裝置支援數不變。未正式上架／未啟動12人14天封測。
+- 中英Devlog1685583已Published，工作流程9項PASS；商店v82介紹／三張新UI圖30439741、30439740、30439739已公開，仍保留前三張戰鬥主圖。原論壇17090045及profile更新v82並新增庭院圖，兩处各9圖均實際載入成功；收據store/page-sync/v0.9.82.json。
+- 論壇編輯器的DOM文字選取會被鍵盤動作覆蓋為舊游標，未儲存錯誤草稿已撤回。以Ctrl+Home／Ctrl+ArrowDown／Ctrl+Shift+ArrowDown建立真實鍵盤選取，核對後刪除，再分25字pressSequentially插入；長單次輸入曾逾時，按已插入前綴續填，沒有重複公告。Play整頁截圖逾時改局部截圖成功，發布狀態另有文字證據。
+- cleanup先dry-run再Apply：移除2項共13,446,234 bytes、0失敗，25權限拒絕目錄保留；保留v82／v81 APK、手機進度／私鑰／備份。未執行全平行及Pixel更新後存檔／版面驗收，不把瀏覽器／AAB／Console當真機證據。上傳金鑰異地備份、價格最終儲存與封測仍待處理。

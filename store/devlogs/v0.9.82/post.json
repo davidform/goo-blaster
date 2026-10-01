@@ -1,0 +1,35 @@
+{
+  "build": "v0.9.82",
+  "title": "v0.9.82 — Turn pages, keep your place",
+  "languages": [
+    "en",
+    "zh-Hant"
+  ],
+  "blocks": [
+    {
+      "kind": "h2",
+      "text": "English"
+    },
+    {
+      "kind": "p",
+      "text": "Game menus now stay within the screen, with their titles and bottom navigation in place. Browse adventure stages by chapter and turn pages through longer upgrade and garden lists. Stories and extra instructions open in matching reading cards. Plant choices remain beside the selected plot, and challenge results have their own compact view. This is a layout update: combat, crop timers, resources and saved progress are unchanged."
+    },
+    {
+      "kind": "h2",
+      "text": "繁體中文"
+    },
+    {
+      "kind": "p",
+      "text": "遊戲選單改為不需上下捲動的排版，標題與底部導覽保持可見。冒險按章節選關，強化與庭院的長清單改用翻頁；故事和補充說明放進同風格的閱讀視窗。作物選項仍在點選的田地旁出現，挑戰結果也有獨立的精簡畫面。這次只調整排版，戰鬥、作物倒數、資源與存檔不變。"
+    }
+  ],
+  "status": "published",
+  "content_sha256": "cf698ffdb8418fe2bde0aefdb1c814cfd62fff98bb8932707b9abf6c4d81dd93",
+  "public_game_sha256": "0e00482770105e320d9f44d59bd96772ceeacf2797c814dff4948dbcff0b0d77",
+  "public_build_id": 2047274,
+  "page": "https://davidform.itch.io/goo-blaster",
+  "post_type": "General Update or Announcement",
+  "body_html": "<h2>English</h2>\n<p>Game menus now stay within the screen, with their titles and bottom navigation in place. Browse adventure stages by chapter and turn pages through longer upgrade and garden lists. Stories and extra instructions open in matching reading cards. Plant choices remain beside the selected plot, and challenge results have their own compact view. This is a layout update: combat, crop timers, resources and saved progress are unchanged.</p>\n<h2>繁體中文</h2>\n<p>遊戲選單改為不需上下捲動的排版，標題與底部導覽保持可見。冒險按章節選關，強化與庭院的長清單改用翻頁；故事和補充說明放進同風格的閱讀視窗。作物選項仍在點選的田地旁出現，挑戰結果也有獨立的精簡畫面。這次只調整排版，戰鬥、作物倒數、資源與存檔不變。</p>",
+  "url": "https://davidform.itch.io/goo-blaster/devlog/1685583/v0982-turn-pages-keep-your-place",
+  "verified_at": "2026-10-01T16:16:49.336868+00:00"
+}

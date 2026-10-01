@@ -1,0 +1,115 @@
+{
+  "build": "v0.9.82",
+  "verified_at": "2026-10-01T16:22:27.671Z",
+  "game_sha256": "0e00482770105e320d9f44d59bd96772ceeacf2797c814dff4948dbcff0b0d77",
+  "store_url": "https://davidform.itch.io/goo-blaster",
+  "store_text": "GOO BLASTER — v0.9.82\n\nA one-thumb survival adventure with soft colours, rounded little monsters, and a Candy Garden to come home to. Drag anywhere to move. Your weapons fire automatically. Dodge, collect upgrades, and find a build that works for you.\n\nA candy-town home screen that fits without scrolling: tap six landmarks for adventures, gardening, permanent upgrades, picnic memory, pond paths and starlight puzzles. A river, bridge, fields and strolling residents bring the town to life. Each landmark opens its own activity page. Home sits in the centre of the fixed bottom navigation, alongside Adventure, Upgrades, Garden and Settings. Menus fit within the screen. Longer upgrade and garden lists use page buttons, and adventure stages are grouped by chapter. Stories and extra instructions open in matching reading cards. The adventure route is on its own page, and picnic, pond and starlight challenges have focused screens and matching music. All six destinations remain visible above the bottom navigation; landscape uses two rows. Resource counts come from your save.\n50 stages across 10 chapters, with a chapter boss every 5 stages.\nChoose up to 2 weapons and 4 skills per run. Upgrade your choices and discover weapon evolutions.\nA permanent Candy Shop: even failed runs earn coins toward upgrades.\nCandy Village: explore an isometric cottage, fields and pond with walking jelly residents. Drag and zoom the scene, tap a field to plant or harvest, and tap your cottage to restore it. A restoration board shows your next cottage upgrade and guides planting, harvesting and repairs. Tap a field to see plant icons, growing times and yields beside it, without scrolling to a separate form. The cottage has its own nearby action card. Kitchen, orders, and decorating each have a focused workspace with a persistent category bar. Titles and category controls stay in place. Long recipe, order and decorating lists use page buttons. The current category turns green when selected. Difficulty choices and navigation destinations also follow their selected state. Six visitor wishes and free decoration tools are in the decorating workspace.\nPlant seeds and watch the harvest countdown: Mint Sprouts, Berry Blooms and Moon Blossoms start at 1, 3 and 6 minutes. New crops use 1×, 1.5×, 2× or 2.5× those times at cottage levels 0, 1, 2 or 3. Check the exact time before planting; existing crops keep their deadlines. Crops keep growing offline and never wither. Collect the harvest before moving on to cottage repairs. Clear stages for extra seeds; gardening does not add combat stats.\nHarvest ingredients, make mint tea, berry jam and moon tarts, and fulfil three neighbours’ orders. Build and improve a sweet shop, picnic pavilion and fountain through six village projects. Orders never expire, recipes are instant, and village reputation does not add combat power.\nVillage adventures: three free challenges with three difficulty levels each. Remember picnic orders, guide a fish to three pearls and a flag, or solve a star-lighting puzzle. Earn medals for picnic, pond and starlight scenery. No supply costs or daily limits. Served dishes stay on the picnic table, pond arrows show where to swim, collected pearls fill a tray, and stars mark which lights changed together. Each theme has matching animated feedback with reduced-motion support.\nScene music: driving combat and Boss tracks, a relaxed garden tune, and distinct picnic, pond and starlight melodies. Music works offline and respects mute and background pause.\nBosses have solid bodies. Time your dash carefully; cooldown upgrades are choices you make during each run.\n11 languages. No ads, no gacha, and no account required to play. The game works offline after it has loaded.\nOpen the privacy policy website from Settings in any of the 11 game languages. Your game stays open while you read it.\n\nControls\nPhone: drag to move; use the dash and nuke buttons when available.\nDesktop: WASD or arrow keys to move, Space to dash, E for a nuke.\n\nAndroid test build: Download the current Android test APK. Update the existing APK installation to keep your progress; do not uninstall it. Google Play installations must update through Google Play because they use a different signing certificate.\n\nI am a solo hobby developer, and this is my first game. Which stage stopped you? Did the controls feel right on your phone? Was it clear what to grow, cook and deliver in the village? Even one sentence of feedback helps. Thank you.",
+  "forum_url": "https://itch.io/t/6826201/50-stages-no-ads-no-gacha-works-offline-my-browser-roguelite-needs-breaking#post-17090045",
+  "forum_text": "davidform40 days ago (12 edits)\n\nHi everyone,\n\nGOO BLASTER is now on v0.9.82. It is a mobile-first survivor-like you can play in your browser, with a town home, separate themed activities, and a Candy Garden between adventures. Game menus now fit within the screen without vertical scrolling. Titles and bottom navigation stay visible; longer garden and upgrade lists use page buttons. Browse adventure stages by chapter, and open stories or extra instructions in matching reading cards.\n\nPlay here (no download or signup):\n\nhttps://davidform.itch.io/goo-blaster\n\nWhat's in the current version:\n\n• 50 stages across 10 chapters, with a chapter boss every 5 stages.\n\n• Choose up to 2 weapons and 4 skills per run, then upgrade and evolve your chosen weapons.\n\n• Permanent Candy Shop upgrades, with coins earned even from failed runs.\n\n• A Candy Garden: crops keep growing while you are away. Harvest ingredients, make treats, deliver village orders and restore buildings. Gardening adds no combat power. Tap a field to choose a plant beside it; kitchen, orders and decorating now have focused workspaces. The current category button turns green when selected, and difficulty choices also highlight the selected option.\n\n• Solid Boss bodies and a dash cooldown that you improve through in-run card choices.\n\n• 11 languages: EN / 繁中 / 简中 / 日本語 / 한국어 / DE / FR / ES / IT / PT-BR / RU.\n\n• No ads or gacha. The game runs offline after it has loaded.\n\n• Open the privacy policy website from Settings in any of the 11 game languages; your game stays open while you read it.\n\nControls: drag to move on mobile. On desktop, use WASD/arrows, Space to dash, and E for a nuke. Weapons fire automatically.\n\nYour earlier feedback helped improve the controls, readability, and difficulty. I would especially like to hear:\n\n1. Which stage did you stop at, and why?\n\n2. Does your weapon/skill combination feel useful without making the later stages trivial?\n\n3. Are the planting, kitchen and order controls easy to find and use?\n\n4. Which phone or browser are you using, and where does it slow down?\n\nThe Android test APK is available here:\n\nhttps://github.com/davidform/goo-blaster/releases/tag/android-test\n\nUpdate the existing APK installation to preserve your progress; do not uninstall it. Google Play installations must update through Google Play.\n\nThis opening post has been refreshed for v0.9.82; older replies below describe earlier versions. Even one line of feedback is useful. Thanks for helping me improve my first game.\n\nDavid\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLike\nEdit\nDelete topic",
+  "forum_images": [
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzMzIxNC5wbmc=/original/qKFNzV.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzU0LnBuZw==/original/UccTzS.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzcxLnBuZw==/original/oJLgib.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzgzLnBuZw==/original/j4muTB.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NTExOS5wbmc=/original/CkMW%2BG.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NzA1MC5wbmc=/original/g%2F5MRz.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDM3MDQ5NS5wbmc=/original/KcNTE5.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDM3MjcyMS5wbmc=/original/jlC7ql.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwNDQwMDM0LnBuZw==/original/jGTbeZ.png"
+    }
+  ],
+  "profile_url": "https://itch.io/profile/davidform",
+  "profile_text": "40 days ago (12 edits)\n\nHi everyone,\n\nGOO BLASTER is now on v0.9.82. It is a mobile-first survivor-like you can play in your browser, with a town home, separate themed activities, and a Candy Garden between adventures. Game menus now fit within the screen without vertical scrolling. Titles and bottom navigation stay visible; longer garden and upgrade lists use page buttons. Browse adventure stages by chapter, and open stories or extra instructions in matching reading cards.\n\nPlay here (no download or signup):\n\nhttps://davidform.itch.io/goo-blaster\n\nWhat's in the current version:\n\n• 50 stages across 10 chapters, with a chapter boss every 5 stages.\n\n• Choose up to 2 weapons and 4 skills per run, then upgrade and evolve your chosen weapons.\n\n• Permanent Candy Shop upgrades, with coins earned even from failed runs.\n\n• A Candy Garden: crops keep growing while you are away. Harvest ingredients, make treats, deliver village orders and restore buildings. Gardening adds no combat power. Tap a field to choose a plant beside it; kitchen, orders and decorating now have focused workspaces. The current category button turns green when selected, and difficulty choices also highlight the selected option.\n\n• Solid Boss bodies and a dash cooldown that you improve through in-run card choices.\n\n• 11 languages: EN / 繁中 / 简中 / 日本語 / 한국어 / DE / FR / ES / IT / PT-BR / RU.\n\n• No ads or gacha. The game runs offline after it has loaded.\n\n• Open the privacy policy website from Settings in any of the 11 game languages; your game stays open while you read it.\n\nControls: drag to move on mobile. On desktop, use WASD/arrows, Space to dash, and E for a nuke. Weapons fire automatically.\n\nYour earlier feedback helped improve the controls, readability, and difficulty. I would especially like to hear:\n\n1. Which stage did you stop at, and why?\n\n2. Does your weapon/skill combination feel useful without making the later stages trivial?\n\n3. Are the planting, kitchen and order controls easy to find and use?\n\n4. Which phone or browser are you using, and where does it slow down?\n\nThe Android test APK is available here:\n\nhttps://github.com/davidform/goo-blaster/releases/tag/android-test\n\nUpdate the existing APK installation to preserve your progress; do not uninstall it. Google Play installations must update through Google Play.\n\nThis opening post has been refreshed for v0.9.82; older replies below describe earlier versions. Even one line of feedback is useful. Thanks for helping me improve my first game.\n\nDavid\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEdit\nDelete topic",
+  "profile_images": [
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzMzIxNC5wbmc=/original/qKFNzV.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzU0LnBuZw==/original/UccTzS.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzcxLnBuZw==/original/oJLgib.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwMzcwNzgzLnBuZw==/original/j4muTB.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NTExOS5wbmc=/original/CkMW%2BG.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDI2NzA1MC5wbmc=/original/g%2F5MRz.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDM3MDQ5NS5wbmc=/original/KcNTE5.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDM3MjcyMS5wbmc=/original/jlC7ql.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1nLzMwNDQwMDM0LnBuZw==/original/jGTbeZ.png"
+    }
+  ],
+  "gallery_first_six": [
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MTAyOC5wbmc=/347x500/NvRgEy.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MTAyNy5wbmc=/347x500/e9ntfJ.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDE0MTAyNi5wbmc=/347x500/UJD0QP.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzOTc0MS5wbmc=/347x500/SZB4o5.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzOTc0MC5wbmc=/347x500/wNtbJG.png"
+    },
+    {
+      "loaded": true,
+      "url": "https://img.itch.zone/aW1hZ2UvNDkwNjgwOS8zMDQzOTczOS5wbmc=/347x500/J38LbL.png"
+    }
+  ],
+  "price_and_visibility": "Existing No payments / Public preserved",
+  "devlog_url": "https://davidform.itch.io/goo-blaster/devlog/1685583/v0982-turn-pages-keep-your-place"
+}
