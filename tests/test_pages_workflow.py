@@ -10,6 +10,12 @@ pages = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pages)
 
 class PagesGate(unittest.TestCase):
+    def test_asset_only_update_is_not_skipped(self):
+        current = {'index.html': b'unchanged game', 'icon-192.png': b'old icon'}
+        with patch.object(pages, 'git', side_effect=lambda *args: current[args[1].split(':', 1)[1]]):
+            self.assertTrue(pages.site_matches('main', current))
+            self.assertFalse(pages.site_matches('main', {**current, 'icon-192.png': b'new icon'}))
+
     def setUp(self):
         self.payload = b"const BUILD='v0.9.55';\r\n// tested\n"
         self.sha = pages.hashlib.sha256(self.payload).hexdigest()

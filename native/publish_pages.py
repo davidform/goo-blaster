@@ -46,6 +46,10 @@ def validate(commit, receipt, reports, payload):
         raise ValueError('Every release test must pass')
     return {'source_commit': source, 'build': build, 'sha256': digest, 'tests': len(required)}
 
+def site_matches(parent, contents):
+    # Icons and policy can change without a new game payload.
+    return all(git('show', parent + ':' + name) == content for name, content in contents.items())
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--commit', required=True)
@@ -70,7 +74,9 @@ def main():
         old_version = re.search(rb"const BUILD='v([\d.]+)'", old)[1].decode()
         if tuple(map(int, proof['build'][1:].split('.'))) < tuple(map(int, old_version.split('.'))):
             raise ValueError('Refusing a version downgrade')
-        if old == payload:
+        files = ['index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'privacy.html', '.nojekyll']
+        contents = {name: payload if name == 'index.html' else (b'' if name == '.nojekyll' else git('show', proof['source_commit'] + ':' + name)) for name in files}
+        if site_matches(parent, contents):
             proof['deployment_commit'] = parent
         else:
             # Isolated Git index: preserve the working tree and upload the tested bytes
@@ -80,9 +86,7 @@ def main():
                 def staging(*command, data=None):
                     return subprocess.check_output(['git', *command], input=data, cwd=ROOT, env=env)
                 staging('read-tree', parent)
-                files = ['index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'privacy.html', '.nojekyll']
-                for name in files:
-                    content = payload if name == 'index.html' else (b'' if name == '.nojekyll' else git('show', proof['source_commit'] + ':' + name))
+                for name, content in contents.items():
                     blob = staging('hash-object', '-w', '--stdin', data=content).decode().strip()
                     staging('update-index', '--add', '--cacheinfo', '100644,' + blob + ',' + name)
                 tree = staging('write-tree').decode().strip()
