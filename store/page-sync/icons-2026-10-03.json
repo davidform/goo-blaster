@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-03",
+  "build": "v0.9.83",
+  "source_commit": "766a45693ce0c831a23870b65eefa5e4726bee43",
+  "pages_deployment": "3afcb4e35f2bb8ae6b11d3ca081e30dfd4d06173",
+  "actions": "https://github.com/davidform/goo-blaster/actions/runs/37080685003",
+  "pages_html_unchanged": true,
+  "pages_icons_match": true,
+  "pages_start_pause": true,
+  "itch_cover": "https://img.itch.zone/aW1nLzMwNDgzMjAwLnBuZw==/original/2FDYrA.png",
+  "itch_favicon": "https://img.itch.zone/aW1nLzMwNDgzMjAwLnBuZw==/32x32%23/VeJr9J.png",
+  "tests": "tests/test_pages_workflow.py: 9/9 PASS",
+  "phone_chrome_tiles_verified": false
+}

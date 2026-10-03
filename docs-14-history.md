@@ -1587,3 +1587,12 @@ Devlog1670920 Published：https://davidform.itch.io/goo-blaster/devlog/1670920/v
 - 中英Devlog1685658已Published，流程9/9 PASS；https://davidform.itch.io/goo-blaster/devlog/1685658/v0983-leave-the-fireworks-at-the-finish-line。商店與原論壇／profile核對v83、兩處各9張原圖正常載入；音效修正保留現有真實UI圖，收據store/page-sync/v0.9.83.json。
 - cleanup dry-run後Apply，移除2項13,446,775bytes、0失敗、25權限拒絕略過；保留v83/v82APK及所有進度／金鑰／備份。Pixel無連線，真機聽感及更新後存檔未驗；全平行未跑，不能把CPU4或Console當手機驗收。
 - 瀏覽器截圖曾逾時，透過頁面正常鍵盤聚焦後保存成功；DOM generic角色不支援及heading level選項不支援時改用已觀察到的編輯區選擇器，沒有隱藏API改頁／送出或重複發布。
+
+
+## 2026-10-03 網站圖示補同步（遊戲維持v0.9.83）
+
+根因：Pages的192／512圖示仍為舊霓虹角色，itch favicon取自舊封面29349624；更新遊戲HTML與介紹沒有同步這些素材。沿用現有Google Play綠色角色更新兩站。另修正Pages發布工具只比對HTML而跳過素材更新的缺口，補僅圖示變更回歸測試，9/9通過。
+
+Pages部署3afcb4e、Actions37080685003成功，公開HTML SHA維持6dfd46f3f9769f38b873e7698b7d7317bb4f846c5ec36fb8e169b57b198c00dd，兩圖SHA與本機一致，實際開始／暫停通過；itch封面改為30483200，公開favicon／og:image與保存後預覽核對完成。證據store/page-sync/icons-2026-10-03.json及_private/site-icons/。
+
+教訓：網站圖示與遊戲內容分開驗收；素材更新也必須觸發部署。手機Chrome常用網站快取未驗，不宣稱已刷新，也不以清除網站資料處理，避免波及存檔。未改index.html、未重跑既有91項測試、未重發APK／Devlog。

@@ -1,7 +1,7 @@
 # GOO BLASTER 精簡交接
 
-## 目前狀態（2026-10-02）
-- 目前目標：交接規範已整合至AGENTS.md第7節並同步CLAUDE.md；下一步仍為Pixel Play版真機驗證，再核對上架待辦。
+## 目前狀態（2026-10-03）
+- 目前目標：網站舊圖示已更新並公開驗證；手機Chrome常用網站格的快取刷新仍待使用者確認。Pixel音效／存檔真機驗證仍待完成。
 - 本輪接手HEAD b7af2f9（交付紀錄）與遊戲commit均已推送；git pull --ff-only回報Already up to date。
 - 本輪文件變更AGENTS.md／CLAUDE.md／HANDOFF.md；提交以docs: clarify proactive conversation handoff rules查找。未追蹤.codex-remote-attachments/保留且不提交。
 - 本次煙火音效跨頁持續播放問題已完成v0.9.83修正、驗證與授權平台交付。
@@ -45,7 +45,7 @@
 - Console 10月2日01:06：0.9.83-rc.1 Internal Test提供給內測者，track4701357753096403615／release4。
 - 內測入口 https://play.google.com/apps/internaltest/4701357753096403615；更新包不等於已安裝到Pixel。
 - 唯一Console警告為缺去混淆檔（minify=false）；裝置支援數不變。_private/play-preparation/internal-v83-receipt.json。
-- 前輪記錄Pixel已為Play簽章版；2026-10-02本輪adb devices -l仍為空清單，98301安裝狀態、真機聽感與存檔均未驗。必須走Play更新，不混裝GitHub debug APK、不卸載／清資料。
+- 2026-10-02後續adb已核對Pixel安裝98301／0.9.83-rc.1，installer=com.android.vending；真機聽感與存檔仍未驗。必須走Play更新，不混裝debug APK、不卸載／清資料。
 - Play簽章57965f11182c1fa87082dc48573a7b9426ab029361da21ff0128416e1e7268f9；upload憑證ed7ec469e074b8489d6515520d1a20e99ec29b4ae25c53f71cc0d56a4fe2eee6。
 - 上傳金鑰異地備份未完成，不得建立新key。IARC已完成；商家由本人處理，價格最終儲存／客服政策同步仍待核對。
 - 未正式上架；Alpha4700117103530327117的12人持續14天尚未開始，內測1位與自動測試均不等於封測。
@@ -54,5 +54,12 @@
 - 本輪僅文件整合與唯讀核對，未啟動測試／建置／發布工作；沒有本輪尚在執行的外部操作。Play待驗事項如上，不代表新對話必須立即再換。
 - 文件驗證：studio.py check設定有效（未跑遊戲測試）；HTML SHA仍與上述v83一致。既有91項／CPU／離線／發布驗證不得重做；文件差異以git diff --check核對。
 - 先讀AGENTS.md／本檔，核對Git與實際BUILD；歷史只按需要搜尋，不重跑已完成的v83發布與三輪驗證。
-- 優先核對Pixel已更新98301；以真實過關→主畫面→庭院／三主題確認無殘留煙火聲，保留存檔。
+- Pixel已核對98301；下一步以真實過關→主畫面→庭院／三主題確認無殘留煙火聲，保留存檔。
 - 無手機連線則明示真機未驗；可續處理Play上架待辦，但不得替代12人14天或擅自正式發布。
+
+## 網站圖示補同步（2026-10-03）
+- commit 766a456：build: refresh website icons and publish asset-only updates，已push。沿用Google Play綠色角色，icon-192／512更新；遊戲HTML原位元組未改、BUILD仍v83，不重發APK／Devlog。
+- Pages工具原本HTML相同就跳過，已改為比對完整網站白名單；tests/test_pages_workflow.py 9/9 PASS，含僅圖示更新回歸。
+- Pages部署3afcb4e／Actions37080685003成功；公開HTML與兩個icon SHA一致；真實開始／暫停PASS。_private/site-icons/pages-check.json、pages-pause.png。
+- itch封面由29349624換為30483200；公開favicon及og:image均指向新圖；重開編輯頁確認已保存，_private/site-icons/itch-cover.png。
+- 收據store/page-sync/icons-2026-10-03.json；手機新分頁快取未驗，不要求清除網站資料（避免影響網頁存檔）。本轮無待完成發布程序。
