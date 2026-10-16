@@ -1,5 +1,5 @@
 # GOO BLASTER — 目前交接
-更新：2026-09-09；本檔只保留現況，不複製完整對話。
+更新：2026-10-16；本檔只保留現況，不複製完整對話。
 
 ## 接手方式
 - 先完整讀 AGENTS.md 與本檔，再核對 git status、git log、BUILD 與本次任務。
@@ -16,7 +16,16 @@
 - itch.io 已明確授權：遊戲改版通過規定測試後自動更新 davidform/goo-blaster 的網頁遊戲；不含價格或商店文案。
 - Chrome/GitHub Desktop/Android Studio 不必常開；執行工作需此專案工具環境、連網及電腦不睡眠。
 
-## 目前任務與發布阻擋
+## 目前任務：Pages CI（2026-10-16）
+- main 核對為 3afcb4e / v0.9.83；以下 9 月遊戲/真機紀錄是舊證據，不代表目前版本已重測。
+- PR #1：語法與 8 項文件檢查 + 單頁 Chromium 離線/CPU4x/開局/重開存檔；validate 成功才部署同一份 _site，PR 不部署。
+- 已同步 PRIVACY.md 至既有公開 HTML，沒有改公開政策、遊戲或 AGENTS/CLAUDE/完整測試門檻。
+- GitHub runner run 38866955959 實跑通過；煙霧約6.3秒，pageerror0、外部HTTP(S)請求0，PR部署正確跳過。
+- 本機語法/文件與兩項故障注入通過；本機瀏覽器安裝受限，瀏覽器證據來自 GitHub runner。
+- 本輪未執行完整三輪、全關卡/語系/壓力/效能或真機；CI綠燈不能替代它們，詳見 tests/README.md。
+- 變更提交於 build/pages-validation；尚未合併/部署至 main。Commit Summary：build: gate Pages deployment on syntax docs and browser smoke checks
+
+## 先前任務與發布阻擋（2026-09-09 歷史，尚未重新核實）
 - 最新需求：Pixel 10 Pro卡頓、參考圖式柔和配色、研究市場後豐富介面。建議先實機定位/單項最佳化，再分版配色與介面；本輪尚未改正式遊戲。
 - docs-15-performance-and-art-direction.md 記錄3款案例、色彩/介面規格與效能診斷；對話已有奶油鼠尾草/霧藍薰衣草互動概念，尚非正式設計驗收。
 - adb devices 本輪無裝置；已詢問卡頓對應新/舊App或網頁、版本/關卡/場景，尚未收到答案。下一步接Pixel錄實際長幀；不拿桌機通過否定真機回報。

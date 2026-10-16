@@ -89,3 +89,46 @@ for observed variability and the pending Pixel investigation.
 
 曾經因此誤以為證明了某個假設 —— 實際上沒有。
 做行動裝置相容性驗證時要意識到這個極限，最終還是要真機測試。
+
+## GitHub Pages deployment gate
+
+`.github/workflows/pages.yml` checks pushes to `main`, PRs targeting `main`,
+and manual runs. `validate` must succeed before `deploy`; only a non-PR run on
+`main` may upload/deploy the Pages artifact. PRs and other manually selected
+branches cannot deploy. Concurrency is scoped to the ref, so a PR does not cancel
+an active main deployment. Only the deploy job receives Pages/OIDC write access.
+
+The validation job runs these in order, without `continue-on-error` or retries:
+
+1. `node tests/syntax_check.js` — parses the inline game JavaScript.
+2. `node tests/check_release_docs.cjs` — checks the existing eight documentation
+   invariants, including bilingual policy content and synchronized instructions.
+3. Install Python 3.12, pinned Playwright from `tests/requirements-ci.txt`, and only
+   Chromium headless shell (`python -m playwright install --with-deps --only-shell chromium`).
+4. Stage the existing website allowlist into `_site`, then run
+   `GOO_ROOT="$PWD/_site" python tests/py_release_smoke.py`.
+
+The smoke test uses one isolated browser profile and one page at a time, runs
+with network offline and CPU throttled 4x, opens Home → Adventure → Play, and
+polls until the real game loop has advanced at least three game seconds. It then
+seeds progress/coins/upgrades via `saveGame()`, closes the browser, and verifies
+those values and stage selection after a real restart. Page errors and observed
+HTTP(S) requests fail the test. This is a `file://` payload check, not an HTTP
+hosting, service-worker, or production Pages availability check. It does not
+prove that progress can be earned through a complete level.
+
+A 3-minute smoke-step timeout and 10-minute job timeout bound resource use;
+there is no parallel browser matrix, FPS gate, or full-suite run in this workflow.
+Logs, game SHA256, and the existing smoke screenshots are retained for seven days.
+The `tee` pipeline uses `pipefail`, so saving logs cannot turn a failed test green.
+Only after success is the **same tested `_site`** uploaded as the Pages artifact;
+the deploy job does not rebuild or check out different bytes.
+
+These are basic deployment safeguards, **not AGENTS.md's three-round acceptance**.
+Game modifications still require the complete existing suite, targeted edge cases,
+and the prescribed stress round; performance tests must run separately. All-level
+balance, 11-language layout, extended gameplay/save migration/garden behavior,
+real touch/audio, phone performance, Android/iOS packaging, and real-device save
+persistence remain outside this CI gate. Neither a green PR nor a successful
+Pages deployment claims those checks passed. `AGENTS.md`, `CLAUDE.md`, `run_tests.sh`,
+and the game BUILD are unchanged by the CI work.

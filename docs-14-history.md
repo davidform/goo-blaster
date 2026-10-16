@@ -685,3 +685,19 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - BUILD v0.9.40與SHA256未變；正式遊戲三輪、真機卡頓定位、11語系新介面、色覺/彈幕辨識、原生重建與發布尚未執行。既有48工壓力失敗仍保留。
 - 教訓：柔和色彩不直接降低計算量；介面應靠內容與材質增加層次，不能用更多持續粒子掩飾單調。
 - Commit Summary：test: profile render cost and document soft visual direction
+
+
+## 2026-10-16：GitHub Pages 部署前自動檢查（非遊戲版本）
+
+- 根因：main 推送即打包部署，沒有跑既有語法/文件檢查，且既有煙霧測試仍從舊版的 Play 入口開始。
+- validate 新增 Node 22 語法、8 項文件一致性、Python 3.12 / Playwright 1.62.0 單頁 Chromium headless shell 煙霧測試；deploy 必須 needs: validate 成功。PR 檢查、不發布；手動僅 main 可發布。PR 與 main concurrency 隔離，Pages/OIDC 權限僅 deploy 持有。
+- 打包仍只包含原網站白名單；煙霧測試 GOO_ROOT 指向 _site，成功後才上傳同一份 Pages artifact，deploy 不重新打包。保留七天 log、SHA256、截圖；pipefail 保證 tee 不吞失敗；煙霧三分鐘、job 十分鐘上限。
+- 初始實跑語法通過，但文件檢查失敗：PRIVACY.md 是9月8日，公開HTML已更新9月29日的庭院存檔/受眾說明。逐段同步既有HTML的中英文至Markdown，未改公開政策或放寬檢查；之後8/8通過。
+- 煙霧測試補上真實 Home → Adventure → Play 導覽；仍保留全新資料、離線、CPU4x、遊戲時間>=3、實際關閉重開與進度9/金幣456/強化dmg2/選關8的原斷言。
+- 實際 GitHub runner 證據：https://github.com/davidform/goo-blaster/actions/runs/38866955959 （PR #1，f9e54b9）。Ubuntu24.04、Node22.23.3、Python3.12.15、Playwright1.62.0；validate約31秒，瀏覽器片段約6.3秒，errors=[]、external_requests=[]；PR的Pages上傳與部署跳過。這是一次實測耗時，不保證後續上限或穩定性統計。
+- 已驗證：本機既有語法、8項文件、YAML事件/needs/最小權限/無continue-on-error，以及暫存副本故障注入：JS語法錯誤及政策不一致均exit1。未把故障版本推到main來測公開部署；阻擋依賴由workflow結構確認。
+- 本機失敗：Playwright系統套件安裝權限與Chromium下載檔案不完整；不是遊戲測試失敗。改由真正GitHub runner成功安裝並執行，沒有以程式碼檢查代替瀏覽器實跑。
+- index.html SHA256仍為6dfd46f3f9769f38b873e7698b7d7317bb4f846c5ec36fb8e169b57b198c00dd，BUILD v0.9.83。AGENTS.md、CLAUDE.md與run_tests.sh未改。
+- 未執行：完整三輪、全關卡/11語系/平衡/長時間遊玩/庭院/儲存遷移/完整壓力與效能、Android/iOS真機；file://煙霧不驗證HTTP託管或正式Pages可用性。未合併main、未發布新版遊戲。
+- 教訓：基礎CI能攔下真實文件漂移與開機迴歸，但不能將短時間煙霧或PR綠燈誤稱完整發布驗收。完整測試要求維持不變。
+- Commit Summary：build: gate Pages deployment on syntax docs and browser smoke checks
