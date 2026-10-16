@@ -1,6 +1,6 @@
 # Privacy Policy — GOO BLASTER
 
-Last updated: 8 September 2026
+Last updated: 29 September 2026
 
 ## Scope and summary
 
@@ -8,7 +8,7 @@ GOO BLASTER is developed by DemjaStudio. The game works offline and does not req
 
 ## Local saves and deletion
 
-The game stores stage progress, Candy Coins, permanent upgrades, language, a full-version unlock flag, save-format version, and whether a backup reminder has been shown. Web saves use browser localStorage. The native app uses Capacitor Preferences and localStorage. The game does not send these saves to a developer-operated server.
+The game stores stage progress, Candy Coins, permanent upgrades, language, a full-version unlock flag, save-format version, whether a backup reminder has been shown, and garden progress (crops and harvest deadlines, resources, cottage upgrades, recipes and orders, village projects, decorations, visitors, challenge medals and selected theme). Web saves use browser localStorage. The native app uses Capacitor Preferences and localStorage. The game does not send these saves to a developer-operated server.
 
 The Android project permits operating-system backup (allowBackup=true). Depending on your device and settings, the operating system may back up or transfer app data. These copies are governed by your platform settings and are not a developer-operated cloud-save service.
 
@@ -22,7 +22,7 @@ The current game does not request your name, contact details, location, camera, 
 
 ## Children and purchases
 
-The game is intended for children and does not request personal information during play. It contains no advertising, paid random loot boxes, or purchase-pressure countdowns. Free random upgrades within a game are not paid purchases. Parents or guardians should handle purchases and support requests.
+The game is intended for players aged 9 and above, including children and adults, and does not request personal information during play. It contains no advertising, paid random loot boxes, or purchase-pressure countdowns. Free random upgrades within a game are not paid purchases. Parents or guardians should handle purchases and support requests.
 
 The planned mobile release is a single paid download that includes the full game, without subscriptions or consumable purchases. The current build does not implement an in-app purchase checkout. Where purchases are offered, the relevant storefront processes payment under its own policies. We do not receive your full payment-card details; storefronts may provide sales and transaction reports for accounting and support.
 
@@ -49,7 +49,7 @@ We will update this policy and its date when the relevant practices change. Cont
 
 # 隱私權政策 —— GOO BLASTER
 
-最後更新：2026 年 9 月 8 日
+最後更新：2026 年 9 月 29 日
 
 ## 適用範圍與摘要
 
@@ -57,7 +57,7 @@ GOO BLASTER 由 DemjaStudio 開發。遊戲可離線遊玩，不需要帳號或�
 
 ## 本機存檔與刪除
 
-遊戲會儲存關卡進度、糖果幣、永久強化、語言、完整版解鎖旗標、存檔格式版本，以及是否已顯示備份提醒。網頁版使用瀏覽器 localStorage；原生 App 使用 Capacitor Preferences 與 localStorage。遊戲不會把這些存檔傳送到開發者營運的伺服器。
+遊戲會儲存關卡進度、糖果幣、永久強化、語言、完整版解鎖旗標、存檔格式版本，是否已顯示備份提醒，以及庭院進度（作物與收成時間、資源、小屋升級、料理與委託、村莊建設、佈置、訪客、挑戰獎章及選取主題）。網頁版使用瀏覽器 localStorage；原生 App 使用 Capacitor Preferences 與 localStorage。遊戲不會把這些存檔傳送到開發者營運的伺服器。
 
 Android 專案允許作業系統備份（allowBackup=true）。依裝置與設定，作業系統可能備份或移轉 App 資料。這些副本由你的平台設定管理，不是開發者提供的雲端存檔服務。
 
@@ -71,7 +71,7 @@ Android 專案允許作業系統備份（allowBackup=true）。依裝置與設�
 
 ## 兒童與購買
 
-本遊戲以兒童為目標玩家，遊玩時不要求個人資訊。遊戲沒有廣告、隨機付費寶箱或催促購買的倒數。局內免費隨機升級不涉及付費購買。購買及客服聯繫應由家長或監護人處理。
+本遊戲以 9 歲以上玩家（包括兒童與成人）為目標對象，遊玩時不要求個人資訊。遊戲沒有廣告、隨機付費寶箱或催促購買的倒數。局內免費隨機升級不涉及付費購買。購買及客服聯繫應由家長或監護人處理。
 
 行動版目前規劃為一次付費下載完整遊戲，不含訂閱或消耗型購買；目前版本尚未實作 App 內購結帳。若於商店提供購買，付款由該商店依其政策處理。我們不會取得完整付款卡片資料；商店可能提供用於帳務與客服的銷售及交易報表。
 

@@ -9,33 +9,86 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Syntax checker regression tests
+        run: node --test tests/syntax_check.test.cjs
+      - name: JavaScript syntax
+        run: node tests/syntax_check.js
+      - name: Release documentation consistency
+        run: node tests/check_release_docs.cjs
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install -r tests/requirements-ci.txt
+          python -m playwright install --with-deps --only-shell chromium
       - name: 只把網頁檔放進 _site
         run: |
           mkdir -p _site
           cp index.html manifest.webmanifest icon-192.png icon-512.png privacy.html _site/
           cp .nojekyll _site/ 2>/dev/null || touch _site/.nojekyll
+      # 基礎防護，不取代 AGENTS.md 的完整三輪遊戲驗收。
+      - name: Offline game startup and save smoke test
+        timeout-minutes: 3
+        env:
+          GOO_ROOT: ${{ github.workspace }}/_site
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p _private/test-artifacts
+          sha256sum _site/index.html | tee _private/test-artifacts/pages-game.sha256
+          python -u tests/py_release_smoke.py 2>&1 | tee _private/test-artifacts/pages-smoke.log
+      - name: Preserve smoke evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: pages-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            _private/test-artifacts/pages-*
+            _private/test-artifacts/release-offline-*.png
+            _private/test-artifacts/release-smoke-result.json
+          if-no-files-found: ignore
+          retention-days: 7
       - uses: actions/upload-pages-artifact@v3
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
         with:
           path: '_site'
+
+  deploy:
+    needs: validate
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
       - id: deployment
         uses: actions/deploy-pages@v4

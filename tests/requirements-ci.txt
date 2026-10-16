@@ -1,0 +1,2 @@
+# Development-only dependency; never copied into the Pages artifact.
+playwright==1.62.0
