@@ -29,6 +29,8 @@ with sync_playwright() as pw:
     initial = page.evaluate('({build:BUILD, progress:PROGRESS, coins:COINS, meta:META})')
     assert initial['progress'] == 1 and initial['coins'] == 0 and not initial['meta'], initial
     page.screenshot(path=str(ARTIFACTS / 'release-offline-menu.png'))
+    # The current hub opens on Home; follow the same route as a player.
+    page.click('#navAdventure')
     page.click('#btnPlay')
     page.mouse.move(195, 500)
     page.mouse.down()
