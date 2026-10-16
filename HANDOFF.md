@@ -21,9 +21,9 @@
 - PR #1：語法與 8 項文件檢查 + 單頁 Chromium 離線/CPU4x/開局/重開存檔；validate 成功才部署同一份 _site，PR 不部署。
 - 已同步 PRIVACY.md 至既有公開 HTML，沒有改公開政策、遊戲或 AGENTS/CLAUDE/完整測試門檻。
 - GitHub runner run 38866955959 實跑通過；煙霧約6.3秒，pageerror0、外部HTTP(S)請求0，PR部署正確跳過。
-- 本機語法/文件與兩項故障注入通過；本機瀏覽器安裝受限，瀏覽器證據來自 GitHub runner。
+- 複查修正語法工具漏讀仍成功/頂層return誤判；12項回歸與8項文件通過。Actions更新v7，煙霧加失敗JSON/截圖/清理；瀏覽器證據以PR最新CI為準。
 - 本輪未執行完整三輪、全關卡/語系/壓力/效能或真機；CI綠燈不能替代它們，詳見 tests/README.md。
-- 變更提交於 build/pages-validation；尚未合併/部署至 main。Commit Summary：build: gate Pages deployment on syntax docs and browser smoke checks
+- 變更提交於 build/pages-validation；尚未合併/部署至 main。Commit Summary：build: harden Pages validation against silent skips
 
 ## 先前任務與發布阻擋（2026-09-09 歷史，尚未重新核實）
 - 最新需求：Pixel 10 Pro卡頓、參考圖式柔和配色、研究市場後豐富介面。建議先實機定位/單項最佳化，再分版配色與介面；本輪尚未改正式遊戲。

@@ -25,15 +25,20 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
+          package-manager-cache: false
+      - name: Syntax checker regression tests
+        run: node --test tests/syntax_check.test.cjs
       - name: JavaScript syntax
         run: node tests/syntax_check.js
       - name: Release documentation consistency
         run: node tests/check_release_docs.cjs
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Install browser test dependencies
@@ -55,15 +60,16 @@ jobs:
           set -o pipefail
           mkdir -p _private/test-artifacts
           sha256sum _site/index.html | tee _private/test-artifacts/pages-game.sha256
-          python tests/py_release_smoke.py 2>&1 | tee _private/test-artifacts/pages-smoke.log
+          python -u tests/py_release_smoke.py 2>&1 | tee _private/test-artifacts/pages-smoke.log
       - name: Preserve smoke evidence
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: pages-smoke-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             _private/test-artifacts/pages-*
             _private/test-artifacts/release-offline-*.png
+            _private/test-artifacts/release-smoke-result.json
           if-no-files-found: ignore
           retention-days: 7
       - uses: actions/upload-pages-artifact@v3

@@ -97,10 +97,17 @@ and manual runs. `validate` must succeed before `deploy`; only a non-PR run on
 `main` may upload/deploy the Pages artifact. PRs and other manually selected
 branches cannot deploy. Concurrency is scoped to the ref, so a PR does not cancel
 an active main deployment. Only the deploy job receives Pages/OIDC write access.
+The checkout/setup-node/setup-python/evidence-upload actions use v7; checkout
+does not retain credentials, and unused automatic npm caching is disabled.
 
 The validation job runs these in order, without `continue-on-error` or retries:
 
-1. `node tests/syntax_check.js` — parses the inline game JavaScript.
+1. `node --test tests/syntax_check.test.cjs` validates the checker with 12 fixtures,
+   then `node tests/syntax_check.js` parses every supported inline classic script.
+   Missing/empty/unclosed or attributed script tags fail closed. This checker
+   deliberately supports plain `<script>` tags only; new script forms require
+   an explicit checker update. Parsing uses `vm.Script`, so browser-invalid
+   top-level `return` is rejected without executing the game.
 2. `node tests/check_release_docs.cjs` — checks the existing eight documentation
    invariants, including bilingual policy content and synchronized instructions.
 3. Install Python 3.12, pinned Playwright from `tests/requirements-ci.txt`, and only
@@ -119,7 +126,11 @@ prove that progress can be earned through a complete level.
 
 A 3-minute smoke-step timeout and 10-minute job timeout bound resource use;
 there is no parallel browser matrix, FPS gate, or full-suite run in this workflow.
-Logs, game SHA256, and the existing smoke screenshots are retained for seven days.
+Logs, game SHA256, smoke screenshots, and `release-smoke-result.json` are retained
+for seven days. The JSON records the last phase, game time, page errors and
+observed requests; ordinary failures also attempt a screenshot. Browser contexts
+and temporary profiles are closed/removed on success or ordinary exceptions.
+A hard runner cancellation may interrupt cleanup or artifact upload.
 The `tee` pipeline uses `pipefail`, so saving logs cannot turn a failed test green.
 Only after success is the **same tested `_site`** uploaded as the Pages artifact;
 the deploy job does not rebuild or check out different bytes.

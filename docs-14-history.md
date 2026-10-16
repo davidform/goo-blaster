@@ -701,3 +701,17 @@ rage 滿血 12.8% / 非滿血 13.0% 是同一件事的另一個切面。
 - 未執行：完整三輪、全關卡/11語系/平衡/長時間遊玩/庭院/儲存遷移/完整壓力與效能、Android/iOS真機；file://煙霧不驗證HTTP託管或正式Pages可用性。未合併main、未發布新版遊戲。
 - 教訓：基礎CI能攔下真實文件漂移與開機迴歸，但不能將短時間煙霧或PR綠燈誤稱完整發布驗收。完整測試要求維持不變。
 - Commit Summary：build: gate Pages deployment on syntax docs and browser smoke checks
+
+
+## 2026-10-16：Pages PR 複查補強（非遊戲版本）
+
+- 使用者要求檢查更新；遠端 main 仍3afcb4e、PR #1仍開啟，基準7d3d5d4，沒有覆寫其他人的變更。
+- 實際重現語法工具3種假綠：無script、只有帶屬性script、正常script混合帶屬性錯誤script，原本全部exit0。另new Function會接受瀏覽器不允許的頂層return。
+- 改用vm.Script靜態解析，要求至少一段非空plain inline script，並比對開頭標籤數；漏讀、未關閉、外部/module/帶屬性等未支援形式明確失敗，不偷偷跳過。這是專案專用檢查，不宣稱通用HTML解析器。
+- 新增tests/syntax_check.test.cjs，12項獨立暫存fixture實跑全過並加入CI；正式index語法與8項文件檢查通過。所有既有遊戲驗收門檻未降低。
+- 上輪runner有Node20淘汰警告；依官方checkout/setup-node/setup-python/upload-artifact文件更新測試job至v7。停用checkout憑證保留及未使用的自動npm快取。遊戲測試Node版本仍22，Python仍3.12。
+- 煙霧測試維持原始斷言，加入每次執行結果JSON、失敗階段/錯誤與失敗截圖、context finally關閉及TemporaryDirectory清理；以python -u避免逾時前log被緩衝。強制取消不保證可完成清理/上傳。
+- 本機故意走缺少瀏覽器的失敗路徑：exit1、結果JSON status=failed/phase=launch，沒有遺留新的profile資料夾；不是遊戲功能測試通過。瀏覽器實跑結果請看PR #1對應提交的GitHub runner。
+- index.html、privacy.html、BUILD v0.9.83、AGENTS.md/CLAUDE.md/run_tests.sh均未改；本次仍不是完整三輪、真機、HTTP託管或正式部署驗收，PR未合併。
+- 官方核對來源：https://github.com/actions/checkout 、https://github.com/actions/setup-node 、https://github.com/actions/setup-python 、https://github.com/actions/upload-artifact 。
+- Commit Summary：build: harden Pages validation against silent skips
